@@ -5,24 +5,96 @@ import PackageDescription
 
 let package = Package(
     name: "OversizeModules",
+    platforms: [
+        .iOS(.v15),
+        .macOS(.v12),
+        .tvOS(.v15),
+        .watchOS(.v8),
+    ],
     products: [
-        // Products define the executables and libraries a package produces, and make them visible to other packages.
+        .library(
+            name: "OversizeLauncher",
+            targets: ["OversizeLauncher"]
+        ),
         .library(
             name: "OversizeModules",
-            targets: ["OversizeModules"]),
+            targets: ["OversizeModules"]
+        ),
+        .library(
+            name: "OversizePINCode",
+            targets: ["OversizePINCode"]
+        ),
+        .library(
+            name: "OversizeStore",
+            targets: ["OversizeStore"]
+        ),
+//        .library(
+//            name: "OversizeSettings",
+//            targets: ["OversizeSettings"]
+//        ),
     ],
     dependencies: [
-        // Dependencies declare other packages that this package depends on.
-        // .package(url: /* package url */, from: "1.0.0"),
+        .package(name: "OversizeUI", path: "../OversizeUI"),
+        .package(name: "OversizeServices", path: "../OversizeServices"),
+        .package(name: "OversizeLocalizable", path: "../OversizeLocalizable"),
+        .package(url: "https://github.com/SDWebImage/SDWebImageSwiftUI.git", from: "2.0.2"),
+        .package(url: "https://github.com/SDWebImage/SDWebImageSVGCoder.git", from: "1.6.1"),
     ],
     targets: [
-        // Targets are the basic building blocks of a package. A target can define a module or a test suite.
-        // Targets can depend on other targets in this package, and on products in packages this package depends on.
+        .target(
+            name: "OversizeLauncher",
+            dependencies: [
+                "OversizePINCode",
+                "OversizeModules",
+                .product(name: "OversizeUI", package: "OversizeUI"),
+                .product(name: "OversizeServices", package: "OversizeServices"),
+                .product(name: "OversizeSecurityService", package: "OversizeServices"),
+                .product(name: "OversizeSettingsService", package: "OversizeServices"),
+                .product(name: "OversizeStoreService", package: "OversizeServices"),
+                .product(name: "OversizeLocalizable", package: "OversizeLocalizable"),
+                .product(name: "SDWebImageSwiftUI", package: "SDWebImageSwiftUI"),
+                .product(name: "SDWebImageSVGCoder", package: "SDWebImageSVGCoder"),
+            ]
+        ),
         .target(
             name: "OversizeModules",
-            dependencies: []),
+            dependencies: [
+                .product(name: "OversizeUI", package: "OversizeUI"),
+                .product(name: "OversizeServices", package: "OversizeServices"),
+                .product(name: "OversizeSecurityService", package: "OversizeServices"),
+                .product(name: "OversizeSettingsService", package: "OversizeServices"),
+                .product(name: "OversizeStoreService", package: "OversizeServices"),
+            ]
+        ),
+        .target(
+            name: "OversizePINCode",
+            dependencies: [
+                .product(name: "OversizeUI", package: "OversizeUI"),
+                .product(name: "OversizeServices", package: "OversizeServices"),
+                .product(name: "OversizeSecurityService", package: "OversizeServices"),
+            ]
+        ),
+        .target(
+            name: "OversizeStore",
+            dependencies: [
+                .product(name: "OversizeUI", package: "OversizeUI"),
+                .product(name: "OversizeServices", package: "OversizeServices"),
+                .product(name: "OversizeStoreService", package: "OversizeServices"),
+            ]
+        ),
+//        .target(
+//            name: "OversizeSettings",
+//            dependencies: [
+//                .product(name: "OversizeUI", package: "OversizeUI"),
+//                .product(name: "OversizeServices", package: "OversizeServices"),
+//                .product(name: "OversizeSecurityService", package: "OversizeServices"),
+//                .product(name: "OversizeSettingsService", package: "OversizeServices"),
+//                .product(name: "OversizeStoreService", package: "OversizeServices"),
+//            ]
+//        ),
         .testTarget(
             name: "OversizeModulesTests",
-            dependencies: ["OversizeModules"]),
+            dependencies: ["OversizeModules"]
+        ),
     ]
 )

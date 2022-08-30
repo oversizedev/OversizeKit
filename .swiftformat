@@ -1,0 +1,3 @@
+--swiftversion 5.5
+--header "\nCopyright © {created.year} Alexander Romanov\n{file}\n"
+--disable preferKeyPath
