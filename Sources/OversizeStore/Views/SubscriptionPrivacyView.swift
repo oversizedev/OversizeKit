@@ -15,11 +15,11 @@ struct SubscriptionPrivacyView: View {
     var body: some View {
         Surface {
             VStack(spacing: .xxSmall) {
-                Text("About Pro subscription")
+                Text("About \(AppInfo.store.subscriptionsName) subscription")
                     .subheadline(.bold)
                     .foregroundColor(Color.onSurfaceDisabled)
 
-                Text("\(AppInfoService.storeKit.badgeName) subscription is required to get access to all functions. Regardless whether the subscription has free trial period or not it automatically renews with the price and duration given above unless it is canceled at least 24 hours before the end of the current period. Payment will be charged to your Apple ID account at the confirmation of purchase. Your account will be charged for renewal within 24 hours prior to the end of the current period. You can manage and cancel your subscriptions by going to your account settings on the App Store after purchase. Any unused portion of a free trial period, if offered, will be forfeited when the user purchases a subscription to that publication, where applicable.")
+                Text("\(AppInfo.store.subscriptionsName) subscription is required to get access to all functions. Regardless whether the subscription has free trial period or not it automatically renews with the price and duration given above unless it is canceled at least 24 hours before the end of the current period. Payment will be charged to your Apple ID account at the confirmation of purchase. Your account will be charged for renewal within 24 hours prior to the end of the current period. You can manage and cancel your subscriptions by going to your account settings on the App Store after purchase. Any unused portion of a free trial period, if offered, will be forfeited when the user purchases a subscription to that publication, where applicable.")
                     .caption()
                     .foregroundColor(Color.onSurfaceMediumEmphasis)
 
@@ -34,7 +34,7 @@ struct SubscriptionPrivacyView: View {
 
                     Text("•")
 
-                    if let privacyUrl = AppInfoService.url.appPrivacyPolicyUrl {
+                    if let privacyUrl = AppInfo.url.appPrivacyPolicyUrl {
                         Link(destination: privacyUrl) {
                             Text("Privacy")
                         }
@@ -42,7 +42,7 @@ struct SubscriptionPrivacyView: View {
 
                     Text("•")
 
-                    if let termsOfUde = AppInfoService.url.appTermsOfUseUrl {
+                    if let termsOfUde = AppInfo.url.appTermsOfUseUrl {
                         Link(destination: termsOfUde) {
                             Text("Terms")
                         }
@@ -54,8 +54,7 @@ struct SubscriptionPrivacyView: View {
             }
             .multilineTextAlignment(.center)
         }
-
-        .surfaceBorderColor(Color.surfaceSecondary)
+        .surfaceBorderColor(Color.surfaceSecondary, width: 2)
     }
 }
 

@@ -3,7 +3,10 @@
 // StoreView.swift
 //
 
+import OversizeComponents
 import OversizeLocalizable
+import OversizeResources
+import OversizeSettingsService
 import OversizeStoreService
 import OversizeUI
 import SwiftUI
@@ -20,7 +23,9 @@ public struct StoreView: View {
         switch viewModel.state {
         case .initial:
             VStack {
+                Spacer()
                 HStack {
+                    Spacer()
                     ProgressView()
                         .task {
                             await viewModel.fetchData()
@@ -28,29 +33,33 @@ public struct StoreView: View {
                                 await viewModel.updateState(products: products)
                             }
                         }
+                    Spacer()
                 }
+                Spacer()
             }
         case .loading:
             ProgressView()
         case let .result(data):
             content(data: data)
         case let .error(error):
-            Text("Error")
-            // ErrorView(error)
+            ErrorView(error)
         }
     }
 
     @ViewBuilder
     private func content(data: StoreKitProducts) -> some View {
         PageView("") {
-            VStack(spacing: .xxSmall) {
-                Text("Upgrade to Pro")
-                    .title()
-                    .foregroundColor(.onSurfaceHighEmphasis)
+            VStack(spacing: .medium) {
+                VStack(spacing: .xxSmall) {
+                    Text("Upgrade to \(AppInfo.store.subscriptionsName)")
+                        .title()
+                        .foregroundColor(.onSurfaceHighEmphasis)
 
-                Text("Remove ads and unlock all features")
-                    .headline()
-                    .foregroundColor(.onSurfaceMediumEmphasis)
+                    Text("Remove ads and unlock all features")
+                        .headline()
+                        .foregroundColor(.onSurfaceMediumEmphasis)
+                }
+
                 HStack(spacing: .xSmall) {
                     ForEach(viewModel.availableSubscriptions /* data.autoRenewable */ ) { product in
                         StoreProductView(product: product, products: data, isSelected: .constant(viewModel.selectedProduct == product)) {
@@ -66,45 +75,26 @@ public struct StoreView: View {
                     }
                 }
 
+                StoreFeaturesView()
+                    .environmentObject(viewModel)
+
                 SubscriptionPrivacyView(products: data)
+
                 productsLust(data: data)
-                    .padding(.top, .medium)
+                    .padding(.bottom, 170)
             }
             .paddingContent(.horizontal)
+        }
+        .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
+        .titleLabel {
+            PremiumLabel(image: Resource.Store.zap, text: AppInfo.store.subscriptionsName, size: .medium)
         }
         .trailingBar {
             BarButton(type: .close)
         }
         .bottomToolbar(style: .none, ignoreSafeArea: false) {
-            VStack {
-                Text(viewModel.selectedProductButtonDescription)
-                    .subheadline(.semibold)
-                    .foregroundColor(.onSurfaceMediumEmphasis)
-                    .padding(.vertical, .small)
-
-                Button {
-                    if let selectedProduct = viewModel.selectedProduct {
-                        Task {
-                            await viewModel.buy(product: selectedProduct)
-                        }
-                    }
-                } label: {
-                    Text(viewModel.selectedProductButtonText)
-                }
-                .buttonStyle(.payment)
-                .controlRadius(.medium)
-                .padding(.horizontal, .xxSmall)
-                .padding(.bottom, .xxSmall)
-            }
-            .background {
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                    .fill(.ultraThinMaterial)
-                    .overlay {
-                        RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            .strokeBorder(Color.black.opacity(0.05), lineWidth: 0.5)
-                    }
-            }
-            .padding(.small)
+            StorePaymentButtonBar()
+                .environmentObject(viewModel)
         }
         .onAppear {
             Task {

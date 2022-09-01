@@ -3,6 +3,7 @@
 // AppLauncher.swift
 //
 
+import OversizeCore
 import OversizeLocalizable
 import OversizeModules
 import OversizePINCode

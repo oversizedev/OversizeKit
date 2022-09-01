@@ -13,20 +13,16 @@ let package = Package(
     ],
     products: [
         .library(
-            name: "OversizeLauncher",
-            targets: ["OversizeLauncher"]
+            name: "OversizeLauncher", targets: ["OversizeLauncher"]
         ),
         .library(
-            name: "OversizeModules",
-            targets: ["OversizeModules"]
+            name: "OversizeModules", targets: ["OversizeModules"]
         ),
         .library(
-            name: "OversizePINCode",
-            targets: ["OversizePINCode"]
+            name: "OversizePINCode", targets: ["OversizePINCode"]
         ),
         .library(
-            name: "OversizeStore",
-            targets: ["OversizeStore"]
+            name: "OversizeStore", targets: ["OversizeStore"]
         ),
 //        .library(
 //            name: "OversizeSettings",
@@ -37,6 +33,8 @@ let package = Package(
         .package(name: "OversizeUI", path: "../OversizeUI"),
         .package(name: "OversizeServices", path: "../OversizeServices"),
         .package(name: "OversizeLocalizable", path: "../OversizeLocalizable"),
+        .package(name: "OversizeCore", path: "../OversizeCore"),
+        .package(name: "OversizeComponents", path: "../OversizeComponents"),
         .package(url: "https://github.com/SDWebImage/SDWebImageSwiftUI.git", from: "2.0.2"),
         .package(url: "https://github.com/SDWebImage/SDWebImageSVGCoder.git", from: "1.6.1"),
     ],
@@ -47,6 +45,7 @@ let package = Package(
                 "OversizePINCode",
                 "OversizeModules",
                 .product(name: "OversizeUI", package: "OversizeUI"),
+                .product(name: "OversizeCore", package: "OversizeCore"),
                 .product(name: "OversizeServices", package: "OversizeServices"),
                 .product(name: "OversizeSecurityService", package: "OversizeServices"),
                 .product(name: "OversizeSettingsService", package: "OversizeServices"),
@@ -80,6 +79,7 @@ let package = Package(
                 .product(name: "OversizeUI", package: "OversizeUI"),
                 .product(name: "OversizeServices", package: "OversizeServices"),
                 .product(name: "OversizeStoreService", package: "OversizeServices"),
+                .product(name: "OversizeComponents", package: "OversizeComponents"),
             ]
         ),
 //        .target(
