@@ -6,6 +6,7 @@
 import OversizeComponents
 import OversizeCore
 import OversizeResources
+import OversizeServices
 import OversizeSettingsService
 import OversizeUI
 import SwiftUI
@@ -65,7 +66,8 @@ struct StoreFeatureDetailView: View {
         VStack(spacing: .zero) {
             Rectangle()
                 .fill(
-                    LinearGradient(gradient: Gradient(colors: [Color(hex: "637DFA"), Color(hex: "872BFF")]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                    LinearGradient(gradient: Gradient(colors: [Color(hex: feature.backgroundColor != nil ? feature.backgroundColor : "637DFA"),
+                                                               Color(hex: feature.backgroundColor != nil ? feature.backgroundColor : "872BFF")]), startPoint: .topLeading, endPoint: .bottomTrailing)
                 )
                 .overlay(alignment: feature.topScreenAlignment ?? true ? .top : .bottom) {
                     ZStack {
@@ -122,7 +124,7 @@ struct StoreFeatureDetailView: View {
                     .padding(12 + (geometry.size.height * 0.02))
                     .background {
                         Circle()
-                            .fill(Color.accent.opacity(0.2))
+                            .fill(backgroundColor(feature: feature).opacity(0.2))
                     }
                     .padding(.bottom, geometry.size.height * 0.07)
 
@@ -135,7 +137,7 @@ struct StoreFeatureDetailView: View {
                     .padding(12 + (geometry.size.height * 0.02))
                     .background {
                         Circle()
-                            .fill(Color.accent.opacity(0.2))
+                            .fill(backgroundColor(feature: feature).opacity(0.2))
                     }
                     .padding(.bottom, geometry.size.height * 0.07)
             }
@@ -143,6 +145,14 @@ struct StoreFeatureDetailView: View {
             TextBox(title: feature.title.valueOrEmpty, subtitle: feature.subtitle, spacing: .xxSmall)
                 .multilineTextAlignment(.center)
                 .paddingContent(.horizontal)
+        }
+    }
+
+    func backgroundColor(feature: StoreFeature) -> Color {
+        if let color = feature.backgroundColor {
+            return Color(hex: color)
+        } else {
+            return Color.accent
         }
     }
 }

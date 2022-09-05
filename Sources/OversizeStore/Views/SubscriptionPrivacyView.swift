@@ -3,6 +3,7 @@
 // SubscriptionPrivacyView.swift
 //
 
+import OversizeServices
 import OversizeSettingsService
 import OversizeStoreService
 import OversizeUI

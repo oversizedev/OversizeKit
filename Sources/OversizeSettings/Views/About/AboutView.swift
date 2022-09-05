@@ -3,8 +3,11 @@
 // AboutView.swift
 //
 
-import OversizeCraft
-import OversizePrivateServices
+import OversizeComponents
+import OversizeLocalizable
+import OversizeResources
+import OversizeServices
+import OversizeSettingsService
 import OversizeUI
 import SwiftUI
 
@@ -51,14 +54,14 @@ import SwiftUI
 
                 SectionView {
                     VStack {
-                        if let sendMailUrl = AppInfoService.url.developerSendMail {
+                        if let sendMailUrl = AppInfo.url.developerSendMail {
                             Link(destination: sendMailUrl) {
                                 Row(L10n.About.suggestIdea)
                             }
                         }
 
                         #if os(iOS)
-                            if let shareUrl = AppInfoService.url.appInstallShare, let id = AppInfoService.app.appStoreID, !id.isEmpty {
+                            if let shareUrl = AppInfo.url.appInstallShare, let id = AppInfo.app.appStoreID, !id.isEmpty {
                                 Button(action: { isSharePresented.toggle() }) {
                                     Row(L10n.Settings.shareApplication)
                                 }
@@ -142,7 +145,7 @@ import SwiftUI
                                     }
                                 }
 
-                                if let authorAllApps = AppInfoService.url.developerAllApps {
+                                if let authorAllApps = AppInfo.url.developerAllApps {
                                     Link(destination: authorAllApps) {
                                         ZStack {
                                             RoundedRectangle(cornerRadius: 16, style: .continuous)
@@ -169,7 +172,7 @@ import SwiftUI
 
                 VStack(alignment: .center) {
                     #if os(iOS)
-                        if let appImage = AppInfoService.app.iconName {
+                        if let appImage = AppInfo.app.iconName {
                             Image(uiImage: UIImage(named: appImage) ?? UIImage())
                                 .resizable()
                                 .frame(width: 128, height: 128)
@@ -179,7 +182,7 @@ import SwiftUI
                         }
 
                     #endif
-                    if let appVersion = AppInfoService.app.verstion {
+                    if let appVersion = AppInfo.app.verstion {
                         Text(appVersion).multilineTextAlignment(.center)
                             .body()
                             .foregroundColor(.onBackgroundHighEmphasis)
@@ -197,9 +200,9 @@ import SwiftUI
                 Spacer()
 
                 VStack(alignment: .center) {
-                    if let authorLink = AppInfoService.url.developerTelegram {
+                    if let authorLink = AppInfo.url.developerTelegram {
                         Link(destination: authorLink) {
-                            if let developerName = AppInfoService.developer.name {
+                            if let developerName = AppInfo.developer.name {
                                 Text(developerName)
                                     .footnote()
                                     .foregroundColor(.onBackgroundDisabled)

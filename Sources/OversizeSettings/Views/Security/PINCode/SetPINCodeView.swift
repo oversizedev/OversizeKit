@@ -3,7 +3,8 @@
 // SetPINCodeView.swift
 //
 
-import OversizeCraft
+import OversizeLocalizable
+import OversizePINCode
 import OversizeUI
 import SwiftUI
 

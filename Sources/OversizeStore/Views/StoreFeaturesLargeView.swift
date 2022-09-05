@@ -3,12 +3,12 @@
 // StoreFeaturesLargeView.swift
 //
 
+import OversizeComponents
 import OversizeResources
 import OversizeServices
 import OversizeSettingsService
 import OversizeUI
 import SwiftUI
-import OversizeComponents
 
 struct StoreFeaturesLargeView: View {
     @EnvironmentObject var viewModel: StoreViewModel
@@ -31,7 +31,10 @@ struct StoreFeaturesLargeView: View {
             VStack(spacing: .zero) {
                 RoundedRectangle(cornerRadius: .medium, style: .continuous)
                     .fill(
-                        LinearGradient(gradient: Gradient(colors: [Color(hex: "637DFA"), Color(hex: "872BFF")]), startPoint: .topLeading, endPoint: .bottomTrailing)
+                        LinearGradient(gradient: Gradient(colors: [Color(hex: feature.backgroundColor != nil ? feature.backgroundColor : "637DFA"),
+                                                                   Color(hex: feature.backgroundColor != nil ? feature.backgroundColor : "872BFF")]),
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing)
                     )
                     .frame(height: 310)
                     .overlay(alignment: feature.topScreenAlignment ?? true ? .top : .bottom) {
@@ -67,7 +70,6 @@ struct StoreFeaturesLargeView: View {
     }
 
     func fetureItem(_ feature: StoreFeature) -> some View {
-
         VStack(spacing: .zero) {
             if let IllustrationURLPath = feature.illustrationURL {
                 AsyncImage(url: URL(string: IllustrationURLPath)) { image in
@@ -92,7 +94,9 @@ struct StoreFeaturesLargeView: View {
                     .padding(20)
                     .background {
                         Circle()
-                            .fill(Color.accent.opacity(0.2))
+                            .fill(
+                                backgroundColor(feature: feature).opacity(0.2)
+                            )
                     }
                     .padding(.bottom, .large)
 
@@ -105,25 +109,10 @@ struct StoreFeaturesLargeView: View {
                     .padding(20)
                     .background {
                         Circle()
-                            .fill(Color.accent.opacity(0.2))
+                            .fill(backgroundColor(feature: feature).opacity(0.2))
                     }
                     .padding(.bottom, .large)
             }
-            
-            
-            
-//            Image(resourceImage: feature.image ?? "")
-//                .resizable()
-//                .renderingMode(.template)
-//                .foregroundAccent()
-//                .frame(width: 48, height: 48)
-//                .padding(20)
-//                .background {
-//                    Circle()
-//                        .fillAccent()
-//                        .opacity(0.2)
-//                }
-//                .padding(.bottom, .large)
 
             VStack(spacing: .xSmall) {
                 Text(feature.title.valueOrEmpty)
@@ -136,6 +125,14 @@ struct StoreFeaturesLargeView: View {
             }
         }
         .padding(.vertical, .large)
+    }
+
+    func backgroundColor(feature: StoreFeature) -> Color {
+        if let color = feature.backgroundColor {
+            return Color(hex: color)
+        } else {
+            return Color.accent
+        }
     }
 }
 

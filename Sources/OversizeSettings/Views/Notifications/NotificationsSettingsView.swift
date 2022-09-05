@@ -3,18 +3,19 @@
 // NotificationsSettingsView.swift
 //
 
-import OversizeCraft
-import OversizePrivateServices
+import OversizeLocalizable
+import OversizeServices
+import OversizeSettingsService
 import OversizeUI
 import SwiftUI
 
 // swiftlint:disable line_length
 #if os(iOS)
     public struct NotificationsSettingsView: View {
-        @EnvironmentObject var settingsStore: SettingsService
         @Environment(\.presentationMode) var presentationMode
         @Environment(\.verticalSizeClass) private var verticalSizeClass
         @Environment(\.isPortrait) var isPortrait
+        @StateObject var settingsService = SettingsService()
         @State var offset = CGPoint(x: 0, y: 0)
 
         public var body: some View {
@@ -39,7 +40,7 @@ import SwiftUI
         private var soundsAndVibrations: some View {
             SectionView {
                 VStack(spacing: .zero) {
-                    Row(L10n.Settings.notifications, trallingType: .toggle(isOn: $settingsStore.notificationEnabled))
+                    Row(L10n.Settings.notifications, trallingType: .toggle(isOn: $settingsService.notificationEnabled))
                 }
             }
         }

@@ -8,6 +8,7 @@ import SwiftUI
 import OversizeComponents
 import OversizeLocalizable
 import OversizeResources
+import OversizeServices
 import OversizeSettingsService
 import OversizeStoreService
 import OversizeUI

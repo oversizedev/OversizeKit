@@ -3,20 +3,20 @@
 // iCloudSettingsView.swift
 //
 
-import OversizeCraft
-import OversizePrivateServices
-import OversizeStore
+import OversizeLocalizable
+import OversizeServices
+import OversizeSettingsService
+import OversizeStoreService
 import OversizeUI
 import SwiftUI
 
 // swiftlint:disable line_length type_name
 #if os(iOS)
     public struct iCloudSettingsView: View {
-        @EnvironmentObject var settingsStore: SettingsService
-        @EnvironmentObject var productsStore: StoreKitLegacyProductsService
         @Environment(\.presentationMode) var presentationMode
         @Environment(\.verticalSizeClass) private var verticalSizeClass
         @Environment(\.isPortrait) var isPortrait
+        @StateObject var settingsService = SettingsService()
         @State var offset = CGPoint(x: 0, y: 0)
 
         public var body: some View {
@@ -46,14 +46,14 @@ import SwiftUI
         private var soundsAndVibrations: some View {
             SectionView {
                 VStack(spacing: .zero) {
-                    Row(L10n.Settings.iCloudSync, trallingType: .toggle(isOn: $settingsStore.cloudKitEnabled))
+                    Row(L10n.Settings.iCloudSync, trallingType: .toggle(isOn: $settingsService.cloudKitEnabled))
                         .premium()
                         .onPremiumTap()
 
                     if FeatureFlags.secure.CVVCodes.valueOrFalse {
                         Row(L10n.Security.iCloudSyncCVV,
-                            subtitle: settingsStore.cloudKitCVVEnabled ? L10n.Security.iCloudSyncCVVDescriptionCloudKit : L10n.Security.iCloudSyncCVVDescriptionLocal,
-                            trallingType: .toggle(isOn: $settingsStore.cloudKitCVVEnabled))
+                            subtitle: settingsService.cloudKitCVVEnabled ? L10n.Security.iCloudSyncCVVDescriptionCloudKit : L10n.Security.iCloudSyncCVVDescriptionLocal,
+                            trallingType: .toggle(isOn: $settingsService.cloudKitCVVEnabled))
                             .premium()
                             .onPremiumTap()
                     }

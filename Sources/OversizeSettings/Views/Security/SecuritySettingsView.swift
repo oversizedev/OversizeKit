@@ -3,22 +3,24 @@
 // SecuritySettingsView.swift
 //
 
-import OversizeCraft
-import OversizePrivateServices
+import OversizeLocalizable
+import OversizeModules
+import OversizeSecurityService
+import OversizeServices
+import OversizeSettingsService
 import OversizeUI
 import SwiftUI
 
 // swiftlint:disable line_length
 #if os(iOS)
     public struct SecuritySettingsView: View {
-        @EnvironmentObject private var settingsStore: SettingsService
-        private var biometricService = BiometricService.shared
-
+        @Injected(\.biometricService) var biometricService
         @Environment(\.verticalSizeClass) private var verticalSizeClass
         @Environment(\.isPortrait) var isPortrait
         @Environment(\.presentationMode) var presentationMode
-        @State var offset = CGPoint(x: 0, y: 0)
+        @StateObject var settingsService = SettingsService()
 
+        @State var offset = CGPoint(x: 0, y: 0)
         @State var isSetPINCodeSheet: PINCodeAction?
 
         public init() {}
@@ -55,9 +57,9 @@ import SwiftUI
                     if FeatureFlags.secure.faceID.valueOrFalse, biometricService.checkIfBioMetricAvailable() {
                         Row(biometricService.biometricType.rawValue, leadingType: .systemImage(biometricImageName), trallingType: .toggle(isOn:
                             Binding(get: {
-                                settingsStore.biometricEnabled
+                                settingsService.biometricEnabled
                             }, set: {
-                                settingsStore.biometricChange($0)
+                                settingsService.biometricChange($0)
                             })))
                     }
 
@@ -66,10 +68,10 @@ import SwiftUI
                             leadingType: .icon(.lock),
                             trallingType: .toggle(isOn:
                                 Binding(get: {
-                                    settingsStore.pinCodeEnabend
+                                    settingsService.pinCodeEnabend
                                 }, set: {
-                                    if settingsStore.isSetedPinCode() {
-                                        settingsStore.pinCodeEnabend = $0
+                                    if settingsService.isSetedPinCode() {
+                                        settingsService.pinCodeEnabend = $0
                                     } else {
                                         isSetPINCodeSheet = .set
                                     }
@@ -78,7 +80,7 @@ import SwiftUI
                                 .systemServices()
                         }
 
-                        if settingsStore.isSetedPinCode() {
+                        if settingsService.isSetedPinCode() {
                             Row(L10n.Security.changePINCode, trallingType: .arrowIcon) {
                                 isSetPINCodeSheet = .update
                             }
@@ -128,7 +130,7 @@ import SwiftUI
 //                }
 
                     if FeatureFlags.secure.lookscreen.valueOrFalse {
-                        Row(L10n.Security.authHistory, trallingType: .toggle(isOn: $settingsStore.authHistoryEnabend))
+                        Row(L10n.Security.authHistory, trallingType: .toggle(isOn: $settingsService.authHistoryEnabend))
                             .premium()
                             .onPremiumTap()
                     }

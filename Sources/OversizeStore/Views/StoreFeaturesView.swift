@@ -20,17 +20,16 @@ struct StoreFeaturesView: View {
         Surface {
             VStack {
                 ForEach(features) { feature in
-                    
                     Row(feature.title.valueOrEmpty, subtitle: feature.subtitle.valueOrEmpty) {
                         selection = feature
                     }
                     .rowLeading(.imageOnSurface(feature.image != nil
-                                                ? Image(resourceImage: feature.image.valueOrEmpty)
-                                                : Icon.Solid.UserInterface.checkCrFr
-                                                , color: Color.onPrimaryHighEmphasis))
+                            ? Image(resourceImage: feature.image.valueOrEmpty)
+                            : Icon.Solid.UserInterface.checkCrFr,
+                        color: Color.onPrimaryHighEmphasis))
                     .rowTrailing(.arrowIcon)
+                    .rowIconBackgroundColor(backgroundColor(feature: feature))
                     .controlPadding(horizontal: .medium, vertical: .small)
-                    .accent()
                 }
             }
         }
@@ -42,6 +41,14 @@ struct StoreFeaturesView: View {
             StoreFeatureDetailView(selection: feature)
                 .environmentObject(viewModel)
                 .presentationDetents([.medium, .large])
+        }
+    }
+
+    func backgroundColor(feature: StoreFeature) -> Color {
+        if let color = feature.backgroundColor {
+            return Color(hex: color)
+        } else {
+            return Color.accent
         }
     }
 }

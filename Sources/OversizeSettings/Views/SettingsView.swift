@@ -3,26 +3,29 @@
 // SettingsView.swift
 //
 
+import OversizeLocalizable
+import OversizeResources
 import OversizeServices
+import OversizeSettingsService
 import OversizeStore
+import OversizeStoreService
 import OversizeUI
 import SwiftUI
 
 // swiftlint:disable line_length
 #if os(iOS)
     public struct SettingsView<AppSection: View, HeadSection: View>: View {
-        let appSection: AppSection
-        let headSection: HeadSection
-
-        @State var offset = CGPoint(x: 0, y: 0)
         @Environment(\.horizontalSizeClass) private var horizontalSizeClass
         @Environment(\.verticalSizeClass) private var verticalSizeClass
         @Environment(\.presentationMode) var presentationMode
         @Environment(\.theme) var theme: ThemeSettings
-        @EnvironmentObject var settingsStore: SettingsService
+        @StateObject var settingsService = SettingsService()
         @EnvironmentObject var hudState: HUD
-        @EnvironmentObject var productsStore: StoreKitLegacyProductsService
 
+        let appSection: AppSection
+        let headSection: HeadSection
+
+        @State private var offset = CGPoint(x: 0, y: 0)
         @State private var isPortrait = false
 
         var rowType: RowTrailingType? {
@@ -176,7 +179,7 @@ import SwiftUI
         private var help: some View {
             SectionView(L10n.Settings.supportSection) {
                 VStack(alignment: .leading) {
-                    if let reviewUrl = AppInfoService.url.appStoreReview, let id = AppInfoService.app.appStoreID, !id.isEmpty {
+                    if let reviewUrl = AppInfo.url.appStoreReview, let id = AppInfo.app.appStoreID, !id.isEmpty {
                         Link(destination: reviewUrl) {
                             Row(L10n.Settings.feedbakAppStore, leadingType: .image(Icon.Plumpy.heart), trallingType: rowType)
                         }
@@ -184,7 +187,7 @@ import SwiftUI
                     }
 
                     // Send author
-                    if let sendMailUrl = AppInfoService.url.developerSendMail { // , let mail = InfoStore.app.mail, !mail.isEmpty {
+                    if let sendMailUrl = AppInfo.url.developerSendMail { // , let mail = InfoStore.app.mail, !mail.isEmpty {
                         Link(destination: sendMailUrl) {
                             Row(L10n.Settings.feedbakAuthor, leadingType: .image(Icon.Plumpy.message), trallingType: rowType)
                         }
@@ -192,7 +195,7 @@ import SwiftUI
                     }
 
                     // Telegramm chat
-                    if let telegramChatUrl = AppInfoService.url.appTelegramChat, let id = AppInfoService.app.telegramChatID, !id.isEmpty {
+                    if let telegramChatUrl = AppInfo.url.appTelegramChat, let id = AppInfo.app.telegramChatID, !id.isEmpty {
                         Link(destination: telegramChatUrl) {
                             Row(L10n.Settings.telegramChat, leadingType: .image(Icon.Plumpy.send), trallingType: rowType)
                         }
