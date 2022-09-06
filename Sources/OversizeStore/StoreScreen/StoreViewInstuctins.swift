@@ -229,20 +229,20 @@ public struct StoreViewInstuctins: View {
     @ViewBuilder
     func productsLust(data: StoreKitProducts) -> some View {
         VStack(spacing: .small) {
-            VStack {
-                if let currentSubscription = viewModel.currentSubscription {
-                    VStack {
-                        Text("My Subscription")
-
-                        StoreProductView(product: currentSubscription, products: data) {}
-
-                        if let status = viewModel.status {
-                            StatusInfoView(product: currentSubscription, status: status, products: data)
-                        }
-                    }
-                    .listStyle(GroupedListStyle())
-                }
-            }
+//            VStack {
+//                if let currentSubscription = viewModel.currentSubscription {
+//                    VStack {
+//                        Text("My Subscription")
+//
+//                        StoreProductView(product: currentSubscription, products: data) {}
+//
+//                        if let status = viewModel.status {
+//                            StatusInfoView(product: currentSubscription, status: status, products: data)
+//                        }
+//                    }
+//                    .listStyle(GroupedListStyle())
+//                }
+//            }
 
             ForEach(viewModel.availableSubscriptions) { product in
                 StoreProductView(product: product, products: data, isSelected: .constant(false)) {

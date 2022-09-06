@@ -4,53 +4,44 @@
 //
 
 import OversizeLocalizable
+import OversizeModules
 import OversizeResources
 import OversizeServices
 import OversizeSettingsService
-import OversizeModules
+import OversizeStoreService
 import OversizeUI
 import SwiftUI
 
 // swiftlint:disable all
 public struct PrmiumBannerRow: View {
     @Environment(\.colorScheme) var colorScheme
-    @Environment(\.isPremium) var isPremium
-    
+    @StateObject private var viewModel: StoreViewModel
+
     @State var showModal = false
-    
-    public init() {}
+
+    public init() {
+        _viewModel = StateObject(wrappedValue: StoreViewModel())
+    }
 
     public var body: some View {
         VStack {
-            if isPremium {
-                if let reviewUrl = URL(string: "itms-apps://apps.apple.com/account/subscriptions") {
-                    if isPremium {
-                        Button {
-                            self.showModal = true
-                        } label: {
-                            subscriptionRow
-                        }.buttonStyle(.row)
-
-                    } else {
-                        Link(destination: reviewUrl) {
-                            subscriptionRow
-
-                        }.buttonStyle(.row)
-                    }
-                }
-            } else {
-                Button(action: {
-                    showModal = true
-                }) {
+            NavigationLink {
+                StoreView()
+                    .closable(false)
+            } label: {
+                if viewModel.isPremium || viewModel.isPremiumActivated {
+                    subscriptionRow
+                } else {
                     banner
                 }
-
             }
+            .buttonStyle(.row)
         }
-        .sheet(isPresented: $showModal) {
-            StoreView()
-                .systemServices()
-                .colorScheme(colorScheme)
+        .task {
+            await viewModel.fetchData()
+            if case let .result(products) = self.viewModel.state {
+                await viewModel.updateState(products: products)
+            }
         }
     }
 
@@ -86,12 +77,12 @@ public struct PrmiumBannerRow: View {
             Spacer()
 
             HStack(spacing: .small) {
-                Text(isPremium ? L10n.Store.expired : L10n.Store.active)
+                Text(viewModel.subsribtionStatusText)
                     .headline()
                     .foregroundColor(.onSurfaceMediumEmphasis)
 
                 Circle()
-                    .foregroundColor(isPremium ? .error : .success)
+                    .foregroundColor(viewModel.subsribtionStatusColor)
                     .frame(width: 8, height: 8)
             }
 
@@ -108,10 +99,8 @@ public extension PrmiumBannerRow {
             Spacer()
 
             VStack {
-                
-                
-                /*PremiumLabel(text: AppInfo.store.subscriptionsName, size: .medium)
-                    .monochrom()*/
+                /* PremiumLabel(text: AppInfo.store.subscriptionsName, size: .medium)
+                 .monochrom() */
                 HStack {
                     HStack(alignment: .center, spacing: Space.xxSmall) {
                         #if os(iOS)

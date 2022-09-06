@@ -3,6 +3,8 @@
 // StoreViewModel.swift
 //
 
+import OversizeCore
+import OversizeLocalizable
 import OversizeServices
 import OversizeStoreService
 import StoreKit
@@ -21,6 +23,7 @@ class StoreViewModel: ObservableObject {
     @Published var selectedProduct: Product?
 
     @AppStorage("AppState.PremiumState") var isPremium: Bool = false
+    @AppStorage("AppState.PremiumActivated") var isPremiumActivated: Bool = false
 
     var availableSubscriptions: [Product] {
         if case let .result(products) = state {
@@ -43,6 +46,61 @@ class StoreViewModel: ObservableObject {
 // MARK: - Descriptions
 
 extension StoreViewModel {
+    var subsribtionStatusText: String {
+        guard case let .result(products) = state else { return "" }
+        if !products.purchasedNonConsumable.isEmpty {
+            return "Lifetime"
+        }
+        guard let subscriptionStatus = products.subscriptionGroupStatus else { return "" }
+        switch subscriptionStatus {
+        case .subscribed: return L10n.Store.active
+        case .revoked:
+            if #available(iOS 15.4, *) {
+                return subscriptionStatus.localizedDescription
+            } else {
+                return "Revoked"
+            }
+        case .expired:
+            if #available(iOS 15.4, *) {
+                return subscriptionStatus.localizedDescription
+            } else {
+                return "Expired"
+            }
+        case .inBillingRetryPeriod:
+            if #available(iOS 15.4, *) {
+                return subscriptionStatus.localizedDescription
+            } else {
+                return "Billing retry"
+            }
+        case .inGracePeriod:
+            if #available(iOS 15.4, *) {
+                return subscriptionStatus.localizedDescription
+            } else {
+                return "Grace period"
+            }
+        default:
+            if #available(iOS 15.4, *) {
+                return subscriptionStatus.localizedDescription
+            } else {
+                return ""
+            }
+        }
+    }
+
+    var subsribtionStatusColor: Color {
+        guard case let .result(products) = state else { return .yellow }
+        if !products.nonConsumable.isEmpty { return .green }
+        guard let subscriptionStatus = products.subscriptionGroupStatus else { return .red }
+        switch subscriptionStatus {
+        case .subscribed: return .green
+        case .revoked: return .red
+        case .expired: return .red
+        case .inBillingRetryPeriod: return .yellow
+        case .inGracePeriod: return .yellow
+        default: return .gray
+        }
+    }
+
     var monthSubscriptionProduct: Product? {
         guard case let .result(products) = state else { return nil }
         return products.autoRenewable.first(where: { $0.subscription?.subscriptionPeriod.unit == .month })
@@ -132,7 +190,7 @@ extension StoreViewModel {
                     await transaction.finish()
                 } catch {
                     // StoreKit has a transaction that fails verification. Don't deliver content to the user.
-                    print("Transaction failed verification")
+                    log("Transaction failed verification")
                 }
             }
         }
@@ -192,7 +250,7 @@ extension StoreViewModel {
             status = highestStatus
             currentSubscription = highestProduct
         } catch {
-            print("Could not update subscription status \(error)")
+            log("Could not update subscription status \(error)")
         }
     }
 
@@ -201,18 +259,17 @@ extension StoreViewModel {
             let result = try await storeKitService.purchase(product)
             switch result {
             case .success:
-
                 isPremium = true
+                isPremiumActivated = true
                 return true
             case .failure:
                 return false
             }
-
         } catch StoreError.failedVerification {
             state = .error(.custom(title: "Your purchase could not be verified by the App Store."))
             return false
         } catch {
-            print("Failed purchase for \(product.id): \(error)")
+            log("Failed purchase for \(product.id): \(error)")
             return false
         }
     }
@@ -226,9 +283,7 @@ extension StoreViewModel {
 
         switch products {
         case let .success(preProducts):
-            print("✅ Product preProducts")
-            // print(preProducts)
-
+            log("✅ Product preProducts")
             let result = await storeKitService.updateCustomerProductStatus(products: preProducts)
             switch result {
             case let .success(finalProducts):
@@ -236,51 +291,16 @@ extension StoreViewModel {
                     selectedProduct = yarlyProduct
                 }
                 state = .result(finalProducts)
-                print("✅ Product updateCustomerProductStatus")
-            // print(finalProducts)
+                log("✅ Product updateCustomerProductStatus")
+            // log(finalProducts)
             case let .failure(error):
                 state = .error(error)
-                print("❌ Product not fetched (\(error.title))")
+                log("❌ Product not fetched (\(error.title))")
             }
 
         case let .failure(error):
             state = .error(error)
         }
-        /*
-         let result = await storeKitService.fetch()
-         switch result {
-         case let .success(data):
-             #if DEBUG
-             print("✅ Product fetched")
-             #endif
-             state = .result(data)
-         case let .failure(error):
-             #if DEBUG
-             print("❌ Product not fetched (\(error.title))")
-             #endif
-             state = .error(error)
-         }
-         */
-    }
-
-    func save() async -> Result<Product, AppError> {
-        /*
-         let item = Product()
-         let result = await storeKitService.save(item)
-         switch result {
-         case let .success(data):
-             #if DEBUG
-             print("✅ Product saved")
-             #endif
-             return .success(data)
-         case let .failure(error):
-             #if DEBUG
-             print("❌ Product not saved (\(error.title))")
-             #endif
-             return .failure(error)
-         }
-         */
-        .failure(.network(type: .unknown))
     }
 }
 
@@ -290,3 +310,115 @@ enum StoreViewModelState {
     case result(StoreKitProducts)
     case error(AppError)
 }
+
+extension Date {
+    func formattedDate() -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM dd, yyyy"
+        return dateFormatter.string(from: self)
+    }
+}
+
+/*
+ // MARK: - StoreKit status
+ extension StoreViewModel {
+     var statusDescription: String {
+
+         guard case .verified(let renewalInfo) = status?.renewalInfo,
+               case .verified(let transaction) = status?.transaction else {
+             return "The App Store could not verify your subscription status."
+         }
+
+         guard let status = status else { return "" }
+
+         guard let product = currentSubscription else { return "" }
+         var description = ""
+
+         switch status.state {
+         case .subscribed:
+             description = subscribedDescription(product: product)
+         case .expired:
+             if let expirationDate = transaction.expirationDate,
+                let expirationReason = renewalInfo.expirationReason {
+                 description = expirationDescription(expirationReason, expirationDate: expirationDate, product: product)
+             }
+         case .revoked:
+             if let revokedDate = transaction.revocationDate {
+                 description = "The App Store refunded your subscription to \(product.displayName) on \(revokedDate.formattedDate())."
+             }
+         case .inGracePeriod:
+             description = gracePeriodDescription(renewalInfo, product: product)
+         case .inBillingRetryPeriod:
+             description = billingRetryDescription(product: product)
+         default:
+             break
+         }
+
+         if let expirationDate = transaction.expirationDate {
+             description += renewalDescription(renewalInfo, expirationDate, product: product)
+         }
+         return description
+     }
+
+     fileprivate func subscribedDescription(product: Product) -> String {
+         return "You are currently subscribed to \(product.displayName)."
+     }
+
+     //Build a string description of the `expirationReason` to display to the user.
+     fileprivate func expirationDescription(_ expirationReason: RenewalInfo.ExpirationReason, expirationDate: Date, product: Product) -> String {
+         var description = ""
+
+         switch expirationReason {
+         case .autoRenewDisabled:
+             if expirationDate > Date() {
+                 description += "Your subscription to \(product.displayName) will expire on \(expirationDate.formattedDate())."
+             } else {
+                 description += "Your subscription to \(product.displayName) expired on \(expirationDate.formattedDate())."
+             }
+         case .billingError:
+             description = "Your subscription to \(product.displayName) was not renewed due to a billing error."
+         case .didNotConsentToPriceIncrease:
+             description = "Your subscription to \(product.displayName) was not renewed due to a price increase that you disapproved."
+         case .productUnavailable:
+             description = "Your subscription to \(product.displayName) was not renewed because the product is no longer available."
+         default:
+             description = "Your subscription to \(product.displayName) was not renewed."
+         }
+
+         return description
+     }
+
+     fileprivate func renewalDescription(_ renewalInfo: RenewalInfo, _ expirationDate: Date, product: Product) -> String {
+         guard case let .result(products) = state else { return "" }
+
+         var description = ""
+
+         if let newProductID = renewalInfo.autoRenewPreference {
+             if let newProduct = products.autoRenewable.first(where: { $0.id == newProductID }) {
+                 description += "\nYour subscription to \(newProduct.displayName)"
+                 description += " will begin when your current subscription expires on \(expirationDate.formattedDate())."
+             }
+         } else if renewalInfo.willAutoRenew {
+             description += "\nNext billing date: \(expirationDate.formattedDate())."
+         }
+
+         return description
+     }
+
+     fileprivate func gracePeriodDescription(_ renewalInfo: RenewalInfo, product: Product) -> String {
+         var description = "The App Store could not confirm your billing information for \(product.displayName)."
+         if let untilDate = renewalInfo.gracePeriodExpirationDate {
+             description += " Please verify your billing information to continue service after \(untilDate.formattedDate())"
+         }
+
+         return description
+     }
+
+     fileprivate func billingRetryDescription(product: Product) -> String {
+         var description = "The App Store could not confirm your billing information for \(product.displayName)."
+         description += " Please verify your billing information to resume service."
+         return description
+     }
+
+ }
+ */

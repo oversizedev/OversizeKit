@@ -3,6 +3,7 @@
 // SetPINCodeViewModel.swift
 //
 
+import OversizeCore
 import OversizeLocalizable
 import OversizePINCode
 import OversizeSecurityService
@@ -79,7 +80,7 @@ public final class SetPINCodeViewModel: ObservableObject {
                     self.settingsStore.pinCodeEnabend = true
                     completion(true)
                     TapticEngine.success.vibrate()
-                    print("PIN Code saved")
+                    log("PIN Code saved")
                     return
                 case false:
                     self.errorText = "Save error"

@@ -1,6 +1,6 @@
 //
 // Copyright © 2022 Alexander Romanov
-// Fireworks.swift
+// FireworksBubbles.swift
 //
 
 import OversizeCore
@@ -24,7 +24,7 @@ struct FireworkParticlesGeometryEffect: GeometryEffect {
     }
 }
 
-struct ParticlesModifier: ViewModifier {
+struct ParticlesBubblesModifier: ViewModifier {
     @State var time = 0.0
     @State var scale = 0.3
     let duration = Double.random(in: 3.0 ... 7.0)
@@ -33,7 +33,7 @@ struct ParticlesModifier: ViewModifier {
         ZStack {
             ForEach(0 ..< 20, id: \.self) { _ in
                 content
-                    // .hueRotation(Angle(degrees: time * 80))
+                    .hueRotation(Angle(degrees: time * 80))
                     .scaleEffect(scale)
                     .modifier(FireworkParticlesGeometryEffect(time: time))
                     .opacity((duration - time) / duration)
@@ -47,7 +47,7 @@ struct ParticlesModifier: ViewModifier {
     }
 }
 
-struct Fireworks: View {
+struct FireworksBubbles: View {
     @State var scaling: Bool = false
 
     var body: some View {
@@ -56,10 +56,29 @@ struct Fireworks: View {
                 Circle()
                     .fill(Color.onPrimaryDisabled)
                     .frame(width: 30, height: 30)
-                    .modifier(ParticlesModifier())
+                    .modifier(ParticlesBubblesModifier())
                     .offset(x: CGFloat.random(in: -200 ... 200), y: CGFloat.random(in: -200 ... 200))
             }
             .zIndex(2)
+        }
+        .onAppear {
+            scaling.toggle()
+        }
+    }
+}
+
+struct Fireworks: View {
+    @State var scaling: Bool = false
+
+    var body: some View {
+        ZStack {
+            ForEach(0 ..< Int.random(in: 10 ... 20), id: \.self) { _ in
+                Circle()
+                    .fill(Color.blue)
+                    .frame(width: 12, height: 12)
+                    .modifier(ParticlesBubblesModifier())
+                    .offset(x: CGFloat.random(in: -200 ... 200), y: CGFloat.random(in: -200 ... 200))
+            }
         }
         .onAppear {
             scaling.toggle()

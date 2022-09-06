@@ -26,6 +26,7 @@ let package = Package(
         .package(name: "OversizeComponents", path: "../OversizeComponents"),
         .package(url: "https://github.com/SDWebImage/SDWebImageSwiftUI.git", from: "2.0.2"),
         .package(url: "https://github.com/SDWebImage/SDWebImageSVGCoder.git", from: "1.6.1"),
+        .package(name: "OversizeResources", path: "../OversizeResources"),
     ],
     targets: [
         .target(
@@ -52,6 +53,7 @@ let package = Package(
                 .product(name: "OversizeSecurityService", package: "OversizeServices"),
                 .product(name: "OversizeSettingsService", package: "OversizeServices"),
                 .product(name: "OversizeStoreService", package: "OversizeServices"),
+                .product(name: "OversizeCore", package: "OversizeCore"),
             ]
         ),
         .target(
@@ -60,6 +62,7 @@ let package = Package(
                 .product(name: "OversizeUI", package: "OversizeUI"),
                 .product(name: "OversizeServices", package: "OversizeServices"),
                 .product(name: "OversizeSecurityService", package: "OversizeServices"),
+                .product(name: "OversizeCore", package: "OversizeCore"),
             ]
         ),
         .target(
@@ -70,6 +73,8 @@ let package = Package(
                 .product(name: "OversizeServices", package: "OversizeServices"),
                 .product(name: "OversizeStoreService", package: "OversizeServices"),
                 .product(name: "OversizeComponents", package: "OversizeComponents"),
+                .product(name: "OversizeResources", package: "OversizeResources"),
+                .product(name: "OversizeCore", package: "OversizeCore"),
             ]
         ),
         .target(
@@ -85,6 +90,7 @@ let package = Package(
                 .product(name: "OversizeSettingsService", package: "OversizeServices"),
                 .product(name: "OversizeStoreService", package: "OversizeServices"),
                 .product(name: "OversizeLocalizable", package: "OversizeLocalizable"),
+                .product(name: "OversizeResources", package: "OversizeResources"),
             ]
         ),
         .testTarget(

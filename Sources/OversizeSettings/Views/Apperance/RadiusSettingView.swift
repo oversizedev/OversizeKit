@@ -9,10 +9,16 @@ import SwiftUI
 struct RadiusSettingView: View {
     @Environment(\.theme) private var theme: ThemeSettings
 
-    @State var offset = CGPoint(x: 0, y: 0)
+    public init() {}
 
     public var body: some View {
-        settings
+        PageView("Radius") {
+            settings
+        }
+        .leadingBar {
+            BarButton(type: .back)
+        }
+        .backgroundSecondary()
     }
 
     private var settings: some View {
@@ -46,14 +52,12 @@ struct RadiusSettingView: View {
 
             Spacer()
         }
-
-        .navigationBar("Radius", style: .fixed($offset)) {
-            BarButton(type: .back)
-        } trailingBar: {} bottomBar: {}
-
-        .background(Color.backgroundSecondary.ignoresSafeArea(.all))
-        .preferredColorScheme(theme.appearance.colorScheme)
-        .animation(.easeIn(duration: 0.2))
+//        .navigationBar("Radius", style: .fixed($offset)) {
+//            BarButton(type: .back)
+//        } trailingBar: {} bottomBar: {}
+//        .background(Color.backgroundSecondary.ignoresSafeArea(.all))
+//        .preferredColorScheme(theme.appearance.colorScheme)
+//        .animation(.easeIn(duration: 0.2))
     }
 }
 

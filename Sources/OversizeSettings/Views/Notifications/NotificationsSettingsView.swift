@@ -19,20 +19,17 @@ import SwiftUI
         @State var offset = CGPoint(x: 0, y: 0)
 
         public var body: some View {
-            iOSSettings
-                .navigationBarHidden(true)
-        }
-    }
-
-    extension NotificationsSettingsView {
-        private var iOSSettings: some View {
-            VStack(alignment: .center, spacing: 0) {
+            PageView(L10n.Settings.notifications) {
                 soundsAndVibrations
             }
-            .scrollWithNavigationBar(L10n.Settings.notifications, style: .fixed($offset), background: Color.backgroundSecondary) {
-                BarButton(type: .backAction(action: { presentationMode.wrappedValue.dismiss() }))
-            } trailingBar: {} bottomBar: {}
-            .background(Color.backgroundSecondary.ignoresSafeArea(.all))
+            .leadingBar {
+                if !isPortrait, verticalSizeClass == .regular {
+                    EmptyView()
+                } else {
+                    BarButton(type: .back)
+                }
+            }
+            .backgroundSecondary()
         }
     }
 

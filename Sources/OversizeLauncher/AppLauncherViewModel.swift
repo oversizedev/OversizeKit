@@ -6,6 +6,7 @@
 #if os(iOS)
     import LocalAuthentication
 #endif
+import OversizeCore
 import OversizePINCode
 import OversizeSecurityService
 import OversizeServices
@@ -13,6 +14,7 @@ import OversizeStoreService
 import OversizeUI
 import SwiftUI
 
+@MainActor
 public final class AppLauncherViewModel: ObservableObject {
     @Injected(\.biometricService) var biometricService
     @Injected(\.appStateService) var appStateService
@@ -21,6 +23,7 @@ public final class AppLauncherViewModel: ObservableObject {
     @Injected(\.storeKitService) private var storeKitService: StoreKitService
 
     @AppStorage("AppState.PremiumState") var isPremium: Bool = false
+    @AppStorage("AppState.SubscriptionsState") var subscriptionsState: RenewalState = .expired
     @Published public var pinCodeField: String = ""
     @Published public var authState: PINCodeViewState = .locked
     @Published var activeFullScreenSheet: FullScreenSheet?
@@ -40,11 +43,16 @@ extension AppLauncherViewModel {
 // Lockscreen
 public extension AppLauncherViewModel {
     func checkPremium() {
-        print("Check premium...")
         Task {
-            let status = await storeKitService.fetchPremiumStatus()
-            isPremium = status
-            print("Status: \(status ? "Premium" : "Not premium")")
+            let status = await storeKitService.fetchPremiumAndSubscriptionsStatus()
+            isPremium = status.0
+            log("\(status.0 ? "👑 Premium status" : "🆓 Free status")")
+            if let subscriptionStatus = status.1 {
+                if #available(iOS 15.4, *) {
+                    log("📝 Subscription: \(subscriptionStatus.localizedDescription)")
+                }
+                subscriptionsState = subscriptionStatus
+            }
         }
     }
 
@@ -62,21 +70,15 @@ public extension AppLauncherViewModel {
     }
 
     func appLockValidation() {
-        let reason = "Auth in app"
-        #if os(iOS)
-            biometricService.authenticating(reason: reason) { [weak self] authenticate in
-                switch authenticate {
-                case true:
-                    DispatchQueue.main.async {
-                        self?.authState = .unlocked
-                    }
-                case false:
-                    DispatchQueue.main.async {
-                        self?.authState = .error
-                    }
-                }
+        Task {
+            let reason = "Auth in app"
+            let authenticate = await biometricService.authenticating(reason: reason)
+            if authenticate {
+                authState = .unlocked
+            } else {
+                authState = .error
             }
-        #endif
+        }
     }
 
     func checkOnboarding() {

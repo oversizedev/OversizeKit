@@ -39,7 +39,7 @@ struct StoreFeaturesLargeView: View {
                     .frame(height: 310)
                     .overlay(alignment: feature.topScreenAlignment ?? true ? .top : .bottom) {
                         ZStack {
-                            Fireworks()
+                            FireworksBubbles()
 
                             if let urlString = feature.screenURL, let url = URL(string: urlString) {
                                 ScreenMockup(url: url)

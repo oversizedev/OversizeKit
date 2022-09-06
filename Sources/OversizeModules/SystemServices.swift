@@ -58,7 +58,7 @@ public struct SystemServicesModifier: ViewModifier {
 //                        blurRadius = 10
 //                    }
 //                @unknown default:
-//                    print("unknown")
+//                    log("unknown")
 //                }
 //            })
 

@@ -13,8 +13,12 @@ import OversizeUI
 import SwiftUI
 
 public struct StoreView: View {
-    @StateObject var viewModel: StoreViewModel
-    @Environment(\.presentationMode) var presentationMode
+    @StateObject private var viewModel: StoreViewModel
+    @Environment(\.presentationMode) private var presentationMode
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+    @Environment(\.isPortrait) private var isPortrait
+    private var isClosable = true
+    @State var isShowFireworks = false
 
     public init() {
         _viewModel = StateObject(wrappedValue: StoreViewModel())
@@ -47,32 +51,51 @@ public struct StoreView: View {
         }
     }
 
+    var titleText: String {
+        if viewModel.isPremium {
+            return "You are all set!"
+        } else {
+            return "Upgrade to \(AppInfo.store.subscriptionsName)"
+        }
+    }
+
+    var subtitleText: String {
+        if viewModel.isPremium {
+            return "Thank you for use to \(AppInfo.store.subscriptionsName).\nHere's what is now unlocked."
+        } else {
+            return "Remove ads and unlock all features"
+        }
+    }
+
     @ViewBuilder
     private func content(data: StoreKitProducts) -> some View {
-        PageView("") {
+        PageView {
             VStack(spacing: .medium) {
                 VStack(spacing: .xxSmall) {
-                    Text("Upgrade to \(AppInfo.store.subscriptionsName)")
+                    Text(titleText)
                         .title()
                         .foregroundColor(.onSurfaceHighEmphasis)
 
-                    Text("Remove ads and unlock all features")
+                    Text(subtitleText)
                         .headline()
                         .foregroundColor(.onSurfaceMediumEmphasis)
                 }
+                .multilineTextAlignment(.center)
 
-                HStack(spacing: .xSmall) {
-                    ForEach(viewModel.availableSubscriptions /* data.autoRenewable */ ) { product in
-                        StoreProductView(product: product, products: data, isSelected: .constant(viewModel.selectedProduct == product)) {
-                            viewModel.selectedProduct = product
+                if !viewModel.isPremium {
+                    HStack(spacing: .xSmall) {
+                        ForEach(viewModel.availableSubscriptions /* data.autoRenewable */ ) { product in
+                            StoreProductView(product: product, products: data, isSelected: .constant(viewModel.selectedProduct == product)) {
+                                viewModel.selectedProduct = product
+                            }
+                            .storeProductStyle(.collumn)
                         }
-                        .storeProductStyle(.collumn)
-                    }
-                    ForEach(data.nonConsumable) { product in
-                        StoreProductView(product: product, products: data, isSelected: .constant(viewModel.selectedProduct == product)) {
-                            viewModel.selectedProduct = product
+                        ForEach(data.nonConsumable) { product in
+                            StoreProductView(product: product, products: data, isSelected: .constant(viewModel.selectedProduct == product)) {
+                                viewModel.selectedProduct = product
+                            }
+                            .storeProductStyle(.collumn)
                         }
-                        .storeProductStyle(.collumn)
                     }
                 }
 
@@ -81,21 +104,40 @@ public struct StoreView: View {
 
                 SubscriptionPrivacyView(products: data)
 
-                productsLust(data: data)
-                    .padding(.bottom, 170)
+                if !viewModel.isPremium {
+                    productsLust(data: data)
+                        .padding(.bottom, 170)
+                }
             }
+
             .paddingContent(.horizontal)
         }
         .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
         .titleLabel {
             PremiumLabel(image: Resource.Store.zap, text: AppInfo.store.subscriptionsName, size: .medium)
         }
+        .leadingBar {
+            if !isPortrait, verticalSizeClass == .regular, !isClosable {
+                EmptyView()
+            } else {
+                BarButton(type: .back)
+            }
+        }
         .trailingBar {
-            BarButton(type: .close)
+            if isClosable {
+                BarButton(type: .close)
+            }
         }
         .bottomToolbar(style: .none, ignoreSafeArea: false) {
-            StorePaymentButtonBar()
-                .environmentObject(viewModel)
+            if !viewModel.isPremium {
+                StorePaymentButtonBar()
+                    .environmentObject(viewModel)
+            }
+        }
+        .overlay {
+            if isShowFireworks {
+                Fireworks()
+            }
         }
         .onAppear {
             Task {
@@ -109,25 +151,31 @@ public struct StoreView: View {
                 await viewModel.updateSubscriptionStatus(products: data)
             }
         }
+        .onChange(of: viewModel.isPremium) { newValue in
+            isShowFireworks = newValue
+            DispatchQueue.main.asyncAfter(deadline: .now() + 30) {
+                isShowFireworks = false
+            }
+        }
     }
 
     @ViewBuilder
     private func productsLust(data: StoreKitProducts) -> some View {
         VStack(spacing: .small) {
-            VStack {
-                if let currentSubscription = viewModel.currentSubscription {
-                    VStack {
-                        Text("My Subscription")
-
-                        StoreProductView(product: currentSubscription, products: data) {}
-
-                        if let status = viewModel.status {
-                            StatusInfoView(product: currentSubscription, status: status, products: data)
-                        }
-                    }
-                    .listStyle(GroupedListStyle())
-                }
-            }
+//            VStack {
+//                if let currentSubscription = viewModel.currentSubscription {
+//                    VStack {
+//                        Text("My Subscription")
+//
+//                        StoreProductView(product: currentSubscription, products: data) {}
+//
+//                        if let status = viewModel.status {
+//                            StatusInfoView(product: currentSubscription, status: status, products: data)
+//                        }
+//                    }
+//                    .listStyle(GroupedListStyle())
+//                }
+//            }
 
             ForEach(viewModel.availableSubscriptions /* data.autoRenewable */ ) { product in
                 StoreProductView(product: product, products: data, isSelected: .constant(viewModel.selectedProduct == product)) {
@@ -146,6 +194,12 @@ public struct StoreView: View {
                 }
             }
         }
+    }
+
+    public func closable(_ isClosable: Bool = true) -> StoreView {
+        var control = self
+        control.isClosable = isClosable
+        return control
     }
 }
 

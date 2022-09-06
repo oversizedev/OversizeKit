@@ -8,12 +8,21 @@ import SwiftUI
 
 public struct BorderSettingView: View {
     @Environment(\.theme) private var theme: ThemeSettings
-    @State var offset = CGPoint(x: 0, y: 0)
 
     public init() {}
 
     public var body: some View {
-        settings
+        PageView("Borders in app") {
+            settings
+        }
+        .leadingBar {
+            // if !isPortrait, verticalSizeClass == .regular {
+            //    EmptyView()
+            // } else {
+            BarButton(type: .back)
+            // }
+        }
+        .backgroundSecondary()
     }
 
     private var settings: some View {
@@ -80,15 +89,13 @@ public struct BorderSettingView: View {
                     }
                 }
             }
-
-            Spacer()
         }
-        .navigationBar("Border", style: .fixed($offset)) {
-            BarButton(type: .back)
-        } trailingBar: {} bottomBar: {}
-        .background(Color.backgroundSecondary.ignoresSafeArea(.all))
-        .preferredColorScheme(theme.appearance.colorScheme)
-        .animation(.easeIn(duration: 0.2))
+//        .navigationBar("Border", style: .fixed($offset)) {
+//            BarButton(type: .back)
+//        } trailingBar: {} bottomBar: {}
+//        .background(Color.backgroundSecondary.ignoresSafeArea(.all))
+//        .preferredColorScheme(theme.appearance.colorScheme)
+//        .animation(.easeIn(duration: 0.2))
     }
 }
 

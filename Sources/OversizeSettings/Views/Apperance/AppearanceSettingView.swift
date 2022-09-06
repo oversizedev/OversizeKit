@@ -3,6 +3,8 @@
 // AppearanceSettingView.swift
 //
 
+import OversizeCore
+import OversizeResources
 import OversizeUI
 import SwiftUI
 
@@ -12,28 +14,26 @@ import SwiftUI
         @Environment(\.presentationMode) var presentationMode
         @Environment(\.theme) private var theme: ThemeSettings
         @Environment(\.isPortrait) var isPortrait
-
-        public init() {}
+        @Environment(\.iconStyle) var iconStyle: IconStyle
 
         #if os(iOS)
             @StateObject var iconSettings = AppIconSettings()
         #endif
 
         // swiftlint:disable trailing_comma
+
+        @State var offset = CGPoint(x: 0, y: 0)
+        @State var pageDestenation: Destenation?
         private let columns = [
             GridItem(.adaptive(minimum: 78)),
         ]
-
-        @State var offset = CGPoint(x: 0, y: 0)
-
         enum Destenation {
             case font
             case border
             case radius
         }
 
-        @State var pageDestenation: Destenation?
-
+        public init() {}
         public var body: some View {
             #if os(iOS)
                 PageView("App") {
@@ -152,9 +152,9 @@ import SwiftUI
                                             // swiftlint:disable line_length
                                             UIApplication.shared.setAlternateIconName(self.iconSettings.iconNames[index]) { error in
                                                 if let error = error {
-                                                    print(error.localizedDescription)
+                                                    log(error.localizedDescription)
                                                 } else {
-                                                    print("Success! You have changed the app icon.")
+                                                    log("Success! You have changed the app icon.")
                                                 }
                                             }
                                         }
@@ -184,12 +184,12 @@ import SwiftUI
                                    selection: $pageDestenation) { EmptyView() }
 
                     VStack(spacing: .zero) {
-                        Row("Fonts", leadingType: .icon(.type), trallingType: .arrowIcon) {
+                        Row("Fonts", leadingType: .image(textIcon), trallingType: .arrowIcon) {
                             pageDestenation = .font
                         }
                         .premium()
 
-                        Row("Borders", leadingType: .icon(.layout), trallingType: .toggleWithArrowButton(isOn: theme.$borderApp, action: {
+                        Row("Borders", leadingType: .image(borderIcon), trallingType: .toggleWithArrowButton(isOn: theme.$borderApp, action: {
                             pageDestenation = .border
                         })) {
                             pageDestenation = .border
@@ -202,12 +202,45 @@ import SwiftUI
                             theme.borderTextFields = value
                         }
 
-                        Row("Radius", leadingType: .icon(.circle), trallingType: .arrowIcon) {
+                        Row("Radius", leadingType: .image(radiusIcon), trallingType: .arrowIcon) {
                             pageDestenation = .radius
                         }
                         .premium()
                     }
                 }
+            }
+        }
+
+        var textIcon: Image {
+            switch iconStyle {
+            case .line:
+                return Icon.Line.Design.text
+            case .solid:
+                return Icon.Solid.Design.text
+            case .duotone:
+                return Icon.Duotone.Design.text
+            }
+        }
+
+        var borderIcon: Image {
+            switch iconStyle {
+            case .line:
+                return Icon.Line.Design.scale
+            case .solid:
+                return Icon.Solid.Design.scale
+            case .duotone:
+                return Icon.Duotone.Design.scale
+            }
+        }
+
+        var radiusIcon: Image {
+            switch iconStyle {
+            case .line:
+                return Icon.Line.Design.vectorEditCircle
+            case .solid:
+                return Icon.Solid.Design.vectorEditCircle
+            case .duotone:
+                return Icon.Duotone.Design.vectorEditCircle
             }
         }
     }

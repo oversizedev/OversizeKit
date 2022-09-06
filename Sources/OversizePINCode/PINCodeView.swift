@@ -3,6 +3,7 @@
 // PINCodeView.swift
 //
 
+import OversizeCore
 import OversizeSecurityService
 import OversizeUI
 import SwiftUI
@@ -225,7 +226,7 @@ public struct PINCodeView: View {
         state = .locked
 
         if pinCode.count > (maxCount - 1) {
-            print("return")
+            log("return")
             return
         }
 
@@ -244,7 +245,7 @@ public struct PINCodeView: View {
             // isDisabledNumpad = false
         }
         pinCode.removeLast()
-        print(pinCode)
+        log(pinCode)
     }
 
     func enterAction() {

@@ -7,6 +7,7 @@ import OversizeCore
 import OversizeLocalizable
 import OversizeModules
 import OversizePINCode
+import OversizeSecurityService
 import OversizeServices
 import OversizeSettingsService
 import OversizeStoreService
@@ -31,14 +32,14 @@ public struct AppLauncher<Content: View, Onboarding: View>: View {
     public var body: some View {
         lockscreen(FeatureFlags.secure.lookscreen.valueOrFalse)
             .onAppear {
+                // try! SecureStorageService.shared.deleteAll()
+
                 viewModel.appStateService.appRun()
                 #if DEBUG
                     viewModel.appStateService.restOnbarding()
                 #endif
                 viewModel.checkOnboarding()
-
                 viewModel.checkPremium()
-                // StoreKitLegacyProductsService.shared.initializeAndCheckPremiun()
                 SDImageCodersManager.shared.addCoder(SDImageSVGCoder.shared)
             }
             .onChange(of: scenePhase, perform: { value in
@@ -61,7 +62,7 @@ public struct AppLauncher<Content: View, Onboarding: View>: View {
                         }
                     }
                 @unknown default:
-                    print("unknown")
+                    log("unknown")
                 }
             })
             .fullScreenCover(item: $viewModel.activeFullScreenSheet) {
@@ -100,7 +101,7 @@ public struct AppLauncher<Content: View, Onboarding: View>: View {
                     viewModel.pinCodeField = ""
 
                 @unknown default:
-                    print("unknown")
+                    log("unknown")
                 }
             })
 

@@ -8,7 +8,6 @@ import OversizeResources
 import OversizeServices
 import OversizeSettingsService
 import OversizeStore
-import OversizeStoreService
 import OversizeUI
 import SwiftUI
 
@@ -18,6 +17,7 @@ import SwiftUI
         @Environment(\.horizontalSizeClass) private var horizontalSizeClass
         @Environment(\.verticalSizeClass) private var verticalSizeClass
         @Environment(\.presentationMode) var presentationMode
+        @Environment(\.iconStyle) var iconStyle: IconStyle
         @Environment(\.theme) var theme: ThemeSettings
         @StateObject var settingsService = SettingsService()
         @EnvironmentObject var hudState: HUD
@@ -123,7 +123,7 @@ import SwiftUI
                         NavigationLink(destination: AppearanceSettingView()
                         ) {
                             Row(L10n.Settings.apperance)
-                                .rowLeading(.image(Icon.Plumpy.paintPalette))
+                                .rowLeading(.image(apperanceSettingsIcon))
                                 .rowTrailing(rowType)
                         }
                         .buttonStyle(.row)
@@ -132,7 +132,7 @@ import SwiftUI
                     if FeatureFlags.app.сloudKit.valueOrFalse {
                         NavigationLink(destination: iCloudSettingsView()
                         ) {
-                            Row(L10n.Title.synchronization, leadingType: .image(Icon.Plumpy.cloud), trallingType: rowType)
+                            Row(L10n.Title.synchronization, leadingType: .image(cloudKitIcon), trallingType: rowType)
                         }
                         .buttonStyle(.row)
                     }
@@ -147,7 +147,7 @@ import SwiftUI
                     {
                         NavigationLink(destination: SecuritySettingsView()
                         ) {
-                            Row(L10n.Security.title, leadingType: .image(Icon.Plumpy.lock), trallingType: rowType)
+                            Row(L10n.Security.title, leadingType: .image(securityIcon), trallingType: rowType)
                         }
                         .buttonStyle(.row)
                     }
@@ -156,7 +156,7 @@ import SwiftUI
                         NavigationLink(destination: SoundsAndVibrationsSettingsView()
                         ) {
                             Row(soundsAndVibrationTitle,
-                                leadingType: .image(FeatureFlags.app.sounds.valueOrFalse ? Icon.Plumpy.music : Icon.Plumpy.radioWaves),
+                                leadingType: .image(FeatureFlags.app.sounds.valueOrFalse ? soundIcon : vibrationIcon),
                                 trallingType: rowType)
                         }
                         .buttonStyle(.row)
@@ -165,7 +165,7 @@ import SwiftUI
                     if FeatureFlags.app.notifications.valueOrFalse {
                         NavigationLink(destination: NotificationsSettingsView()
                         ) {
-                            Row(L10n.Settings.notifications, leadingType: .image(Icon.Plumpy.notification), trallingType: rowType)
+                            Row(L10n.Settings.notifications, leadingType: .image(notificationsIcon), trallingType: rowType)
                         }
                         .buttonStyle(.row)
                     }
@@ -175,13 +175,79 @@ import SwiftUI
             }
         }
 
+        var apperanceSettingsIcon: Image {
+            switch iconStyle {
+            case .line:
+                return Icon.Line.Design.brush
+            case .solid:
+                return Icon.Solid.Design.brush
+            case .duotone:
+                return Icon.Duotone.Design.brush
+            }
+        }
+
+        var cloudKitIcon: Image {
+            switch iconStyle {
+            case .line:
+                return Icon.Line.Weather.cloudy02
+            case .solid:
+                return Icon.Solid.Weather.cloudy02
+            case .duotone:
+                return Icon.Duotone.Weather.cloudy02
+            }
+        }
+
+        var securityIcon: Image {
+            switch iconStyle {
+            case .line:
+                return Icon.Line.UserInterface.lock
+            case .solid:
+                return Icon.Solid.UserInterface.lock
+            case .duotone:
+                return Icon.Duotone.UserInterface.lock
+            }
+        }
+
+        var soundIcon: Image {
+            switch iconStyle {
+            case .line:
+                return Icon.Line.MediaControls.musicalNote02
+            case .solid:
+                return Icon.Solid.MediaControls.musicalNote02
+            case .duotone:
+                return Icon.Duotone.MediaControls.musicalNote02
+            }
+        }
+
+        var vibrationIcon: Image {
+            switch iconStyle {
+            case .line:
+                return Icon.Line.Weather.windy
+            case .solid:
+                return Icon.Solid.Weather.windy
+            case .duotone:
+                return Icon.Duotone.Weather.windy
+            }
+        }
+
+        var notificationsIcon: Image {
+            switch iconStyle {
+            case .line:
+                return Icon.Line.UserInterface.bell
+            case .solid:
+                return Icon.Solid.UserInterface.bell
+            case .duotone:
+                return Icon.Duotone.UserInterface.bell
+            }
+        }
+
         // App Store Review
         private var help: some View {
             SectionView(L10n.Settings.supportSection) {
                 VStack(alignment: .leading) {
                     if let reviewUrl = AppInfo.url.appStoreReview, let id = AppInfo.app.appStoreID, !id.isEmpty {
                         Link(destination: reviewUrl) {
-                            Row(L10n.Settings.feedbakAppStore, leadingType: .image(Icon.Plumpy.heart), trallingType: rowType)
+                            Row(L10n.Settings.feedbakAppStore, leadingType: .image(heartIcon), trallingType: rowType)
                         }
                         .buttonStyle(.row)
                     }
@@ -189,7 +255,7 @@ import SwiftUI
                     // Send author
                     if let sendMailUrl = AppInfo.url.developerSendMail { // , let mail = InfoStore.app.mail, !mail.isEmpty {
                         Link(destination: sendMailUrl) {
-                            Row(L10n.Settings.feedbakAuthor, leadingType: .image(Icon.Plumpy.message), trallingType: rowType)
+                            Row(L10n.Settings.feedbakAuthor, leadingType: .image(mailIcon), trallingType: rowType)
                         }
                         .buttonStyle(.row)
                     }
@@ -197,7 +263,7 @@ import SwiftUI
                     // Telegramm chat
                     if let telegramChatUrl = AppInfo.url.appTelegramChat, let id = AppInfo.app.telegramChatID, !id.isEmpty {
                         Link(destination: telegramChatUrl) {
-                            Row(L10n.Settings.telegramChat, leadingType: .image(Icon.Plumpy.send), trallingType: rowType)
+                            Row(L10n.Settings.telegramChat, leadingType: .image(chatIcon), trallingType: rowType)
                         }
                         .buttonStyle(.row)
                     }
@@ -205,11 +271,55 @@ import SwiftUI
             }
         }
 
+        var heartIcon: Image {
+            switch iconStyle {
+            case .line:
+                return Icon.Line.UserInterface.heart
+            case .solid:
+                return Icon.Solid.UserInterface.heart
+            case .duotone:
+                return Icon.Duotone.UserInterface.heart
+            }
+        }
+
+        var mailIcon: Image {
+            switch iconStyle {
+            case .line:
+                return Icon.Line.Communication.mail
+            case .solid:
+                return Icon.Solid.Communication.mail
+            case .duotone:
+                return Icon.Duotone.Communication.mail
+            }
+        }
+
+        var chatIcon: Image {
+            switch iconStyle {
+            case .line:
+                return Icon.Line.Communication.chatDots
+            case .solid:
+                return Icon.Solid.Communication.chatDots
+            case .duotone:
+                return Icon.Duotone.Communication.chatDots
+            }
+        }
+
+        var infoIcon: Image {
+            switch iconStyle {
+            case .line:
+                return Icon.Line.UserInterface.infoCrFr
+            case .solid:
+                return Icon.Solid.UserInterface.infoCrFr
+            case .duotone:
+                return Icon.Duotone.UserInterface.infoCrFr
+            }
+        }
+
         private var about: some View {
             SectionView {
                 NavigationLink(destination: AboutView()) {
                     Row(L10n.Settings.about,
-                        leadingType: .image(Icon.Plumpy.infoCircle),
+                        leadingType: .image(infoIcon),
                         trallingType: rowType)
                 }
                 .buttonStyle(.row)
@@ -250,11 +360,6 @@ import SwiftUI
         }
     }
 
-    // public extension SettingsView where AppSection == EmptyView {
-//    init(@ViewBuilder headSection: () -> HeadSection) {
-//        self.init(appSection: { EmptyView() }, headSection: headSection)
-//    }
-    // }
 #endif
 #if os(iOS)
     extension UINavigationController: UIGestureRecognizerDelegate {
@@ -268,75 +373,3 @@ import SwiftUI
         }
     }
 #endif
-
-// public struct SettingsView<AppSection: View, TopSection: View>: View {
-//
-//    let appSection: AppSection
-//    let topSection: TopSection
-//
-//    public init(@ViewBuilder appSection: @escaping () -> AppSection,
-//                @ViewBuilder topSection: @escaping () -> TopSection) {
-//        self.appSection = appSection()
-//        self.topSection = topSection()
-//    }
-//
-//    public var body: some View {
-//
-//        NavigationView {
-//
-//            List {
-//
-//                topSection
-//
-//                Section(header: Text(LocalizeLabel.settings.appSection)) {
-//                    appSection
-//                }
-//
-//                Section(header: Text(LocalizeLabel.settings.supportSection)) {
-//
-//                    if let reviewUrl = InfoStore.url.appStoreReview {
-//
-//
-//
-//                        Link("Оценить в AppStore", destination: reviewUrl)
-//
-//                    }
-//                }
-//
-//                Section() {
-//                NavigationLink(LocalizeLabel.settings.about, destination: AboutView())
-//
-//                }
-//
-//
-//
-//
-//            }
-//            .navigationTitle(LocalizeLabel.settings.title)
-//            .listStyle(InsetGroupedListStyle())
-//
-//
-//        }
-//
-//    }
-// }
-//
-// public extension SettingsView where TopSection == EmptyView {
-//    init(@ViewBuilder appSection: @escaping () -> AppSection) {
-//        self.init(appSection: appSection, topSection: { EmptyView() })
-//    }
-// }
-
-// extension SettingsView where TopSection == EmptyView {
-//    init(@ViewBuilder appSection: () -> AppSection) {
-//        self.init(appSection: appSection, topSection: { EmptyView() })
-//    }
-// }
-
-// struct SettingsView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        SettingsView {
-//
-//        }
-//    }
-// }
