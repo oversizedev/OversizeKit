@@ -11,7 +11,7 @@ import SwiftUI
 public struct SetPINCodeView: View {
     @ObservedObject var viewModel: SetPINCodeViewModel
     @EnvironmentObject private var hud: HUD
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
 
     public init(action: PINCodeAction) {
         viewModel = SetPINCodeViewModel(action: action)
@@ -23,7 +23,7 @@ public struct SetPINCodeView: View {
 
             VStack(alignment: .leading) {
                 Button {
-                    presentationMode.wrappedValue.dismiss()
+                    dismiss()
                 } label: {
                     Icon(.xMini, color: .onSurfaceHighEmphasis)
                 }
@@ -60,10 +60,11 @@ public struct SetPINCodeView: View {
                         maxCount: viewModel.maxCount,
                         title: L10n.Security.confirmPINCode,
                         errorText: viewModel.errorText) {
-                viewModel.checkConfirmNewPINCode { result in
+                Task {
+                    let result = await viewModel.checkConfirmNewPINCode()
                     switch result {
                     case true:
-                        presentationMode.wrappedValue.dismiss()
+                        dismiss()
                         switch viewModel.action {
                         case .set:
                             hud.show(title: L10n.Security.createPINCode, icon: .check)
@@ -75,6 +76,7 @@ public struct SetPINCodeView: View {
                         break
                     }
                 }
+
             } biometricAction: {}
         }
     }

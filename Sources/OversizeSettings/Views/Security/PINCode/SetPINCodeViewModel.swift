@@ -72,24 +72,20 @@ public final class SetPINCodeViewModel: ObservableObject {
         TapticEngine.soft.vibrate()
     }
 
-    public func checkConfirmNewPINCode(completion: @escaping (Bool) -> Void) {
+    public func checkConfirmNewPINCode() async -> Bool {
         if newPinCodeField == confirmNewCodeField {
-            settingsStore.updatePINCode(oldPIN: curentPinCode, newPIN: newPinCodeField) { result in
-                switch result {
-                case true:
-                    self.settingsStore.pinCodeEnabend = true
-                    completion(true)
-                    TapticEngine.success.vibrate()
-                    log("PIN Code saved")
-                    return
-                case false:
-                    self.errorText = "Save error"
-                    completion(false)
-                    self.newPinCodeField = ""
-                    self.confirmNewCodeField = ""
-                    TapticEngine.error.vibrate()
-                    return
-                }
+            let result = await settingsStore.updatePINCode(oldPIN: curentPinCode, newPIN: newPinCodeField)
+            switch result {
+            case true:
+                settingsStore.pinCodeEnabend = true
+                TapticEngine.success.vibrate()
+                return true
+            case false:
+                errorText = "Save error"
+                newPinCodeField = ""
+                confirmNewCodeField = ""
+                TapticEngine.error.vibrate()
+                return false
             }
 
         } else {
@@ -99,8 +95,7 @@ public final class SetPINCodeViewModel: ObservableObject {
             newPinCodeField = ""
             confirmNewCodeField = ""
             TapticEngine.error.vibrate()
-            completion(false)
-            return
+            return false
         }
     }
 }

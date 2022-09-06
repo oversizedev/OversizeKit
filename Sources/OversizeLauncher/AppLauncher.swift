@@ -33,7 +33,6 @@ public struct AppLauncher<Content: View, Onboarding: View>: View {
         lockscreen(FeatureFlags.secure.lookscreen.valueOrFalse)
             .onAppear {
                 // try! SecureStorageService.shared.deleteAll()
-
                 viewModel.appStateService.appRun()
                 #if DEBUG
                     viewModel.appStateService.restOnbarding()

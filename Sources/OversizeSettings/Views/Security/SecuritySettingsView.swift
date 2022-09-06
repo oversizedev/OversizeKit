@@ -59,7 +59,7 @@ import SwiftUI
                             Binding(get: {
                                 settingsService.biometricEnabled
                             }, set: {
-                                settingsService.biometricChange($0)
+                                biometricChange(state: $0)
                             })))
                     }
 
@@ -87,6 +87,12 @@ import SwiftUI
                         }
                     }
                 }
+            }
+        }
+
+        private func biometricChange(state: Bool) {
+            Task {
+                await settingsService.biometricChange(state)
             }
         }
 

@@ -24,6 +24,7 @@ class StoreViewModel: ObservableObject {
 
     @AppStorage("AppState.PremiumState") var isPremium: Bool = false
     @AppStorage("AppState.PremiumActivated") var isPremiumActivated: Bool = false
+    @AppStorage("AppState.PremiumRenewalState") var currentSubscriptionStatus: RenewalState = .revoked
 
     var availableSubscriptions: [Product] {
         if case let .result(products) = state {
@@ -89,7 +90,7 @@ extension StoreViewModel {
 
     var subsribtionStatusColor: Color {
         guard case let .result(products) = state else { return .yellow }
-        if !products.nonConsumable.isEmpty { return .green }
+        if !products.purchasedNonConsumable.isEmpty { return .green }
         guard let subscriptionStatus = products.subscriptionGroupStatus else { return .red }
         switch subscriptionStatus {
         case .subscribed: return .green
@@ -289,6 +290,9 @@ extension StoreViewModel {
             case let .success(finalProducts):
                 if let yarlyProduct = finalProducts.autoRenewable.first(where: { $0.subscription?.subscriptionPeriod.unit == .year }) {
                     selectedProduct = yarlyProduct
+                }
+                if let products = finalProducts.subscriptionGroupStatus {
+                    currentSubscriptionStatus = products
                 }
                 state = .result(finalProducts)
                 log("✅ Product updateCustomerProductStatus")
