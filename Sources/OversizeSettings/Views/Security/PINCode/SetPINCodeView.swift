@@ -4,7 +4,7 @@
 //
 
 import OversizeLocalizable
-import OversizePINCode
+import OversizeLockscreen
 import OversizeUI
 import SwiftUI
 
@@ -38,7 +38,7 @@ public struct SetPINCodeView: View {
     private func stateView(state: SetPINCodeViewState) -> some View {
         switch state {
         case .oldPINField:
-            PINCodeView(pinCode: $viewModel.oldCodeField,
+            LockscreenView(pinCode: $viewModel.oldCodeField,
                         state: $viewModel.authState,
                         maxCount: viewModel.maxCount,
                         title: L10n.Security.oldPINCode,
@@ -47,7 +47,7 @@ public struct SetPINCodeView: View {
             } biometricAction: {}
 
         case .newPINField:
-            PINCodeView(pinCode: $viewModel.newPinCodeField,
+            LockscreenView(pinCode: $viewModel.newPinCodeField,
                         state: $viewModel.authState,
                         maxCount: viewModel.maxCount,
                         title: L10n.Security.newPINCode,
@@ -55,7 +55,7 @@ public struct SetPINCodeView: View {
                 viewModel.checkNewPINCode()
             } biometricAction: {}
         case .confirmNewPINField:
-            PINCodeView(pinCode: $viewModel.confirmNewCodeField,
+            LockscreenView(pinCode: $viewModel.confirmNewCodeField,
                         state: $viewModel.authState,
                         maxCount: viewModel.maxCount,
                         title: L10n.Security.confirmPINCode,

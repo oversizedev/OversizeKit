@@ -6,7 +6,7 @@
 import OversizeCore
 import OversizeLocalizable
 import OversizeModules
-import OversizePINCode
+import OversizeLockscreen
 import OversizeSecurityService
 import OversizeServices
 import OversizeSettingsService
@@ -31,16 +31,21 @@ public struct AppLauncher<Content: View, Onboarding: View>: View {
     }
 
     public var body: some View {
-        appScreen(FeatureFlags.secure.lookscreen.valueOrFalse)
+        content
+            .opacity(viewModel.authState != .unlocked ? 0 : 1)
             .onAppear {
-                #if DEBUG
-                    viewModel.appStateService.restOnbarding()
-                    viewModel.appStateService.restAppRunCount()
-                #endif
+//                #if DEBUG
+//                    viewModel.appStateService.restOnbarding()
+//                    viewModel.appStateService.restAppRunCount()
+//                #endif
                 viewModel.appStateService.appRun()
-
+                viewModel.checkLockscreen()
+                if viewModel.settingsService.biometricEnabled, scenePhase != .background {
+                    viewModel.appLockValidation()
+                }
                 viewModel.checkOnboarding()
                 viewModel.checkPremium()
+                viewModel.reviewService.appRunRequest()
                 SDImageCodersManager.shared.addCoder(SDImageSVGCoder.shared)
             }
             .fullScreenCover(item: $viewModel.activeFullScreenSheet) {
@@ -52,30 +57,6 @@ public struct AppLauncher<Content: View, Onboarding: View>: View {
                     viewModel.setPayWall()
                 }
             }
-    }
-
-    @ViewBuilder
-    private func fullScreenCover(sheet: AppLauncherViewModel.FullScreenSheet) -> some View {
-        switch sheet {
-        case .onboarding: onboarding
-        case .payWall: StoreView().closable()
-        }
-    }
-
-    @ViewBuilder
-    private func appScreen(_ featureFlag: Bool) -> some View {
-        switch featureFlag {
-        case true:
-            contentAndLoclscreenView
-
-        case false:
-            contentView
-        }
-    }
-
-    private var contentView: some View {
-        content
-            .blur(radius: blurRadius)
             .onChange(of: scenePhase, perform: { value in
                 switch value {
                 case .active, .inactive:
@@ -83,42 +64,36 @@ public struct AppLauncher<Content: View, Onboarding: View>: View {
                 case .background:
                     viewModel.authState = .locked
                     viewModel.pinCodeField = ""
-
+                    viewModel.activeFullScreenSheet = .lockscreen
                 @unknown default:
                     log("unknown")
                 }
             })
-
-            .onAppear {
-                viewModel.reviewService.appRunRequest()
-            }
     }
 
-    private var contentAndLoclscreenView: some View {
-        ZStack {
-            if viewModel.settingsService.pinCodeEnabend || viewModel.settingsService.biometricEnabled,
-               viewModel.authState != .unlocked
-            {
-                PINCodeView(pinCode: $viewModel.pinCodeField,
-                            state: $viewModel.authState,
-                            title: L10n.Security.enterPINCode,
-                            errorText: L10n.Security.invalidPIN,
-                            pinCodeEnabled: viewModel.settingsService.pinCodeEnabend,
-                            biometricEnabled: viewModel.settingsService.biometricEnabled,
-                            biometricType: viewModel.biometricService.biometricType) {
-                    self.viewModel.checkPassword()
-                } biometricAction: {
-                    self.viewModel.appLockValidation()
-                }
-                .onAppear {
-                    if viewModel.settingsService.biometricEnabled, scenePhase != .background {
-                        viewModel.appLockValidation()
-                    }
-                }
-            } else {
-                contentView
-            }
+    @ViewBuilder
+    private func fullScreenCover(sheet: AppLauncherViewModel.FullScreenSheet) -> some View {
+        switch sheet {
+        case .onboarding: onboarding
+        case .payWall: StoreView().closable()
+        case .lockscreen: lockscreenView
         }
+    }
+    
+    private var lockscreenView: some View {
+
+        LockscreenView(pinCode: $viewModel.pinCodeField,
+                       state: $viewModel.authState,
+                       title: L10n.Security.enterPINCode,
+                       errorText: L10n.Security.invalidPIN,
+                       pinCodeEnabled: viewModel.settingsService.pinCodeEnabend,
+                       biometricEnabled: viewModel.settingsService.biometricEnabled,
+                       biometricType: viewModel.biometricService.biometricType) {
+            self.viewModel.checkPassword()
+        } biometricAction: {
+            self.viewModel.appLockValidation()
+        }
+            
     }
 
     public func onboarding(@ViewBuilder onboarding: @escaping () -> Onboarding) -> AppLauncher {

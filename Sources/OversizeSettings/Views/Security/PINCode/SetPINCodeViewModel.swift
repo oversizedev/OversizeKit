@@ -5,7 +5,7 @@
 
 import OversizeCore
 import OversizeLocalizable
-import OversizePINCode
+import OversizeLockscreen
 import OversizeSecurityService
 import OversizeServices
 import OversizeSettingsService
@@ -14,7 +14,6 @@ import SwiftUI
 
 public enum PINCodeAction: Identifiable {
     case set, update
-
     public var id: Int {
         hashValue
     }
@@ -29,7 +28,7 @@ public final class SetPINCodeViewModel: ObservableObject {
 
     @Published public var pinCodeField: String = ""
 
-    @Published public var authState: PINCodeViewState = .locked
+    @Published public var authState: LockscreenViewState = .locked
 
     @Published public var maxCount = 4
 

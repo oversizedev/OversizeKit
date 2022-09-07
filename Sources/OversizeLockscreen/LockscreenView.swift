@@ -8,18 +8,18 @@ import OversizeSecurityService
 import OversizeUI
 import SwiftUI
 
-public enum PINCodeViewState {
+public enum LockscreenViewState {
     case locked, loading, error, unlocked
 }
 
-public struct PINCodeView: View {
+public struct LockscreenView: View {
     @Binding private var pinCode: String
 
-    @Binding private var state: PINCodeViewState
+    @Binding private var state: LockscreenViewState
 
     @State private var shouldAnimate = false
 
-    let timer = Timer.publish(every: 0.3, on: .main, in: .common).autoconnect()
+    private let timer = Timer.publish(every: 0.3, on: .main, in: .common).autoconnect()
 
     @State var leftOffset: CGFloat = 0
     @State var rightOffset: CGFloat = 50
@@ -40,7 +40,7 @@ public struct PINCodeView: View {
     private let biometricType: BiometricType
 
     public init(pinCode: Binding<String>,
-                state: Binding<PINCodeViewState> = .constant(.locked),
+                state: Binding<LockscreenViewState> = .constant(.locked),
                 maxCount: Int = 4,
                 title: String? = nil,
                 errorText: String? = nil,
@@ -189,7 +189,7 @@ public struct PINCodeView: View {
     }
 
     @ViewBuilder
-    private func pinCounter(state: PINCodeViewState) -> some View {
+    private func pinCounter(state: LockscreenViewState) -> some View {
         switch state {
         case .locked, .error, .unlocked:
             HStack(spacing: .xSmall) {
@@ -268,6 +268,6 @@ public struct NumpadButtonStyle: ButtonStyle {
 
 struct PINCodeView_Previews: PreviewProvider {
     static var previews: some View {
-        PINCodeView(pinCode: .constant("123"), state: .constant(.locked))
+        LockscreenView(pinCode: .constant("123"), state: .constant(.locked))
     }
 }

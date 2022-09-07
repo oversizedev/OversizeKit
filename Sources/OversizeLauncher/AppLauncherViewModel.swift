@@ -3,16 +3,16 @@
 // AppLauncherViewModel.swift
 //
 
-#if os(iOS)
-    import LocalAuthentication
-#endif
 import OversizeCore
-import OversizePINCode
+import OversizeLockscreen
 import OversizeSecurityService
 import OversizeServices
 import OversizeStoreService
 import OversizeUI
 import SwiftUI
+#if canImport(LocalAuthentication)
+import LocalAuthentication
+#endif
 
 @MainActor
 public final class AppLauncherViewModel: ObservableObject {
@@ -25,7 +25,7 @@ public final class AppLauncherViewModel: ObservableObject {
     @AppStorage("AppState.PremiumState") var isPremium: Bool = false
     @AppStorage("AppState.SubscriptionsState") var subscriptionsState: RenewalState = .expired
     @Published public var pinCodeField: String = ""
-    @Published public var authState: PINCodeViewState = .locked
+    @Published public var authState: LockscreenViewState = .locked
     @Published var activeFullScreenSheet: FullScreenSheet?
 
     public init() {}
@@ -35,6 +35,7 @@ extension AppLauncherViewModel {
     enum FullScreenSheet: Identifiable, Equatable {
         case onboarding
         case payWall
+        case lockscreen
         public var id: Int {
             hashValue
         }
@@ -66,9 +67,21 @@ public extension AppLauncherViewModel {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             if self.pinCodeField == self.settingsService.getPINCode() {
                 self.authState = .unlocked
+                self.activeFullScreenSheet = nil
             } else {
                 self.authState = .error
                 self.pinCodeField = ""
+            }
+        }
+    }
+    
+    func checkLockscreen() {
+        if settingsService.pinCodeEnabend || settingsService.biometricEnabled,
+           authState != .unlocked {
+            var transaction = Transaction()
+            transaction.disablesAnimations = true
+            withTransaction(transaction) {
+                activeFullScreenSheet = .lockscreen
             }
         }
     }
@@ -79,6 +92,7 @@ public extension AppLauncherViewModel {
             let authenticate = await biometricService.authenticating(reason: reason)
             if authenticate {
                 authState = .unlocked
+                activeFullScreenSheet = nil
             } else {
                 authState = .error
             }
