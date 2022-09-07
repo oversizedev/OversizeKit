@@ -12,8 +12,16 @@ import SwiftUI
 
 @MainActor
 class StoreViewModel: ObservableObject {
+    
+    enum State {
+        case initial
+        case loading
+        case result(StoreKitProducts)
+        case error(AppError)
+    }
+    
     @Injected(\.storeKitService) private var storeKitService: StoreKitService
-    @Published var state = StoreViewModelState.initial
+    @Published var state = State.initial
 
     public var updateListenerTask: Task<Void, Error>?
 
@@ -305,13 +313,6 @@ extension StoreViewModel {
             state = .error(error)
         }
     }
-}
-
-enum StoreViewModelState {
-    case initial
-    case loading
-    case result(StoreKitProducts)
-    case error(AppError)
 }
 
 extension Date {

@@ -32,7 +32,7 @@ public struct AppLauncher<Content: View, Onboarding: View>: View {
 
     public var body: some View {
         content
-            .opacity(viewModel.authState != .unlocked ? 0 : 1)
+            .opacity(viewModel.settingsService.biometricEnabled && viewModel.authState != .unlocked ? 0 : 1)
             .onAppear {
 //                #if DEBUG
 //                    viewModel.appStateService.restOnbarding()

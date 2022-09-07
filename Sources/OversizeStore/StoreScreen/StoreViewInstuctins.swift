@@ -25,36 +25,67 @@ public struct StoreViewInstuctins: View {
     }
 
     public var body: some View {
-        switch viewModel.state {
-        case .initial:
-            VStack {
-                Spacer()
-                HStack {
-                    Spacer()
+        ScrollViewReader { value in
+           
+            PageView { offset = $0 } content: {
+                Group {
+                switch viewModel.state {
+                case .initial:
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            ProgressView()
+                                .task {
+                                    await viewModel.fetchData()
+                                    if case let .result(products) = self.viewModel.state {
+                                        await viewModel.updateState(products: products)
+                                    }
+                                }
+                            Spacer()
+                        }
+                        Spacer()
+                    }
+                case .loading:
                     ProgressView()
-                        .task {
-                            await viewModel.fetchData()
-                            if case let .result(products) = self.viewModel.state {
-                                await viewModel.updateState(products: products)
+                case let .result(data):
+                    content(data: data)
+                case let .error(error):
+                    ErrorView(error)
+                }
+            }
+                .paddingContent(.horizontal)
+            }
+            .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
+            .titleLabel {
+                PremiumLabel(image: Resource.Store.zap, text: AppInfo.store.subscriptionsName, size: .medium)
+            }
+            .trailingBar {
+                BarButton(type: .close)
+            }
+            .bottomToolbar(style: .none, ignoreSafeArea: false) {
+                VStack(spacing: .zero) {
+                    StorePaymentButtonBar {
+                        isShowAllPlans = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            withAnimation {
+                                value.scrollTo(10, anchor: .top)
                             }
                         }
-                    Spacer()
+                    }
+                    .environmentObject(viewModel)
                 }
-                Spacer()
+
             }
-        case .loading:
-            ProgressView()
-        case let .result(data):
-            content(data: data)
-        case let .error(error):
-            ErrorView(error)
         }
+        
+        
+
     }
 
     @ViewBuilder
     private func content(data: StoreKitProducts) -> some View {
-        ScrollViewReader { value in
-            PageView { offset = $0 } content: {
+        
                 VStack(spacing: .medium) {
                     VStack {
                         VStack(spacing: .xSmall) {
@@ -106,26 +137,7 @@ public struct StoreViewInstuctins: View {
                 }
                 .padding(.bottom, 220)
                 .paddingContent(.horizontal)
-            }
-            .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
-            .titleLabel {
-                PremiumLabel(image: Resource.Store.zap, text: AppInfo.store.subscriptionsName, size: .medium)
-            }
-            .trailingBar {
-                BarButton(type: .close)
-            }
-            .bottomToolbar(style: .none, ignoreSafeArea: false) {
-                VStack(spacing: .zero) {
-                    StorePaymentButtonBar {
-                        isShowAllPlans = true
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            withAnimation {
-                                value.scrollTo(10, anchor: .top)
-                            }
-                        }
-                    }
-                    .environmentObject(viewModel)
-                }
+            
                 .onAppear {
                     Task {
                         // When this view appears, get the latest subscription status.
@@ -138,8 +150,8 @@ public struct StoreViewInstuctins: View {
                         await viewModel.updateSubscriptionStatus(products: data)
                     }
                 }
-            }
-        }
+            
+        
     }
 
     @ViewBuilder

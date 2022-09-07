@@ -25,29 +25,62 @@ public struct StoreView: View {
     }
 
     public var body: some View {
-        switch viewModel.state {
-        case .initial:
-            VStack {
-                Spacer()
-                HStack {
-                    Spacer()
-                    ProgressView()
-                        .task {
-                            await viewModel.fetchData()
-                            if case let .result(products) = self.viewModel.state {
-                                await viewModel.updateState(products: products)
-                            }
+        PageView {
+            Group {
+                switch viewModel.state {
+                case .initial:
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            ProgressView()
+                                .task {
+                                    await viewModel.fetchData()
+                                    if case let .result(products) = self.viewModel.state {
+                                        await viewModel.updateState(products: products)
+                                    }
+                                }
+                            Spacer()
                         }
-                    Spacer()
+                        Spacer()
+                    }
+                case .loading:
+                    ProgressView()
+                case let .result(data):
+                    content(data: data)
+                case let .error(error):
+                    ErrorView(error)
                 }
-                Spacer()
             }
-        case .loading:
-            ProgressView()
-        case let .result(data):
-            content(data: data)
-        case let .error(error):
-            ErrorView(error)
+            .paddingContent(.horizontal)
+        }
+        .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
+        .titleLabel {
+            PremiumLabel(image: Resource.Store.zap, text: AppInfo.store.subscriptionsName, size: .medium)
+        }
+        .leadingBar {
+            if !isPortrait, verticalSizeClass == .regular, isClosable {
+                EmptyView()
+            } else {
+                BarButton(type: .back)
+            }
+        }
+        .trailingBar {
+            if isClosable {
+                BarButton(type: .close)
+            }
+        }
+
+        .bottomToolbar(style: .none, ignoreSafeArea: false) {
+            if !viewModel.isPremium {
+                StorePaymentButtonBar()
+                    .environmentObject(viewModel)
+            }
+        }
+        .overlay {
+            if isShowFireworks {
+                Fireworks()
+            }
         }
     }
 
@@ -69,7 +102,6 @@ public struct StoreView: View {
 
     @ViewBuilder
     private func content(data: StoreKitProducts) -> some View {
-        PageView {
             VStack(spacing: .medium) {
                 VStack(spacing: .xxSmall) {
                     Text(titleText)
@@ -109,54 +141,26 @@ public struct StoreView: View {
                         .padding(.bottom, 170)
                 }
             }
+            .onAppear {
+                Task {
+                    // When this view appears, get the latest subscription status.
+                    await viewModel.updateSubscriptionStatus(products: data)
+                }
+            }
+            .onChange(of: data.purchasedAutoRenewable) { _ in
+                Task {
+                    // When `purchasedSubscriptions` changes, get the latest subscription status.
+                    await viewModel.updateSubscriptionStatus(products: data)
+                }
+            }
+            .onChange(of: viewModel.isPremium) { newValue in
+                isShowFireworks = newValue
+                DispatchQueue.main.asyncAfter(deadline: .now() + 30) {
+                    isShowFireworks = false
+                }
+            }
 
-            .paddingContent(.horizontal)
-        }
-        .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
-        .titleLabel {
-            PremiumLabel(image: Resource.Store.zap, text: AppInfo.store.subscriptionsName, size: .medium)
-        }
-        .leadingBar {
-            if !isPortrait, verticalSizeClass == .regular, isClosable {
-                EmptyView()
-            } else {
-                BarButton(type: .back)
-            }
-        }
-        .trailingBar {
-            if isClosable {
-                BarButton(type: .close)
-            }
-        }
-        .bottomToolbar(style: .none, ignoreSafeArea: false) {
-            if !viewModel.isPremium {
-                StorePaymentButtonBar()
-                    .environmentObject(viewModel)
-            }
-        }
-        .overlay {
-            if isShowFireworks {
-                Fireworks()
-            }
-        }
-        .onAppear {
-            Task {
-                // When this view appears, get the latest subscription status.
-                await viewModel.updateSubscriptionStatus(products: data)
-            }
-        }
-        .onChange(of: data.purchasedAutoRenewable) { _ in
-            Task {
-                // When `purchasedSubscriptions` changes, get the latest subscription status.
-                await viewModel.updateSubscriptionStatus(products: data)
-            }
-        }
-        .onChange(of: viewModel.isPremium) { newValue in
-            isShowFireworks = newValue
-            DispatchQueue.main.asyncAfter(deadline: .now() + 30) {
-                isShowFireworks = false
-            }
-        }
+            
     }
 
     @ViewBuilder
