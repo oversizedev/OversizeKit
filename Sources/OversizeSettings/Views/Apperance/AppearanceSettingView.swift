@@ -188,6 +188,7 @@ import SwiftUI
                             pageDestenation = .font
                         }
                         .premium()
+                        .onPremiumTap()
 
                         Row("Borders", leadingType: .image(borderIcon), trallingType: .toggleWithArrowButton(isOn: theme.$borderApp, action: {
                             pageDestenation = .border
@@ -195,6 +196,7 @@ import SwiftUI
                             pageDestenation = .border
                         }
                         .premium()
+                        .onPremiumTap()
                         .onChange(of: theme.borderApp) { value in
                             theme.borderSurface = value
                             theme.borderButtons = value
@@ -206,6 +208,7 @@ import SwiftUI
                             pageDestenation = .radius
                         }
                         .premium()
+                        .onPremiumTap()
                     }
                 }
             }

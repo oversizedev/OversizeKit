@@ -117,7 +117,7 @@ public struct StoreView: View {
             PremiumLabel(image: Resource.Store.zap, text: AppInfo.store.subscriptionsName, size: .medium)
         }
         .leadingBar {
-            if !isPortrait, verticalSizeClass == .regular, !isClosable {
+            if !isPortrait, verticalSizeClass == .regular, isClosable {
                 EmptyView()
             } else {
                 BarButton(type: .back)

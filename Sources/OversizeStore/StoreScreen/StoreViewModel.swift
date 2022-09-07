@@ -284,18 +284,17 @@ extension StoreViewModel {
 
         switch products {
         case let .success(preProducts):
-            log("✅ Product preProducts")
             let result = await storeKitService.updateCustomerProductStatus(products: preProducts)
             switch result {
             case let .success(finalProducts):
                 if let yarlyProduct = finalProducts.autoRenewable.first(where: { $0.subscription?.subscriptionPeriod.unit == .year }) {
                     selectedProduct = yarlyProduct
                 }
-                if let products = finalProducts.subscriptionGroupStatus {
-                    currentSubscriptionStatus = products
+                if let status = finalProducts.subscriptionGroupStatus {
+                    currentSubscriptionStatus = status
                 }
                 state = .result(finalProducts)
-                log("✅ Product updateCustomerProductStatus")
+                log("✅ StoeKit fetched")
             // log(finalProducts)
             case let .failure(error):
                 state = .error(error)

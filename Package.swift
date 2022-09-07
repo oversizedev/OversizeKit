@@ -34,6 +34,7 @@ let package = Package(
             dependencies: [
                 "OversizePINCode",
                 "OversizeModules",
+                "OversizeStore",
                 .product(name: "OversizeUI", package: "OversizeUI"),
                 .product(name: "OversizeCore", package: "OversizeCore"),
                 .product(name: "OversizeServices", package: "OversizeServices"),

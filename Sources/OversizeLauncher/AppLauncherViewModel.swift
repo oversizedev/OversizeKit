@@ -34,6 +34,7 @@ public final class AppLauncherViewModel: ObservableObject {
 extension AppLauncherViewModel {
     enum FullScreenSheet: Identifiable, Equatable {
         case onboarding
+        case payWall
         public var id: Int {
             hashValue
         }
@@ -45,8 +46,11 @@ public extension AppLauncherViewModel {
     func checkPremium() {
         Task {
             let status = await storeKitService.fetchPremiumAndSubscriptionsStatus()
-            isPremium = status.0
-            log("\(status.0 ? "👑 Premium status" : "🆓 Free status")")
+            if let premiumStatus = status.0 {
+                isPremium = premiumStatus
+                log("\(premiumStatus ? "👑 Premium status" : "🆓 Free status")")
+            }
+
             if let subscriptionStatus = status.1 {
                 if #available(iOS 15.4, *) {
                     log("📝 Subscription: \(subscriptionStatus.localizedDescription)")
@@ -89,5 +93,18 @@ public extension AppLauncherViewModel {
                 activeFullScreenSheet = .onboarding
             }
         }
+    }
+
+    func setPayWall() {
+        var transaction = Transaction()
+        transaction.disablesAnimations = true
+        withTransaction(transaction) {
+            activeFullScreenSheet = nil
+            activeFullScreenSheet = .payWall
+        }
+//        withoutAnimation {
+//            activeFullScreenSheet = nil
+//
+//        }
     }
 }

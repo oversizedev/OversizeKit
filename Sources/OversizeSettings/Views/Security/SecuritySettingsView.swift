@@ -45,7 +45,7 @@ import SwiftUI
             VStack(alignment: .center, spacing: 0) {
                 faceID
 
-                // additionally
+                additionally
             }
         }
     }
@@ -129,11 +129,11 @@ import SwiftUI
 //                    Row(L10n.Security.facedownLock, trallingType: .toggle(isOn: $settingsStore.lookScreenDownEnabend))
 //                }
 //
-//                if FeatureFlags.secure.blurMinimize.valueOrFalse {
-//                    Row(L10n.Security.blurMinimize, trallingType: .toggle(isOn: $settingsStore.blurMinimizeEnabend))
-//                        .premium()
-//                        .onPremiumTap()
-//                }
+                    if FeatureFlags.secure.blurMinimize.valueOrFalse {
+                        Row(L10n.Security.blurMinimize, trallingType: .toggle(isOn: $settingsService.blurMinimizeEnabend))
+                            .premium()
+                            .onPremiumTap()
+                    }
 
                     if FeatureFlags.secure.lookscreen.valueOrFalse {
                         Row(L10n.Security.authHistory, trallingType: .toggle(isOn: $settingsService.authHistoryEnabend))

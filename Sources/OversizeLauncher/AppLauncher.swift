@@ -10,6 +10,7 @@ import OversizePINCode
 import OversizeSecurityService
 import OversizeServices
 import OversizeSettingsService
+import OversizeStore
 import OversizeStoreService
 import OversizeUI
 import SDWebImageSVGCoder
@@ -30,43 +31,26 @@ public struct AppLauncher<Content: View, Onboarding: View>: View {
     }
 
     public var body: some View {
-        lockscreen(FeatureFlags.secure.lookscreen.valueOrFalse)
+        appScreen(FeatureFlags.secure.lookscreen.valueOrFalse)
             .onAppear {
-                // try! SecureStorageService.shared.deleteAll()
-                viewModel.appStateService.appRun()
                 #if DEBUG
                     viewModel.appStateService.restOnbarding()
+                    viewModel.appStateService.restAppRunCount()
                 #endif
+                viewModel.appStateService.appRun()
+
                 viewModel.checkOnboarding()
                 viewModel.checkPremium()
                 SDImageCodersManager.shared.addCoder(SDImageSVGCoder.shared)
             }
-            .onChange(of: scenePhase, perform: { value in
-                switch value {
-                case .active:
-                    withAnimation {
-                        blurRadius = 0
-                    }
-
-                case .background:
-                    if viewModel.settingsService.blurMinimizeEnabend {
-                        withAnimation {
-                            blurRadius = 10
-                        }
-                    }
-                case .inactive:
-                    if viewModel.settingsService.blurMinimizeEnabend {
-                        withAnimation {
-                            blurRadius = 10
-                        }
-                    }
-                @unknown default:
-                    log("unknown")
-                }
-            })
             .fullScreenCover(item: $viewModel.activeFullScreenSheet) {
                 fullScreenCover(sheet: $0)
                     .systemServices()
+            }
+            .onChange(of: viewModel.appStateService.isCompletedOnbarding) { isCompletedOnbarding in
+                if isCompletedOnbarding, viewModel.appStateService.appRunCount == 1, !viewModel.isPremium {
+                    viewModel.setPayWall()
+                }
             }
     }
 
@@ -74,11 +58,12 @@ public struct AppLauncher<Content: View, Onboarding: View>: View {
     private func fullScreenCover(sheet: AppLauncherViewModel.FullScreenSheet) -> some View {
         switch sheet {
         case .onboarding: onboarding
+        case .payWall: StoreView().closable()
         }
     }
 
     @ViewBuilder
-    private func lockscreen(_ featureFlag: Bool) -> some View {
+    private func appScreen(_ featureFlag: Bool) -> some View {
         switch featureFlag {
         case true:
             contentAndLoclscreenView

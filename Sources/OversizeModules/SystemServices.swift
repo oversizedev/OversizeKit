@@ -31,7 +31,7 @@ public struct SystemServicesModifier: ViewModifier {
             content
 
                 // defaults
-                // .blur(radius: blurRadius)
+                .blur(radius: blurRadius)
                 .preferredColorScheme(theme.appearance.colorScheme)
             #if os(iOS)
                 .accentColor(theme.accentColor)
@@ -45,22 +45,30 @@ public struct SystemServicesModifier: ViewModifier {
                 .hud(isPresented: $hudState.isPresented, type: $hudState.type) {
                     HUDContent(title: hudState.title, image: hudState.image, type: hudState.type)
                 }
-//            .onChange(of: scenePhase, perform: { value in
-//                switch value {
-//                case .active:
-//                    blurRadius = 0
-//                case .background:
-//                    if settingsStore.blurMinimizeEnabend {
-//                        blurRadius = 10
-//                    }
-//                case .inactive:
-//                    if settingsStore.blurMinimizeEnabend {
-//                        blurRadius = 10
-//                    }
-//                @unknown default:
-//                    log("unknown")
-//                }
-//            })
+                .onChange(of: scenePhase, perform: { value in
+                    switch value {
+                    case .active:
+                        if settingsStore.blurMinimizeEnabend {
+                            withAnimation {
+                                blurRadius = 0
+                            }
+                        }
+                    case .background:
+                        if settingsStore.blurMinimizeEnabend {
+                            withAnimation {
+                                blurRadius = 10
+                            }
+                        }
+                    case .inactive:
+                        if settingsStore.blurMinimizeEnabend {
+                            withAnimation {
+                                blurRadius = 10
+                            }
+                        }
+                    @unknown default:
+                        break
+                    }
+                })
 
                 // services
                 .environmentObject(hudState)
