@@ -8,6 +8,7 @@ import OversizeResources
 import OversizeServices
 import OversizeSettingsService
 import OversizeUI
+import OversizeModules
 import SwiftUI
 
 struct StoreFeaturesView: View {
@@ -41,6 +42,7 @@ struct StoreFeaturesView: View {
             StoreFeatureDetailView(selection: feature)
                 .environmentObject(viewModel)
                 .presentationDetents([.medium, .large])
+                .systemServices()
         }
     }
 

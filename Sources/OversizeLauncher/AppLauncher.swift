@@ -31,21 +31,15 @@ public struct AppLauncher<Content: View, Onboarding: View>: View {
     }
 
     public var body: some View {
-        content
-            .opacity(viewModel.settingsService.biometricEnabled && viewModel.authState != .unlocked ? 0 : 1)
+        contentView
             .onAppear {
 //                #if DEBUG
 //                    viewModel.appStateService.restOnbarding()
 //                    viewModel.appStateService.restAppRunCount()
 //                #endif
                 viewModel.appStateService.appRun()
-                viewModel.checkLockscreen()
-                if viewModel.settingsService.biometricEnabled, scenePhase != .background {
-                    viewModel.appLockValidation()
-                }
                 viewModel.checkOnboarding()
                 viewModel.checkPremium()
-                viewModel.reviewService.appRunRequest()
                 SDImageCodersManager.shared.addCoder(SDImageSVGCoder.shared)
             }
             .fullScreenCover(item: $viewModel.activeFullScreenSheet) {
@@ -64,11 +58,23 @@ public struct AppLauncher<Content: View, Onboarding: View>: View {
                 case .background:
                     viewModel.authState = .locked
                     viewModel.pinCodeField = ""
-                    viewModel.activeFullScreenSheet = .lockscreen
                 @unknown default:
                     log("unknown")
                 }
             })
+    }
+    
+    var contentView: some View {
+        Group {
+            if viewModel.isShowLockscreen {
+                lockscreenView
+            } else {
+                content
+                    .onAppear {
+                        viewModel.reviewService.appRunRequest()
+                    }
+            }
+        }
     }
 
     @ViewBuilder
@@ -76,12 +82,10 @@ public struct AppLauncher<Content: View, Onboarding: View>: View {
         switch sheet {
         case .onboarding: onboarding
         case .payWall: StoreView().closable()
-        case .lockscreen: lockscreenView
         }
     }
     
     private var lockscreenView: some View {
-
         LockscreenView(pinCode: $viewModel.pinCodeField,
                        state: $viewModel.authState,
                        title: L10n.Security.enterPINCode,
@@ -93,7 +97,11 @@ public struct AppLauncher<Content: View, Onboarding: View>: View {
         } biometricAction: {
             self.viewModel.appLockValidation()
         }
-            
+        .onAppear {
+            if viewModel.settingsService.biometricEnabled, scenePhase != .background {
+                viewModel.appLockValidation()
+            }
+        }
     }
 
     public func onboarding(@ViewBuilder onboarding: @escaping () -> Onboarding) -> AppLauncher {

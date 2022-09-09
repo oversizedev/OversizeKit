@@ -9,6 +9,7 @@ import OversizeResources
 import OversizeServices
 import OversizeSettingsService
 import OversizeUI
+import OversizeModules
 import SwiftUI
 
 struct StoreFeatureDetailView: View {
@@ -16,6 +17,7 @@ struct StoreFeatureDetailView: View {
     @State var selection: StoreFeature
     @Environment(\.screenSize) var screenSize
     @Environment(\.dismiss) var dismiss
+    @Environment(\.isPremium) var isPremium
 
     init(selection: StoreFeature) {
         _selection = State(initialValue: selection)
@@ -27,14 +29,18 @@ struct StoreFeatureDetailView: View {
                 TabView(selection: $selection) {
                     ForEach(AppInfo.store.features) { feature in
                         fetureItem(feature, geometry: geometry)
+                            .padding(.bottom, isPremium ? .large : .zero)
                             .tag(feature)
                     }
+                    
                 }
-                .tabViewStyle(.page(indexDisplayMode: .never))
-                .indexViewStyle(.page(backgroundDisplayMode: .never))
+                .tabViewStyle(.page(indexDisplayMode: isPremium ? .always : .never))
+                .indexViewStyle(.page(backgroundDisplayMode:  isPremium ? .always : .never))
 
-                StorePaymentButtonBar()
-                    .environmentObject(viewModel)
+                if !isPremium {
+                    StorePaymentButtonBar()
+                        .environmentObject(viewModel)
+                }
             }
             .overlay(alignment: .topTrailing) {
                 Button {
@@ -80,6 +86,7 @@ struct StoreFeatureDetailView: View {
                                          feature.topScreenAlignment ?? true
                                              ? (geometry.size.height * 0.1) - 24
                                              : (geometry.size.height * 0.1) + 12)
+                            
                         }
                     }
                 }

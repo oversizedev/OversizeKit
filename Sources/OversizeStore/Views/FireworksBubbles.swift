@@ -31,7 +31,7 @@ struct ParticlesBubblesModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         ZStack {
-            ForEach(0 ..< 20, id: \.self) { _ in
+            ForEach(0 ..< 5, id: \.self) { _ in
                 content
                     .hueRotation(Angle(degrees: time * 80))
                     .scaleEffect(scale)
@@ -52,7 +52,7 @@ struct FireworksBubbles: View {
 
     var body: some View {
         ZStack {
-            ForEach(0 ..< Int.random(in: 5 ... 10), id: \.self) { _ in
+            ForEach(0 ..< Int.random(in: 2 ... 5), id: \.self) { _ in
                 Circle()
                     .fill(Color.onPrimaryDisabled)
                     .frame(width: 30, height: 30)

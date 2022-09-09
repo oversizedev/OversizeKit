@@ -1,4 +1,4 @@
-// swift-tools-version: 5.6
+// swift-tools-version: 5.7
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -49,6 +49,7 @@ let package = Package(
         .target(
             name: "OversizeModules",
             dependencies: [
+                "OversizeLockscreen",
                 .product(name: "OversizeUI", package: "OversizeUI"),
                 .product(name: "OversizeServices", package: "OversizeServices"),
                 .product(name: "OversizeSecurityService", package: "OversizeServices"),

@@ -27,6 +27,18 @@ public final class AppLauncherViewModel: ObservableObject {
     @Published public var pinCodeField: String = ""
     @Published public var authState: LockscreenViewState = .locked
     @Published var activeFullScreenSheet: FullScreenSheet?
+    
+    var isShowLockscreen: Bool {
+        if FeatureFlags.secure.lookscreen ?? false {
+            if settingsService.pinCodeEnabend || settingsService.biometricEnabled, authState != .unlocked {
+                return true
+            } else {
+                return false
+            }
+        } else {
+            return false
+        }
+    }
 
     public init() {}
 }
@@ -35,7 +47,6 @@ extension AppLauncherViewModel {
     enum FullScreenSheet: Identifiable, Equatable {
         case onboarding
         case payWall
-        case lockscreen
         public var id: Int {
             hashValue
         }
@@ -81,7 +92,7 @@ public extension AppLauncherViewModel {
             var transaction = Transaction()
             transaction.disablesAnimations = true
             withTransaction(transaction) {
-                activeFullScreenSheet = .lockscreen
+                //activeFullScreenSheet = .lockscreen
             }
         }
     }
