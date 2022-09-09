@@ -19,7 +19,7 @@ struct FireworkParticlesGeometryEffect: GeometryEffect {
     func effectValue(size _: CGSize) -> ProjectionTransform {
         let xTranslation = speed * cos(direction) * time
         let yTranslation = speed * sin(direction) * time
-        let affineTranslation = CGAffineTransform(translationX: xTranslation, y: yTranslation)
+        let affineTranslation: CGAffineTransform = .init(translationX: xTranslation, y: yTranslation)
         return ProjectionTransform(affineTranslation)
     }
 }

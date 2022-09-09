@@ -125,7 +125,7 @@ public struct LockscreenView: View {
         LazyVGrid(columns: gridItemLayout, spacing: 20) {
             ForEach(1 ... 9, id: \.self) { number in
 
-                let stringNumber = String(number)
+                let stringNumber: String = .init(number)
 
                 Button {
                     appendNumber(number: Character(stringNumber))

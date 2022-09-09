@@ -122,7 +122,7 @@
 //
 // extension Date {
 //    func formattedDate() -> String {
-//        let dateFormatter = DateFormatter()
+//        let dateFormatter: DateFormatter = .init()
 //        dateFormatter.dateFormat = "MMM dd, yyyy"
 //        return dateFormatter.string(from: self)
 //    }
