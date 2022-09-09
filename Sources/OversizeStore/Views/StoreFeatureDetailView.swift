@@ -5,11 +5,11 @@
 
 import OversizeComponents
 import OversizeCore
+import OversizeModules
 import OversizeResources
 import OversizeServices
 import OversizeSettingsService
 import OversizeUI
-import OversizeModules
 import SwiftUI
 
 struct StoreFeatureDetailView: View {
@@ -32,10 +32,9 @@ struct StoreFeatureDetailView: View {
                             .padding(.bottom, isPremium ? .large : .zero)
                             .tag(feature)
                     }
-                    
                 }
                 .tabViewStyle(.page(indexDisplayMode: isPremium ? .always : .never))
-                .indexViewStyle(.page(backgroundDisplayMode:  isPremium ? .always : .never))
+                .indexViewStyle(.page(backgroundDisplayMode: isPremium ? .always : .never))
 
                 if !isPremium {
                     StorePaymentButtonBar()
@@ -86,7 +85,6 @@ struct StoreFeatureDetailView: View {
                                          feature.topScreenAlignment ?? true
                                              ? (geometry.size.height * 0.1) - 24
                                              : (geometry.size.height * 0.1) + 12)
-                            
                         }
                     }
                 }

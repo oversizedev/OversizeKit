@@ -17,6 +17,7 @@ let package = Package(
         .library(name: "OversizeLockscreen", targets: ["OversizeLockscreen"]),
         .library(name: "OversizeStore", targets: ["OversizeStore"]),
         .library(name: "OversizeSettings", targets: ["OversizeSettings"]),
+        .library(name: "OversizeOnboarding", targets: ["OversizeOnboarding"]),
     ],
     dependencies: [
         .package(name: "OversizeUI", path: "../OversizeUI"),
@@ -77,6 +78,17 @@ let package = Package(
                 .product(name: "OversizeComponents", package: "OversizeComponents"),
                 .product(name: "OversizeResources", package: "OversizeResources"),
                 .product(name: "OversizeCore", package: "OversizeCore"),
+            ]
+        ),
+        .target(
+            name: "OversizeOnboarding",
+            dependencies: [
+                "OversizeModules",
+                .product(name: "OversizeUI", package: "OversizeUI"),
+                .product(name: "OversizeCore", package: "OversizeCore"),
+                .product(name: "OversizeComponents", package: "OversizeComponents"),
+                .product(name: "OversizeServices", package: "OversizeServices"),
+                .product(name: "OversizeResources", package: "OversizeResources"),
             ]
         ),
         .target(

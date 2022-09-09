@@ -5,8 +5,8 @@
 
 import OversizeCore
 import OversizeLocalizable
-import OversizeModules
 import OversizeLockscreen
+import OversizeModules
 import OversizeSecurityService
 import OversizeServices
 import OversizeSettingsService
@@ -33,10 +33,10 @@ public struct AppLauncher<Content: View, Onboarding: View>: View {
     public var body: some View {
         contentView
             .onAppear {
-//                #if DEBUG
-//                    viewModel.appStateService.restOnbarding()
-//                    viewModel.appStateService.restAppRunCount()
-//                #endif
+                #if DEBUG
+                    viewModel.appStateService.restOnbarding()
+                    viewModel.appStateService.restAppRunCount()
+                #endif
                 viewModel.appStateService.appRun()
                 viewModel.checkOnboarding()
                 viewModel.checkPremium()
@@ -63,7 +63,7 @@ public struct AppLauncher<Content: View, Onboarding: View>: View {
                 }
             })
     }
-    
+
     var contentView: some View {
         Group {
             if viewModel.isShowLockscreen {
@@ -84,7 +84,7 @@ public struct AppLauncher<Content: View, Onboarding: View>: View {
         case .payWall: StoreView().closable()
         }
     }
-    
+
     private var lockscreenView: some View {
         LockscreenView(pinCode: $viewModel.pinCodeField,
                        state: $viewModel.authState,

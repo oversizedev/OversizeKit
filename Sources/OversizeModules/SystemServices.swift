@@ -3,18 +3,17 @@
 // SystemServices.swift
 //
 
+import OversizeCore
+import OversizeLocalizable
+import OversizeLockscreen
 import OversizeSecurityService
 import OversizeServices
 import OversizeSettingsService
 import OversizeStoreService
 import OversizeUI
-import OversizeLockscreen
 import SwiftUI
-import OversizeLocalizable
-import OversizeCore
 
 public struct SystemServicesModifier: ViewModifier {
-    
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.theme) var theme
 
@@ -28,13 +27,13 @@ public struct SystemServicesModifier: ViewModifier {
     @StateObject var hudState = HUD()
     @State var blurRadius: CGFloat = 0
     @State var oppacity: CGFloat = 1
-    
+
     @State public var pinCodeField: String = ""
     @State public var authState: LockscreenViewState = .locked
     @State var activeFullScreenSheet: FullScreenSheet?
-    
+
     @State var isShwoLock = false
-    
+
     enum FullScreenSheet: Identifiable, Equatable {
         case onboarding
         case payWall
@@ -53,24 +52,24 @@ public struct SystemServicesModifier: ViewModifier {
                     switch value {
                     case .active:
                         if settingsService.blurMinimizeEnabend {
-                           // withAnimation {
-                                blurRadius = 0
-                                oppacity = 1
-                          //  }
+                            // withAnimation {
+                            blurRadius = 0
+                            oppacity = 1
+                            //  }
                         }
                     case .background:
                         if settingsService.blurMinimizeEnabend {
-                           // withAnimation {
-                                blurRadius = 10
+                            // withAnimation {
+                            blurRadius = 10
                             oppacity = 0
-                           // }
+                            // }
                         }
                     case .inactive:
                         if settingsService.blurMinimizeEnabend {
-                           // withAnimation {
-                                blurRadius = 10
+                            // withAnimation {
+                            blurRadius = 10
                             oppacity = 0
-                         //   }
+                            //   }
                         }
                     @unknown default:
                         break
@@ -105,7 +104,6 @@ public struct SystemServicesModifier: ViewModifier {
                 .hud(isPresented: $hudState.isPresented, type: $hudState.type) {
                     HUDContent(title: hudState.title, image: hudState.image, type: hudState.type)
                 }
-
 
                 // services
                 .environmentObject(hudState)

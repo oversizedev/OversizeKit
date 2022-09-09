@@ -26,34 +26,34 @@ public struct StoreViewInstuctins: View {
 
     public var body: some View {
         ScrollViewReader { value in
-           
+
             PageView { offset = $0 } content: {
                 Group {
-                switch viewModel.state {
-                case .initial:
-                    VStack {
-                        Spacer()
-                        HStack {
+                    switch viewModel.state {
+                    case .initial:
+                        VStack {
                             Spacer()
-                            ProgressView()
-                                .task {
-                                    await viewModel.fetchData()
-                                    if case let .result(products) = self.viewModel.state {
-                                        await viewModel.updateState(products: products)
+                            HStack {
+                                Spacer()
+                                ProgressView()
+                                    .task {
+                                        await viewModel.fetchData()
+                                        if case let .result(products) = self.viewModel.state {
+                                            await viewModel.updateState(products: products)
+                                        }
                                     }
-                                }
+                                Spacer()
+                            }
                             Spacer()
                         }
-                        Spacer()
+                    case .loading:
+                        ProgressView()
+                    case let .result(data):
+                        content(data: data)
+                    case let .error(error):
+                        ErrorView(error)
                     }
-                case .loading:
-                    ProgressView()
-                case let .result(data):
-                    content(data: data)
-                case let .error(error):
-                    ErrorView(error)
                 }
-            }
                 .paddingContent(.horizontal)
             }
             .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
@@ -75,83 +75,76 @@ public struct StoreViewInstuctins: View {
                     }
                     .environmentObject(viewModel)
                 }
-
             }
         }
-        
-        
-
     }
 
     @ViewBuilder
     private func content(data: StoreKitProducts) -> some View {
-        
-                VStack(spacing: .medium) {
-                    VStack {
-                        VStack(spacing: .xSmall) {
-                            Text("How your free trial works")
-                                .largeTitle()
-                                .foregroundColor(.onSurfaceHighEmphasis)
+        VStack(spacing: .medium) {
+            VStack {
+                VStack(spacing: .xSmall) {
+                    Text("How your free trial works")
+                        .largeTitle()
+                        .foregroundColor(.onSurfaceHighEmphasis)
 
-                            if viewModel.isHaveSale {
-                                Group {
-                                    Text("Begin your path towards feeling better with a ")
-                                        .foregroundColor(.onSurfaceMediumEmphasis)
+                    if viewModel.isHaveSale {
+                        Group {
+                            Text("Begin your path towards feeling better with a ")
+                                .foregroundColor(.onSurfaceMediumEmphasis)
 
-                                        + Text("\(viewModel.saleProcent)% discount")
-                                        .foregroundColor(.accent)
-                                }
-                                .body(.semibold)
-                            }
+                                + Text("\(viewModel.saleProcent)% discount")
+                                .foregroundColor(.accent)
                         }
-                        .multilineTextAlignment(.center)
-                        .padding(.top, .small)
-
-                        Spacer()
-
-                        stepsView
-                            .padding(.bottom, .medium)
-
-                        Spacer()
-                    }
-                    .frame(height: screenSize.safeAreaHeight - 265)
-                    .overlay {
-                        ScrollArrow(width: 30, offset: -5 + (offset * 0.05))
-                            .stroke(style: StrokeStyle(lineWidth: 5, lineCap: .round))
-                            .foregroundColor(.onSurfaceHighEmphasis.opacity(0.3))
-                            .frame(width: 30)
-                            .offset(y: screenSize.safeAreaHeight - 300)
-                            .opacity(1 - (offset * 0.01))
-                    }
-
-                    StoreFeaturesLargeView()
-                        .environmentObject(viewModel)
-                        .opacity(0 + (offset * 0.01))
-
-                    if isShowAllPlans {
-                        productsLust(data: data)
-                            .id(10)
-                    }
-
-                    SubscriptionPrivacyView(products: data)
-                }
-                .padding(.bottom, 220)
-                .paddingContent(.horizontal)
-            
-                .onAppear {
-                    Task {
-                        // When this view appears, get the latest subscription status.
-                        await viewModel.updateSubscriptionStatus(products: data)
+                        .body(.semibold)
                     }
                 }
-                .onChange(of: data.purchasedAutoRenewable) { _ in
-                    Task {
-                        // When `purchasedSubscriptions` changes, get the latest subscription status.
-                        await viewModel.updateSubscriptionStatus(products: data)
-                    }
-                }
-            
-        
+                .multilineTextAlignment(.center)
+                .padding(.top, .small)
+
+                Spacer()
+
+                stepsView
+                    .padding(.bottom, .medium)
+
+                Spacer()
+            }
+            .frame(height: screenSize.safeAreaHeight - 265)
+            .overlay {
+                ScrollArrow(width: 30, offset: -5 + (offset * 0.05))
+                    .stroke(style: StrokeStyle(lineWidth: 5, lineCap: .round))
+                    .foregroundColor(.onSurfaceHighEmphasis.opacity(0.3))
+                    .frame(width: 30)
+                    .offset(y: screenSize.safeAreaHeight - 300)
+                    .opacity(1 - (offset * 0.01))
+            }
+
+            StoreFeaturesLargeView()
+                .environmentObject(viewModel)
+                .opacity(0 + (offset * 0.01))
+
+            if isShowAllPlans {
+                productsLust(data: data)
+                    .id(10)
+            }
+
+            SubscriptionPrivacyView(products: data)
+        }
+        .padding(.bottom, 220)
+        .paddingContent(.horizontal)
+
+        .onAppear {
+            Task {
+                // When this view appears, get the latest subscription status.
+                await viewModel.updateSubscriptionStatus(products: data)
+            }
+        }
+        .onChange(of: data.purchasedAutoRenewable) { _ in
+            Task {
+                // When `purchasedSubscriptions` changes, get the latest subscription status.
+                await viewModel.updateSubscriptionStatus(products: data)
+            }
+        }
     }
 
     @ViewBuilder

@@ -1,6 +1,6 @@
 //
 // Copyright © 2022 Alexander Romanov
-// PINCodeView.swift
+// LockscreenView.swift
 //
 
 import OversizeCore

@@ -12,14 +12,13 @@ import SwiftUI
 
 @MainActor
 class StoreViewModel: ObservableObject {
-    
     enum State {
         case initial
         case loading
         case result(StoreKitProducts)
         case error(AppError)
     }
-    
+
     @Injected(\.storeKitService) private var storeKitService: StoreKitService
     @Published var state = State.initial
 

@@ -102,65 +102,63 @@ public struct StoreView: View {
 
     @ViewBuilder
     private func content(data: StoreKitProducts) -> some View {
-            VStack(spacing: .medium) {
-                VStack(spacing: .xxSmall) {
-                    Text(titleText)
-                        .title()
-                        .foregroundColor(.onSurfaceHighEmphasis)
+        VStack(spacing: .medium) {
+            VStack(spacing: .xxSmall) {
+                Text(titleText)
+                    .title()
+                    .foregroundColor(.onSurfaceHighEmphasis)
 
-                    Text(subtitleText)
-                        .headline()
-                        .foregroundColor(.onSurfaceMediumEmphasis)
-                }
-                .multilineTextAlignment(.center)
+                Text(subtitleText)
+                    .headline()
+                    .foregroundColor(.onSurfaceMediumEmphasis)
+            }
+            .multilineTextAlignment(.center)
 
-                if !viewModel.isPremium {
-                    HStack(spacing: .xSmall) {
-                        ForEach(viewModel.availableSubscriptions /* data.autoRenewable */ ) { product in
-                            StoreProductView(product: product, products: data, isSelected: .constant(viewModel.selectedProduct == product)) {
-                                viewModel.selectedProduct = product
-                            }
-                            .storeProductStyle(.collumn)
+            if !viewModel.isPremium {
+                HStack(spacing: .xSmall) {
+                    ForEach(viewModel.availableSubscriptions /* data.autoRenewable */ ) { product in
+                        StoreProductView(product: product, products: data, isSelected: .constant(viewModel.selectedProduct == product)) {
+                            viewModel.selectedProduct = product
                         }
-                        ForEach(data.nonConsumable) { product in
-                            StoreProductView(product: product, products: data, isSelected: .constant(viewModel.selectedProduct == product)) {
-                                viewModel.selectedProduct = product
-                            }
-                            .storeProductStyle(.collumn)
+                        .storeProductStyle(.collumn)
+                    }
+                    ForEach(data.nonConsumable) { product in
+                        StoreProductView(product: product, products: data, isSelected: .constant(viewModel.selectedProduct == product)) {
+                            viewModel.selectedProduct = product
                         }
+                        .storeProductStyle(.collumn)
                     }
                 }
-
-                StoreFeaturesView()
-                    .environmentObject(viewModel)
-
-                SubscriptionPrivacyView(products: data)
-
-                if !viewModel.isPremium {
-                    productsLust(data: data)
-                        .padding(.bottom, 170)
-                }
-            }
-            .onAppear {
-                Task {
-                    // When this view appears, get the latest subscription status.
-                    await viewModel.updateSubscriptionStatus(products: data)
-                }
-            }
-            .onChange(of: data.purchasedAutoRenewable) { _ in
-                Task {
-                    // When `purchasedSubscriptions` changes, get the latest subscription status.
-                    await viewModel.updateSubscriptionStatus(products: data)
-                }
-            }
-            .onChange(of: viewModel.isPremium) { newValue in
-                isShowFireworks = newValue
-                DispatchQueue.main.asyncAfter(deadline: .now() + 30) {
-                    isShowFireworks = false
-                }
             }
 
-            
+            StoreFeaturesView()
+                .environmentObject(viewModel)
+
+            SubscriptionPrivacyView(products: data)
+
+            if !viewModel.isPremium {
+                productsLust(data: data)
+                    .padding(.bottom, 170)
+            }
+        }
+        .onAppear {
+            Task {
+                // When this view appears, get the latest subscription status.
+                await viewModel.updateSubscriptionStatus(products: data)
+            }
+        }
+        .onChange(of: data.purchasedAutoRenewable) { _ in
+            Task {
+                // When `purchasedSubscriptions` changes, get the latest subscription status.
+                await viewModel.updateSubscriptionStatus(products: data)
+            }
+        }
+        .onChange(of: viewModel.isPremium) { newValue in
+            isShowFireworks = newValue
+            DispatchQueue.main.asyncAfter(deadline: .now() + 30) {
+                isShowFireworks = false
+            }
+        }
     }
 
     @ViewBuilder

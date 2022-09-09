@@ -11,7 +11,7 @@ import OversizeStoreService
 import OversizeUI
 import SwiftUI
 #if canImport(LocalAuthentication)
-import LocalAuthentication
+    import LocalAuthentication
 #endif
 
 @MainActor
@@ -27,7 +27,7 @@ public final class AppLauncherViewModel: ObservableObject {
     @Published public var pinCodeField: String = ""
     @Published public var authState: LockscreenViewState = .locked
     @Published var activeFullScreenSheet: FullScreenSheet?
-    
+
     var isShowLockscreen: Bool {
         if FeatureFlags.secure.lookscreen ?? false {
             if settingsService.pinCodeEnabend || settingsService.biometricEnabled, authState != .unlocked {
@@ -85,14 +85,15 @@ public extension AppLauncherViewModel {
             }
         }
     }
-    
+
     func checkLockscreen() {
         if settingsService.pinCodeEnabend || settingsService.biometricEnabled,
-           authState != .unlocked {
+           authState != .unlocked
+        {
             var transaction = Transaction()
             transaction.disablesAnimations = true
             withTransaction(transaction) {
-                //activeFullScreenSheet = .lockscreen
+                // activeFullScreenSheet = .lockscreen
             }
         }
     }
