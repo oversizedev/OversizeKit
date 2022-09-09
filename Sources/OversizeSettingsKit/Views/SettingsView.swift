@@ -7,7 +7,7 @@ import OversizeLocalizable
 import OversizeResources
 import OversizeServices
 import OversizeSettingsService
-import OversizeStore
+import OversizeStoreKit
 import OversizeUI
 import SwiftUI
 

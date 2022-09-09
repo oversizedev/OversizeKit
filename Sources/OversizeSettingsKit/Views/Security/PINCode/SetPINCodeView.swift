@@ -4,7 +4,7 @@
 //
 
 import OversizeLocalizable
-import OversizeLockscreen
+import OversizeLockscreenKit
 import OversizeUI
 import SwiftUI
 

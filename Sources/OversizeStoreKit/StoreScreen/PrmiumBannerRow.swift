@@ -3,8 +3,8 @@
 // PrmiumBannerRow.swift
 //
 
+import OversizeKit
 import OversizeLocalizable
-import OversizeModules
 import OversizeResources
 import OversizeServices
 import OversizeSettingsService

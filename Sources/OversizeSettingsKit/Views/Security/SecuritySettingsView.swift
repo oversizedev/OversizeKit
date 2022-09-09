@@ -3,8 +3,8 @@
 // SecuritySettingsView.swift
 //
 
+import OversizeKit
 import OversizeLocalizable
-import OversizeModules
 import OversizeSecurityService
 import OversizeServices
 import OversizeSettingsService

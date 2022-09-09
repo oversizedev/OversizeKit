@@ -4,7 +4,7 @@
 import PackageDescription
 
 let package = Package(
-    name: "OversizeModules",
+    name: "OversizeKit",
     platforms: [
         .iOS(.v15),
         .macOS(.v12),
@@ -12,12 +12,12 @@ let package = Package(
         .watchOS(.v8),
     ],
     products: [
-        .library(name: "OversizeLauncher", targets: ["OversizeLauncher"]),
-        .library(name: "OversizeModules", targets: ["OversizeModules"]),
-        .library(name: "OversizeLockscreen", targets: ["OversizeLockscreen"]),
-        .library(name: "OversizeStore", targets: ["OversizeStore"]),
-        .library(name: "OversizeSettings", targets: ["OversizeSettings"]),
-        .library(name: "OversizeOnboarding", targets: ["OversizeOnboarding"]),
+        .library(name: "OversizeLauncherKit", targets: ["OversizeLauncherKit"]),
+        .library(name: "OversizeKit", targets: ["OversizeKit"]),
+        .library(name: "OversizeLockscreenKit", targets: ["OversizeLockscreenKit"]),
+        .library(name: "OversizeStoreKit", targets: ["OversizeStoreKit"]),
+        .library(name: "OversizeSettingsKit", targets: ["OversizeSettingsKit"]),
+        .library(name: "OversizeOnboardingKit", targets: ["OversizeOnboardingKit"]),
     ],
     dependencies: [
         .package(name: "OversizeUI", path: "../OversizeUI"),
@@ -31,11 +31,11 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "OversizeLauncher",
+            name: "OversizeLauncherKit",
             dependencies: [
-                "OversizeLockscreen",
-                "OversizeModules",
-                "OversizeStore",
+                "OversizeLockscreenKit",
+                "OversizeKit",
+                "OversizeStoreKit",
                 .product(name: "OversizeUI", package: "OversizeUI"),
                 .product(name: "OversizeCore", package: "OversizeCore"),
                 .product(name: "OversizeServices", package: "OversizeServices"),
@@ -48,9 +48,9 @@ let package = Package(
             ]
         ),
         .target(
-            name: "OversizeModules",
+            name: "OversizeKit",
             dependencies: [
-                "OversizeLockscreen",
+                "OversizeLockscreenKit",
                 .product(name: "OversizeUI", package: "OversizeUI"),
                 .product(name: "OversizeServices", package: "OversizeServices"),
                 .product(name: "OversizeSecurityService", package: "OversizeServices"),
@@ -60,7 +60,7 @@ let package = Package(
             ]
         ),
         .target(
-            name: "OversizeLockscreen",
+            name: "OversizeLockscreenKit",
             dependencies: [
                 .product(name: "OversizeUI", package: "OversizeUI"),
                 .product(name: "OversizeServices", package: "OversizeServices"),
@@ -69,9 +69,9 @@ let package = Package(
             ]
         ),
         .target(
-            name: "OversizeStore",
+            name: "OversizeStoreKit",
             dependencies: [
-                "OversizeModules",
+                "OversizeKit",
                 .product(name: "OversizeUI", package: "OversizeUI"),
                 .product(name: "OversizeServices", package: "OversizeServices"),
                 .product(name: "OversizeStoreService", package: "OversizeServices"),
@@ -81,9 +81,9 @@ let package = Package(
             ]
         ),
         .target(
-            name: "OversizeOnboarding",
+            name: "OversizeOnboardingKit",
             dependencies: [
-                "OversizeModules",
+                "OversizeKit",
                 .product(name: "OversizeUI", package: "OversizeUI"),
                 .product(name: "OversizeCore", package: "OversizeCore"),
                 .product(name: "OversizeComponents", package: "OversizeComponents"),
@@ -92,11 +92,11 @@ let package = Package(
             ]
         ),
         .target(
-            name: "OversizeSettings",
+            name: "OversizeSettingsKit",
             dependencies: [
-                "OversizeStore",
-                "OversizeModules",
-                "OversizeLockscreen",
+                "OversizeStoreKit",
+                "OversizeKit",
+                "OversizeLockscreenKit",
                 .product(name: "OversizeCore", package: "OversizeCore"),
                 .product(name: "OversizeUI", package: "OversizeUI"),
                 .product(name: "OversizeServices", package: "OversizeServices"),
@@ -108,8 +108,8 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "OversizeModulesTests",
-            dependencies: ["OversizeModules"]
+            name: "OversizeKitTests",
+            dependencies: ["OversizeKit"]
         ),
     ]
 )

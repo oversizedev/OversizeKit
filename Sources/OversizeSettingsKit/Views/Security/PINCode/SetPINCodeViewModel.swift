@@ -5,7 +5,7 @@
 
 import OversizeCore
 import OversizeLocalizable
-import OversizeLockscreen
+import OversizeLockscreenKit
 import OversizeSecurityService
 import OversizeServices
 import OversizeSettingsService

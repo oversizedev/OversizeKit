@@ -3,7 +3,7 @@
 // OnPremiumTap.swift
 //
 
-import OversizeModules
+import OversizeKit
 import SwiftUI
 
 public struct OnPremiumTap: ViewModifier {

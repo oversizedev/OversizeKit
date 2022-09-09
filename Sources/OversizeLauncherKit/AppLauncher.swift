@@ -4,13 +4,13 @@
 //
 
 import OversizeCore
+import OversizeKit
 import OversizeLocalizable
-import OversizeLockscreen
-import OversizeModules
+import OversizeLockscreenKit
 import OversizeSecurityService
 import OversizeServices
 import OversizeSettingsService
-import OversizeStore
+import OversizeStoreKit
 import OversizeStoreService
 import OversizeUI
 import SDWebImageSVGCoder

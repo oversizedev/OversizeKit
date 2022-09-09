@@ -5,7 +5,7 @@
 
 import OversizeComponents
 import OversizeCore
-import OversizeModules
+import OversizeKit
 import OversizeResources
 import OversizeServices
 import OversizeSettingsService

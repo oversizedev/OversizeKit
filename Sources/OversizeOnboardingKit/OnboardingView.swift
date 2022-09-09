@@ -34,11 +34,11 @@ public struct OnboardingView<Content: View>: View {
             }
 
             TabView(selection: $selection) {
-                //ForEach(Array(slides.enumerated()), id: \.offset) { index, element in
+                // ForEach(Array(slides.enumerated()), id: \.offset) { index, element in
 
                 tabItem(tabItem: OnboardingItem(title: "Title", subtitle: "Sub"), index: 0)
-                        //.tag(index)
-                //}
+                // .tag(index)
+                // }
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .indexViewStyle(.page(backgroundDisplayMode: .never))
@@ -51,15 +51,13 @@ public struct OnboardingView<Content: View>: View {
         }
     }
 
-    private func tabItem(tabItem: OnboardingItem, index: Int) -> some View {
+    private func tabItem(tabItem: OnboardingItem, index _: Int) -> some View {
         VStack(spacing: .small) {
-            
             if let image = tabItem.image {
                 image
             }
-            
+
             VStack {
-                
                 if let title = tabItem.title {
                     Text(title)
                         .largeTitle()
@@ -83,7 +81,7 @@ public struct OnboardingView<Content: View>: View {
     }
 }
 
-//struct FloatingTabBarExample: View {
+// struct FloatingTabBarExample: View {
 //    @State var selection = 0
 //
 //    var body: some View {
@@ -101,11 +99,11 @@ public struct OnboardingView<Content: View>: View {
 //                .opacity(selection == 1 ? 1 : 0)
 //        }
 //    }
-//}
+// }
 
-//struct FloatingTabBar_Previews: PreviewProvider {
+// struct FloatingTabBar_Previews: PreviewProvider {
 //    static var previews: some View {
 //        FloatingTabBarExample()
 //    }
-//}
+// }
 //

@@ -4,7 +4,7 @@
 //
 
 import OversizeCore
-import OversizeLockscreen
+import OversizeLockscreenKit
 import OversizeSecurityService
 import OversizeServices
 import OversizeStoreService
