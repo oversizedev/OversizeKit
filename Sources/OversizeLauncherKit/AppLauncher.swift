@@ -33,6 +33,7 @@ public struct AppLauncher<Content: View, Onboarding: View>: View {
     public var body: some View {
         contentView
             .onAppear {
+                viewModel.isShowSplashScreen = false
                 #if DEBUG
                     viewModel.appStateService.restOnbarding()
                     viewModel.appStateService.restAppRunCount()
@@ -66,7 +67,9 @@ public struct AppLauncher<Content: View, Onboarding: View>: View {
 
     var contentView: some View {
         Group {
-            if viewModel.isShowLockscreen {
+            if viewModel.isShowSplashScreen {
+                SplashScreen()
+            } else if viewModel.isShowLockscreen {
                 lockscreenView
             } else {
                 content

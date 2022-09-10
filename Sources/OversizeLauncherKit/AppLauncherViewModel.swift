@@ -27,6 +27,7 @@ public final class AppLauncherViewModel: ObservableObject {
     @Published public var pinCodeField: String = ""
     @Published public var authState: LockscreenViewState = .locked
     @Published var activeFullScreenSheet: FullScreenSheet?
+    @Published var isShowSplashScreen: Bool = true
 
     var isShowLockscreen: Bool {
         if FeatureFlags.secure.lookscreen ?? false {

@@ -29,23 +29,16 @@ public struct StoreView: View {
             Group {
                 switch viewModel.state {
                 case .initial:
-                    VStack {
-                        Spacer()
-                        HStack {
-                            Spacer()
-                            ProgressView()
-                                .task {
-                                    await viewModel.fetchData()
-                                    if case let .result(products) = self.viewModel.state {
-                                        await viewModel.updateState(products: products)
-                                    }
-                                }
-                            Spacer()
+                    contentPlaceholder()
+                        .task {
+                            await viewModel.fetchData()
+                            if case let .result(products) = self.viewModel.state {
+                                await viewModel.updateState(products: products)
+                            }
                         }
-                        Spacer()
-                    }
+
                 case .loading:
-                    ProgressView()
+                    contentPlaceholder()
                 case let .result(data):
                     content(data: data)
                 case let .error(error):
@@ -97,6 +90,33 @@ public struct StoreView: View {
             return "Thank you for use to \(AppInfo.store.subscriptionsName).\nHere's what is now unlocked."
         } else {
             return "Remove ads and unlock all features"
+        }
+    }
+
+    @ViewBuilder
+    private func contentPlaceholder() -> some View {
+        VStack(spacing: .medium) {
+            VStack(spacing: .xxSmall) {
+                Text(titleText)
+                    .title()
+                    .foregroundColor(.onSurfaceHighEmphasis)
+
+                Text(subtitleText)
+                    .headline()
+                    .foregroundColor(.onSurfaceMediumEmphasis)
+            }
+            .multilineTextAlignment(.center)
+
+            HStack(spacing: .xSmall) {
+                ForEach(0 ..< 3, id: \.self) { _ in
+                    RoundedRectangle(cornerRadius: .small)
+                        .fillSurfaceSecondary()
+                        .frame(height: 180)
+                }
+            }
+
+            StoreFeaturesView()
+                .environmentObject(viewModel)
         }
     }
 
