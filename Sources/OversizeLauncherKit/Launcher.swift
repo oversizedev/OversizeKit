@@ -1,6 +1,6 @@
 //
 // Copyright © 2022 Alexander Romanov
-// AppLauncher.swift
+// Launcher.swift
 //
 
 import OversizeCore
@@ -16,14 +16,14 @@ import OversizeUI
 import SDWebImageSVGCoder
 import SwiftUI
 
-public struct AppLauncher<Content: View, Onboarding: View>: View {
+public struct Launcher<Content: View, Onboarding: View>: View {
     @Environment(\.scenePhase) var scenePhase
 
     private var onboarding: Onboarding?
     private let content: Content
     private var transaction = Transaction()
 
-    @StateObject private var viewModel = AppLauncherViewModel()
+    @StateObject private var viewModel = LauncherViewModel()
     @State private var blurRadius: CGFloat = 0
 
     public init(@ViewBuilder content: () -> Content) {
@@ -34,10 +34,10 @@ public struct AppLauncher<Content: View, Onboarding: View>: View {
         contentView
             .onAppear {
                 viewModel.isShowSplashScreen = false
-                #if DEBUG
-                    viewModel.appStateService.restOnbarding()
-                    viewModel.appStateService.restAppRunCount()
-                #endif
+//                #if DEBUG
+//                    viewModel.appStateService.restOnbarding()
+//                    viewModel.appStateService.restAppRunCount()
+//                #endif
                 viewModel.appStateService.appRun()
                 viewModel.checkOnboarding()
                 viewModel.checkPremium()
@@ -81,7 +81,7 @@ public struct AppLauncher<Content: View, Onboarding: View>: View {
     }
 
     @ViewBuilder
-    private func fullScreenCover(sheet: AppLauncherViewModel.FullScreenSheet) -> some View {
+    private func fullScreenCover(sheet: LauncherViewModel.FullScreenSheet) -> some View {
         switch sheet {
         case .onboarding: onboarding
         case .payWall: StoreView().closable()
@@ -107,14 +107,14 @@ public struct AppLauncher<Content: View, Onboarding: View>: View {
         }
     }
 
-    public func onboarding(@ViewBuilder onboarding: @escaping () -> Onboarding) -> AppLauncher {
+    public func onboarding(@ViewBuilder onboarding: @escaping () -> Onboarding) -> Launcher {
         var control = self
         control.onboarding = onboarding()
         return control
     }
 }
 
-public extension AppLauncher where Onboarding == EmptyView {
+public extension Launcher where Onboarding == EmptyView {
     init(@ViewBuilder content: () -> Content) {
         self.content = content()
         onboarding = nil
@@ -123,14 +123,14 @@ public extension AppLauncher where Onboarding == EmptyView {
 
 public extension View {
     func appLaunch() -> some View {
-        AppLauncher {
+        Launcher {
             self
         }
         .systemServices()
     }
 
     func appLaunch<Onboarding: View>(@ViewBuilder onboarding: @escaping () -> Onboarding) -> some View {
-        AppLauncher {
+        Launcher {
             self
         }
         .onboarding(onboarding: onboarding)
@@ -150,7 +150,7 @@ extension View {
 
 struct LockscreenView_Previews: PreviewProvider {
     static var previews: some View {
-        AppLauncher {
+        Launcher {
             Text("Succes")
         }
     }

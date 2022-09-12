@@ -1,6 +1,6 @@
 //
 // Copyright © 2022 Alexander Romanov
-// AppLauncherViewModel.swift
+// LauncherViewModel.swift
 //
 
 import OversizeCore
@@ -15,7 +15,7 @@ import SwiftUI
 #endif
 
 @MainActor
-public final class AppLauncherViewModel: ObservableObject {
+public final class LauncherViewModel: ObservableObject {
     @Injected(\.biometricService) var biometricService
     @Injected(\.appStateService) var appStateService
     @Injected(\.settingsService) var settingsService
@@ -44,7 +44,7 @@ public final class AppLauncherViewModel: ObservableObject {
     public init() {}
 }
 
-extension AppLauncherViewModel {
+extension LauncherViewModel {
     enum FullScreenSheet: Identifiable, Equatable {
         case onboarding
         case payWall
@@ -55,7 +55,7 @@ extension AppLauncherViewModel {
 }
 
 // Lockscreen
-public extension AppLauncherViewModel {
+public extension LauncherViewModel {
     func checkPremium() {
         Task {
             let status = await storeKitService.fetchPremiumAndSubscriptionsStatus()
@@ -83,18 +83,6 @@ public extension AppLauncherViewModel {
             } else {
                 self.authState = .error
                 self.pinCodeField = ""
-            }
-        }
-    }
-
-    func checkLockscreen() {
-        if settingsService.pinCodeEnabend || settingsService.biometricEnabled,
-           authState != .unlocked
-        {
-            var transaction = Transaction()
-            transaction.disablesAnimations = true
-            withTransaction(transaction) {
-                // activeFullScreenSheet = .lockscreen
             }
         }
     }
@@ -129,9 +117,5 @@ public extension AppLauncherViewModel {
             activeFullScreenSheet = nil
             activeFullScreenSheet = .payWall
         }
-//        withoutAnimation {
-//            activeFullScreenSheet = nil
-//
-//        }
     }
 }
