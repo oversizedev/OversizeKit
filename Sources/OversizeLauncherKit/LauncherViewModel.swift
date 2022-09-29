@@ -48,6 +48,7 @@ extension LauncherViewModel {
     enum FullScreenSheet: Identifiable, Equatable {
         case onboarding
         case payWall
+        case rate
         public var id: Int {
             hashValue
         }
@@ -56,6 +57,12 @@ extension LauncherViewModel {
 
 // Lockscreen
 public extension LauncherViewModel {
+    func launcherSheetsChek() {
+        checkOnboarding()
+        checkPremium()
+        checkAppRate()
+    }
+
     func checkPremium() {
         Task {
             let status = await storeKitService.fetchPremiumAndSubscriptionsStatus()
@@ -116,6 +123,12 @@ public extension LauncherViewModel {
         withTransaction(transaction) {
             activeFullScreenSheet = nil
             activeFullScreenSheet = .payWall
+        }
+    }
+
+    func checkAppRate() {
+        if reviewService.isShowReviewBanner {
+            activeFullScreenSheet = .rate
         }
     }
 }

@@ -34,7 +34,7 @@ struct StorePaymentButtonBar: View {
             .controlRadius(.medium)
             .padding(.horizontal, .xxSmall)
 
-            if let action = action {
+            if let action {
                 Button("View all plans") {
                     action()
                 }

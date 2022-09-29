@@ -39,9 +39,8 @@ public struct Launcher<Content: View, Onboarding: View>: View {
 //                    viewModel.appStateService.restAppRunCount()
 //                #endif
                 viewModel.appStateService.appRun()
-                viewModel.checkOnboarding()
-                viewModel.checkPremium()
-                SDImageCodersManager.shared.addCoder(SDImageSVGCoder.shared)
+                viewModel.launcherSheetsChek()
+                initialize()
             }
             .fullScreenCover(item: $viewModel.activeFullScreenSheet) {
                 fullScreenCover(sheet: $0)
@@ -74,7 +73,7 @@ public struct Launcher<Content: View, Onboarding: View>: View {
             } else {
                 content
                     .onAppear {
-                        viewModel.reviewService.appRunRequest()
+                        viewModel.reviewService.launchEvent()
                     }
             }
         }
@@ -85,6 +84,7 @@ public struct Launcher<Content: View, Onboarding: View>: View {
         switch sheet {
         case .onboarding: onboarding
         case .payWall: StoreView().closable()
+        case .rate: RateAppScreen()
         }
     }
 
@@ -112,6 +112,10 @@ public struct Launcher<Content: View, Onboarding: View>: View {
         control.onboarding = onboarding()
         return control
     }
+
+    func initialize() {
+        SDImageCodersManager.shared.addCoder(SDImageSVGCoder.shared)
+    }
 }
 
 public extension Launcher where Onboarding == EmptyView {
@@ -129,7 +133,7 @@ public extension View {
         .systemServices()
     }
 
-    func appLaunch<Onboarding: View>(@ViewBuilder onboarding: @escaping () -> Onboarding) -> some View {
+    func appLaunch(@ViewBuilder onboarding: @escaping () -> some View) -> some View {
         Launcher {
             self
         }

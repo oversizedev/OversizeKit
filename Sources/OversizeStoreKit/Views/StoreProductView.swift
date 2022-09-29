@@ -48,7 +48,7 @@ public struct StoreProductView: View {
 
     // Percentage of decrease = |239.88 - 59.99|/239.88 = 179.89/239.88 = 0.74991662497916 = 74.991662497916%
     var saleProcent: String {
-        if let monthSubscriptionProduct = monthSubscriptionProduct {
+        if let monthSubscriptionProduct {
             let yearPriceMonthly = monthSubscriptionProduct.price * 12
             let procent = (yearPriceMonthly - product.price) / yearPriceMonthly
             return (procent * 100).rounded(0).toString
@@ -299,7 +299,7 @@ public struct StoreProductView: View {
 
                 if let subscriptionUnit = product.subscription?.subscriptionPeriod.unit, subscriptionUnit == .year {
                     HStack {
-                        if isHaveSale, let monthSubscriptionProduct = monthSubscriptionProduct, !isPurchased {
+                        if isHaveSale, let monthSubscriptionProduct, !isPurchased {
                             Text(monthSubscriptionProduct.displayPrice)
                                 .strikethrough()
                                 .subheadline()

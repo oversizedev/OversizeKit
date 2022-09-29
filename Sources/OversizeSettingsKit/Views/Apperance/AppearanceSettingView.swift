@@ -151,7 +151,7 @@ import SwiftUI
                                         if defaultIconIndex != index {
                                             // swiftlint:disable line_length
                                             UIApplication.shared.setAlternateIconName(self.iconSettings.iconNames[index]) { error in
-                                                if let error = error {
+                                                if let error {
                                                     log(error.localizedDescription)
                                                 } else {
                                                     log("Success! You have changed the app icon.")

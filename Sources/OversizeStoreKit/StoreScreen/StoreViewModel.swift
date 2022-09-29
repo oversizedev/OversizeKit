@@ -129,8 +129,8 @@ extension StoreViewModel {
 
     // Percentage of decrease = |239.88 - 59.99|/239.88 = 179.89/239.88 = 0.74991662497916 = 74.991662497916%
     var saleProcent: String {
-        guard let yearSubscriptionProduct = yearSubscriptionProduct else { return "" }
-        if let monthSubscriptionProduct = monthSubscriptionProduct {
+        guard let yearSubscriptionProduct else { return "" }
+        if let monthSubscriptionProduct {
             let yearPriceMonthly = monthSubscriptionProduct.price * 12
             let procent = (yearPriceMonthly - yearSubscriptionProduct.price) / yearPriceMonthly
             return (procent * 100).rounded(0).toString
@@ -140,7 +140,7 @@ extension StoreViewModel {
     }
 
     var selectedProductButtonDescription: String {
-        guard let selectedProduct = selectedProduct else { return "" }
+        guard let selectedProduct else { return "" }
         switch selectedProduct.type {
         case .autoRenewable:
             var priceText: String = selectedProduct.displayPrice + " per year"
@@ -157,7 +157,7 @@ extension StoreViewModel {
     }
 
     var selectedProductButtonText: String {
-        guard let selectedProduct = selectedProduct else { return "Select product" }
+        guard let selectedProduct else { return "Select product" }
         switch selectedProduct.type {
         case .autoRenewable:
             if selectedProduct.subscription?.introductoryOffer != nil {
