@@ -61,7 +61,8 @@ extension StoreViewModel {
         }
         guard let subscriptionStatus = products.subscriptionGroupStatus else { return "" }
         switch subscriptionStatus {
-        case .subscribed: return L10n.Store.active
+        case .subscribed:
+            return L10n.Store.active
         case .revoked:
             if #available(iOS 15.4, *) {
                 return subscriptionStatus.localizedDescription
@@ -96,7 +97,7 @@ extension StoreViewModel {
     }
 
     var subsribtionStatusColor: Color {
-        guard case let .result(products) = state else { return .yellow }
+        guard case let .result(products) = state else { return .gray }
         if !products.purchasedNonConsumable.isEmpty { return .green }
         guard let subscriptionStatus = products.subscriptionGroupStatus else { return .red }
         switch subscriptionStatus {
