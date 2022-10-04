@@ -135,11 +135,11 @@ import SwiftUI
                             .onPremiumTap()
                     }
 
-                    if FeatureFlags.secure.lookscreen.valueOrFalse {
-                        Row(L10n.Security.authHistory, trallingType: .toggle(isOn: $settingsService.authHistoryEnabend))
-                            .premium()
-                            .onPremiumTap()
-                    }
+//                    if FeatureFlags.secure.lookscreen.valueOrFalse {
+//                        Row(L10n.Security.authHistory, trallingType: .toggle(isOn: $settingsService.authHistoryEnabend))
+//                            .premium()
+//                            .onPremiumTap()
+//                    }
                 }
             }
         }

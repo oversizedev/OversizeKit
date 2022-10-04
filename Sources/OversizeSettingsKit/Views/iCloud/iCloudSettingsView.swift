@@ -46,14 +46,22 @@ import SwiftUI
         private var soundsAndVibrations: some View {
             SectionView {
                 VStack(spacing: .zero) {
-                    Row(L10n.Settings.iCloudSync, trallingType: .toggle(isOn: $settingsService.cloudKitEnabled))
-                        .premium()
-                        .onPremiumTap()
+                    if FeatureFlags.app.сloudKit.valueOrFalse {
+                        Row(L10n.Settings.iCloudSync, trallingType: .toggle(isOn: $settingsService.cloudKitEnabled))
+                            .premium()
+                            .onPremiumTap()
+                    }
 
                     if FeatureFlags.secure.CVVCodes.valueOrFalse {
                         Row(L10n.Security.iCloudSyncCVV,
                             subtitle: settingsService.cloudKitCVVEnabled ? L10n.Security.iCloudSyncCVVDescriptionCloudKit : L10n.Security.iCloudSyncCVVDescriptionLocal,
                             trallingType: .toggle(isOn: $settingsService.cloudKitCVVEnabled))
+                            .premium()
+                            .onPremiumTap()
+                    }
+                    
+                    if FeatureFlags.app.healthKit.valueOrFalse {
+                        Row("HealthKit synchronization", trallingType: .toggle(isOn: $settingsService.healthKitEnabled))
                             .premium()
                             .onPremiumTap()
                     }
