@@ -49,47 +49,47 @@ import SwiftUI
         }
 
         public var body: some View {
-#if os(iOS)
-            
-            Group {
-                if !isPortrait, verticalSizeClass == .regular {
-                    Group {
-                        PageView(L10n.Settings.title) {
-                            iOSSettings
-                        }.backgroundSecondary()
-                        
-                        AppearanceSettingView()
-                    }
-                    .navigationable()
-                    .navigationViewStyle(DoubleColumnNavigationViewStyle())
-                } else {
-                    Group {
-                        PageView(L10n.Settings.title) {
-                            iOSSettings
+            #if os(iOS)
+
+                Group {
+                    if !isPortrait, verticalSizeClass == .regular {
+                        Group {
+                            PageView(L10n.Settings.title) {
+                                iOSSettings
+                            }.backgroundSecondary()
+
+                            AppearanceSettingView()
                         }
-                        .backgroundSecondary()
+                        .navigationable()
+                        .navigationViewStyle(DoubleColumnNavigationViewStyle())
+                    } else {
+                        Group {
+                            PageView(L10n.Settings.title) {
+                                iOSSettings
+                            }
+                            .backgroundSecondary()
+                        }
+                        .navigationable()
+                        .navigationViewStyle(StackNavigationViewStyle())
                     }
-                    .navigationable()
-                    .navigationViewStyle(StackNavigationViewStyle())
                 }
-            }
-            .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
-                setOrientation()
-            }
-            .onAppear {
-                setOrientation()
-            }
-            .portraitMode(isPortrait)
+                .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
+                    setOrientation()
+                }
+                .onAppear {
+                    setOrientation()
+                }
+                .portraitMode(isPortrait)
 
             #else
                 macSettings
 
             #endif
         }
-        
+
         func setOrientation() {
             guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
-            self.isPortrait = scene.interfaceOrientation.isPortrait
+            isPortrait = scene.interfaceOrientation.isPortrait
         }
     }
 #endif
@@ -136,7 +136,7 @@ import SwiftUI
                         .buttonStyle(.row)
                     }
 
-                    if FeatureFlags.app.сloudKit.valueOrFalse {
+                    if FeatureFlags.app.сloudKit.valueOrFalse || FeatureFlags.app.healthKit.valueOrFalse {
                         NavigationLink(destination: iCloudSettingsView()
                         ) {
                             Row(L10n.Title.synchronization, leadingType: .image(cloudKitIcon), trallingType: rowType)

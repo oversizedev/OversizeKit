@@ -59,11 +59,11 @@ import SwiftUI
                             .premium()
                             .onPremiumTap()
                     }
-                    
+
                     if FeatureFlags.app.healthKit.valueOrFalse {
                         Row("HealthKit synchronization", trallingType: .toggle(isOn: $settingsService.healthKitEnabled))
-                            .premium()
-                            .onPremiumTap()
+                            //.premium()
+                            //.onPremiumTap()
                     }
                 }
             }

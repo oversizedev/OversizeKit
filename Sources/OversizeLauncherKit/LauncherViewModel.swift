@@ -19,7 +19,7 @@ public final class LauncherViewModel: ObservableObject {
     @Injected(\.biometricService) var biometricService
     @Injected(\.appStateService) var appStateService
     @Injected(\.settingsService) var settingsService
-    @Injected(\.appStoreReviewService) var reviewService
+    @Injected(\.appStoreReviewService) var reviewService: AppStoreReviewServiceProtocol
     @Injected(\.storeKitService) private var storeKitService: StoreKitService
 
     @AppStorage("AppState.PremiumState") var isPremium: Bool = false
@@ -122,12 +122,14 @@ public extension LauncherViewModel {
         transaction.disablesAnimations = true
         withTransaction(transaction) {
             activeFullScreenSheet = nil
-            activeFullScreenSheet = .payWall
+            delay(time: 0.2) {
+                self.activeFullScreenSheet = .payWall
+            }
         }
     }
 
     func checkAppRate() {
-        if reviewService.isShowReviewBanner {
+        if reviewService.isShowReviewSheet {
             activeFullScreenSheet = .rate
         }
     }
