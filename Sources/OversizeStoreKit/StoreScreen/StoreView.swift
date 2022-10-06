@@ -137,10 +137,12 @@ public struct StoreView: View {
             if !viewModel.isPremium {
                 HStack(spacing: .xSmall) {
                     ForEach(viewModel.availableSubscriptions /* data.autoRenewable */ ) { product in
-                        StoreProductView(product: product, products: data, isSelected: .constant(viewModel.selectedProduct == product)) {
-                            viewModel.selectedProduct = product
+                        if !product.isOffer {
+                            StoreProductView(product: product, products: data, isSelected: .constant(viewModel.selectedProduct == product)) {
+                                viewModel.selectedProduct = product
+                            }
+                            .storeProductStyle(.collumn)
                         }
-                        .storeProductStyle(.collumn)
                     }
                     ForEach(data.nonConsumable) { product in
                         StoreProductView(product: product, products: data, isSelected: .constant(viewModel.selectedProduct == product)) {
@@ -200,12 +202,12 @@ public struct StoreView: View {
 //            }
 
             ForEach(viewModel.availableSubscriptions /* data.autoRenewable */ ) { product in
-                StoreProductView(product: product, products: data, isSelected: .constant(viewModel.selectedProduct == product)) {
-                    viewModel.selectedProduct = product
-//                    Task {
-//                       await viewModel.buy(product: product)
-//                    }
+                if !product.isOffer {
+                    StoreProductView(product: product, products: data, isSelected: .constant(viewModel.selectedProduct == product)) {
+                        viewModel.selectedProduct = product
+                    }
                 }
+                    
             }
             ForEach(data.nonConsumable) { product in
                 StoreProductView(product: product, products: data, isSelected: .constant(viewModel.selectedProduct == product)) {

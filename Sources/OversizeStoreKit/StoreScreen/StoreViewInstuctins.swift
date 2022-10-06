@@ -250,9 +250,11 @@ public struct StoreViewInstuctins: View {
 //            }
 
             ForEach(viewModel.availableSubscriptions) { product in
-                StoreProductView(product: product, products: data, isSelected: .constant(false)) {
-                    Task {
-                        await viewModel.buy(product: product)
+                if !product.isOffer {
+                    StoreProductView(product: product, products: data, isSelected: .constant(false)) {
+                        Task {
+                            await viewModel.buy(product: product)
+                        }
                     }
                 }
             }

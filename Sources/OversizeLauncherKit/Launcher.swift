@@ -83,7 +83,7 @@ public struct Launcher<Content: View, Onboarding: View>: View {
     private func fullScreenCover(sheet: LauncherViewModel.FullScreenSheet) -> some View {
         switch sheet {
         case .onboarding: onboarding
-        case .payWall: StoreView().closable()
+        case .payWall: StoreViewInstuctins()
         case .rate: RateAppScreen()
         }
     }

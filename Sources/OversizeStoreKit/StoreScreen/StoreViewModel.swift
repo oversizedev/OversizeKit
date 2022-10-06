@@ -248,6 +248,12 @@ extension StoreViewModel {
 
                     let highestTier = storeKitService.tier(for: currentProduct.id)
                     let newTier = storeKitService.tier(for: renewalInfo.currentProductID)
+                    
+                    log("romanov.cc.ScaleDown.monthly")
+                    log(storeKitService.tier(for: "romanov.cc.ScaleDown.monthly"))
+                    
+                    log("romanov.cc.ScaleDown.yearly")
+                    log(storeKitService.tier(for: "romanov.cc.ScaleDown.yearly"))
 
                     if newTier > highestTier {
                         highestStatus = status
