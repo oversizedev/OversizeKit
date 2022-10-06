@@ -298,7 +298,7 @@ public struct StoreProductView: View {
                     .foregroundColor(.onSurfaceMediumEmphasis)
 
                 if let subscriptionUnit = product.subscription?.subscriptionPeriod.unit, subscriptionUnit == .year {
-                    HStack {
+                    HStack(spacing: 2) {
                         if isHaveSale, let monthSubscriptionProduct, !isPurchased {
                             Text(monthSubscriptionProduct.displayPrice)
                                 .strikethrough()

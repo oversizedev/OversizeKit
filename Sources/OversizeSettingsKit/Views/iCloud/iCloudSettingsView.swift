@@ -12,7 +12,7 @@ import SwiftUI
 
 // swiftlint:disable line_length type_name
 #if os(iOS)
-    public struct iCloudSettingsView: View {
+    public struct iCloudSettingsView: View { // Synchronization
         @Environment(\.presentationMode) var presentationMode
         @Environment(\.verticalSizeClass) private var verticalSizeClass
         @Environment(\.isPortrait) var isPortrait
@@ -62,8 +62,8 @@ import SwiftUI
 
                     if FeatureFlags.app.healthKit.valueOrFalse {
                         Row("HealthKit synchronization", trallingType: .toggle(isOn: $settingsService.healthKitEnabled))
-                            //.premium()
-                            //.onPremiumTap()
+                        // .premium()
+                        // .onPremiumTap()
                     }
                 }
             }

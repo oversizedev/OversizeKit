@@ -207,7 +207,6 @@ public struct StoreView: View {
                         viewModel.selectedProduct = product
                     }
                 }
-                    
             }
             ForEach(data.nonConsumable) { product in
                 StoreProductView(product: product, products: data, isSelected: .constant(viewModel.selectedProduct == product)) {

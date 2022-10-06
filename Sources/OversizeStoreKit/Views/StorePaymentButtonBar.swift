@@ -38,7 +38,7 @@ struct StorePaymentButtonBar: View {
                 Button("View all plans") {
                     action()
                 }
-                .buttonStyle(.tertiary)
+                .buttonStyle(.quaternary)
                 .accent()
             }
         }

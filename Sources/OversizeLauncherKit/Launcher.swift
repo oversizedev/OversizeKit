@@ -42,6 +42,9 @@ public struct Launcher<Content: View, Onboarding: View>: View {
                 viewModel.launcherSheetsChek()
                 initialize()
             }
+            .task {
+                await viewModel.checkPremium()
+            }
             .fullScreenCover(item: $viewModel.activeFullScreenSheet) {
                 fullScreenCover(sheet: $0)
                     .systemServices()
@@ -85,6 +88,7 @@ public struct Launcher<Content: View, Onboarding: View>: View {
         case .onboarding: onboarding
         case .payWall: StoreViewInstuctins()
         case .rate: RateAppScreen()
+        case .specialOffer: StoreSpecialOfferView()
         }
     }
 

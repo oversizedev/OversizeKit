@@ -49,6 +49,7 @@ extension LauncherViewModel {
         case onboarding
         case payWall
         case rate
+        case specialOffer
         public var id: Int {
             hashValue
         }
@@ -59,24 +60,22 @@ extension LauncherViewModel {
 public extension LauncherViewModel {
     func launcherSheetsChek() {
         checkOnboarding()
-        checkPremium()
         checkAppRate()
+        checkSpecialOffer()
     }
 
-    func checkPremium() {
-        Task {
-            let status = await storeKitService.fetchPremiumAndSubscriptionsStatus()
-            if let premiumStatus = status.0 {
-                isPremium = premiumStatus
-                log("\(premiumStatus ? "👑 Premium status" : "🆓 Free status")")
-            }
+    func checkPremium() async {
+        let status = await storeKitService.fetchPremiumAndSubscriptionsStatus()
+        if let premiumStatus = status.0 {
+            isPremium = premiumStatus
+            log("\(premiumStatus ? "👑 Premium status" : "🆓 Free status")")
+        }
 
-            if let subscriptionStatus = status.1 {
-                if #available(iOS 15.4, *) {
-                    log("📝 Subscription: \(subscriptionStatus.localizedDescription)")
-                }
-                subscriptionsState = subscriptionStatus
+        if let subscriptionStatus = status.1 {
+            if #available(iOS 15.4, *) {
+                log("📝 Subscription: \(subscriptionStatus.localizedDescription)")
             }
+            subscriptionsState = subscriptionStatus
         }
     }
 
@@ -129,8 +128,14 @@ public extension LauncherViewModel {
     }
 
     func checkAppRate() {
-        if reviewService.isShowReviewSheet {
+        if reviewService.isShowReviewSheet, activeFullScreenSheet == nil {
             activeFullScreenSheet = .rate
+        }
+    }
+
+    func checkSpecialOffer() {
+        if activeFullScreenSheet == nil {
+            activeFullScreenSheet = .specialOffer
         }
     }
 }

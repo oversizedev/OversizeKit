@@ -61,7 +61,9 @@ struct StoreFeaturesLargeView: View {
                         .foregroundColor(.onSurfaceMediumEmphasis)
                 }
                 .padding(.vertical, .medium)
+                .padding(.horizontal, .xSmall)
             }
+            .multilineTextAlignment(.center)
         }
         .controlRadius(.large)
         .controlPadding(.xxxSmall)

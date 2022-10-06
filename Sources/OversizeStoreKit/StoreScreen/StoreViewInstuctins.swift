@@ -3,8 +3,6 @@
 // StoreViewInstuctins.swift
 //
 
-import SwiftUI
-
 import OversizeComponents
 import OversizeLocalizable
 import OversizeResources
@@ -120,6 +118,7 @@ public struct StoreViewInstuctins: View {
             }
 
             StoreFeaturesLargeView()
+                .paddingContent(.horizontal)
                 .environmentObject(viewModel)
                 .opacity(0 + (offset * 0.01))
 
@@ -131,7 +130,7 @@ public struct StoreViewInstuctins: View {
             SubscriptionPrivacyView(products: data)
         }
         .padding(.bottom, 220)
-        .paddingContent(.horizontal)
+       
 
         .onAppear {
             Task {

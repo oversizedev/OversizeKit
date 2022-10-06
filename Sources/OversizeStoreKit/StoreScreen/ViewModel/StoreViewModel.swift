@@ -19,7 +19,7 @@ class StoreViewModel: ObservableObject {
         case error(AppError)
     }
 
-    @Injected(\.storeKitService) private var storeKitService: StoreKitService
+    @Injected(\.storeKitService) var storeKitService: StoreKitService
     @Published var state = State.initial
 
     public var updateListenerTask: Task<Void, Error>?
@@ -28,6 +28,7 @@ class StoreViewModel: ObservableObject {
     @Published var status: Product.SubscriptionInfo.Status?
 
     @Published var selectedProduct: Product?
+    let specialOfferMode: Bool
 
     @AppStorage("AppState.PremiumState") var isPremium: Bool = false
     @AppStorage("AppState.PremiumActivated") var isPremiumActivated: Bool = false
@@ -41,8 +42,9 @@ class StoreViewModel: ObservableObject {
         }
     }
 
-    public init() {
+    public init(specialOfferMode: Bool = false) {
         // Start a transaction listener as close to app launch as possible so you don't miss any transactions.
+        self.specialOfferMode = specialOfferMode
         updateListenerTask = listenForTransactions()
     }
 
@@ -117,7 +119,7 @@ extension StoreViewModel {
 
     var yearSubscriptionProduct: Product? {
         guard case let .result(products) = state else { return nil }
-        return products.autoRenewable.first(where: { $0.subscription?.subscriptionPeriod.unit == .year })
+        return products.autoRenewable.first(where: { $0.subscription?.subscriptionPeriod.unit == .year && $0.isOffer == specialOfferMode })
     }
 
     var isHaveSale: Bool {
@@ -248,10 +250,10 @@ extension StoreViewModel {
 
                     let highestTier = storeKitService.tier(for: currentProduct.id)
                     let newTier = storeKitService.tier(for: renewalInfo.currentProductID)
-                    
+
                     log("romanov.cc.ScaleDown.monthly")
                     log(storeKitService.tier(for: "romanov.cc.ScaleDown.monthly"))
-                    
+
                     log("romanov.cc.ScaleDown.yearly")
                     log(storeKitService.tier(for: "romanov.cc.ScaleDown.yearly"))
 
@@ -301,7 +303,8 @@ extension StoreViewModel {
             let result = await storeKitService.updateCustomerProductStatus(products: preProducts)
             switch result {
             case let .success(finalProducts):
-                if let yarlyProduct = finalProducts.autoRenewable.first(where: { $0.subscription?.subscriptionPeriod.unit == .year }) {
+
+                if let yarlyProduct = finalProducts.autoRenewable.first(where: { $0.subscription?.subscriptionPeriod.unit == .year && $0.isOffer == specialOfferMode }) {
                     selectedProduct = yarlyProduct
                 }
                 if let status = finalProducts.subscriptionGroupStatus {
