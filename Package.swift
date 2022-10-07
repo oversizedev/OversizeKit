@@ -3,7 +3,7 @@
 
 import PackageDescription
 
-let productionDependencies: [PackageDescription.Package.Dependency] = {[
+let productionDependencies: [PackageDescription.Package.Dependency] = { [
     .package(url: "http://github.com/oversizedev/OversizeUI.git", branch: "main"),
     .package(url: "http://github.com/oversizedev/OversizeServices.git", branch: "main"),
     .package(url: "http://github.com/oversizedev/OversizeLocalizable.git", branch: "main"),
@@ -13,9 +13,9 @@ let productionDependencies: [PackageDescription.Package.Dependency] = {[
     .package(url: "http://github.com/oversizedev/OversizeCDN.git", branch: "main"),
     .package(url: "https://github.com/SDWebImage/SDWebImageSwiftUI.git", from: "2.0.2"),
     .package(url: "https://github.com/SDWebImage/SDWebImageSVGCoder.git", from: "1.6.1"),
-]}()
+] }()
 
-let developmentDependencies: [PackageDescription.Package.Dependency] = {[
+let developmentDependencies: [PackageDescription.Package.Dependency] = { [
     .package(name: "OversizeUI", path: "../OversizeUI"),
     .package(name: "OversizeServices", path: "../OversizeServices"),
     .package(name: "OversizeLocalizable", path: "../OversizeLocalizable"),
@@ -25,7 +25,7 @@ let developmentDependencies: [PackageDescription.Package.Dependency] = {[
     .package(name: "OversizeCDN", path: "../OversizeCDN"),
     .package(url: "https://github.com/SDWebImage/SDWebImageSwiftUI.git", from: "2.0.2"),
     .package(url: "https://github.com/SDWebImage/SDWebImageSVGCoder.git", from: "1.6.1"),
-]}()
+] }()
 
 let package = Package(
     name: "OversizeKit",

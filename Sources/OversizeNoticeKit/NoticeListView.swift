@@ -4,8 +4,8 @@
 //
 
 import OversizeServices
-import OversizeStoreService
 import OversizeStoreKit
+import OversizeStoreService
 import OversizeUI
 import StoreKit
 import SwiftUI
@@ -15,7 +15,7 @@ public struct NoticeListView: View {
 
     @State private var isBannerClosed = false
     @State private var showRecommended = false
-    
+
     private var specialOffer: StoreSpecialOfferEventType? {
         var specialOffer: StoreSpecialOfferEventType?
         for event in StoreSpecialOfferEventType.allCases where event.isNow {
@@ -25,6 +25,7 @@ public struct NoticeListView: View {
         }
         return specialOffer
     }
+
     @State private var isShowOfferSheet: Bool = false
     @AppStorage("AppState.LastClosedSpecialOfferBanner") var lastClosedSpecialOffer: StoreSpecialOfferEventType = .oldUser
 
@@ -35,55 +36,55 @@ public struct NoticeListView: View {
     public init() {}
 
     public var body: some View {
-            VStack(spacing: .small) {
-                if isShowRate, let reviewUrl = AppInfo.url.appStoreReview {
-                    NoticeView("How do you like the application?") {
-                        Link(destination: reviewUrl) {
-                            Text("Good")
-                        }
-                        .buttonStyle(.primary(infinityWidth: true))
-                        .accent()
-                        .simultaneousGesture(TapGesture().onEnded {
-                            reviewService.estimate(goodRating: true)
-                            isBannerClosed = true
-                        })
+        VStack(spacing: .small) {
+            if isShowRate, let reviewUrl = AppInfo.url.appStoreReview {
+                NoticeView("How do you like the application?") {
+                    Link(destination: reviewUrl) {
+                        Text("Good")
+                    }
+                    .buttonStyle(.primary(infinityWidth: true))
+                    .accent()
+                    .simultaneousGesture(TapGesture().onEnded {
+                        reviewService.estimate(goodRating: true)
+                        isBannerClosed = true
+                    })
 
-                        Button("Bad") {
-                            reviewService.estimate(goodRating: false)
-                            isBannerClosed = true
-                        }
-                        .buttonStyle(.tertiary(infinityWidth: true))
-
-                    } closeAction: {
-                        reviewService.rewiewBunnerClosed()
+                    Button("Bad") {
+                        reviewService.estimate(goodRating: false)
                         isBannerClosed = true
                     }
-                    .animation(.default, value: isBannerClosed)
+                    .buttonStyle(.tertiary(infinityWidth: true))
+
+                } closeAction: {
+                    reviewService.rewiewBunnerClosed()
+                    isBannerClosed = true
                 }
-                
-                if let event = specialOffer {
-                    let url = URL(string: "https://cdn.oversize.design/assets/illustrations/\(event.specialOfferImageURL)")
-                    
-                    NoticeView(event.specialOfferBannerTitle,
-                               subtitle: event.specialOfferDescription,
-                               imageURL: url) {
-                        Button {
-                            isShowOfferSheet.toggle()
-                        } label: {
-                            Text("Get Free Trial")
-                        }
-                        .accent()
-                        
-                    } closeAction: {
-                        lastClosedSpecialOffer = event
+                .animation(.default, value: isBannerClosed)
+            }
+
+            if let event = specialOffer {
+                let url = URL(string: "https://cdn.oversize.design/assets/illustrations/\(event.specialOfferImageURL)")
+
+                NoticeView(event.specialOfferBannerTitle,
+                           subtitle: event.specialOfferDescription,
+                           imageURL: url) {
+                    Button {
+                        isShowOfferSheet.toggle()
+                    } label: {
+                        Text("Get Free Trial")
                     }
-                    .sheet(isPresented: $isShowOfferSheet) {
-                        StoreSpecialOfferView(event: event)
-                            .systemServices()
-                    }
+                    .accent()
+
+                } closeAction: {
+                    lastClosedSpecialOffer = event
+                }
+                .sheet(isPresented: $isShowOfferSheet) {
+                    StoreSpecialOfferView(event: event)
+                        .systemServices()
                 }
             }
         }
+    }
 }
 
 // struct NoticeListView_Previews: PreviewProvider {

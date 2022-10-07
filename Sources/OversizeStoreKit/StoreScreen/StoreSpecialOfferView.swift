@@ -21,7 +21,7 @@ public struct StoreSpecialOfferView: View {
     @State private var isShowAllPlans = false
     @State private var offset: CGFloat = 0
     private let event: StoreSpecialOfferEventType
-    
+
     @State var trialDaysPeriodText: String = ""
 
     public init(event: StoreSpecialOfferEventType = .newUser) {
