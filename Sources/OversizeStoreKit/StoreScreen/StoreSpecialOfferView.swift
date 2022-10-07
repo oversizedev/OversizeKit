@@ -14,12 +14,14 @@ import SwiftUI
 
 public struct StoreSpecialOfferView: View {
     @Environment(\.screenSize) private var screenSize
+    @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel: StoreViewModel
+    @AppStorage("AppState.LastClosedSpecialOfferSheet") var lastClosedSpecialOffer: StoreSpecialOfferEventType = .oldUser
 
     @State private var isShowAllPlans = false
     @State private var offset: CGFloat = 0
     private let event: StoreSpecialOfferEventType
-
+    
     @State var trialDaysPeriodText: String = ""
 
     public init(event: StoreSpecialOfferEventType = .newUser) {
@@ -62,7 +64,10 @@ public struct StoreSpecialOfferView: View {
             PremiumLabel(image: Resource.Store.zap, text: AppInfo.store.subscriptionsName, size: .medium)
         }
         .trailingBar {
-            BarButton(type: .close)
+            BarButton(type: .closeAction(action: {
+                lastClosedSpecialOffer = event
+                dismiss()
+            }))
         }
         .bottomToolbar(style: .none, ignoreSafeArea: false) {
             VStack(spacing: .zero) {
@@ -72,16 +77,15 @@ public struct StoreSpecialOfferView: View {
             }
         }
     }
-    
+
     var imageSize: CGFloat {
-        if screenSize.height > 840 {
+        if screenSize.height > 830 {
             return 144
-        } else if screenSize.height > 810 {
+        } else if screenSize.height > 800 {
             return 98
         } else {
             return 64
         }
-    
     }
 
     @ViewBuilder

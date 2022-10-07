@@ -130,7 +130,6 @@ public struct StoreViewInstuctins: View {
             SubscriptionPrivacyView(products: data)
         }
         .padding(.bottom, 220)
-       
 
         .onAppear {
             Task {

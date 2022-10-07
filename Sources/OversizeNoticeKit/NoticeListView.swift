@@ -5,6 +5,7 @@
 
 import OversizeServices
 import OversizeStoreService
+import OversizeStoreKit
 import OversizeUI
 import StoreKit
 import SwiftUI
@@ -14,6 +15,18 @@ public struct NoticeListView: View {
 
     @State private var isBannerClosed = false
     @State private var showRecommended = false
+    
+    private var specialOffer: StoreSpecialOfferEventType? {
+        var specialOffer: StoreSpecialOfferEventType?
+        for event in StoreSpecialOfferEventType.allCases where event.isNow {
+            if lastClosedSpecialOffer != event {
+                specialOffer = event
+            }
+        }
+        return specialOffer
+    }
+    @State private var isShowOfferSheet: Bool = false
+    @AppStorage("AppState.LastClosedSpecialOfferBanner") var lastClosedSpecialOffer: StoreSpecialOfferEventType = .oldUser
 
     private var isShowRate: Bool {
         !isBannerClosed && reviewService.isShowReviewBanner
@@ -22,7 +35,6 @@ public struct NoticeListView: View {
     public init() {}
 
     public var body: some View {
-        if isShowRate {
             VStack(spacing: .small) {
                 if isShowRate, let reviewUrl = AppInfo.url.appStoreReview {
                     NoticeView("How do you like the application?") {
@@ -48,21 +60,30 @@ public struct NoticeListView: View {
                     }
                     .animation(.default, value: isBannerClosed)
                 }
-
-                //            NoticeView("Dress Weather") {
-                //                Button {
-                //                    showRecommended.toggle()
-                //                } label: {
-                //                    Text("Show")
-                //                }
-                //                .accent()
-                //            }
-                //            .appStoreOverlay(isPresented: $showRecommended) {
-                //                SKOverlay.AppConfiguration(appIdentifier: "1552617598", position: .bottomRaised)
-                //            }
+                
+                if let event = specialOffer {
+                    let url = URL(string: "https://cdn.oversize.design/assets/illustrations/\(event.specialOfferImageURL)")
+                    
+                    NoticeView(event.specialOfferBannerTitle,
+                               subtitle: event.specialOfferDescription,
+                               imageURL: url) {
+                        Button {
+                            isShowOfferSheet.toggle()
+                        } label: {
+                            Text("Get Free Trial")
+                        }
+                        .accent()
+                        
+                    } closeAction: {
+                        lastClosedSpecialOffer = event
+                    }
+                    .sheet(isPresented: $isShowOfferSheet) {
+                        StoreSpecialOfferView(event: event)
+                            .systemServices()
+                    }
+                }
             }
         }
-    }
 }
 
 // struct NoticeListView_Previews: PreviewProvider {

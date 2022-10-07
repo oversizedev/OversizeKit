@@ -88,7 +88,7 @@ public struct Launcher<Content: View, Onboarding: View>: View {
         case .onboarding: onboarding
         case .payWall: StoreViewInstuctins()
         case .rate: RateAppScreen()
-        case .specialOffer: StoreSpecialOfferView()
+        case let .specialOffer(event): StoreSpecialOfferView(event: event)
         }
     }
 

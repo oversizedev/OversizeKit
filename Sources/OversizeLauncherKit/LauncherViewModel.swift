@@ -17,13 +17,14 @@ import SwiftUI
 @MainActor
 public final class LauncherViewModel: ObservableObject {
     @Injected(\.biometricService) var biometricService
-    @Injected(\.appStateService) var appStateService
+    @Injected(\.appStateService) var appStateService: AppStateService
     @Injected(\.settingsService) var settingsService
     @Injected(\.appStoreReviewService) var reviewService: AppStoreReviewServiceProtocol
     @Injected(\.storeKitService) private var storeKitService: StoreKitService
 
     @AppStorage("AppState.PremiumState") var isPremium: Bool = false
     @AppStorage("AppState.SubscriptionsState") var subscriptionsState: RenewalState = .expired
+    @AppStorage("AppState.LastClosedSpecialOfferSheet") var lastClosedSpecialOffer: StoreSpecialOfferEventType = .oldUser
     @Published public var pinCodeField: String = ""
     @Published public var authState: LockscreenViewState = .locked
     @Published var activeFullScreenSheet: FullScreenSheet?
@@ -49,9 +50,14 @@ extension LauncherViewModel {
         case onboarding
         case payWall
         case rate
-        case specialOffer
+        case specialOffer(event: StoreSpecialOfferEventType)
         public var id: Int {
-            hashValue
+            switch self {
+            case .onboarding: return 0
+            case .payWall: return 1
+            case .rate: return 2
+            case .specialOffer: return 3
+            }
         }
     }
 }
@@ -134,8 +140,10 @@ public extension LauncherViewModel {
     }
 
     func checkSpecialOffer() {
-        if activeFullScreenSheet == nil {
-            activeFullScreenSheet = .specialOffer
+        for event in StoreSpecialOfferEventType.allCases where event.isNow {
+            if activeFullScreenSheet == nil, lastClosedSpecialOffer != event {
+                activeFullScreenSheet = .specialOffer(event: event)
+            }
         }
     }
 }
