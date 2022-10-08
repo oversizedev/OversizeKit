@@ -33,56 +33,64 @@ public struct NoticeListView: View {
         !isBannerClosed && reviewService.isShowReviewBanner
     }
 
+    private var isShowNoticeView: Bool {
+        isShowRate && specialOffer != nil
+    }
+
     public init() {}
 
     public var body: some View {
-        VStack(spacing: .small) {
-            if isShowRate, let reviewUrl = AppInfo.url.appStoreReview {
-                NoticeView("How do you like the application?") {
-                    Link(destination: reviewUrl) {
-                        Text("Good")
-                    }
-                    .buttonStyle(.primary(infinityWidth: true))
-                    .accent()
-                    .simultaneousGesture(TapGesture().onEnded {
-                        reviewService.estimate(goodRating: true)
+        if isShowNoticeView {
+            VStack(spacing: .small) {
+                if isShowRate, let reviewUrl = AppInfo.url.appStoreReview {
+                    NoticeView("How do you like the application?") {
+                        Link(destination: reviewUrl) {
+                            Text("Good")
+                        }
+                        .buttonStyle(.primary(infinityWidth: true))
+                        .accent()
+                        .simultaneousGesture(TapGesture().onEnded {
+                            reviewService.estimate(goodRating: true)
+                            isBannerClosed = true
+                        })
+
+                        Button("Bad") {
+                            reviewService.estimate(goodRating: false)
+                            isBannerClosed = true
+                        }
+                        .buttonStyle(.tertiary(infinityWidth: true))
+
+                    } closeAction: {
+                        reviewService.rewiewBunnerClosed()
                         isBannerClosed = true
-                    })
-
-                    Button("Bad") {
-                        reviewService.estimate(goodRating: false)
-                        isBannerClosed = true
                     }
-                    .buttonStyle(.tertiary(infinityWidth: true))
-
-                } closeAction: {
-                    reviewService.rewiewBunnerClosed()
-                    isBannerClosed = true
+                    .animation(.default, value: isBannerClosed)
                 }
-                .animation(.default, value: isBannerClosed)
-            }
 
-            if let event = specialOffer {
-                let url = URL(string: "https://cdn.oversize.design/assets/illustrations/\(event.specialOfferImageURL)")
+                if let event = specialOffer {
+                    let url = URL(string: "https://cdn.oversize.design/assets/illustrations/\(event.specialOfferImageURL)")
 
-                NoticeView(event.specialOfferBannerTitle,
-                           subtitle: event.specialOfferDescription,
-                           imageURL: url) {
-                    Button {
-                        isShowOfferSheet.toggle()
-                    } label: {
-                        Text("Get Free Trial")
+                    NoticeView(event.specialOfferBannerTitle,
+                               subtitle: event.specialOfferDescription,
+                               imageURL: url) {
+                        Button {
+                            isShowOfferSheet.toggle()
+                        } label: {
+                            Text("Get Free Trial")
+                        }
+                        .accent()
+
+                    } closeAction: {
+                        lastClosedSpecialOffer = event
                     }
-                    .accent()
-
-                } closeAction: {
-                    lastClosedSpecialOffer = event
-                }
-                .sheet(isPresented: $isShowOfferSheet) {
-                    StoreSpecialOfferView(event: event)
-                        .systemServices()
+                    .sheet(isPresented: $isShowOfferSheet) {
+                        StoreSpecialOfferView(event: event)
+                            .systemServices()
+                    }
                 }
             }
+        } else {
+            EmptyView()
         }
     }
 }
