@@ -74,7 +74,7 @@ public struct PaymentButtonStyle: ButtonStyle {
     private func loadingView(for _: ButtonRole?) -> some View {
         if isLoading {
             ProgressView()
-                .foregroundColor(.onPrimaryHighEmphasis)
+                .progressViewStyle(CircularProgressViewStyle(tint: Color.onPrimaryHighEmphasis))
         } else {
             EmptyView()
         }

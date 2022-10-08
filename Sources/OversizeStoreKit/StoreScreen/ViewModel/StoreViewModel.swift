@@ -26,6 +26,7 @@ class StoreViewModel: ObservableObject {
 
     @Published var currentSubscription: Product?
     @Published var status: Product.SubscriptionInfo.Status?
+    @Published var isBuyLoading: Bool = false
 
     @Published var selectedProduct: Product?
     let specialOfferMode: Bool
@@ -272,20 +273,25 @@ extension StoreViewModel {
     }
 
     func buy(product: Product) async -> Bool {
+        isBuyLoading = true
         do {
             let result = try await storeKitService.purchase(product)
             switch result {
             case .success:
                 isPremium = true
                 isPremiumActivated = true
+                isBuyLoading = false
                 return true
             case .failure:
+                isBuyLoading = false
                 return false
             }
         } catch StoreError.failedVerification {
+            isBuyLoading = false
             state = .error(.custom(title: "Your purchase could not be verified by the App Store."))
             return false
         } catch {
+            isBuyLoading = false
             log("Failed purchase for \(product.id): \(error)")
             return false
         }

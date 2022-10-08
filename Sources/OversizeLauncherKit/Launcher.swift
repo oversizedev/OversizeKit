@@ -50,8 +50,10 @@ public struct Launcher<Content: View, Onboarding: View>: View {
                     .systemServices()
             }
             .onChange(of: viewModel.appStateService.isCompletedOnbarding) { isCompletedOnbarding in
-                if isCompletedOnbarding, viewModel.appStateService.appRunCount == 1, !viewModel.isPremium {
+                if isCompletedOnbarding, !viewModel.isPremium {
                     viewModel.setPayWall()
+                } else {
+                    viewModel.activeFullScreenSheet = nil
                 }
             }
             .onChange(of: scenePhase, perform: { value in

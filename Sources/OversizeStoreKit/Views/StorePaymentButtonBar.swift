@@ -33,6 +33,7 @@ struct StorePaymentButtonBar: View {
             .buttonStyle(.payment)
             .controlRadius(.medium)
             .padding(.horizontal, .xxSmall)
+            .loading(viewModel.isBuyLoading)
 
             if let action {
                 Button("View all plans") {
