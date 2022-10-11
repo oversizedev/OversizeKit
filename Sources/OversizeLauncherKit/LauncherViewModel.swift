@@ -140,9 +140,11 @@ public extension LauncherViewModel {
     }
 
     func checkSpecialOffer() {
-        for event in StoreSpecialOfferEventType.allCases where event.isNow {
-            if activeFullScreenSheet == nil, lastClosedSpecialOffer != event {
-                activeFullScreenSheet = .specialOffer(event: event)
+        if !isPremium {
+            for event in StoreSpecialOfferEventType.allCases where event.isNow {
+                if activeFullScreenSheet == nil, lastClosedSpecialOffer != event {
+                    activeFullScreenSheet = .specialOffer(event: event)
+                }
             }
         }
     }

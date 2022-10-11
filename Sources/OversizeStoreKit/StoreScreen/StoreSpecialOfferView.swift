@@ -15,8 +15,9 @@ import SwiftUI
 public struct StoreSpecialOfferView: View {
     @Environment(\.screenSize) private var screenSize
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.isPremium) private var isPremium
     @StateObject private var viewModel: StoreViewModel
-    @AppStorage("AppState.LastClosedSpecialOfferSheet") var lastClosedSpecialOffer: StoreSpecialOfferEventType = .oldUser
+    @AppStorage("AppState.LastClosedSpecialOfferSheet") private var lastClosedSpecialOffer: StoreSpecialOfferEventType = .oldUser
 
     @State private var isShowAllPlans = false
     @State private var offset: CGFloat = 0
@@ -74,6 +75,11 @@ public struct StoreSpecialOfferView: View {
                 StorePaymentButtonBar()
                     .environmentObject(viewModel)
                     .padding(.horizontal, 8)
+            }
+        }
+        .onChange(of: isPremium) { status in
+            if status {
+                dismiss()
             }
         }
     }

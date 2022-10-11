@@ -35,14 +35,6 @@ struct RateAppScreen: View {
 
             if let reviewUrl = AppInfo.url.appStoreReview {
                 HStack(spacing: .large) {
-                    Button {
-                        reviewService.estimate(goodRating: false)
-                        dismiss()
-                    } label: {
-                        Icon(.thumbsDown, color: .onSurfaceHighEmphasis)
-                    }
-                    .buttonStyle(.secondary(infinityWidth: false))
-
                     Link(destination: reviewUrl) {
                         Icon(.thumbsUp, color: .onPrimaryHighEmphasis)
                     }
@@ -52,6 +44,14 @@ struct RateAppScreen: View {
                         reviewService.estimate(goodRating: true)
                         dismiss()
                     })
+
+                    Button {
+                        reviewService.estimate(goodRating: false)
+                        dismiss()
+                    } label: {
+                        Icon(.thumbsDown, color: .onSurfaceHighEmphasis)
+                    }
+                    .buttonStyle(.secondary(infinityWidth: false))
                 }
                 .controlBorderShape(.capsule)
                 .elevation(.z3)

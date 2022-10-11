@@ -15,6 +15,8 @@ import SwiftUI
 public struct StoreViewInstuctins: View {
     @StateObject var viewModel: StoreViewModel
     @Environment(\.screenSize) var screenSize
+    @Environment(\.isPremium) var isPremium
+    @Environment(\.dismiss) var dismiss
     @State var isShowAllPlans = false
     @State var offset: CGFloat = 0
 
@@ -24,28 +26,20 @@ public struct StoreViewInstuctins: View {
 
     public var body: some View {
         ScrollViewReader { value in
-
             PageView { offset = $0 } content: {
                 Group {
                     switch viewModel.state {
                     case .initial:
-                        VStack {
-                            Spacer()
-                            HStack {
-                                Spacer()
-                                ProgressView()
-                                    .task {
-                                        await viewModel.fetchData()
-                                        if case let .result(products) = self.viewModel.state {
-                                            await viewModel.updateState(products: products)
-                                        }
-                                    }
-                                Spacer()
+                        contentPlaceholder()
+                            .task {
+                                await viewModel.fetchData()
+                                if case let .result(products) = self.viewModel.state {
+                                    await viewModel.updateState(products: products)
+                                }
                             }
-                            Spacer()
-                        }
+
                     case .loading:
-                        ProgressView()
+                        contentPlaceholder()
                     case let .result(data):
                         content(data: data)
                     case let .error(error):
@@ -74,7 +68,60 @@ public struct StoreViewInstuctins: View {
                     .environmentObject(viewModel)
                 }
             }
+            .onChange(of: isPremium) { status in
+                if status {
+                    dismiss()
+                }
+            }
         }
+    }
+
+    @ViewBuilder
+    private func contentPlaceholder() -> some View {
+        VStack(spacing: .medium) {
+            VStack {
+                VStack(spacing: .xSmall) {
+                    Text("How your free trial works")
+                        .largeTitle()
+                        .foregroundColor(.onSurfaceHighEmphasis)
+
+                    if viewModel.isHaveSale {
+                        Group {
+                            Text("Begin your path towards feeling better with a ")
+                                .foregroundColor(.onSurfaceMediumEmphasis)
+
+                                + Text("--% discount")
+                                .foregroundColor(.accent)
+                        }
+                        .body(.semibold)
+                    }
+                }
+                .multilineTextAlignment(.center)
+                .padding(.top, .small)
+
+                Spacer()
+
+                stepsView
+                    .padding(.bottom, .medium)
+
+                Spacer()
+            }
+            .frame(height: screenSize.safeAreaHeight - 265)
+            .overlay {
+                ScrollArrow(width: 30, offset: -5 + (offset * 0.05))
+                    .stroke(style: StrokeStyle(lineWidth: 5, lineCap: .round))
+                    .foregroundColor(.onSurfaceHighEmphasis.opacity(0.3))
+                    .frame(width: 30)
+                    .offset(y: screenSize.safeAreaHeight - 300)
+                    .opacity(1 - (offset * 0.01))
+            }
+
+            StoreFeaturesLargeView()
+                .paddingContent(.horizontal)
+                .environmentObject(viewModel)
+                .opacity(0 + (offset * 0.01))
+        }
+        .padding(.bottom, 220)
     }
 
     @ViewBuilder
