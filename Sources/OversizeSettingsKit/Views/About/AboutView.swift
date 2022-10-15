@@ -77,7 +77,7 @@ import SwiftUI
                 SectionView {
                     VStack {
                         HStack {
-                            Text(L10n.About.otherApplications)
+                            Text(L10n.About.otherApplications.uppercased())
                                 .caption(true)
                                 .foregroundColor(.onSurfaceHighEmphasis)
                                 .padding(.top, 12)
