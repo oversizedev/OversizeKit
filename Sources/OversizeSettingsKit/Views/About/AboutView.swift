@@ -88,6 +88,23 @@ import SwiftUI
 
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: Space.small) {
+                                
+                                if let dressWeather = URL(string: "itms-apps:itunes.apple.com/us/app/apple-store/id1552617598") {
+                                    Link(destination: dressWeather) {
+                                        Resource.AppsIcons.dressWeather
+                                            .resizable()
+                                            .frame(width: 74, height: 74)
+                                            .mask(RoundedRectangle(cornerRadius: 16,
+                                                                   style: .continuous))
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 16,
+                                                                 style: .continuous)
+                                                    .stroke(lineWidth: 1)
+                                                    .opacity(0.15)
+                                            )
+                                    }
+                                }
+                                
                                 if let pinWalletLink = URL(string: "itms-apps:itunes.apple.com/us/app/apple-store/id1477792790") {
                                     Link(destination: pinWalletLink) {
                                         Resource.AppsIcons.pinWallet
