@@ -47,7 +47,9 @@ import SwiftUI
             SectionView {
                 VStack(spacing: .zero) {
                     if FeatureFlags.app.сloudKit.valueOrFalse {
-                        Row(L10n.Settings.iCloudSync, trallingType: .toggle(isOn: $settingsService.cloudKitEnabled))
+                        Row(L10n.Settings.iCloudSync)
+                            .rowLeading(.icon(.cloud))
+                            .rowTrailing(.toggle(isOn: $settingsService.cloudKitEnabled))
                             .premium()
                             .onPremiumTap()
                     }
@@ -61,7 +63,9 @@ import SwiftUI
                     }
 
                     if FeatureFlags.app.healthKit.valueOrFalse {
-                        Row("HealthKit synchronization", trallingType: .toggle(isOn: $settingsService.healthKitEnabled))
+                        Row("HealthKit synchronization", subtitle: "After switching on, data from the Health app will be downloaded")
+                            .rowLeading(.icon(.heart))
+                            .rowTrailing(.toggle(isOn: $settingsService.healthKitEnabled))
                         // .premium()
                         // .onPremiumTap()
                     }
