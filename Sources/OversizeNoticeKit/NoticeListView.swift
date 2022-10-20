@@ -11,7 +11,7 @@ import StoreKit
 import SwiftUI
 
 public struct NoticeListView: View {
-    @Injected(\.appStoreReviewService) var reviewService
+    @Injected(Container.appStoreReviewService) var reviewService
 
     @State private var isBannerClosed = false
     @State private var showRecommended = false

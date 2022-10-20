@@ -12,7 +12,7 @@ import OversizeStoreService
 import OversizeUI
 import SwiftUI
 
-public struct StoreViewInstuctins: View {
+public struct StoreInstuctinsView: View {
     @StateObject var viewModel: StoreViewModel
     @Environment(\.screenSize) var screenSize
     @Environment(\.isPremium) var isPremium
@@ -316,6 +316,6 @@ public struct StoreViewInstuctins: View {
 
 struct StoreViewInstuctins_Previews: PreviewProvider {
     static var previews: some View {
-        StoreViewInstuctins()
+        StoreInstuctinsView()
     }
 }

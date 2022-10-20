@@ -14,7 +14,7 @@
 // import SwiftUI
 //
 // struct StatusInfoView: View {
-//    @Injected(\.storeKitService) private var store: StoreKitService
+//    @Injected(Container.storeKitService) private var store: StoreKitService
 //
 //    let product: Product
 //    let status: Product.SubscriptionInfo.Status

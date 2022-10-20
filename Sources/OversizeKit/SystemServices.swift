@@ -17,9 +17,9 @@ public struct SystemServicesModifier: ViewModifier {
     @Environment(\.scenePhase) var scenePhase
     @Environment(\.theme) var theme
 
-    @Injected(\.appStateService) var appState
-    @Injected(\.settingsService) var settingsService
-    @Injected(\.appStoreReviewService) var appStoreReviewService
+    @Injected(Container.appStateService) var appState
+    @Injected(Container.settingsService) var settingsService
+    @Injected(Container.appStoreReviewService) var appStoreReviewService
 
     @AppStorage("AppState.PremiumState") var isPremium: Bool = false
 

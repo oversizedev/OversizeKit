@@ -19,7 +19,7 @@ class StoreViewModel: ObservableObject {
         case error(AppError)
     }
 
-    @Injected(\.storeKitService) var storeKitService: StoreKitService
+    @Injected(Container.storeKitService) var storeKitService: StoreKitService
     @Published var state = State.initial
 
     public var updateListenerTask: Task<Void, Error>?

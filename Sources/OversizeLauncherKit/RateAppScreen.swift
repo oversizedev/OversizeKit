@@ -10,7 +10,7 @@ import OversizeUI
 import SwiftUI
 
 struct RateAppScreen: View {
-    @Injected(\.appStoreReviewService) var reviewService
+    @Injected(Container.appStoreReviewService) var reviewService
     @Environment(\.dismiss) var dismiss
 
     var body: some View {

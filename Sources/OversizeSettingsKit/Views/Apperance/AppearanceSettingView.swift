@@ -6,7 +6,32 @@
 import OversizeCore
 import OversizeResources
 import OversizeUI
+import OversizeStoreKit
+import OversizeServices
 import SwiftUI
+
+#if os(iOS)
+    public class AppIconSettings: ObservableObject {
+        public var iconNames: [String?] = [nil]
+        @Published public var currentIndex = 0
+
+        public init() {
+            getAlternateIconNames()
+
+            if let currentIcon = UIApplication.shared.alternateIconName {
+                currentIndex = iconNames.firstIndex(of: currentIcon) ?? 0
+            }
+        }
+
+        private func getAlternateIconNames() {
+            if let iconCount = FeatureFlags.app.alternateAppIcons {
+                for index in 1...iconCount {
+                    iconNames.append("AppIcon\(index)")
+                }
+            }
+        }
+    }
+#endif
 
 #if os(iOS)
     public struct AppearanceSettingView: View {
@@ -15,7 +40,8 @@ import SwiftUI
         @Environment(\.theme) private var theme: ThemeSettings
         @Environment(\.isPortrait) var isPortrait
         @Environment(\.iconStyle) var iconStyle: IconStyle
-
+        @Environment(\.isPremium) var isPremium: Bool
+        
         #if os(iOS)
             @StateObject var iconSettings = AppIconSettings()
         #endif
@@ -24,6 +50,7 @@ import SwiftUI
 
         @State var offset = CGPoint(x: 0, y: 0)
         @State var pageDestenation: Destenation?
+        @State var isShowPremium: Bool = .init(false)
         private let columns = [
             GridItem(.adaptive(minimum: 78)),
         ]
@@ -134,7 +161,7 @@ import SwiftUI
                         ForEach(0 ..< iconSettings.iconNames.count) { index in
                             HStack {
                                 Image(uiImage: UIImage(named: iconSettings.iconNames[index]
-                                        ?? "DefaultAppIcon") ?? UIImage())
+                                        ?? "AppIcon") ?? UIImage())
                                     .renderingMode(.original)
                                     .resizable()
                                     .scaledToFit()
@@ -146,15 +173,21 @@ import SwiftUI
                                                     lineWidth: index == iconSettings.currentIndex ? 3 : 0)
                                     )
                                     .onTapGesture {
-                                        let defaultIconIndex = self.iconSettings.iconNames
-                                            .firstIndex(of: UIApplication.shared.alternateIconName) ?? 0
-                                        if defaultIconIndex != index {
-                                            // swiftlint:disable line_length
-                                            UIApplication.shared.setAlternateIconName(self.iconSettings.iconNames[index]) { error in
-                                                if let error {
-                                                    log(error.localizedDescription)
-                                                } else {
-                                                    log("Success! You have changed the app icon.")
+                                        
+                                        if index != 0, isPremium == false  {
+                                            isShowPremium.toggle()
+                                        } else {
+                                            
+                                            let defaultIconIndex = self.iconSettings.iconNames
+                                                .firstIndex(of: UIApplication.shared.alternateIconName) ?? 0
+                                            if defaultIconIndex != index {
+                                                // swiftlint:disable line_length
+                                                UIApplication.shared.setAlternateIconName(self.iconSettings.iconNames[index]) { error in
+                                                    if let error {
+                                                        log(error.localizedDescription)
+                                                    } else {
+                                                        log("Success! You have changed the app icon.")
+                                                    }
                                                 }
                                             }
                                         }
@@ -165,6 +198,10 @@ import SwiftUI
                     }
                     .padding()
                 }
+                .sheet(isPresented: $isShowPremium, content: {
+                StoreView()
+                        .closable()
+                })
             }
         #endif
 

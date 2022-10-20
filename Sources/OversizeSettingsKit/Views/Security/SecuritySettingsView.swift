@@ -14,7 +14,7 @@ import SwiftUI
 // swiftlint:disable line_length
 #if os(iOS)
     public struct SecuritySettingsView: View {
-        @Injected(\.biometricService) var biometricService
+        @Injected(Container.biometricService) var biometricService
         @Environment(\.verticalSizeClass) private var verticalSizeClass
         @Environment(\.isPortrait) var isPortrait
         @Environment(\.presentationMode) var presentationMode

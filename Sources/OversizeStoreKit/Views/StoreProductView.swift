@@ -14,7 +14,7 @@ public struct StoreProductView: View {
         case row, collumn
     }
 
-    @Injected(\.storeKitService) private var store: StoreKitService
+    @Injected(Container.storeKitService) private var store: StoreKitService
     @State var isPurchased: Bool = false
 
     @Binding var isSelected: Bool
