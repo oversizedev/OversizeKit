@@ -1,6 +1,6 @@
 //
 // Copyright © 2022 Alexander Romanov
-// StoreViewInstuctins.swift
+// StoreInstuctinsView.swift
 //
 
 import OversizeComponents

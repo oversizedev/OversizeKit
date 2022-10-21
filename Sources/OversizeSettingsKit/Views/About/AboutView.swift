@@ -49,24 +49,27 @@ import SwiftUI
         }
 
         private var list: some View {
-            VStack {
+            VStack(spacing: .zero) {
                 header
 
+                soclal
+                    .padding(.bottom, .small)
+
                 SectionView {
-                    VStack {
+                    VStack(spacing: .zero) {
                         if let sendMailUrl = AppInfo.url.developerSendMail {
                             Link(destination: sendMailUrl) {
                                 Row(L10n.About.suggestIdea)
                             }
+                            .buttonStyle(.row)
                         }
 
                         #if os(iOS)
                             if let shareUrl = AppInfo.url.appInstallShare, let id = AppInfo.app.appStoreID, !id.isEmpty {
-                                Button(action: { isSharePresented.toggle() }) {
-                                    Row(L10n.Settings.shareApplication)
+                                Row(L10n.Settings.shareApplication) {
+                                    isSharePresented.toggle()
                                 }
                                 .sheet(isPresented: $isSharePresented, content: {
-                                    // Text(L10n.Settings.shareApplication)
                                     ActivityViewController(activityItems: [shareUrl])
                                 })
                             }
@@ -75,11 +78,11 @@ import SwiftUI
                 }
 
                 SectionView {
-                    VStack {
+                    VStack(spacing: .zero)  {
                         HStack {
                             Text(L10n.About.otherApplications.uppercased())
                                 .caption(true)
-                                .foregroundColor(.onSurfaceHighEmphasis)
+                                .foregroundColor(.onSurfaceMediumEmphasis)
                                 .padding(.top, 12)
                                 .paddingContent(.horizontal)
                                 .padding(.bottom, 8)
@@ -88,7 +91,6 @@ import SwiftUI
 
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: Space.small) {
-                                
                                 if let dressWeather = URL(string: "itms-apps:itunes.apple.com/us/app/apple-store/id1552617598") {
                                     Link(destination: dressWeather) {
                                         Resource.AppsIcons.dressWeather
@@ -104,7 +106,7 @@ import SwiftUI
                                             )
                                     }
                                 }
-                                
+
                                 if let pinWalletLink = URL(string: "itms-apps:itunes.apple.com/us/app/apple-store/id1477792790") {
                                     Link(destination: pinWalletLink) {
                                         Resource.AppsIcons.pinWallet
@@ -183,6 +185,86 @@ import SwiftUI
             }
         }
 
+        private var soclal: some View {
+            HStack(spacing: .small) {
+                if let facebook = AppInfo.url.companyFacebook {
+                    Link(destination: facebook) {
+                        Surface {
+                            HStack {
+                                Spacer()
+                                Icon.Solid.SocialMediaandBrands.facebook
+                                    .renderingMode(.template)
+                                    .foregroundColor(Color.onSurfaceMediumEmphasis)
+                                Spacer()
+                            }
+                        }
+                    }
+                }
+
+                if let instagram = AppInfo.url.companyInstagram {
+                    Link(destination: instagram) {
+                        Surface {
+                            HStack {
+                                Spacer()
+                                Icon.Solid.SocialMediaandBrands.instagram
+                                    .renderingMode(.template)
+                                    .foregroundColor(Color.onSurfaceMediumEmphasis)
+                                Spacer()
+                            }
+                        }
+                    }
+                }
+                
+                if let twitter = AppInfo.url.companyTwitter {
+                    Link(destination: twitter) {
+                        Surface {
+                            HStack {
+                                Spacer()
+                                Icon.Solid.SocialMediaandBrands.twitter
+                                    .renderingMode(.template)
+                                    .foregroundColor(Color.onSurfaceMediumEmphasis)
+                                Spacer()
+                            }
+                        }
+                    }
+                }
+                
+                /*
+                if let telegram = AppInfo.url.companyTelegram {
+                    Link(destination: telegram) {
+                        Surface {
+                            HStack {
+                                Spacer()
+                                Icon(.send, color: .onSurfaceMediumEmphasis)
+                                
+                                Spacer()
+                            }
+                        }
+                    }
+                }
+                 */
+                
+                if let dribbble = AppInfo.url.companyDribbble {
+                    Link(destination: dribbble) {
+                        Surface {
+                            HStack {
+                                Spacer()
+                                Icon.Solid.SocialMediaandBrands.dribbble
+                                    .renderingMode(.template)
+                                    .foregroundColor(Color.onSurfaceMediumEmphasis)
+                                Spacer()
+                            }
+                        }
+                    }
+                }
+                
+                
+            }
+            .buttonStyle(.scale)
+            .controlPadding(.xSmall)
+            .paddingContent(.horizontal)
+        }
+
         private var header: some View {
             HStack {
                 Spacer()
@@ -200,9 +282,9 @@ import SwiftUI
 
                     #endif
                     if let appVersion = AppInfo.app.verstion {
-                        Text(appVersion).multilineTextAlignment(.center)
-                            .body()
-                            .foregroundColor(.onBackgroundHighEmphasis)
+                        Text("Version \(appVersion)").multilineTextAlignment(.center)
+                            .body(.semibold)
+                            .foregroundColor(.onBackgroundMediumEmphasis)
                             .padding(.top, Space.small)
                             .padding(.bottom, Space.xLarge)
                     }

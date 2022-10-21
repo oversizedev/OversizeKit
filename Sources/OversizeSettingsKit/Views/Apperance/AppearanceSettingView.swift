@@ -5,9 +5,9 @@
 
 import OversizeCore
 import OversizeResources
-import OversizeUI
-import OversizeStoreKit
 import OversizeServices
+import OversizeStoreKit
+import OversizeUI
 import SwiftUI
 
 #if os(iOS)
@@ -25,7 +25,7 @@ import SwiftUI
 
         private func getAlternateIconNames() {
             if let iconCount = FeatureFlags.app.alternateAppIcons {
-                for index in 1...iconCount {
+                for index in 1 ... iconCount {
                     iconNames.append("AppIcon\(index)")
                 }
             }
@@ -41,7 +41,7 @@ import SwiftUI
         @Environment(\.isPortrait) var isPortrait
         @Environment(\.iconStyle) var iconStyle: IconStyle
         @Environment(\.isPremium) var isPremium: Bool
-        
+
         #if os(iOS)
             @StateObject var iconSettings = AppIconSettings()
         #endif
@@ -173,11 +173,9 @@ import SwiftUI
                                                     lineWidth: index == iconSettings.currentIndex ? 3 : 0)
                                     )
                                     .onTapGesture {
-                                        
-                                        if index != 0, isPremium == false  {
+                                        if index != 0, isPremium == false {
                                             isShowPremium.toggle()
                                         } else {
-                                            
                                             let defaultIconIndex = self.iconSettings.iconNames
                                                 .firstIndex(of: UIApplication.shared.alternateIconName) ?? 0
                                             if defaultIconIndex != index {
@@ -199,7 +197,7 @@ import SwiftUI
                     .padding()
                 }
                 .sheet(isPresented: $isShowPremium, content: {
-                StoreView()
+                    StoreView()
                         .closable()
                 })
             }

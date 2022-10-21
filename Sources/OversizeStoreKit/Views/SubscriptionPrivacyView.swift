@@ -3,6 +3,7 @@
 // SubscriptionPrivacyView.swift
 //
 
+import OversizeComponents
 import OversizeServices
 import OversizeSettingsService
 import OversizeStoreService
@@ -12,6 +13,9 @@ import SwiftUI
 
 struct SubscriptionPrivacyView: View {
     let products: StoreKitProducts
+
+    @State var isShowPrivacy = false
+    @State var isShowTerms = false
 
     var body: some View {
         Surface {
@@ -36,16 +40,26 @@ struct SubscriptionPrivacyView: View {
                     Text("•")
 
                     if let privacyUrl = AppInfo.url.appPrivacyPolicyUrl {
-                        Link(destination: privacyUrl) {
+                        Button {
+                            isShowPrivacy.toggle()
+                        } label: {
                             Text("Privacy")
+                        }
+                        .sheet(isPresented: $isShowPrivacy) {
+                            WebView(url: privacyUrl)
                         }
                     }
 
                     Text("•")
 
                     if let termsOfUde = AppInfo.url.appTermsOfUseUrl {
-                        Link(destination: termsOfUde) {
+                        Button {
+                            isShowPrivacy.toggle()
+                        } label: {
                             Text("Terms")
+                        }
+                        .sheet(isPresented: $isShowTerms) {
+                            WebView(url: termsOfUde)
                         }
                     }
                 }
