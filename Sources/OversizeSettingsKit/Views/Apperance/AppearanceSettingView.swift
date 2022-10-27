@@ -4,6 +4,7 @@
 //
 
 import OversizeCore
+import OversizeLocalizable
 import OversizeResources
 import OversizeServices
 import OversizeStoreKit
@@ -63,7 +64,7 @@ import SwiftUI
         public init() {}
         public var body: some View {
             #if os(iOS)
-                PageView("App") {
+                PageView(L10n.Settings.apperance) {
                     iOSSettings
                 }
                 .leadingBar {

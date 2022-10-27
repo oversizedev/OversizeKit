@@ -27,6 +27,8 @@ import SwiftUI
 
         @State private var offset = CGPoint(x: 0, y: 0)
         @State private var isPortrait = false
+        @State private var isShowSupport = false
+        @State private var isShowFeedback = false
 
         var rowType: RowTrailingType? {
             #if os(iOS)
@@ -124,7 +126,7 @@ import SwiftUI
         }
 
         private var app: some View {
-            SectionView(L10n.Settings.appSection) {
+            SectionView("General") {
                 VStack(spacing: .zero) {
                     if FeatureFlags.app.apperance.valueOrFalse {
                         NavigationLink(destination: AppearanceSettingView()
@@ -252,28 +254,32 @@ import SwiftUI
         private var help: some View {
             SectionView(L10n.Settings.supportSection) {
                 VStack(alignment: .leading) {
-                    if let reviewUrl = AppInfo.url.appStoreReview, let id = AppInfo.app.appStoreID, !id.isEmpty {
-                        Link(destination: reviewUrl) {
-                            Row(L10n.Settings.feedbakAppStore, leadingType: .image(heartIcon), trallingType: rowType)
-                        }
-                        .buttonStyle(.row)
+                    Row("Get help", leadingType: .image(helpIcon), trallingType: rowType) {
+                        isShowSupport.toggle()
+                    }
+                    .buttonStyle(.row)
+                    .sheet(isPresented: $isShowSupport) {
+                        SupportView()
+                            .presentationDetents([.medium])
                     }
 
-                    // Send author
-                    if let sendMailUrl = AppInfo.url.developerSendMail { // , let mail = InfoStore.app.mail, !mail.isEmpty {
-                        Link(destination: sendMailUrl) {
-                            Row(L10n.Settings.feedbakAuthor, leadingType: .image(mailIcon), trallingType: rowType)
-                        }
-                        .buttonStyle(.row)
+                    Row("Send feedback", leadingType: .image(chatIcon), trallingType: rowType) {
+                        isShowFeedback.toggle()
+                    }
+                    .buttonStyle(.row)
+                    .sheet(isPresented: $isShowFeedback) {
+                        FeedbackView()
+                            .presentationDetents([.medium])
                     }
 
-                    // Telegramm chat
-                    if let telegramChatUrl = AppInfo.url.appTelegramChat, let id = AppInfo.app.telegramChatID, !id.isEmpty {
-                        Link(destination: telegramChatUrl) {
-                            Row(L10n.Settings.telegramChat, leadingType: .image(chatIcon), trallingType: rowType)
-                        }
-                        .buttonStyle(.row)
-                    }
+//
+//                    // Telegramm chat
+//                    if let telegramChatUrl = AppInfo.url.appTelegramChat, let id = AppInfo.app.telegramChatID, !id.isEmpty {
+//                        Link(destination: telegramChatUrl) {
+//                            Row(L10n.Settings.telegramChat, leadingType: .image(chatIcon), trallingType: rowType)
+//                        }
+//                        .buttonStyle(.row)
+//                    }
                 }
             }
         }
@@ -322,14 +328,38 @@ import SwiftUI
             }
         }
 
+        var oversizeIcon: Image {
+            switch iconStyle {
+            case .line:
+                return Icon.Line.SocialMediaandBrands.oversize
+            case .solid:
+                return Icon.Solid.SocialMediaandBrands.oversize
+            case .duotone:
+                return Icon.Duotone.SocialMediaandBrands.oversize
+            }
+        }
+
+        var helpIcon: Image {
+            switch iconStyle {
+            case .line:
+                return Icon.Line.UserInterface.questionMarkCrFr
+            case .solid:
+                return Icon.Solid.UserInterface.questionMarkCrFr
+            case .duotone:
+                return Icon.Duotone.UserInterface.questionMarkCrFr
+            }
+        }
+
         private var about: some View {
             SectionView {
-                NavigationLink(destination: AboutView()) {
-                    Row(L10n.Settings.about,
-                        leadingType: .image(infoIcon),
-                        trallingType: rowType)
+                VStack(spacing: .zero) {
+                    NavigationLink(destination: AboutView()) {
+                        Row(L10n.Settings.about,
+                            leadingType: .image(infoIcon),
+                            trallingType: rowType)
+                    }
+                    .buttonStyle(.row)
                 }
-                .buttonStyle(.row)
             }
         }
 

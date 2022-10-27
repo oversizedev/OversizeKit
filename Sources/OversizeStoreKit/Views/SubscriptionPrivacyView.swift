@@ -54,7 +54,7 @@ struct SubscriptionPrivacyView: View {
 
                     if let termsOfUde = AppInfo.url.appTermsOfUseUrl {
                         Button {
-                            isShowPrivacy.toggle()
+                            isShowTerms.toggle()
                         } label: {
                             Text("Terms")
                         }

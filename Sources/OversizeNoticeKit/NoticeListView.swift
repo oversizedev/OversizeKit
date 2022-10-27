@@ -12,6 +12,7 @@ import SwiftUI
 
 public struct NoticeListView: View {
     @Injected(Container.appStoreReviewService) var reviewService
+    @Environment(\.isPremium) var isPremium: Bool
 
     @State private var isBannerClosed = false
     @State private var showRecommended = false
@@ -34,7 +35,7 @@ public struct NoticeListView: View {
     }
 
     private var isShowNoticeView: Bool {
-        isShowRate && specialOffer != nil
+        isShowRate && (specialOffer != nil && isPremium == false)
     }
 
     public init() {}
