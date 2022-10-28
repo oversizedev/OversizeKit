@@ -49,7 +49,7 @@ public struct StoreView: View {
         }
         .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
         .titleLabel {
-            PremiumLabel(image: Resource.Store.zap, text: AppInfo.store.subscriptionsName, size: .medium)
+            PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: .medium)
         }
         .leadingBar {
             if !isPortrait, verticalSizeClass == .regular, isClosable {
@@ -81,13 +81,13 @@ public struct StoreView: View {
         if viewModel.isPremium {
             return "You are all set!"
         } else {
-            return "Upgrade to \(AppInfo.store.subscriptionsName)"
+            return "Upgrade to \(Info.store.subscriptionsName)"
         }
     }
 
     var subtitleText: String {
         if viewModel.isPremium {
-            return "Thank you for use to \(AppInfo.store.subscriptionsName).\nHere's what is now unlocked."
+            return "Thank you for use to \(Info.store.subscriptionsName).\nHere's what is now unlocked."
         } else {
             return "Remove ads and unlock all features"
         }

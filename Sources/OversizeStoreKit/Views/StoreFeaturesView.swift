@@ -13,9 +13,9 @@ import SwiftUI
 
 struct StoreFeaturesView: View {
     @EnvironmentObject var viewModel: StoreViewModel
-    @State var selection: StoreFeature?
+    @State var selection: Store.StoreFeature?
 
-    let features = AppInfo.store.features
+    let features = Info.store.features
 
     var body: some View {
         Surface {
@@ -46,7 +46,7 @@ struct StoreFeaturesView: View {
         }
     }
 
-    func backgroundColor(feature: StoreFeature) -> Color {
+    func backgroundColor(feature: Store.StoreFeature) -> Color {
         if let color = feature.backgroundColor {
             return Color(hex: color)
         } else {

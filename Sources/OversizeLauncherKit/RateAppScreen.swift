@@ -27,13 +27,13 @@ struct RateAppScreen: View {
 
             Spacer()
 
-            Text((AppInfo.app.name ?? "App") + " is developed only one person, and your assessment would very much drop in")
+            Text((Info.app.name ?? "App") + " is developed only one person, and your assessment would very much drop in")
                 .title3()
                 .foregroundOnSurfaceHighEmphasis()
 
             Spacer()
 
-            if let reviewUrl = AppInfo.url.appStoreReview {
+            if let reviewUrl = Info.url.appStoreReview {
                 HStack(spacing: .large) {
                     Link(destination: reviewUrl) {
                         Icon(.thumbsUp, color: .onPrimaryHighEmphasis)

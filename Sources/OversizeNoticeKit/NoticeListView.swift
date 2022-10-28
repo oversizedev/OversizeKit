@@ -43,7 +43,7 @@ public struct NoticeListView: View {
     public var body: some View {
         if isShowNoticeView {
             VStack(spacing: .small) {
-                if isShowRate, let reviewUrl = AppInfo.url.appStoreReview {
+                if isShowRate, let reviewUrl = Info.url.appStoreReview {
                     NoticeView("How do you like the application?") {
                         Link(destination: reviewUrl) {
                             Text("Good")

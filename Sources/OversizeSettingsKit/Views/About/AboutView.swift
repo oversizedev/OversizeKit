@@ -131,7 +131,7 @@ import SwiftUI
 
                 SectionView {
                     VStack(spacing: .zero) {
-                        if let reviewUrl = AppInfo.url.appStoreReview, let id = AppInfo.app.appStoreID, !id.isEmpty, let appName = AppInfo.app.name {
+                        if let reviewUrl = Info.url.appStoreReview, let id = Info.app.appStoreID, !id.isEmpty, let appName = Info.app.name {
                             Link(destination: reviewUrl) {
                                 Row("Rate \(appName) on App Store")
                                     .rowLeading(.image(rateSettingsIcon))
@@ -140,14 +140,14 @@ import SwiftUI
                         }
 
                         if MFMailComposeViewController.canSendMail(),
-                           let mail = AppInfo.developer.email,
-                           let appVersion = AppInfo.app.verstion,
-                           let appName = AppInfo.app.name,
-                           let device = AppInfo.app.device,
-                           let appBuild = AppInfo.app.build,
-                           let systemVersion = AppInfo.app.system
+                           let mail = Info.developer.email,
+                           let appVersion = Info.app.verstion,
+                           let appName = Info.app.name,
+                           let device = Info.app.device,
+                           let appBuild = Info.app.build,
+                           let systemVersion = Info.app.system
                         {
-                            let contentPreText = "\n\n\n\n\n\n————————————————\nApp: \(appName) \(appVersion) (\(appBuild))\nDevice: \(device), \(systemVersion)\nLocale: \(AppInfo.app.language ?? "Not init")"
+                            let contentPreText = "\n\n\n\n\n\n————————————————\nApp: \(appName) \(appVersion) (\(appBuild))\nDevice: \(device), \(systemVersion)\nLocale: \(Info.app.language ?? "Not init")"
                             let subject = "Feedback"
 
                             Row(L10n.About.suggestIdea) {
@@ -162,7 +162,7 @@ import SwiftUI
                         }
 
                         #if os(iOS)
-                            if let shareUrl = AppInfo.url.appInstallShare, let id = AppInfo.app.appStoreID, !id.isEmpty {
+                            if let shareUrl = Info.url.appInstallShare, let id = Info.app.appStoreID, !id.isEmpty {
                                 Row(L10n.Settings.shareApplication) {
                                     isSharePresented.toggle()
                                 }
@@ -190,7 +190,7 @@ import SwiftUI
 
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: Space.small) {
-                                ForEach(AppInfo.all?.apps ?? []) { app in
+                                ForEach(Info.all?.apps ?? []) { app in
                                     VStack {
                                         Resource.AppsIcons.dressWeather
                                             .resizable()
@@ -269,7 +269,7 @@ import SwiftUI
 //                                    }
 //                                }
 
-                                if let authorAllApps = AppInfo.url.developerAllApps {
+                                if let authorAllApps = Info.url.developerAllApps {
                                     Link(destination: authorAllApps) {
                                         ZStack {
                                             RoundedRectangle(cornerRadius: 16, style: .continuous)
@@ -295,7 +295,7 @@ import SwiftUI
                         }
                         .buttonStyle(.row)
 
-                        if let privacyUrl = AppInfo.url.appPrivacyPolicyUrl {
+                        if let privacyUrl = Info.url.appPrivacyPolicyUrl {
                             Row(L10n.Store.privacyPolicy) {
                                 isShowPrivacy.toggle()
                             }
@@ -304,7 +304,7 @@ import SwiftUI
                             }
                         }
 
-                        if let termsOfUde = AppInfo.url.appTermsOfUseUrl {
+                        if let termsOfUde = Info.url.appTermsOfUseUrl {
                             Row(L10n.Store.termsOfUse) {
                                 isShowTerms.toggle()
                             }
@@ -321,7 +321,7 @@ import SwiftUI
 
         private var soclal: some View {
             HStack(spacing: .small) {
-                if let facebook = AppInfo.links?.company.facebookUrl {
+                if let facebook = Info.links?.company.facebookUrl {
                     Link(destination: facebook) {
                         // Surface {
                         HStack {
@@ -335,7 +335,7 @@ import SwiftUI
                     }
                 }
 
-                if let instagram = AppInfo.url.companyInstagram {
+                if let instagram = Info.url.companyInstagram {
                     Link(destination: instagram) {
                         // Surface {
                         HStack {
@@ -349,7 +349,7 @@ import SwiftUI
                     }
                 }
 
-                if let twitter = AppInfo.url.companyTwitter {
+                if let twitter = Info.url.companyTwitter {
                     Link(destination: twitter) {
                         // Surface {
                         HStack {
@@ -363,7 +363,7 @@ import SwiftUI
                     }
                 }
 
-                if let telegramUrl = AppInfo.url.companyTelegram {
+                if let telegramUrl = Info.url.companyTelegram {
                     Link(destination: telegramUrl) {
                         // Surface {
                         HStack {
@@ -377,7 +377,7 @@ import SwiftUI
                     }
                 }
 
-                if let dribbble = AppInfo.url.companyDribbble {
+                if let dribbble = Info.url.companyDribbble {
                     Link(destination: dribbble) {
                         //  Surface {
                         HStack {
@@ -456,12 +456,12 @@ import SwiftUI
                 Spacer()
 
                 VStack(alignment: .center) {
-                    if let authorLink = AppInfo.links?.company.url {
+                    if let authorLink = Info.links?.company.url {
                         Link(destination: authorLink) {
-                            if let developerName = AppInfo.developer.name,
-                               let appVersion = AppInfo.app.verstion,
-                               let appName = AppInfo.app.name,
-                               let appBuild = AppInfo.app.build
+                            if let developerName = Info.developer.name,
+                               let appVersion = Info.app.verstion,
+                               let appName = Info.app.name,
+                               let appBuild = Info.app.build
                             {
                                 Text("© 2022 \(developerName). \(appName) \(appVersion) (\(appBuild))")
                                     .footnote()

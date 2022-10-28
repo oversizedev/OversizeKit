@@ -43,14 +43,14 @@ public struct SupportView: View {
         SectionView {
             VStack(alignment: .leading) {
                 if MFMailComposeViewController.canSendMail(),
-                   let mail = AppInfo.developer.email,
-                   let appVersion = AppInfo.app.verstion,
-                   let appName = AppInfo.app.name,
-                   let device = AppInfo.app.device,
-                   let appBuild = AppInfo.app.build,
-                   let systemVersion = AppInfo.app.system
+                   let mail = Info.developer.email,
+                   let appVersion = Info.app.verstion,
+                   let appName = Info.app.name,
+                   let device = Info.app.device,
+                   let appBuild = Info.app.build,
+                   let systemVersion = Info.app.system
                 {
-                    let contentPreText = "\n\n\n\n\n\n————————————————\nApp: \(appName) \(appVersion) (\(appBuild))\nDevice: \(device), \(systemVersion)\nLocale: \(AppInfo.app.language ?? "Not init")"
+                    let contentPreText = "\n\n\n\n\n\n————————————————\nApp: \(appName) \(appVersion) (\(appBuild))\nDevice: \(device), \(systemVersion)\nLocale: \(Info.app.language ?? "Not init")"
                     let subject = "Support"
 
                     Row("Contact Us") {
@@ -64,7 +64,7 @@ public struct SupportView: View {
                     }
                 } else {
                     // Send author
-                    if let sendMailUrl = AppInfo.url.developerSendMail {
+                    if let sendMailUrl = Info.url.developerSendMail {
                         Link(destination: sendMailUrl) {
                             Row("Contact Us", leadingType: .image(mailIcon))
                         }
@@ -73,7 +73,7 @@ public struct SupportView: View {
                 }
 
                 // Telegramm chat
-                if let telegramChatUrl = AppInfo.url.appTelegramChat, let id = AppInfo.app.telegramChatID, !id.isEmpty {
+                if let telegramChatUrl = Info.url.appTelegramChat, let id = Info.app.telegramChatID, !id.isEmpty {
                     Link(destination: telegramChatUrl) {
                         Row(L10n.Settings.telegramChat, leadingType: .image(chatIcon))
                     }

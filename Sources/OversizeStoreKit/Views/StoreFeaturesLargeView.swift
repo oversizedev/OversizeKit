@@ -12,7 +12,7 @@ import SwiftUI
 
 struct StoreFeaturesLargeView: View {
     @EnvironmentObject var viewModel: StoreViewModel
-    let features = AppInfo.store.features
+    let features = Info.store.features
 
     var body: some View {
         VStack {
@@ -26,7 +26,7 @@ struct StoreFeaturesLargeView: View {
         }
     }
 
-    func fetureScreenItem(_ feature: StoreFeature) -> some View {
+    func fetureScreenItem(_ feature: Store.StoreFeature) -> some View {
         Surface {
             VStack(spacing: .zero) {
                 RoundedRectangle(cornerRadius: .medium, style: .continuous)
@@ -71,7 +71,7 @@ struct StoreFeaturesLargeView: View {
         .elevation(.z3)
     }
 
-    func fetureItem(_ feature: StoreFeature) -> some View {
+    func fetureItem(_ feature: Store.StoreFeature) -> some View {
         VStack(spacing: .zero) {
             if let IllustrationURLPath = feature.illustrationURL {
                 AsyncImage(url: URL(string: IllustrationURLPath)) { image in
@@ -129,7 +129,7 @@ struct StoreFeaturesLargeView: View {
         .padding(.vertical, .large)
     }
 
-    func backgroundColor(feature: StoreFeature) -> Color {
+    func backgroundColor(feature: Store.StoreFeature) -> Color {
         if let color = feature.backgroundColor {
             return Color(hex: color)
         } else {

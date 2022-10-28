@@ -13,7 +13,7 @@ struct SplashScreen: View {
             Color.accent
 
             #if os(iOS)
-                if let appImage = AppInfo.app.iconName {
+                if let appImage = Info.app.iconName {
                     Image(uiImage: UIImage(named: appImage) ?? UIImage())
                         .resizable()
                         .frame(width: 128, height: 128)

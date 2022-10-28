@@ -62,7 +62,7 @@ public struct StoreSpecialOfferView: View {
         }
         .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
         .titleLabel {
-            PremiumLabel(image: Resource.Store.zap, text: AppInfo.store.subscriptionsName, size: .medium)
+            PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: .medium)
         }
         .trailingBar {
             BarButton(type: .closeAction(action: {

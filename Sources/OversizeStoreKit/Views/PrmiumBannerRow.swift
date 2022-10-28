@@ -70,7 +70,7 @@ public struct PrmiumBannerRow: View {
                         startPoint: .topLeading, endPoint: .bottomTrailing))
             )
 
-            Text(AppInfo.store.subscriptionsName)
+            Text(Info.store.subscriptionsName)
                 .headline(.semibold)
                 .foregroundColor(.onSurfaceHighEmphasis)
 
@@ -112,7 +112,7 @@ public extension PrmiumBannerRow {
                             Image(nsImage: OversizeCraft.Illustrations.Images.zap.image)
                         #endif
 
-                        Text(AppInfo.store.subscriptionsName)
+                        Text(Info.store.subscriptionsName)
                             .font(.system(size: 20, weight: .heavy))
                             .fontStyle(.title3, color: Color(hex: "B75375"))
                     }
@@ -126,7 +126,7 @@ public extension PrmiumBannerRow {
 
                         ))
 
-                Text(AppInfo.store.subscriptionsDescription)
+                Text(Info.store.subscriptionsDescription)
                     .headline(.semibold)
                     .foregroundOnPrimaryHighEmphasis()
                     .multilineTextAlignment(.center)

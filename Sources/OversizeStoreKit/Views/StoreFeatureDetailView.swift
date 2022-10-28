@@ -14,12 +14,12 @@ import SwiftUI
 
 struct StoreFeatureDetailView: View {
     @EnvironmentObject var viewModel: StoreViewModel
-    @State var selection: StoreFeature
+    @State var selection: Store.StoreFeature
     @Environment(\.screenSize) var screenSize
     @Environment(\.dismiss) var dismiss
     @Environment(\.isPremium) var isPremium
 
-    init(selection: StoreFeature) {
+    init(selection: Store.StoreFeature) {
         _selection = State(initialValue: selection)
     }
 
@@ -27,7 +27,7 @@ struct StoreFeatureDetailView: View {
         GeometryReader { geometry in
             VStack(spacing: .zero) {
                 TabView(selection: $selection) {
-                    ForEach(AppInfo.store.features) { feature in
+                    ForEach(Info.store.features) { feature in
                         fetureItem(feature, geometry: geometry)
                             .padding(.bottom, isPremium ? .large : .zero)
                             .tag(feature)
@@ -57,7 +57,7 @@ struct StoreFeatureDetailView: View {
         }
     }
 
-    func fetureItem(_ feature: StoreFeature, geometry: GeometryProxy) -> some View {
+    func fetureItem(_ feature: Store.StoreFeature, geometry: GeometryProxy) -> some View {
         Group {
             if let _ = feature.screenURL {
                 screenFetureItem(feature, geometry: geometry)
@@ -67,7 +67,7 @@ struct StoreFeatureDetailView: View {
         }
     }
 
-    func screenFetureItem(_ feature: StoreFeature, geometry: GeometryProxy) -> some View {
+    func screenFetureItem(_ feature: Store.StoreFeature, geometry: GeometryProxy) -> some View {
         VStack(spacing: .zero) {
             Rectangle()
                 .fill(
@@ -104,7 +104,7 @@ struct StoreFeatureDetailView: View {
         }
     }
 
-    func iconFetureItem(_ feature: StoreFeature, geometry: GeometryProxy) -> some View {
+    func iconFetureItem(_ feature: Store.StoreFeature, geometry: GeometryProxy) -> some View {
         VStack(spacing: .xxxSmall) {
             if let IllustrationURLPath = feature.illustrationURL {
                 AsyncImage(url: URL(string: IllustrationURLPath)) { image in
@@ -153,7 +153,7 @@ struct StoreFeatureDetailView: View {
         }
     }
 
-    func backgroundColor(feature: StoreFeature) -> Color {
+    func backgroundColor(feature: Store.StoreFeature) -> Color {
         if let color = feature.backgroundColor {
             return Color(hex: color)
         } else {
