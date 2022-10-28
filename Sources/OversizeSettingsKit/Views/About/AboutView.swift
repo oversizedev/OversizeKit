@@ -29,6 +29,7 @@ import SwiftUI
 
         @State var isShowPrivacy = false
         @State var isShowTerms = false
+        @State var selectedProductId: String = ""
 
         @State private var isPresentStoreProduct: Bool = false
 
@@ -189,99 +190,64 @@ import SwiftUI
                         }
 
                         ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: Space.small) {
-                                ForEach(Info.all?.apps ?? []) { app in
-                                    VStack {
-                                        Resource.AppsIcons.dressWeather
-                                            .resizable()
-                                            .frame(width: 74, height: 74)
-                                            .mask(RoundedRectangle(cornerRadius: 16,
-                                                                   style: .continuous))
-                                            .overlay(
-                                                RoundedRectangle(cornerRadius: 16,
-                                                                 style: .continuous)
-                                                    .stroke(lineWidth: 1)
-                                                    .opacity(0.15)
-                                            )
-                                            .appStoreOverlay(isPresent: $isPresentStoreProduct, appId: app.id ?? "")
-                                            .onTapGesture {
-                                                isPresentStoreProduct = true
-                                            }
+                            HStack(alignment: .top, spacing: Space.small) {
+                                let data = Info.all?.apps.filter { $0.id != Info.app.appStoreID }
+
+                                ForEach(data ?? []) { app in
+                                    VStack(spacing: .xSmall) {
+                                        AsyncImage(url: URL(string: "https://cdn.oversize.design/assets/apps/\(app.path ?? "")/icon.png"), content: {
+                                            $0
+                                                .resizable()
+                                                .frame(width: 74, height: 74)
+                                                .mask(RoundedRectangle(cornerRadius: .large,
+                                                                       style: .continuous))
+                                                .overlay(
+                                                    RoundedRectangle(cornerRadius: 16,
+                                                                     style: .continuous)
+                                                        .stroke(lineWidth: 1)
+                                                        .opacity(0.15)
+                                                )
+                                                .onTapGesture {
+                                                    selectedProductId = app.id ?? ""
+                                                    isPresentStoreProduct = true
+                                                }
+
+                                        }, placeholder: {
+                                            RoundedRectangle(cornerRadius: .large, style: .continuous)
+                                                .fillSurfaceSecondary()
+                                                .frame(width: 74, height: 74)
+                                        })
 
                                         Text(app.name ?? "")
+                                            .caption(.medium)
+                                            .multilineTextAlignment(.center)
+                                            .foregroundColor(.onSurfaceMediumEmphasis)
+                                            .frame(width: 74)
                                     }
                                 }
 
-//                                if let pinWalletLink = URL(string: "itms-apps:itunes.apple.com/us/app/apple-store/id1477792790") {
-//                                    Link(destination: pinWalletLink) {
-//                                        Resource.AppsIcons.pinWallet
-//                                            .resizable()
-//                                            .frame(width: 74, height: 74)
-//                                            .mask(RoundedRectangle(cornerRadius: 16,
-//                                                                   style: .continuous))
-//                                    }
-//                                }
-//
-//                                if let fmLink = URL(string: "itms-apps:itunes.apple.com/us/app/apple-store/id1498304700") {
-//                                    Link(destination: fmLink) {
-//                                        Resource.AppsIcons.fm
-//                                            .resizable()
-//                                            .frame(width: 74, height: 74)
-//                                            .mask(RoundedRectangle(cornerRadius: 16,
-//                                                                   style: .continuous)
-//                                            )
-//                                            .overlay(
-//                                                RoundedRectangle(cornerRadius: 16,
-//                                                                 style: .continuous)
-//                                                    .stroke(lineWidth: 1)
-//                                                    .opacity(0.15)
-//                                            )
-//                                    }
-//                                }
-//
-//                                if let baskrt = URL(string: "itms-apps:itunes.apple.com/us/app/apple-store/id1490018969") {
-//                                    Link(destination: baskrt) {
-//                                        Resource.AppsIcons.basket
-//                                            .resizable()
-//                                            .frame(width: 74, height: 74)
-//                                            .mask(RoundedRectangle(cornerRadius: 16,
-//                                                                   style: .continuous))
-//                                    }
-//                                }
-//
-//                                if let jornalLink = URL(string: "itms-apps:itunes.apple.com/us/app/apple-store/id1508796556") {
-//                                    Link(destination: jornalLink) {
-//                                        Resource.AppsIcons.jornal
-//                                            .resizable()
-//                                            .frame(width: 74, height: 74)
-//                                            .mask(RoundedRectangle(cornerRadius: 16,
-//                                                                   style: .continuous))
-//                                    }
-//                                }
-//
-//                                if let randomLink = URL(string: "itms-apps:itunes.apple.com/us/app/apple-store/id1459928736") {
-//                                    Link(destination: randomLink) {
-//                                        Resource.AppsIcons.random
-//                                            .resizable()
-//                                            .frame(width: 74, height: 74)
-//                                            .mask(RoundedRectangle(cornerRadius: 16,
-//                                                                   style: .continuous))
-//                                    }
-//                                }
-
                                 if let authorAllApps = Info.url.developerAllApps {
-                                    Link(destination: authorAllApps) {
-                                        ZStack {
-                                            RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                                .foregroundColor(.surfaceSecondary)
-                                                .frame(width: 74, height: 74)
+                                    VStack(spacing: .xSmall) {
+                                        Link(destination: authorAllApps) {
+                                            ZStack {
+                                                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                                    .foregroundColor(.surfaceSecondary)
+                                                    .frame(width: 74, height: 74)
 
-                                            Icon(.externalLink)
+                                                Icon(.externalLink)
+                                            }
                                         }
+
+                                        Text("All apps")
+                                            .caption(.medium)
+                                            .multilineTextAlignment(.center)
+                                            .foregroundColor(.onSurfaceMediumEmphasis)
+                                            .frame(width: 74)
                                     }
                                 }
 
                             }.padding(.horizontal, .medium)
+                                .appStoreOverlay(isPresent: $isPresentStoreProduct, appId: selectedProductId)
                         }
                         .padding(.bottom, 16)
                     }
