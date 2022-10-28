@@ -5,6 +5,7 @@
 
 import SwiftUI
 
+#if os(iOS)
 public struct AppStoreProductViewControllerRepresentable: UIViewControllerRepresentable {
     public typealias UIViewControllerType = AppStoreProductViewController
 
@@ -36,3 +37,4 @@ public extension View {
         }
     }
 }
+#endif

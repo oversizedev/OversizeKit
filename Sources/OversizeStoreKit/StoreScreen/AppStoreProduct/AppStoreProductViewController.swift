@@ -3,6 +3,7 @@
 // StoreProductViewController.swift
 //
 
+#if os(iOS)
 import StoreKit
 import SwiftUI
 import UIKit
@@ -61,3 +62,4 @@ extension AppStoreProductViewController: SKStoreProductViewControllerDelegate {
         viewController.dismiss(animated: true)
     }
 }
+#endif
