@@ -36,8 +36,9 @@ let package = Package(
         .watchOS(.v8),
     ],
     products: [
-        .library(name: "OversizeLauncherKit", targets: ["OversizeLauncherKit"]),
         .library(name: "OversizeKit", targets: ["OversizeKit"]),
+        .library(name: "OversizeAdsKit", targets: ["OversizeAdsKit"]),
+        .library(name: "OversizeLauncherKit", targets: ["OversizeLauncherKit"]),
         .library(name: "OversizeLockscreenKit", targets: ["OversizeLockscreenKit"]),
         .library(name: "OversizeStoreKit", targets: ["OversizeStoreKit"]),
         .library(name: "OversizeSettingsKit", targets: ["OversizeSettingsKit"]),
@@ -46,6 +47,25 @@ let package = Package(
     ],
     dependencies: productionDependencies,
     targets: [
+        .target(
+            name: "OversizeKit",
+            dependencies: [
+                "OversizeLockscreenKit",
+                .product(name: "OversizeUI", package: "OversizeUI"),
+                .product(name: "OversizeServices", package: "OversizeServices"),
+                .product(name: "OversizeSecurityService", package: "OversizeServices"),
+                .product(name: "OversizeSettingsService", package: "OversizeServices"),
+                .product(name: "OversizeStoreService", package: "OversizeServices"),
+                .product(name: "OversizeCore", package: "OversizeCore"),
+            ]
+        ),
+        .target(name: "OversizeAdsKit",
+                dependencies: [
+                    "OversizeStoreKit",
+                    .product(name: "OversizeUI", package: "OversizeUI"),
+                    .product(name: "OversizeCore", package: "OversizeCore"),
+                    .product(name: "OversizeServices", package: "OversizeServices"),
+                ]),
         .target(
             name: "OversizeLauncherKit",
             dependencies: [
@@ -61,18 +81,6 @@ let package = Package(
                 .product(name: "OversizeLocalizable", package: "OversizeLocalizable"),
                 .product(name: "SDWebImageSwiftUI", package: "SDWebImageSwiftUI"),
                 .product(name: "SDWebImageSVGCoder", package: "SDWebImageSVGCoder"),
-            ]
-        ),
-        .target(
-            name: "OversizeKit",
-            dependencies: [
-                "OversizeLockscreenKit",
-                .product(name: "OversizeUI", package: "OversizeUI"),
-                .product(name: "OversizeServices", package: "OversizeServices"),
-                .product(name: "OversizeSecurityService", package: "OversizeServices"),
-                .product(name: "OversizeSettingsService", package: "OversizeServices"),
-                .product(name: "OversizeStoreService", package: "OversizeServices"),
-                .product(name: "OversizeCore", package: "OversizeCore"),
             ]
         ),
         .target(
