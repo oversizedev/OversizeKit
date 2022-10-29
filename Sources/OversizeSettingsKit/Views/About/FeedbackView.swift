@@ -2,8 +2,9 @@
 // Copyright © 2022 Alexander Romanov
 // FeedbackView.swift
 //
-
+#if canImport(MessageUI)
 import MessageUI
+#endif
 import OversizeCDN
 import OversizeComponents
 import OversizeLocalizable
@@ -48,7 +49,9 @@ public struct FeedbackView: View {
                 .buttonStyle(.row)
             }
 
+           
             VStack(alignment: .leading) {
+                #if os(iOS)
                 if MFMailComposeViewController.canSendMail(),
                    let mail = Info.developer.email,
                    let appVersion = Info.app.verstion,
@@ -78,6 +81,7 @@ public struct FeedbackView: View {
                         .buttonStyle(.row)
                     }
                 }
+                #endif
 
                 // Telegramm chat
                 if let telegramChatUrl = Info.url.appTelegramChat, let id = Info.app.telegramChatID, !id.isEmpty {

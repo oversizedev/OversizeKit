@@ -18,6 +18,7 @@ public struct AdView: View {
 
     public var body: some View {
         if isPremium { EmptyView() } else {
+            #if os(iOS)
             Surface {
                 isShowProduct.toggle()
             } label: {
@@ -76,6 +77,9 @@ public struct AdView: View {
             }
             .controlPadding(.xSmall)
             .appStoreOverlay(isPresent: $isShowProduct, appId: app?.id ?? "")
+            #else
+            EmptyView()
+            #endif
         }
     }
 }

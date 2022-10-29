@@ -3,7 +3,9 @@
 // OurResorsesView.swift
 //
 
+#if canImport(MessageUI)
 import MessageUI
+#endif
 import OversizeComponents
 import OversizeLocalizable
 import OversizeResources

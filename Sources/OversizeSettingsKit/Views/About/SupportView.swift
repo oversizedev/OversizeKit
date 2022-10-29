@@ -3,7 +3,9 @@
 // SupportView.swift
 //
 
+#if canImport(MessageUI)
 import MessageUI
+#endif
 import OversizeCDN
 import OversizeComponents
 import OversizeLocalizable
@@ -42,6 +44,7 @@ public struct SupportView: View {
     private var help: some View {
         SectionView {
             VStack(alignment: .leading) {
+                #if os(iOS)
                 if MFMailComposeViewController.canSendMail(),
                    let mail = Info.developer.email,
                    let appVersion = Info.app.verstion,
@@ -71,6 +74,7 @@ public struct SupportView: View {
                         .buttonStyle(.row)
                     }
                 }
+                #endif
 
                 // Telegramm chat
                 if let telegramChatUrl = Info.url.appTelegramChat, let id = Info.app.telegramChatID, !id.isEmpty {
