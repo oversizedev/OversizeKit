@@ -45,15 +45,25 @@ struct StorePaymentButtonBar: View {
         }
         .padding(.bottom, .xxSmall)
         .background {
+            backgroundView
+        }
+        .padding(.bottom, .small)
+        .padding(.horizontal, .small)
+    }
+    
+    var backgroundView: some View {
+        Group {
+#if os(iOS)
             RoundedRectangle(cornerRadius: 16, style: .continuous)
                 .fill(.ultraThinMaterial)
                 .overlay {
                     RoundedRectangle(cornerRadius: 16, style: .continuous)
                         .strokeBorder(Color.black.opacity(0.05), lineWidth: 0.5)
                 }
+#else
+            EmptyView()
+#endif
         }
-        .padding(.bottom, .small)
-        .padding(.horizontal, .small)
     }
 }
 

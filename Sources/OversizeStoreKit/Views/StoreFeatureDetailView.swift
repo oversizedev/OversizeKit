@@ -25,6 +25,7 @@ struct StoreFeatureDetailView: View {
 
     var body: some View {
         GeometryReader { geometry in
+            #if os(iOS)
             VStack(spacing: .zero) {
                 TabView(selection: $selection) {
                     ForEach(Info.store.features) { feature in
@@ -54,6 +55,7 @@ struct StoreFeatureDetailView: View {
                         .padding(.small)
                 }
             }
+            #endif
         }
     }
 

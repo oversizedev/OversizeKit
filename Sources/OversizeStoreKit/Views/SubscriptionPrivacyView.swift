@@ -28,6 +28,7 @@ struct SubscriptionPrivacyView: View {
                     .caption()
                     .foregroundColor(Color.onSurfaceMediumEmphasis)
 
+                #if os(iOS)
                 HStack(spacing: .xxSmall) {
                     Button("Restore") {
                         Task {
@@ -66,6 +67,7 @@ struct SubscriptionPrivacyView: View {
                 .subheadline(.bold)
                 .foregroundColor(Color.onSurfaceDisabled)
                 .padding(.top, .xxxSmall)
+                #endif
             }
             .multilineTextAlignment(.center)
         }

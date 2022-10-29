@@ -269,7 +269,8 @@ public struct StoreProductView: View {
             }
             .foregroundColor(.onSurfaceDisabled)
             .padding(.vertical, .xxSmall)
-
+            
+            #if os(iOS)
             if isHaveSale, !isPurchased {
                 Text("Save " + saleProcent + "%")
                     .caption2(.bold)
@@ -284,6 +285,9 @@ public struct StoreProductView: View {
                     .padding(.horizontal, 2)
                     .padding(.bottom, 2)
             }
+            #else
+            EmptyView()
+            #endif
         }
         .frame(maxHeight: .infinity)
     }
@@ -317,6 +321,7 @@ public struct StoreProductView: View {
 
     var labelBackground: some View {
         Group {
+            #if os(iOS)
             if isHaveIntroductoryOffer, type == .row {
                 RoundedRectangle(cornerRadius: 4, style: .continuous)
                     .fill(Color.surfacePrimary)
@@ -332,6 +337,10 @@ public struct StoreProductView: View {
                         }
                     }
             }
+            #else
+            EmptyView()
+            #endif
+            
         }
     }
 

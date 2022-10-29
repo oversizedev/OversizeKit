@@ -12,6 +12,7 @@ import OversizeStoreService
 import OversizeUI
 import SwiftUI
 
+#if os(iOS)
 public struct StoreView: View {
     @StateObject private var viewModel: StoreViewModel
     @Environment(\.presentationMode) private var presentationMode
@@ -231,3 +232,18 @@ struct StoreView_Previews: PreviewProvider {
         StoreView()
     }
 }
+#else
+public struct StoreView: View {
+    public init() {}
+    
+    public var body: some View {
+        Text("Store")
+        
+    }
+    
+    public func closable(_ isClosable: Bool = true) -> StoreView {
+        var control = self
+        return control
+    }
+}
+#endif

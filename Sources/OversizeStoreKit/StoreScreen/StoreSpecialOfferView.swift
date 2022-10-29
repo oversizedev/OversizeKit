@@ -31,6 +31,7 @@ public struct StoreSpecialOfferView: View {
     }
 
     public var body: some View {
+        #if os(iOS)
         PageView { offset = $0 } content: {
             Group {
                 switch viewModel.state {
@@ -82,6 +83,9 @@ public struct StoreSpecialOfferView: View {
                 dismiss()
             }
         }
+        #else
+        EmptyView()
+        #endif
     }
 
     var imageSize: CGFloat {
