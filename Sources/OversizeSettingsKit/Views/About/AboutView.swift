@@ -3,7 +3,6 @@
 // AboutView.swift
 //
 
-import MessageUI
 import OversizeComponents
 import OversizeLocalizable
 import OversizeResources
@@ -15,6 +14,7 @@ import SwiftUI
 
 // swiftlint:disable all
 #if os(iOS)
+    import MessageUI
     public struct AboutView: View {
         @Environment(\.verticalSizeClass) private var verticalSizeClass
         @Environment(\.isPortrait) var isPortrait
