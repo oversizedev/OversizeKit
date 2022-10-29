@@ -29,44 +29,44 @@ struct SubscriptionPrivacyView: View {
                     .foregroundColor(Color.onSurfaceMediumEmphasis)
 
                 #if os(iOS)
-                HStack(spacing: .xxSmall) {
-                    Button("Restore") {
-                        Task {
-                            // This call displays a system prompt that asks users to authenticate with their App Store credentials.
-                            // Call this function only in response to an explicit user action, such as tapping a button.
-                            try? await AppStore.sync()
+                    HStack(spacing: .xxSmall) {
+                        Button("Restore") {
+                            Task {
+                                // This call displays a system prompt that asks users to authenticate with their App Store credentials.
+                                // Call this function only in response to an explicit user action, such as tapping a button.
+                                try? await AppStore.sync()
+                            }
+                        }
+
+                        Text("•")
+
+                        if let privacyUrl = Info.url.appPrivacyPolicyUrl {
+                            Button {
+                                isShowPrivacy.toggle()
+                            } label: {
+                                Text("Privacy")
+                            }
+                            .sheet(isPresented: $isShowPrivacy) {
+                                WebView(url: privacyUrl)
+                            }
+                        }
+
+                        Text("•")
+
+                        if let termsOfUde = Info.url.appTermsOfUseUrl {
+                            Button {
+                                isShowTerms.toggle()
+                            } label: {
+                                Text("Terms")
+                            }
+                            .sheet(isPresented: $isShowTerms) {
+                                WebView(url: termsOfUde)
+                            }
                         }
                     }
-
-                    Text("•")
-
-                    if let privacyUrl = Info.url.appPrivacyPolicyUrl {
-                        Button {
-                            isShowPrivacy.toggle()
-                        } label: {
-                            Text("Privacy")
-                        }
-                        .sheet(isPresented: $isShowPrivacy) {
-                            WebView(url: privacyUrl)
-                        }
-                    }
-
-                    Text("•")
-
-                    if let termsOfUde = Info.url.appTermsOfUseUrl {
-                        Button {
-                            isShowTerms.toggle()
-                        } label: {
-                            Text("Terms")
-                        }
-                        .sheet(isPresented: $isShowTerms) {
-                            WebView(url: termsOfUde)
-                        }
-                    }
-                }
-                .subheadline(.bold)
-                .foregroundColor(Color.onSurfaceDisabled)
-                .padding(.top, .xxxSmall)
+                    .subheadline(.bold)
+                    .foregroundColor(Color.onSurfaceDisabled)
+                    .padding(.top, .xxxSmall)
                 #endif
             }
             .multilineTextAlignment(.center)

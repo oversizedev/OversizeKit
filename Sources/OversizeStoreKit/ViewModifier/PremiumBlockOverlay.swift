@@ -1,11 +1,11 @@
 //
-// Copyright © 2022 Alexander Romanov
+// Copyright © 1984 Alexander Romanov
 // PremiumBlockOverlay.swift
 //
 
+import OversizeLocalizable
 import OversizeUI
 import SwiftUI
-import OversizeLocalizable
 
 public struct PremiumBlockOverlay: ViewModifier {
     @Environment(\.colorScheme) var colorScheme
@@ -47,7 +47,7 @@ public struct PremiumBlockOverlay: ViewModifier {
                                 .title()
                                 .foregroundColor(.onSurfaceHighEmphasis)
 
-                            if let subtitle = subtitle {
+                            if let subtitle {
                                 Text(subtitle)
                                     .headline()
                                     .foregroundColor(.onSurfaceMediumEmphasis)

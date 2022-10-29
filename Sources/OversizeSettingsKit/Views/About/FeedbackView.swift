@@ -2,8 +2,9 @@
 // Copyright © 2022 Alexander Romanov
 // FeedbackView.swift
 //
+
 #if canImport(MessageUI)
-import MessageUI
+    import MessageUI
 #endif
 import OversizeCDN
 import OversizeComponents
@@ -49,38 +50,37 @@ public struct FeedbackView: View {
                 .buttonStyle(.row)
             }
 
-           
             VStack(alignment: .leading) {
                 #if os(iOS)
-                if MFMailComposeViewController.canSendMail(),
-                   let mail = Info.developer.email,
-                   let appVersion = Info.app.verstion,
-                   let appName = Info.app.name,
-                   let device = Info.app.device,
-                   let appBuild = Info.app.build,
-                   let systemVersion = Info.app.system
-                {
-                    let contentPreText = "\n\n\n\n\n\n————————————————\nApp: \(appName) \(appVersion) (\(appBuild))\nDevice: \(device), \(systemVersion)\nLocale: \(Info.app.language ?? "Not init")"
-                    let subject = "Feedback"
+                    if MFMailComposeViewController.canSendMail(),
+                       let mail = Info.links?.company.email,
+                       let appVersion = Info.app.verstion,
+                       let appName = Info.app.name,
+                       let device = Info.app.device,
+                       let appBuild = Info.app.build,
+                       let systemVersion = Info.app.system
+                    {
+                        let contentPreText = "\n\n\n\n\n\n————————————————\nApp: \(appName) \(appVersion) (\(appBuild))\nDevice: \(device), \(systemVersion)\nLocale: \(Info.app.language ?? "Not init")"
+                        let subject = "Feedback"
 
-                    Row(L10n.Settings.feedbakAuthor) {
-                        isShowMail.toggle()
-                    }
-                    .rowLeading(.image(mailIcon))
-
-                    .buttonStyle(.row)
-                    .sheet(isPresented: $isShowMail) {
-                        MailView(to: mail, subject: subject, content: contentPreText)
-                    }
-                } else {
-                    // Send author
-                    if let sendMailUrl = Info.url.developerSendMail {
-                        Link(destination: sendMailUrl) {
-                            Row(L10n.Settings.feedbakAuthor, leadingType: .image(mailIcon))
+                        Row(L10n.Settings.feedbakAuthor) {
+                            isShowMail.toggle()
                         }
+                        .rowLeading(.image(mailIcon))
+
                         .buttonStyle(.row)
+                        .sheet(isPresented: $isShowMail) {
+                            MailView(to: mail, subject: subject, content: contentPreText)
+                        }
+                    } else {
+                        // Send author
+                        if let sendMailUrl = Info.url.developerSendMail {
+                            Link(destination: sendMailUrl) {
+                                Row(L10n.Settings.feedbakAuthor, leadingType: .image(mailIcon))
+                            }
+                            .buttonStyle(.row)
+                        }
                     }
-                }
                 #endif
 
                 // Telegramm chat

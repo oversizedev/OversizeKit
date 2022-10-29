@@ -32,59 +32,59 @@ public struct StoreSpecialOfferView: View {
 
     public var body: some View {
         #if os(iOS)
-        PageView { offset = $0 } content: {
-            Group {
-                switch viewModel.state {
-                case .initial:
-                    VStack {
-                        Spacer()
-                        HStack {
+            PageView { offset = $0 } content: {
+                Group {
+                    switch viewModel.state {
+                    case .initial:
+                        VStack {
                             Spacer()
-                            ProgressView()
-                                .task {
-                                    await viewModel.fetchData()
-                                    if case let .result(products) = self.viewModel.state {
-                                        await viewModel.updateState(products: products)
+                            HStack {
+                                Spacer()
+                                ProgressView()
+                                    .task {
+                                        await viewModel.fetchData()
+                                        if case let .result(products) = self.viewModel.state {
+                                            await viewModel.updateState(products: products)
+                                        }
                                     }
-                                }
+                                Spacer()
+                            }
                             Spacer()
                         }
-                        Spacer()
+                    case .loading:
+                        ProgressView()
+                    case let .result(data):
+                        content(data: data)
+                    case let .error(error):
+                        ErrorView(error)
                     }
-                case .loading:
-                    ProgressView()
-                case let .result(data):
-                    content(data: data)
-                case let .error(error):
-                    ErrorView(error)
+                }
+                .paddingContent(.horizontal)
+            }
+            .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
+            .titleLabel {
+                PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: .medium)
+            }
+            .trailingBar {
+                BarButton(type: .closeAction(action: {
+                    lastClosedSpecialOffer = event
+                    dismiss()
+                }))
+            }
+            .bottomToolbar(style: .none, ignoreSafeArea: false) {
+                VStack(spacing: .zero) {
+                    StorePaymentButtonBar()
+                        .environmentObject(viewModel)
+                        .padding(.horizontal, 8)
                 }
             }
-            .paddingContent(.horizontal)
-        }
-        .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
-        .titleLabel {
-            PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: .medium)
-        }
-        .trailingBar {
-            BarButton(type: .closeAction(action: {
-                lastClosedSpecialOffer = event
-                dismiss()
-            }))
-        }
-        .bottomToolbar(style: .none, ignoreSafeArea: false) {
-            VStack(spacing: .zero) {
-                StorePaymentButtonBar()
-                    .environmentObject(viewModel)
-                    .padding(.horizontal, 8)
+            .onChange(of: isPremium) { status in
+                if status {
+                    dismiss()
+                }
             }
-        }
-        .onChange(of: isPremium) { status in
-            if status {
-                dismiss()
-            }
-        }
         #else
-        EmptyView()
+            EmptyView()
         #endif
     }
 

@@ -26,35 +26,35 @@ struct StoreFeatureDetailView: View {
     var body: some View {
         GeometryReader { geometry in
             #if os(iOS)
-            VStack(spacing: .zero) {
-                TabView(selection: $selection) {
-                    ForEach(Info.store.features) { feature in
-                        fetureItem(feature, geometry: geometry)
-                            .padding(.bottom, isPremium ? .large : .zero)
-                            .tag(feature)
+                VStack(spacing: .zero) {
+                    TabView(selection: $selection) {
+                        ForEach(Info.store.features) { feature in
+                            fetureItem(feature, geometry: geometry)
+                                .padding(.bottom, isPremium ? .large : .zero)
+                                .tag(feature)
+                        }
+                    }
+                    .tabViewStyle(.page(indexDisplayMode: isPremium ? .always : .never))
+                    .indexViewStyle(.page(backgroundDisplayMode: isPremium ? .always : .never))
+
+                    if !isPremium {
+                        StorePaymentButtonBar()
+                            .environmentObject(viewModel)
                     }
                 }
-                .tabViewStyle(.page(indexDisplayMode: isPremium ? .always : .never))
-                .indexViewStyle(.page(backgroundDisplayMode: isPremium ? .always : .never))
-
-                if !isPremium {
-                    StorePaymentButtonBar()
-                        .environmentObject(viewModel)
+                .overlay(alignment: .topTrailing) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Icon(.xMini, color: selection.screenURL != nil ? .onPrimaryHighEmphasis : .onSurfaceDisabled)
+                            .padding(.xxSmall)
+                            .background {
+                                Circle()
+                                    .fill(.ultraThinMaterial)
+                            }
+                            .padding(.small)
+                    }
                 }
-            }
-            .overlay(alignment: .topTrailing) {
-                Button {
-                    dismiss()
-                } label: {
-                    Icon(.xMini, color: selection.screenURL != nil ? .onPrimaryHighEmphasis : .onSurfaceDisabled)
-                        .padding(.xxSmall)
-                        .background {
-                            Circle()
-                                .fill(.ultraThinMaterial)
-                        }
-                        .padding(.small)
-                }
-            }
             #endif
         }
     }

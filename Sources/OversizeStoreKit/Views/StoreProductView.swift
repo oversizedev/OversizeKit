@@ -269,24 +269,24 @@ public struct StoreProductView: View {
             }
             .foregroundColor(.onSurfaceDisabled)
             .padding(.vertical, .xxSmall)
-            
+
             #if os(iOS)
-            if isHaveSale, !isPurchased {
-                Text("Save " + saleProcent + "%")
-                    .caption2(.bold)
-                    .foregroundColor(.onPrimaryHighEmphasis)
-                    .padding(.vertical, .xxxSmall)
-                    .frame(maxWidth: .infinity)
-                    .background {
-                        RoundedRectangle(cornerRadius: 2, style: .continuous)
-                            .fill(Color.success)
-                            .cornerRadius(8, corners: [.bottomLeft, .bottomRight])
-                    }
-                    .padding(.horizontal, 2)
-                    .padding(.bottom, 2)
-            }
+                if isHaveSale, !isPurchased {
+                    Text("Save " + saleProcent + "%")
+                        .caption2(.bold)
+                        .foregroundColor(.onPrimaryHighEmphasis)
+                        .padding(.vertical, .xxxSmall)
+                        .frame(maxWidth: .infinity)
+                        .background {
+                            RoundedRectangle(cornerRadius: 2, style: .continuous)
+                                .fill(Color.success)
+                                .cornerRadius(8, corners: [.bottomLeft, .bottomRight])
+                        }
+                        .padding(.horizontal, 2)
+                        .padding(.bottom, 2)
+                }
             #else
-            EmptyView()
+                EmptyView()
             #endif
         }
         .frame(maxHeight: .infinity)
@@ -322,25 +322,24 @@ public struct StoreProductView: View {
     var labelBackground: some View {
         Group {
             #if os(iOS)
-            if isHaveIntroductoryOffer, type == .row {
-                RoundedRectangle(cornerRadius: 4, style: .continuous)
-                    .fill(Color.surfacePrimary)
-                    .cornerRadius(10, corners: [.bottomLeft, .bottomRight])
-            } else {
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .fill(Color.surfacePrimary)
-                    .overlay {
-                        if type == .collumn, !isSelected {
-                            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                .strokeBorder(Color.backgroundTertiary, lineWidth: 2)
-                                .padding(-2)
+                if isHaveIntroductoryOffer, type == .row {
+                    RoundedRectangle(cornerRadius: 4, style: .continuous)
+                        .fill(Color.surfacePrimary)
+                        .cornerRadius(10, corners: [.bottomLeft, .bottomRight])
+                } else {
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .fill(Color.surfacePrimary)
+                        .overlay {
+                            if type == .collumn, !isSelected {
+                                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                    .strokeBorder(Color.backgroundTertiary, lineWidth: 2)
+                                    .padding(-2)
+                            }
                         }
-                    }
-            }
+                }
             #else
-            EmptyView()
+                EmptyView()
             #endif
-            
         }
     }
 

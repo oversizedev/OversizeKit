@@ -29,7 +29,6 @@ import SwiftUI
 
         @State var isShowPrivacy = false
         @State var isShowTerms = false
-        @State var selectedProductId: String = ""
 
         @State private var isPresentStoreProduct: Bool = false
 
@@ -141,7 +140,7 @@ import SwiftUI
                         }
 
                         if MFMailComposeViewController.canSendMail(),
-                           let mail = Info.developer.email,
+                           let mail = Info.links?.company.email,
                            let appVersion = Info.app.verstion,
                            let appName = Info.app.name,
                            let device = Info.app.device,
@@ -194,36 +193,39 @@ import SwiftUI
                                 let data = Info.all?.apps.filter { $0.id != Info.app.appStoreID }
 
                                 ForEach(data ?? []) { app in
-                                    VStack(spacing: .xSmall) {
-                                        AsyncImage(url: URL(string: "https://cdn.oversize.design/assets/apps/\(app.path ?? "")/icon.png"), content: {
-                                            $0
-                                                .resizable()
-                                                .frame(width: 74, height: 74)
-                                                .mask(RoundedRectangle(cornerRadius: .large,
-                                                                       style: .continuous))
-                                                .overlay(
-                                                    RoundedRectangle(cornerRadius: 16,
-                                                                     style: .continuous)
-                                                        .stroke(lineWidth: 1)
-                                                        .opacity(0.15)
-                                                )
-                                                .onTapGesture {
-                                                    selectedProductId = app.id ?? ""
-                                                    isPresentStoreProduct = true
-                                                }
+                                    Button {
+                                        isPresentStoreProduct = true
+                                    } label: {
+                                        VStack(spacing: .xSmall) {
+                                            let imageUrl = "\(Info.links?.company.cdnString ?? "")/assets/apps/\(app.path ?? "")/icon.png"
+                                            AsyncImage(url: URL(string: imageUrl), content: {
+                                                $0
+                                                    .resizable()
+                                                    .frame(width: 74, height: 74)
+                                                    .mask(RoundedRectangle(cornerRadius: .large,
+                                                                           style: .continuous))
+                                                    .overlay(
+                                                        RoundedRectangle(cornerRadius: 16,
+                                                                         style: .continuous)
+                                                            .stroke(lineWidth: 1)
+                                                            .opacity(0.15)
+                                                    )
 
-                                        }, placeholder: {
-                                            RoundedRectangle(cornerRadius: .large, style: .continuous)
-                                                .fillSurfaceSecondary()
-                                                .frame(width: 74, height: 74)
-                                        })
+                                            }, placeholder: {
+                                                RoundedRectangle(cornerRadius: .large, style: .continuous)
+                                                    .fillSurfaceSecondary()
+                                                    .frame(width: 74, height: 74)
+                                            })
 
-                                        Text(app.name ?? "")
-                                            .caption(.medium)
-                                            .multilineTextAlignment(.center)
-                                            .foregroundColor(.onSurfaceMediumEmphasis)
-                                            .frame(width: 74)
+                                            Text(app.name ?? "")
+                                                .caption(.medium)
+                                                .multilineTextAlignment(.center)
+                                                .foregroundColor(.onSurfaceMediumEmphasis)
+                                                .frame(width: 74)
+                                        }
                                     }
+                                    .buttonStyle(.scale)
+                                    .appStoreOverlay(isPresent: $isPresentStoreProduct, appId: app.id)
                                 }
 
                                 if let authorAllApps = Info.url.developerAllApps {
@@ -247,7 +249,6 @@ import SwiftUI
                                 }
 
                             }.padding(.horizontal, .medium)
-                                .appStoreOverlay(isPresent: $isPresentStoreProduct, appId: selectedProductId)
                         }
                         .padding(.bottom, 16)
                     }
@@ -287,7 +288,7 @@ import SwiftUI
 
         private var soclal: some View {
             HStack(spacing: .small) {
-                if let facebook = Info.links?.company.facebookUrl {
+                if let facebook = Info.url.companyFacebook {
                     Link(destination: facebook) {
                         // Surface {
                         HStack {

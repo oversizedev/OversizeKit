@@ -27,55 +27,55 @@ public struct StoreInstuctinsView: View {
     public var body: some View {
         ScrollViewReader { value in
             #if os(iOS)
-            PageView { offset = $0 } content: {
-                Group {
-                    switch viewModel.state {
-                    case .initial:
-                        contentPlaceholder()
-                            .task {
-                                await viewModel.fetchData()
-                                if case let .result(products) = self.viewModel.state {
-                                    await viewModel.updateState(products: products)
+                PageView { offset = $0 } content: {
+                    Group {
+                        switch viewModel.state {
+                        case .initial:
+                            contentPlaceholder()
+                                .task {
+                                    await viewModel.fetchData()
+                                    if case let .result(products) = self.viewModel.state {
+                                        await viewModel.updateState(products: products)
+                                    }
                                 }
-                            }
 
-                    case .loading:
-                        contentPlaceholder()
-                    case let .result(data):
-                        content(data: data)
-                    case let .error(error):
-                        ErrorView(error)
-                    }
-                }
-                .paddingContent(.horizontal)
-            }
-            .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
-            .titleLabel {
-                PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: .medium)
-            }
-            .trailingBar {
-                BarButton(type: .close)
-            }
-            .bottomToolbar(style: .none, ignoreSafeArea: false) {
-                VStack(spacing: .zero) {
-                    StorePaymentButtonBar {
-                        isShowAllPlans = true
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            withAnimation {
-                                value.scrollTo(10, anchor: .top)
-                            }
+                        case .loading:
+                            contentPlaceholder()
+                        case let .result(data):
+                            content(data: data)
+                        case let .error(error):
+                            ErrorView(error)
                         }
                     }
-                    .environmentObject(viewModel)
+                    .paddingContent(.horizontal)
                 }
-            }
-            .onChange(of: isPremium) { status in
-                if status {
-                    dismiss()
+                .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
+                .titleLabel {
+                    PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: .medium)
                 }
-            }
+                .trailingBar {
+                    BarButton(type: .close)
+                }
+                .bottomToolbar(style: .none, ignoreSafeArea: false) {
+                    VStack(spacing: .zero) {
+                        StorePaymentButtonBar {
+                            isShowAllPlans = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                withAnimation {
+                                    value.scrollTo(10, anchor: .top)
+                                }
+                            }
+                        }
+                        .environmentObject(viewModel)
+                    }
+                }
+                .onChange(of: isPremium) { status in
+                    if status {
+                        dismiss()
+                    }
+                }
             #else
-            EmptyView()
+                EmptyView()
             #endif
         }
     }
