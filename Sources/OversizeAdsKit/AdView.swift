@@ -51,7 +51,7 @@ public struct AdView: View {
                                     .foregroundOnSurfaceHighEmphasis()
 
                                 Bage(color: .warning) {
-                                    Text("Ad")
+                                    Text("Our app")
                                         .bold()
                                 }
                             }
