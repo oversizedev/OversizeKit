@@ -25,7 +25,7 @@ import SwiftUI
         }
 
         private func getAlternateIconNames() {
-            if let iconCount = FeatureFlags.app.alternateAppIcons {
+            if let iconCount = FeatureFlags.app.alternateAppIcons, iconCount != 0 {
                 for index in 1 ... iconCount {
                     iconNames.append("AppIcon\(index)")
                 }
