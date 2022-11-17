@@ -170,8 +170,8 @@ import SwiftUI
                                     .cornerRadius(18)
                                     .overlay(
                                         RoundedRectangle(cornerRadius: 20)
-                                            .stroke(Color.accent,
-                                                    lineWidth: index == iconSettings.currentIndex ? 3 : 0)
+                                            .stroke(index == iconSettings.currentIndex ? Color.accent : Color.border,
+                                                    lineWidth: index == iconSettings.currentIndex ? 3 : 1)
                                     )
                                     .onTapGesture {
                                         if index != 0, isPremium == false {
