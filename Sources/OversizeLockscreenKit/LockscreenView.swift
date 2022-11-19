@@ -5,6 +5,7 @@
 
 import OversizeCore
 import OversizeSecurityService
+import OversizeServices
 import OversizeUI
 import SwiftUI
 
@@ -13,6 +14,10 @@ public enum LockscreenViewState {
 }
 
 public struct LockscreenView: View {
+    @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
+    @Environment(\.scenePhase) var scenePhase: ScenePhase
+
     @Binding private var pinCode: String
 
     @Binding private var state: LockscreenViewState
@@ -38,6 +43,18 @@ public struct LockscreenView: View {
     private let pinCodeEnabled: Bool
     private let biometricEnabled: Bool
     private let biometricType: BiometricType
+
+    private var isShowTitle: Bool {
+        if horizontalSizeClass == .compact, verticalSizeClass == .regular {
+            return true
+        } else if horizontalSizeClass == .regular, verticalSizeClass == .compact {
+            return false
+        } else if horizontalSizeClass == .regular, verticalSizeClass == .regular {
+            return true
+        } else {
+            return true
+        }
+    }
 
     public init(pinCode: Binding<String>,
                 state: Binding<LockscreenViewState> = .constant(.locked),
@@ -65,6 +82,16 @@ public struct LockscreenView: View {
     public var body: some View {
         content()
             .background(Color.surfacePrimary.ignoresSafeArea(.all))
+            .onChange(of: scenePhase) { phase in
+                switch phase {
+                case .active:
+                    if state == .locked, biometricEnabled {
+                        biometricAction?()
+                    }
+                default:
+                    break
+                }
+            }
     }
 
     @ViewBuilder
@@ -81,48 +108,85 @@ public struct LockscreenView: View {
         VStack {
             Spacer()
 
-            Text(biometricType.rawValue)
-                .fontStyle(.title2, color: .onBackgroundHighEmphasis)
+            if let appImage = Info.app.iconName {
+                #if os(iOS)
+
+                    Image(uiImage: UIImage(named: appImage) ?? UIImage())
+                        .resizable()
+                        .frame(width: 96, height: 96)
+                        .mask(RoundedRectangle(cornerRadius: 26,
+                                               style: .continuous))
+
+                #else
+                    Text(biometricType.rawValue)
+                        .title2(.bold)
+                        .foregroundColor(.onSurfaceHighEmphasis)
+
+                #endif
+
+            } else {
+                Text(biometricType.rawValue)
+                    .title2(.semibold)
+                    .foregroundColor(.onSurfaceHighEmphasis)
+            }
 
             Spacer()
 
             #if os(iOS)
-                biometricImage()
-                    .onTapGesture {
-                        biometricAction?()
+
+                Button { biometricAction?() } label: {
+                    HStack(spacing: .xSmall) {
+                        biometricImage()
+                            .padding(.leading, 2)
+
+                        Text("Open with \(biometricType.rawValue)")
                     }
+                    .padding(.horizontal, .xxxSmall)
+                }
+                .buttonStyle(.tertiary(infinityWidth: false))
+                .controlBorderShape(.capsule)
+                .controlSize(.small)
             #endif
 
             Spacer()
         }
+        .hCenter()
     }
 
     var pinCodeView: some View {
         VStack {
-            Spacer()
+            if isShowTitle {
+                Spacer()
 
-            Text(title ?? "")
-                .fontStyle(.title2, color: .onBackgroundHighEmphasis)
-                .opacity(title != nil ? 1 : 0)
+                Text(title ?? "")
+                    .title2(.bold)
+                    .foregroundColor(.onSurfaceHighEmphasis)
+                    .opacity(title != nil ? 1 : 0)
 
-            Spacer()
+                Spacer()
+            }
 
             pinCounter(state: state)
+                .padding()
 
-            Spacer()
+            if isShowTitle {
+                Spacer()
+            }
 
             Text(errorText ?? "")
                 .fontStyle(.subheadline, color: .error)
                 .opacity(state == .error ? 1 : 0)
 
-            Spacer()
+            if isShowTitle {
+                Spacer()
+            }
 
             numpad
         }
     }
 
     var numpad: some View {
-        LazyVGrid(columns: gridItemLayout, spacing: 20) {
+        LazyVGrid(columns: gridItemLayout, spacing: isShowTitle ? 20 : 4) {
             ForEach(1 ... 9, id: \.self) { number in
 
                 let stringNumber: String = .init(number)
@@ -166,8 +230,8 @@ public struct LockscreenView: View {
                 }
             } // .opacity(pinCode.isEmpty && biometricEnabled ? 1 : 0)
         }
-        .paddingContent()
-        .padding(.bottom, .xLarge)
+        .paddingContent(isShowTitle ? .all : .horizontal)
+        .padding(.bottom, isShowTitle ? .xLarge : .zero)
     }
 
     @ViewBuilder
@@ -178,11 +242,11 @@ public struct LockscreenView: View {
         case .touchID:
             Image(systemName: "touchid")
                 .foregroundColor(Color.onBackgroundHighEmphasis)
-                .font(.system(size: 32))
+                .font(.system(size: 26))
                 .frame(width: 24, height: 24, alignment: .center)
         case .faceID:
             Image(systemName: "faceid")
-                .font(.system(size: 32))
+                .font(.system(size: 26))
                 .foregroundColor(Color.onBackgroundHighEmphasis)
                 .frame(width: 24, height: 24, alignment: .center)
         }
@@ -213,7 +277,7 @@ public struct LockscreenView: View {
                         .scaleEffect(shouldAnimate ? 0.5 : 1)
                         .animation(Animation.easeInOut(duration: 0.5)
                             .repeatForever()
-                            .delay(number == 0 ? 0 : 0.5 * Double(number)))
+                            .delay(number == 0 ? 0 : 0.5 * Double(number)), value: shouldAnimate)
                 }
             }
             .onReceive(timer) { _ in
