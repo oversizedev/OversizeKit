@@ -59,13 +59,15 @@ let package = Package(
                 .product(name: "OversizeCore", package: "OversizeCore"),
             ]
         ),
-        .target(name: "OversizeAdsKit",
-                dependencies: [
-                    "OversizeStoreKit",
-                    .product(name: "OversizeUI", package: "OversizeUI"),
-                    .product(name: "OversizeCore", package: "OversizeCore"),
-                    .product(name: "OversizeServices", package: "OversizeServices"),
-                ]),
+        .target(
+            name: "OversizeAdsKit",
+            dependencies: [
+                "OversizeStoreKit",
+                .product(name: "OversizeUI", package: "OversizeUI"),
+                .product(name: "OversizeCore", package: "OversizeCore"),
+                .product(name: "OversizeServices", package: "OversizeServices"),
+            ]
+        ),
         .target(
             name: "OversizeLauncherKit",
             dependencies: [

@@ -78,7 +78,7 @@ public struct PrmiumBannerRow: View {
 
             HStack(spacing: .small) {
                 Text(viewModel.subsribtionStatusText)
-                    .headline()
+                    .headline(.medium)
                     .foregroundColor(.onSurfaceMediumEmphasis)
 
                 Circle()
