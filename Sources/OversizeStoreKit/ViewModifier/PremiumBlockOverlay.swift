@@ -1,5 +1,5 @@
 //
-// Copyright © 1984 Alexander Romanov
+// Copyright © 2022 Alexander Romanov
 // PremiumBlockOverlay.swift
 //
 

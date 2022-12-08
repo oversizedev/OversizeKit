@@ -114,22 +114,14 @@ public extension LauncherViewModel {
 
     func checkOnboarding() {
         if !appStateService.isCompletedOnbarding {
-            var transaction = Transaction()
-            transaction.disablesAnimations = true
-            withTransaction(transaction) {
-                activeFullScreenSheet = .onboarding
-            }
+            activeFullScreenSheet = .onboarding
         }
     }
 
     func setPayWall() {
-        var transaction = Transaction()
-        transaction.disablesAnimations = true
-        withTransaction(transaction) {
-            activeFullScreenSheet = nil
-            delay(time: 0.2) {
-                self.activeFullScreenSheet = .payWall
-            }
+        activeFullScreenSheet = nil
+        delay(time: 0.2) {
+            self.activeFullScreenSheet = .payWall
         }
     }
 
