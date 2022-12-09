@@ -3,8 +3,8 @@
 // AdView.swift
 //
 
+import OversizeKit
 import OversizeServices
-import OversizeStoreKit
 import OversizeUI
 import SwiftUI
 

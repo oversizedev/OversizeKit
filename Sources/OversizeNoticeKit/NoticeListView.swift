@@ -3,8 +3,8 @@
 // NoticeListView.swift
 //
 
+import OversizeKit
 import OversizeServices
-import OversizeStoreKit
 import OversizeStoreService
 import OversizeUI
 import StoreKit

@@ -38,10 +38,6 @@ let package = Package(
     products: [
         .library(name: "OversizeKit", targets: ["OversizeKit"]),
         .library(name: "OversizeAdsKit", targets: ["OversizeAdsKit"]),
-        .library(name: "OversizeLauncherKit", targets: ["OversizeLauncherKit"]),
-        .library(name: "OversizeLockscreenKit", targets: ["OversizeLockscreenKit"]),
-        .library(name: "OversizeStoreKit", targets: ["OversizeStoreKit"]),
-        .library(name: "OversizeSettingsKit", targets: ["OversizeSettingsKit"]),
         .library(name: "OversizeOnboardingKit", targets: ["OversizeOnboardingKit"]),
         .library(name: "OversizeNoticeKit", targets: ["OversizeNoticeKit"]),
     ],
@@ -50,101 +46,39 @@ let package = Package(
         .target(
             name: "OversizeKit",
             dependencies: [
-                "OversizeLockscreenKit",
                 .product(name: "OversizeUI", package: "OversizeUI"),
                 .product(name: "OversizeServices", package: "OversizeServices"),
-                .product(name: "OversizeSecurityService", package: "OversizeServices"),
-                .product(name: "OversizeSettingsService", package: "OversizeServices"),
                 .product(name: "OversizeStoreService", package: "OversizeServices"),
                 .product(name: "OversizeCore", package: "OversizeCore"),
+                .product(name: "OversizeComponents", package: "OversizeComponents"),
+                .product(name: "OversizeLocalizable", package: "OversizeLocalizable"),
+                .product(name: "OversizeResources", package: "OversizeResources"),
+                .product(name: "SDWebImageSwiftUI", package: "SDWebImageSwiftUI"),
+                .product(name: "SDWebImageSVGCoder", package: "SDWebImageSVGCoder"),
+                .product(name: "OversizeCDN", package: "OversizeCDN"),
             ]
         ),
         .target(
             name: "OversizeAdsKit",
             dependencies: [
-                "OversizeStoreKit",
-                .product(name: "OversizeUI", package: "OversizeUI"),
-                .product(name: "OversizeCore", package: "OversizeCore"),
-                .product(name: "OversizeServices", package: "OversizeServices"),
-            ]
-        ),
-        .target(
-            name: "OversizeLauncherKit",
-            dependencies: [
-                "OversizeLockscreenKit",
-                "OversizeKit",
-                "OversizeStoreKit",
-                .product(name: "OversizeUI", package: "OversizeUI"),
-                .product(name: "OversizeCore", package: "OversizeCore"),
-                .product(name: "OversizeServices", package: "OversizeServices"),
-                .product(name: "OversizeSecurityService", package: "OversizeServices"),
-                .product(name: "OversizeSettingsService", package: "OversizeServices"),
-                .product(name: "OversizeStoreService", package: "OversizeServices"),
-                .product(name: "OversizeLocalizable", package: "OversizeLocalizable"),
-                .product(name: "SDWebImageSwiftUI", package: "SDWebImageSwiftUI"),
-                .product(name: "SDWebImageSVGCoder", package: "SDWebImageSVGCoder"),
-            ]
-        ),
-        .target(
-            name: "OversizeLockscreenKit",
-            dependencies: [
-                .product(name: "OversizeUI", package: "OversizeUI"),
-                .product(name: "OversizeServices", package: "OversizeServices"),
-                .product(name: "OversizeSecurityService", package: "OversizeServices"),
-                .product(name: "OversizeCore", package: "OversizeCore"),
-            ]
-        ),
-        .target(
-            name: "OversizeStoreKit",
-            dependencies: [
                 "OversizeKit",
                 .product(name: "OversizeUI", package: "OversizeUI"),
                 .product(name: "OversizeServices", package: "OversizeServices"),
-                .product(name: "OversizeStoreService", package: "OversizeServices"),
-                .product(name: "OversizeComponents", package: "OversizeComponents"),
-                .product(name: "OversizeResources", package: "OversizeResources"),
-                .product(name: "OversizeCore", package: "OversizeCore"),
-                .product(name: "OversizeCDN", package: "OversizeCDN"),
-                .product(name: "OversizeLocalizable", package: "OversizeLocalizable"),
             ]
         ),
         .target(
             name: "OversizeOnboardingKit",
             dependencies: [
-                "OversizeKit",
                 .product(name: "OversizeUI", package: "OversizeUI"),
-                .product(name: "OversizeCore", package: "OversizeCore"),
-                .product(name: "OversizeComponents", package: "OversizeComponents"),
-                .product(name: "OversizeServices", package: "OversizeServices"),
-                .product(name: "OversizeResources", package: "OversizeResources"),
-            ]
-        ),
-        .target(
-            name: "OversizeSettingsKit",
-            dependencies: [
-                "OversizeStoreKit",
-                "OversizeKit",
-                "OversizeLockscreenKit",
-                .product(name: "OversizeCore", package: "OversizeCore"),
-                .product(name: "OversizeUI", package: "OversizeUI"),
-                .product(name: "OversizeServices", package: "OversizeServices"),
-                .product(name: "OversizeSecurityService", package: "OversizeServices"),
-                .product(name: "OversizeSettingsService", package: "OversizeServices"),
-                .product(name: "OversizeStoreService", package: "OversizeServices"),
-                .product(name: "OversizeLocalizable", package: "OversizeLocalizable"),
-                .product(name: "OversizeResources", package: "OversizeResources"),
             ]
         ),
         .target(
             name: "OversizeNoticeKit",
             dependencies: [
                 "OversizeKit",
-                "OversizeStoreKit",
                 .product(name: "OversizeUI", package: "OversizeUI"),
-                .product(name: "OversizeCore", package: "OversizeCore"),
                 .product(name: "OversizeServices", package: "OversizeServices"),
                 .product(name: "OversizeStoreService", package: "OversizeServices"),
-                .product(name: "OversizeResources", package: "OversizeResources"),
             ]
         ),
         .testTarget(
