@@ -159,7 +159,7 @@ import SwiftUI
             private var appIcon: some View {
                 SectionView("App icon") {
                     LazyVGrid(columns: columns, spacing: 24) {
-                        ForEach(0 ..< iconSettings.iconNames.count) { index in
+                        ForEach(0 ..< iconSettings.iconNames.count, id: \.self) { index in
                             HStack {
                                 Image(uiImage: UIImage(named: iconSettings.iconNames[index]
                                         ?? "AppIcon") ?? UIImage())

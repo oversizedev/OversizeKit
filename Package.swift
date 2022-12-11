@@ -40,6 +40,9 @@ let package = Package(
         .library(name: "OversizeAdsKit", targets: ["OversizeAdsKit"]),
         .library(name: "OversizeOnboardingKit", targets: ["OversizeOnboardingKit"]),
         .library(name: "OversizeNoticeKit", targets: ["OversizeNoticeKit"]),
+        .library(name: "OversizeCalendarKit", targets: ["OversizeCalendarKit"]),
+        .library(name: "OversizeContactsKit", targets: ["OversizeContactsKit"]),
+        .library(name: "OversizeLocationKit", targets: ["OversizeLocationKit"])
     ],
     dependencies: productionDependencies,
     targets: [
@@ -67,18 +70,44 @@ let package = Package(
             ]
         ),
         .target(
-            name: "OversizeOnboardingKit",
+            name: "OversizeCalendarKit",
             dependencies: [
                 .product(name: "OversizeUI", package: "OversizeUI"),
+                .product(name: "OversizeServices", package: "OversizeServices"),
+                .product(name: "OversizeCalendarService", package: "OversizeServices"),
+            ]
+        ),
+        .target(
+            name: "OversizeContactsKit",
+            dependencies: [
+                "OversizeKit",
+                .product(name: "OversizeUI", package: "OversizeUI"),
+                .product(name: "OversizeServices", package: "OversizeServices"),
+                .product(name: "OversizeContactsService", package: "OversizeServices"),
+            ]
+        ),
+        .target(
+            name: "OversizeLocationKit",
+            dependencies: [
+                .product(name: "OversizeUI", package: "OversizeUI"),
+                .product(name: "OversizeServices", package: "OversizeServices"),
+                .product(name: "OversizeLocationService", package: "OversizeServices"),
             ]
         ),
         .target(
             name: "OversizeNoticeKit",
             dependencies: [
                 "OversizeKit",
+                .product(name: "OversizeCore", package: "OversizeCore"),
                 .product(name: "OversizeUI", package: "OversizeUI"),
                 .product(name: "OversizeServices", package: "OversizeServices"),
                 .product(name: "OversizeStoreService", package: "OversizeServices"),
+            ]
+        ),
+        .target(
+            name: "OversizeOnboardingKit",
+            dependencies: [
+                .product(name: "OversizeUI", package: "OversizeUI"),
             ]
         ),
         .testTarget(
