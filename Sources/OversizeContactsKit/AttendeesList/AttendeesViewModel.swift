@@ -1,21 +1,28 @@
+// 
+//  AttendersViewModel.swift
+//  
 //
-// Copyright © 2022 Alexander Romanov
-// ContactsPickerViewModel.swift
+//  Created by Aleksandr Romanov on 11.12.2022.
 //
 
-import Contacts
-import OversizeContactsService
 import OversizeCore
 import OversizeServices
+import OversizeContactsService
 import SwiftUI
+import Contacts
+import EventKit
 
 @MainActor
-class ContactsPickerViewModel: ObservableObject {
+class AttendeesViewModel: ObservableObject {
     @Injected(Container.contactsService) private var contactsService: ContactsService
-    @Published var state = ContactsPickerViewModelState.initial
+    @Published var state = AttendeesViewModelState.initial
     @Published var searchText: String = .init()
-
-    @AppStorage("AppState.LastSelectedEmails") var lastSelectedEmails: [String] = .init()
+    
+    let event: EKEvent
+    
+    init(event: EKEvent) {
+        self.event = event
+    }
 
     func fetchData() async {
         state = .loading
@@ -49,7 +56,7 @@ class ContactsPickerViewModel: ObservableObject {
     }
 }
 
-enum ContactsPickerViewModelState {
+enum AttendeesViewModelState {
     case initial
     case loading
     case result([CNContact])

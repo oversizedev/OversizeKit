@@ -7,9 +7,9 @@ import Combine
 import CoreLocation
 import MapKit
 import OversizeCore
+import OversizeLocationService
 import OversizeUI
 import SwiftUI
-import OversizeLocationService
 
 public struct AddressPicker: View {
     @Environment(\.dismiss) private var dismiss
@@ -23,7 +23,8 @@ public struct AddressPicker: View {
     public init(
         address: Binding<String?> = .constant(nil),
         location: Binding<CLLocationCoordinate2D?> = .constant(nil),
-        place: Binding<LocationAddress?> = .constant(nil)) {
+        place: Binding<LocationAddress?> = .constant(nil)
+    ) {
         _seletedAddress = address
         _seletedLocation = location
         _seletedPlace = place
@@ -83,20 +84,17 @@ public struct AddressPicker: View {
                     if viewModel.isSaveFromSearth {
                         ProgressView()
                             .padding(.trailing, .xSmall)
-                        
                     }
                 }
         }
-        //.scrollDismissesKeyboard(.immediately)
+        // .scrollDismissesKeyboard(.immediately)
         .task(priority: .background) {
             do {
                 try await viewModel.updateCurrentPosition()
                 if viewModel.isSaveCurentPositon {
                     onSaveCurrntPosition()
                 }
-            } catch {
-                
-            }
+            } catch {}
         }
         .onAppear {
             isFocusSearth = true
@@ -186,7 +184,7 @@ public struct AddressPicker: View {
         }
         dismiss()
     }
-    
+
     private func onSaveCurrntPosition() {
         Task {
             let address = try? await viewModel.locationService.fetchAddressFromLocation(viewModel.currentLocation)
@@ -202,7 +200,7 @@ public struct AddressPicker: View {
             dismiss()
         }
     }
-    
+
     func saveToHistory() {
         let lastSearth: SearchHistoryAddress
         if let seletedLocation {

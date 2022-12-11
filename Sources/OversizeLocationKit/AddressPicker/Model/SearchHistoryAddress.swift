@@ -1,6 +1,6 @@
 //
 // Copyright © 2022 Alexander Romanov
-// SearthHistoryAddress.swift
+// SearchHistoryAddress.swift
 //
 
 import Foundation
@@ -26,4 +26,3 @@ public struct SearchHistoryAddress: Identifiable, Codable {
         self.place = place
     }
 }
-

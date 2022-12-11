@@ -1,8 +1,6 @@
 //
-//  File.swift
-//  
-//
-//  Created by Aleksandr Romanov on 11.12.2022.
+// Copyright © 2022 Alexander Romanov
+// SearchHistoryLocationCoordinate.swift
 //
 
 import Foundation

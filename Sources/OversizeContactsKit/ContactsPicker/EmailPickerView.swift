@@ -12,7 +12,7 @@ import SwiftUI
 
 public struct EmailPickerView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var viewModel: ContactsPickerViewModel
+    @StateObject private var viewModel: EmailPickerViewModel
 
     @Binding private var selection: [String]
     @State private var selectedEmails: [String] = .init()
@@ -20,7 +20,7 @@ public struct EmailPickerView: View {
     @FocusState private var isFocusSearth
 
     public init(selection: Binding<[String]>) {
-        _viewModel = StateObject(wrappedValue: ContactsPickerViewModel())
+        _viewModel = StateObject(wrappedValue: EmailPickerViewModel())
         _selection = selection
     }
 
