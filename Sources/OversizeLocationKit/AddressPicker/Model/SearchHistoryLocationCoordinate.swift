@@ -6,16 +6,19 @@
 import Foundation
 import MapKit
 
-public struct SearchHistoryLocationCoordinate: Codable {
+public struct SearchHistoryLocationCoordinate: Codable, Identifiable {
+    public let id: String
     public let latitude: Double
     public let longitude: Double
 
-    public init(latitude: Double, longitude: Double) {
+    public init(id: String = UUID().uuidString, latitude: Double, longitude: Double) {
+        self.id = id
         self.latitude = latitude
         self.longitude = longitude
     }
 
-    public init(coordinate: CLLocationCoordinate2D) {
+    public init(id: String = UUID().uuidString, coordinate: CLLocationCoordinate2D) {
+        self.id = id
         latitude = coordinate.latitude
         longitude = coordinate.longitude
     }
@@ -23,5 +26,6 @@ public struct SearchHistoryLocationCoordinate: Codable {
     public enum CardKeys: CodingKey {
         case latitude
         case longitude
+        case id
     }
 }

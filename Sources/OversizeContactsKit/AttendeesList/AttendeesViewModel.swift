@@ -1,25 +1,23 @@
-// 
-//  AttendersViewModel.swift
-//  
 //
-//  Created by Aleksandr Romanov on 11.12.2022.
+// Copyright © 2022 Alexander Romanov
+// AttendeesViewModel.swift
 //
 
-import OversizeCore
-import OversizeServices
-import OversizeContactsService
-import SwiftUI
 import Contacts
 import EventKit
+import OversizeContactsService
+import OversizeCore
+import OversizeServices
+import SwiftUI
 
 @MainActor
 class AttendeesViewModel: ObservableObject {
     @Injected(Container.contactsService) private var contactsService: ContactsService
     @Published var state = AttendeesViewModelState.initial
     @Published var searchText: String = .init()
-    
+
     let event: EKEvent
-    
+
     init(event: EKEvent) {
         self.event = event
     }

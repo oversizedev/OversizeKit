@@ -1,23 +1,20 @@
-// 
-//  ContactsListsViewModel.swift
-//  
 //
-//  Created by Aleksandr Romanov on 11.12.2022.
+// Copyright © 2022 Alexander Romanov
+// ContactsListsViewModel.swift
 //
 
+import Contacts
+import OversizeContactsService
 import OversizeCore
 import OversizeServices
-import OversizeContactsService
 import SwiftUI
-import Contacts
 
 @MainActor
 public class ContactsListsViewModel: ObservableObject {
-    
     @Injected(Container.contactsService) private var contactsService: ContactsService
     @Published var state = ContactsPickerViewModelState.initial
     @Published var searchText: String = .init()
-    
+
     public init() {}
 
     func fetchData() async {

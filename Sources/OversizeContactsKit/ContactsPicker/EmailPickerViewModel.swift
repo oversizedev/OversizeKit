@@ -1,6 +1,6 @@
 //
 // Copyright © 2022 Alexander Romanov
-// ContactsPickerViewModel.swift
+// EmailPickerViewModel.swift
 //
 
 import Contacts

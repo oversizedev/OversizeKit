@@ -1,29 +1,27 @@
-// 
-//  ContactsListsView.swift
-//  
 //
-//  Created by Aleksandr Romanov on 11.12.2022.
+// Copyright © 2022 Alexander Romanov
+// ContactsListsView.swift
 //
 
+import Contacts
 import OversizeComponents
 import OversizeCore
+import OversizeKit
 import OversizeLocalizable
 import OversizeServices
 import OversizeUI
 import SwiftUI
-import Contacts
-import OversizeKit
 
 public struct ContactsListsView: View {
     @StateObject var viewModel: ContactsListsViewModel
     @Environment(\.dismiss) var dismiss
     @Binding private var emails: [String]
-    
+
     public init(emails: Binding<[String]>) {
         _viewModel = StateObject(wrappedValue: ContactsListsViewModel())
         _emails = emails
     }
-    
+
     public var body: some View {
         PageView("") {
             Group {
@@ -46,7 +44,7 @@ public struct ContactsListsView: View {
             await viewModel.fetchData()
         }
     }
-    
+
     @ViewBuilder
     private func content(data: [CNContact]) -> some View {
         ForEach(emails, id: \.self) { email in
@@ -58,11 +56,11 @@ public struct ContactsListsView: View {
                 }
             } else {
                 Row(email)
-                .rowLeading(.avatar(AvatarView(firstName: email)))
+                    .rowLeading(.avatar(AvatarView(firstName: email)))
             }
         }
     }
-    
+
     @ViewBuilder
     private func emailRow(email: CNLabeledValue<NSString>, contact: CNContact) -> some View {
         let email = email.value as String
@@ -72,10 +70,9 @@ public struct ContactsListsView: View {
         } else {
             Row(contact.givenName + " " + contact.familyName, subtitle: email)
                 .rowLeading(.avatar(AvatarView(firstName: contact.givenName, lastName: contact.familyName)))
-            
         }
     }
-    
+
     @ViewBuilder
     private func placeholder() -> some View {
         ForEach(emails, id: \.self) { email in
