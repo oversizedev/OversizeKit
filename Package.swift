@@ -4,13 +4,13 @@
 import PackageDescription
 
 let productionDependencies: [PackageDescription.Package.Dependency] = { [
-    .package(url: "https://github.com/oversizedev/OversizeUI.git", branch: "main"),
-    .package(url: "https://github.com/oversizedev/OversizeServices.git", branch: "main"),
-    .package(url: "https://github.com/oversizedev/OversizeLocalizable.git", branch: "main"),
-    .package(url: "https://github.com/oversizedev/OversizeCore.git", branch: "main"),
-    .package(url: "https://github.com/oversizedev/OversizeComponents.git", branch: "main"),
-    .package(url: "https://github.com/oversizedev/OversizeResources.git", branch: "main"),
-    .package(url: "https://github.com/oversizedev/OversizeCDN.git", branch: "main"),
+    .package(url: "https://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@github.com/oversizedev/OversizeUI.git", branch: "main"),
+    .package(url: "https://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@github.com/oversizedev/OversizeServices.git", branch: "main"),
+    .package(url: "https://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@github.com/oversizedev/OversizeLocalizable.git", branch: "main"),
+    .package(url: "https://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@github.com/oversizedev/OversizeCore.git", branch: "main"),
+    .package(url: "https://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@github.com/oversizedev/OversizeComponents.git", branch: "main"),
+    .package(url: "https://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@github.com/oversizedev/OversizeResources.git", branch: "main"),
+    .package(url: "https://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@github.com/oversizedev/OversizeCDN.git", branch: "main"),
     .package(url: "https://github.com/SDWebImage/SDWebImageSwiftUI.git", from: "2.0.2"),
     .package(url: "https://github.com/SDWebImage/SDWebImageSVGCoder.git", from: "1.6.1"),
 ] }()
