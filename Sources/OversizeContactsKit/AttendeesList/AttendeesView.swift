@@ -70,7 +70,8 @@ public struct AttendeesView: View {
 
     func userAvatarView(participant: EKParticipant) -> some View {
         ZStack(alignment: .bottomTrailing) {
-            AvatarView(firstName: participant.name ?? participant.url.absoluteString, size: .medium)
+            AvatarView(firstName: participant.name ?? participant.url.absoluteString)
+                .controlSize(.regular)
 
             ZStack {
                 Circle()

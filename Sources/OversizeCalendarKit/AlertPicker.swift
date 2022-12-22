@@ -15,6 +15,7 @@ public struct AlarmPicker: View {
 
     public init(selection: Binding<[CalendarAlertsTimes]>) {
         _selection = selection
+        _selectedAlerts = State(wrappedValue: selection.wrappedValue)
     }
 
     public var body: some View {
@@ -24,7 +25,6 @@ public struct AlarmPicker: View {
                     ForEach(CalendarAlertsTimes.allCases) { alert in
                         Row(alert.title) {
                             if !selectedAlerts.isEmpty, let _ = selectedAlerts.first(where: { $0.id == alert.id }) {
-                                // if (selectedAlerts.first { $0.id == alert.id } != nil) {
                                 selectedAlerts.remove(alert)
                             } else {
                                 selectedAlerts.append(alert)

@@ -32,7 +32,8 @@ struct StoreFeaturesView: View {
                 }
             }
         }
-        .surfaceBorderColor(Color.surfaceSecondary, width: 2)
+        .surfaceBorderColor(Color.surfaceSecondary)
+        .surfaceBorderWidth(2)
         .controlPadding(horizontal: .zero, vertical: .xSmall)
         .sheet(item: $selection) {
             selection = nil

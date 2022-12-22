@@ -70,7 +70,8 @@ struct SubscriptionPrivacyView: View {
             }
             .multilineTextAlignment(.center)
         }
-        .surfaceBorderColor(Color.surfaceSecondary, width: 2)
+        .surfaceBorderColor(Color.surfaceSecondary)
+        .surfaceBorderWidth(2)
     }
 }
 

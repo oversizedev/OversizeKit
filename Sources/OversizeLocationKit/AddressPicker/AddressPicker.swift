@@ -125,7 +125,7 @@ public struct AddressPicker: View {
                 }
             }
             .rowLeading(.iconOnSurface(.mapPin))
-            .сlearAction {
+            .rowClearButton {
                 if let fooOffset = viewModel.lastSearchAddresses.firstIndex(where: { $0.id == address.id }) {
                     viewModel.lastSearchAddresses.remove(at: fooOffset)
                 }
