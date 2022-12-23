@@ -3,7 +3,6 @@
 // StoreSpecialOfferView.swift
 //
 
-import OversizeCDN
 import OversizeComponents
 import OversizeLocalizable
 import OversizeResources

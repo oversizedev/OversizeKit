@@ -6,7 +6,6 @@
 #if canImport(MessageUI)
     import MessageUI
 #endif
-import OversizeCDN
 import OversizeComponents
 import OversizeLocalizable
 import OversizeResources

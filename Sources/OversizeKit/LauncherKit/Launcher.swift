@@ -7,7 +7,7 @@ import OversizeCore
 import OversizeLocalizable
 import OversizeServices
 import OversizeUI
-import SDWebImageSVGCoder
+//import SDWebImageSVGCoder
 import SwiftUI
 
 public struct Launcher<Content: View, Onboarding: View>: View {
@@ -114,7 +114,8 @@ public struct Launcher<Content: View, Onboarding: View>: View {
     }
 
     func initialize() {
-        SDImageCodersManager.shared.addCoder(SDImageSVGCoder.shared)
+        // SDWebImageSVGCoder
+        //SDImageCodersManager.shared.addCoder(SDImageSVGCoder.shared)
     }
 }
 
