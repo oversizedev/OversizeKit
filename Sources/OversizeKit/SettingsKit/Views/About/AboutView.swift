@@ -488,12 +488,14 @@ import SwiftUI
     }
 #endif
 
-#if os(iOS)
-    import UIKit
-    extension UIScrollView {
-        override open var clipsToBounds: Bool {
-            get { false }
-            set {}
-        }
-    }
-#endif
+// MARK: - UIScrollView
+
+// #if os(iOS)
+//    import UIKit
+//    extension UIScrollView {
+//        override open var clipsToBounds: Bool {
+//            get { false }
+//            set {}
+//        }
+//    }
+// #endif

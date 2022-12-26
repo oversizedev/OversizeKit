@@ -16,10 +16,13 @@ public struct CalendarPicker: View {
 
     private let sourses: [EKSource]
 
-    public init(selection: Binding<EKCalendar?>, calendars: [EKCalendar], sourses: [EKSource]) {
+    private let closable: Bool
+
+    public init(selection: Binding<EKCalendar?>, calendars: [EKCalendar], sourses: [EKSource], closable: Bool = true) {
         _selection = selection
         self.calendars = calendars
         self.sourses = sourses
+        self.closable = closable
     }
 
     public var body: some View {
@@ -33,7 +36,7 @@ public struct CalendarPicker: View {
         }
         .backgroundSecondary()
         .leadingBar {
-            BarButton(type: .close)
+            BarButton(type: closable ? .close : .back)
         }
     }
 

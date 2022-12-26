@@ -10,9 +10,9 @@ let productionDependencies: [PackageDescription.Package.Dependency] = { [
     .package(url: "https://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@github.com/oversizedev/OversizeCore.git", branch: "main"),
     .package(url: "https://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@github.com/oversizedev/OversizeComponents.git", branch: "main"),
     .package(url: "https://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@github.com/oversizedev/OversizeResources.git", branch: "main"),
-    //.package(url: "https://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@github.com/oversizedev/OversizeCDN.git", branch: "main"),
-    //.package(url: "https://github.com/SDWebImage/SDWebImageSwiftUI.git", from: "2.0.2"),
-    //.package(url: "https://github.com/SDWebImage/SDWebImageSVGCoder.git", from: "1.6.1"),
+    // .package(url: "https://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@github.com/oversizedev/OversizeCDN.git", branch: "main"),
+    // .package(url: "https://github.com/SDWebImage/SDWebImageSwiftUI.git", from: "2.0.2"),
+    // .package(url: "https://github.com/SDWebImage/SDWebImageSVGCoder.git", from: "1.6.1"),
 ] }()
 
 let developmentDependencies: [PackageDescription.Package.Dependency] = { [
@@ -22,9 +22,9 @@ let developmentDependencies: [PackageDescription.Package.Dependency] = { [
     .package(name: "OversizeCore", path: "../OversizeCore"),
     .package(name: "OversizeComponents", path: "../OversizeComponents"),
     .package(name: "OversizeResources", path: "../OversizeResources"),
-    //.package(name: "OversizeCDN", path: "../OversizeCDN"),
-    //.package(url: "https://github.com/SDWebImage/SDWebImageSwiftUI.git", from: "2.0.2"),
-    //.package(url: "https://github.com/SDWebImage/SDWebImageSVGCoder.git", from: "1.6.1"),
+    // .package(name: "OversizeCDN", path: "../OversizeCDN"),
+    // .package(url: "https://github.com/SDWebImage/SDWebImageSwiftUI.git", from: "2.0.2"),
+    // .package(url: "https://github.com/SDWebImage/SDWebImageSVGCoder.git", from: "1.6.1"),
 ] }()
 
 let package = Package(
@@ -56,9 +56,9 @@ let package = Package(
                 .product(name: "OversizeComponents", package: "OversizeComponents"),
                 .product(name: "OversizeLocalizable", package: "OversizeLocalizable"),
                 .product(name: "OversizeResources", package: "OversizeResources"),
-                //.product(name: "SDWebImageSwiftUI", package: "SDWebImageSwiftUI"),
-                //.product(name: "SDWebImageSVGCoder", package: "SDWebImageSVGCoder"),
-                //.product(name: "OversizeCDN", package: "OversizeCDN"),
+                // .product(name: "SDWebImageSwiftUI", package: "SDWebImageSwiftUI"),
+                // .product(name: "SDWebImageSVGCoder", package: "SDWebImageSVGCoder"),
+                // .product(name: "OversizeCDN", package: "OversizeCDN"),
             ]
         ),
         .target(
