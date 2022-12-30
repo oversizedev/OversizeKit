@@ -33,7 +33,9 @@ public struct AddressPicker: View {
     public var body: some View {
         PageView("Location") {
             LazyVStack(spacing: .zero) {
-                currentLocation
+                if viewModel.appError != nil {
+                    currentLocation
+                }
 
                 if viewModel.searchTerm.isEmpty, !viewModel.lastSearchAddresses.isEmpty {
                     HStack(spacing: .zero) {

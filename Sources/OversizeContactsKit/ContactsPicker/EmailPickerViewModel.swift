@@ -19,21 +19,27 @@ class EmailPickerViewModel: ObservableObject {
 
     func fetchData() async {
         state = .loading
-        let _ = await contactsService.requestAccess()
-        do {
-            let keys = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactEmailAddressesKey, CNContactThumbnailImageDataKey]
-            let result = try await contactsService.fetchContacts(keysToFetch: keys as [CNKeyDescriptor])
-            switch result {
-            case let .success(data):
-                log("✅ CNContact fetched")
-                state = .result(data)
-            case let .failure(error):
-                log("❌ CNContact not fetched (\(error.title))")
-                state = .error(error)
+        let status = await contactsService.requestAccess()
+        switch status {
+        case .success:
+            do {
+                let keys = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactEmailAddressesKey, CNContactThumbnailImageDataKey]
+                let result = try await contactsService.fetchContacts(keysToFetch: keys as [CNKeyDescriptor])
+                switch result {
+                case let .success(data):
+                    log("✅ CNContact fetched")
+                    state = .result(data)
+                case let .failure(error):
+                    log("❌ CNContact not fetched (\(error.title))")
+                    state = .error(error)
+                }
+            } catch {
+                state = .error(.contacts(type: .unknown))
             }
-        } catch {
-            state = .error(.custom(title: "Not contacts"))
+        case let .failure(error):
+            state = .error(error)
         }
+
     }
 
     func getContactFromEmail(email: String, contacts: [CNContact]) -> CNContact? {

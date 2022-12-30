@@ -9,7 +9,7 @@ import OversizeUI
 import SwiftUI
 
 public enum ErrorButtnType {
-    case locationSettings
+    case appSettings
     case tryAgain(action: () -> Void)
     case custum(_ text: String, action: () -> Void)
 }
@@ -39,7 +39,7 @@ public struct ErrorView: View {
     private var contenButtonType: ContenButtonType? {
         if let primaryButton {
             switch primaryButton {
-            case .locationSettings:
+            case .appSettings:
                 return .accent(L10n.Button.goToSettings, action: {
                     #if os(iOS)
                         UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
@@ -78,6 +78,26 @@ public struct ErrorView: View {
                 return nil
             case .coreData:
                 return nil
+            case .eventKit(type: let type):
+                if type == .notAccess {
+                    return .accent(L10n.Button.goToSettings, action: {
+                        #if os(iOS)
+                            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+                        #endif
+                    })
+                } else {
+                    return nil
+                }
+            case .contacts(type: let type):
+                if type == .notAccess {
+                    return .accent(L10n.Button.goToSettings, action: {
+                        #if os(iOS)
+                            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+                        #endif
+                    })
+                } else {
+                    return nil
+                }
             }
         }
     }

@@ -28,6 +28,8 @@ class AddressPickerViewModel: NSObject, ObservableObject {
 
     private var searchCompleter = MKLocalSearchCompleter()
     private var currentPromise: ((Result<[MKLocalSearchCompletion], Error>) -> Void)?
+    
+    @State var appError: AppError?
 
     override init() {
         super.init()
@@ -66,11 +68,17 @@ extension AddressPickerViewModel: MKLocalSearchCompleterDelegate {
 
 extension AddressPickerViewModel {
     func updateCurrentPosition() async throws {
-        isFetchUpdatePositon = true
-        let currentPosition = try await locationService.currentLocation()
-        guard let newLocation = currentPosition else { return }
-        currentLocation = newLocation
-        print("📍 Location: \(newLocation.latitude), \(newLocation.longitude)")
-        isFetchUpdatePositon = false
+        let status = locationService.permissionsStatus()
+        switch status {
+        case .success:
+            isFetchUpdatePositon = true
+            let currentPosition = try await locationService.currentLocation()
+            guard let newLocation = currentPosition else { return }
+            currentLocation = newLocation
+            print("📍 Location: \(newLocation.latitude), \(newLocation.longitude)")
+            isFetchUpdatePositon = false
+        case .failure(let error):
+            appError = error
+        }
     }
 }
