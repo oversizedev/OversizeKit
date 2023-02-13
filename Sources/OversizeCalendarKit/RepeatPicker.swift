@@ -77,13 +77,13 @@ public struct RepeatPicker: View {
             }
             .backgroundSecondary()
             .leadingBar {
-                BarButton(type: .close)
+                BarButton(.close)
             }
             .trailingBar {
                 if rule == .never {
-                    BarButton(type: .disabled("Done"))
+                    BarButton(.disabled("Done"))
                 } else {
-                    BarButton(type: .accent("Done", action: {
+                    BarButton(.accent("Done", action: {
                         selectionRule = rule
                         selectionEndRule = endRule
                         dismiss()

@@ -29,7 +29,7 @@ public struct FeedbackView: View {
             }
         }
         .trailingBar {
-            BarButton(type: .close)
+            BarButton(.close)
         }
         .backgroundSecondary()
     }
@@ -43,7 +43,7 @@ public struct FeedbackView: View {
         SectionView {
             if let reviewUrl = Info.url.appStoreReview, let id = Info.app.appStoreID, !id.isEmpty {
                 Link(destination: reviewUrl) {
-                    Row(L10n.Settings.feedbakAppStore, leadingType: .image(heartIcon))
+                    RowDeprecated(L10n.Settings.feedbakAppStore, leadingType: .image(heartIcon))
                 }
                 .buttonStyle(.row)
             }
@@ -74,7 +74,7 @@ public struct FeedbackView: View {
                         // Send author
                         if let sendMailUrl = Info.url.developerSendMail {
                             Link(destination: sendMailUrl) {
-                                Row(L10n.Settings.feedbakAuthor, leadingType: .image(mailIcon))
+                                RowDeprecated(L10n.Settings.feedbakAuthor, leadingType: .image(mailIcon))
                             }
                             .buttonStyle(.row)
                         }
@@ -84,7 +84,7 @@ public struct FeedbackView: View {
                 // Telegramm chat
                 if let telegramChatUrl = Info.url.appTelegramChat, let id = Info.app.telegramChatID, !id.isEmpty {
                     Link(destination: telegramChatUrl) {
-                        Row(L10n.Settings.telegramChat, leadingType: .image(chatIcon))
+                        RowDeprecated(L10n.Settings.telegramChat, leadingType: .image(chatIcon))
                     }
                     .buttonStyle(.row)
                 }

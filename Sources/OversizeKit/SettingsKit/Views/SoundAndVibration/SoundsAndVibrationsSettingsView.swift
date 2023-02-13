@@ -27,7 +27,7 @@ import SwiftUI
                 if !isPortrait, verticalSizeClass == .regular {
                     EmptyView()
                 } else {
-                    BarButton(type: .back)
+                    BarButton(.back)
                 }
             }
             .backgroundSecondary()
@@ -59,11 +59,19 @@ import SwiftUI
             SectionView {
                 VStack(spacing: .zero) {
                     if FeatureFlags.app.sounds.valueOrFalse {
-                        Row(L10n.Settings.sounds, leadingType: .icon(.music), trallingType: .toggle(isOn: $settingsService.soundsEnabled))
+                        Switch(isOn: $settingsService.soundsEnabled) {
+                            Row(L10n.Settings.sounds) {
+                                Icon(.music)
+                            }
+                        }
                     }
 
                     if FeatureFlags.app.vibration.valueOrFalse {
-                        Row(L10n.Settings.vibration, leadingType: .icon(.radio), trallingType: .toggle(isOn: $settingsService.vibrationEnabled))
+                        Switch(isOn: $settingsService.vibrationEnabled) {
+                            Row(L10n.Settings.vibration) {
+                                Icon(.radio)
+                            }
+                        }
                     }
                 }
             }

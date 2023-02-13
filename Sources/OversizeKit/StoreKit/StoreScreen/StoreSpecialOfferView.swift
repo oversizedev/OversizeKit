@@ -65,10 +65,10 @@ public struct StoreSpecialOfferView: View {
                 PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: .medium)
             }
             .trailingBar {
-                BarButton(type: .closeAction(action: {
+                BarButton(.closeAction {
                     lastClosedSpecialOffer = event
                     dismiss()
-                }))
+                })
             }
             .bottomToolbar(style: .none, ignoreSafeArea: false) {
                 VStack(spacing: .zero) {
@@ -114,7 +114,7 @@ public struct StoreSpecialOfferView: View {
                     VStack(spacing: .xSmall) {
                         Text(event.specialOfferSubtitle.uppercased())
                             .footnote(.semibold)
-                            .foregroundOnBackgroundMediumEmphasis()
+                            .onBackgroundMediumEmphasisForegroundColor()
 
                         Text(event.isNeedTrialDescription ? event.specialOfferTitle + " " + trialDaysPeriodText : event.specialOfferTitle)
                             .title(.bold)
@@ -155,7 +155,7 @@ public struct StoreSpecialOfferView: View {
                 VStack(spacing: .zero) {
                     Text("Additional features in\nthe subscription")
                         .title()
-                        .foregroundOnBackgroundHighEmphasis()
+                        .onBackgroundHighEmphasisForegroundColor()
                         .multilineTextAlignment(.center)
                         .padding(.top, .large)
 

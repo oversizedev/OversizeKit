@@ -31,7 +31,7 @@ import SwiftUI
                 if !isPortrait, verticalSizeClass == .regular {
                     EmptyView()
                 } else {
-                    BarButton(type: .back)
+                    BarButton(.back)
                 }
             }
             .backgroundSecondary()
@@ -53,35 +53,45 @@ import SwiftUI
             SectionView(L10n.Settings.entrance) {
                 VStack(spacing: .zero) {
                     if FeatureFlags.secure.faceID.valueOrFalse, biometricService.checkIfBioMetricAvailable() {
-                        Row(biometricService.biometricType.rawValue, leadingType: .systemImage(biometricImageName), trallingType: .toggle(isOn:
+                        Switch(isOn:
                             Binding(get: {
                                 settingsService.biometricEnabled
                             }, set: {
                                 biometricChange(state: $0)
-                            })))
+                            })
+                        ) {
+                            Row(biometricService.biometricType.rawValue) {
+                                Icon(.file)
+                                // leadingType: .systemImage(biometricImageName)
+                            }
+                        }
                     }
 
                     if FeatureFlags.secure.lookscreen.valueOrFalse {
-                        Row(L10n.Security.pinCode,
-                            leadingType: .icon(.lock),
-                            trallingType: .toggle(isOn:
-                                Binding(get: {
-                                    settingsService.pinCodeEnabend
-                                }, set: {
-                                    if settingsService.isSetedPinCode() {
-                                        settingsService.pinCodeEnabend = $0
-                                    } else {
-                                        isSetPINCodeSheet = .set
-                                    }
-                                }))).sheet(item: $isSetPINCodeSheet) { sheet in
+                        Switch(isOn:
+                            Binding(get: {
+                                settingsService.pinCodeEnabend
+                            }, set: {
+                                if settingsService.isSetedPinCode() {
+                                    settingsService.pinCodeEnabend = $0
+                                } else {
+                                    isSetPINCodeSheet = .set
+                                }
+                            })
+                        ) {
+                            Row(biometricService.biometricType.rawValue) {
+                                Icon(.lock)
+                            }
+                        }.sheet(item: $isSetPINCodeSheet) { sheet in
                             SetPINCodeView(action: sheet)
                                 .systemServices()
                         }
 
                         if settingsService.isSetedPinCode() {
-                            Row(L10n.Security.changePINCode, trallingType: .arrowIcon) {
+                            Row(L10n.Security.changePINCode) {
                                 isSetPINCodeSheet = .update
                             }
+                            .rowArrow()
                         }
                     }
                 }
@@ -128,9 +138,11 @@ import SwiftUI
 //                }
 //
                     if FeatureFlags.secure.blurMinimize.valueOrFalse {
-                        Row(L10n.Security.blurMinimize, trallingType: .toggle(isOn: $settingsService.blurMinimizeEnabend))
-                            .premium()
-                            .onPremiumTap()
+                        Switch(isOn: $settingsService.blurMinimizeEnabend) {
+                            Row(L10n.Security.blurMinimize)
+                                .premium()
+                                .onPremiumTap()
+                        }
                     }
 
 //                    if FeatureFlags.secure.lookscreen.valueOrFalse {

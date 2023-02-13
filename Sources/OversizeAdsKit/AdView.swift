@@ -48,7 +48,7 @@ public struct AdView: View {
                             HStack {
                                 Text(app?.name ?? "")
                                     .subheadline(.bold)
-                                    .foregroundOnSurfaceHighEmphasis()
+                                    .onSurfaceHighEmphasisForegroundColor()
 
                                 Bage(color: .warning) {
                                     Text("Our app")
@@ -58,7 +58,7 @@ public struct AdView: View {
 
                             Text(app?.title ?? "")
                                 .subheadline()
-                                .foregroundOnSurfaceMediumEmphasis()
+                                .onSurfaceMediumEmphasisForegroundColor()
                         }
                         .padding(.leading, .xSmall)
 
@@ -74,7 +74,7 @@ public struct AdView: View {
                         .loading(isShowProduct)
                     }
                 }
-                .controlPadding(.xSmall)
+                .surfaceContentInsets(.xSmall)
                 .appStoreOverlay(isPresent: $isShowProduct, appId: app?.id ?? "")
             #else
                 EmptyView()

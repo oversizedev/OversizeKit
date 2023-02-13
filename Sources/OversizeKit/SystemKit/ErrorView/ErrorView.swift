@@ -78,7 +78,7 @@ public struct ErrorView: View {
                 return nil
             case .coreData:
                 return nil
-            case .eventKit(type: let type):
+            case let .eventKit(type: type):
                 if type == .notAccess {
                     return .accent(L10n.Button.goToSettings, action: {
                         #if os(iOS)
@@ -88,7 +88,7 @@ public struct ErrorView: View {
                 } else {
                     return nil
                 }
-            case .contacts(type: let type):
+            case let .contacts(type: type):
                 if type == .notAccess {
                     return .accent(L10n.Button.goToSettings, action: {
                         #if os(iOS)

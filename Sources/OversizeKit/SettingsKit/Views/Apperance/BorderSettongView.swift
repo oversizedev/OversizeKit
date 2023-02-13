@@ -19,7 +19,7 @@ public struct BorderSettingView: View {
             // if !isPortrait, verticalSizeClass == .regular {
             //    EmptyView()
             // } else {
-            BarButton(type: .back)
+            BarButton(.back)
             // }
         }
         .backgroundSecondary()
@@ -74,18 +74,18 @@ public struct BorderSettingView: View {
                                 .padding(.horizontal, theme.borderSurface ? 0 : Space.medium.rawValue)
 
                             VStack(spacing: .zero) {
-                                Row("Surface",
-                                    trallingType: .toggle(isOn: theme.$borderSurface),
-                                    paddingVertical: .xSmall)
-                                Row("Buttons",
-                                    trallingType: .toggle(isOn: theme.$borderSurface),
-                                    paddingVertical: .xSmall)
-                                Row("Text fields",
-                                    trallingType: .toggle(isOn: theme.$borderSurface),
-                                    paddingVertical: .xSmall)
-                                Row("Other controls",
-                                    trallingType: .toggle(isOn: theme.$borderSurface),
-                                    paddingVertical: .xSmall)
+                                RowDeprecated("Surface",
+                                              trallingType: .toggle(isOn: theme.$borderSurface),
+                                              paddingVertical: .xSmall)
+                                RowDeprecated("Buttons",
+                                              trallingType: .toggle(isOn: theme.$borderSurface),
+                                              paddingVertical: .xSmall)
+                                RowDeprecated("Text fields",
+                                              trallingType: .toggle(isOn: theme.$borderSurface),
+                                              paddingVertical: .xSmall)
+                                RowDeprecated("Other controls",
+                                              trallingType: .toggle(isOn: theme.$borderSurface),
+                                              paddingVertical: .xSmall)
                             }.padding(.top, .xxxSmall)
                                 .padding(.vertical, .xxxSmall)
                         }
@@ -94,7 +94,7 @@ public struct BorderSettingView: View {
             }
         }
 //        .navigationBar("Border", style: .fixed($offset)) {
-//            BarButton(type: .back)
+//            BarButton(.back)
 //        } trailingBar: {} bottomBar: {}
 //        .background(Color.backgroundSecondary.ignoresSafeArea(.all))
 //        .preferredColorScheme(theme.appearance.colorScheme)

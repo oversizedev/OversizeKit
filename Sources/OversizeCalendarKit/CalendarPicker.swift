@@ -36,7 +36,7 @@ public struct CalendarPicker: View {
         }
         .backgroundSecondary()
         .leadingBar {
-            BarButton(type: closable ? .close : .back)
+            BarButton(closable ? .close : .back)
         }
     }
 

@@ -43,7 +43,7 @@ public struct AttendeesView: View {
             }
         }
         .leadingBar {
-            BarButton(type: .close)
+            BarButton(.close)
         }
     }
 

@@ -11,7 +11,7 @@ import SwiftUI
 
 struct StoreFeaturesView: View {
     @EnvironmentObject var viewModel: StoreViewModel
-    @State var selection: Store.StoreFeature?
+    @State var selection: PlistConfiguration.Store.StoreFeature?
 
     let features = Info.store.features
 
@@ -45,7 +45,7 @@ struct StoreFeaturesView: View {
         }
     }
 
-    func backgroundColor(feature: Store.StoreFeature) -> Color {
+    func backgroundColor(feature: PlistConfiguration.Store.StoreFeature) -> Color {
         if let color = feature.backgroundColor {
             return Color(hex: color)
         } else {

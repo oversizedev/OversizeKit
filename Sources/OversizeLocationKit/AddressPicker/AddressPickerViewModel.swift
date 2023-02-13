@@ -28,7 +28,7 @@ class AddressPickerViewModel: NSObject, ObservableObject {
 
     private var searchCompleter = MKLocalSearchCompleter()
     private var currentPromise: ((Result<[MKLocalSearchCompletion], Error>) -> Void)?
-    
+
     @State var appError: AppError?
 
     override init() {
@@ -77,7 +77,7 @@ extension AddressPickerViewModel {
             currentLocation = newLocation
             print("📍 Location: \(newLocation.latitude), \(newLocation.longitude)")
             isFetchUpdatePositon = false
-        case .failure(let error):
+        case let .failure(error):
             appError = error
         }
     }

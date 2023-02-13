@@ -29,7 +29,7 @@ public struct SupportView: View {
             }
         }
         .trailingBar {
-            BarButton(type: .close)
+            BarButton(.close)
         }
         .backgroundSecondary()
     }
@@ -67,7 +67,7 @@ public struct SupportView: View {
                         // Send author
                         if let sendMailUrl = Info.url.developerSendMail {
                             Link(destination: sendMailUrl) {
-                                Row("Contact Us", leadingType: .image(mailIcon))
+                                RowDeprecated("Contact Us", leadingType: .image(mailIcon))
                             }
                             .buttonStyle(.row)
                         }
@@ -77,7 +77,7 @@ public struct SupportView: View {
                 // Telegramm chat
                 if let telegramChatUrl = Info.url.appTelegramChat, let id = Info.app.telegramChatID, !id.isEmpty {
                     Link(destination: telegramChatUrl) {
-                        Row(L10n.Settings.telegramChat, leadingType: .image(chatIcon))
+                        RowDeprecated(L10n.Settings.telegramChat, leadingType: .image(chatIcon))
                     }
                     .buttonStyle(.row)
                 }

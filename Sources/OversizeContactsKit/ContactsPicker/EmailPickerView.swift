@@ -38,13 +38,13 @@ public struct EmailPickerView: View {
             }
         }
         .leadingBar {
-            BarButton(type: .close)
+            BarButton(.close)
         }
         .trailingBar {
             if selectedEmails.isEmpty, !viewModel.searchText.isEmail {
-                BarButton(type: .disabled("Done"))
+                BarButton(.disabled("Done"))
             } else {
-                BarButton(type: .accent("Done", action: {
+                BarButton(.accent("Done", action: {
                     onDoneAction()
                 }))
             }

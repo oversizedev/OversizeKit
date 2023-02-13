@@ -56,12 +56,12 @@ import SwiftUI
                 if !isPortrait, verticalSizeClass == .regular, isClosable {
                     EmptyView()
                 } else {
-                    BarButton(type: .back)
+                    BarButton(.back)
                 }
             }
             .trailingBar {
                 if isClosable {
-                    BarButton(type: .close)
+                    BarButton(.close)
                 }
             }
 

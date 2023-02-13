@@ -38,7 +38,7 @@ let package = Package(
         .library(name: "OversizeContactsKit", targets: ["OversizeContactsKit"]),
         .library(name: "OversizeLocationKit", targets: ["OversizeLocationKit"]),
     ],
-    dependencies: productionDependencies,
+    dependencies: developmentDependencies,
     targets: [
         .target(
             name: "OversizeKit",

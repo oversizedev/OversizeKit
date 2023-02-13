@@ -26,7 +26,7 @@ import SwiftUI
                 if !isPortrait, verticalSizeClass == .regular {
                     EmptyView()
                 } else {
-                    BarButton(type: .back)
+                    BarButton(.back)
                 }
             }
             .backgroundSecondary()
@@ -37,7 +37,7 @@ import SwiftUI
         private var soundsAndVibrations: some View {
             SectionView {
                 VStack(spacing: .zero) {
-                    Row(L10n.Settings.notifications, trallingType: .toggle(isOn: $settingsService.notificationEnabled))
+                    Switch(L10n.Settings.notifications, isOn: $settingsService.notificationEnabled)
                 }
             }
         }

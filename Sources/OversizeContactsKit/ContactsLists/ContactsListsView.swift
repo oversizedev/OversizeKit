@@ -38,7 +38,7 @@ public struct ContactsListsView: View {
             }
         }
         .leadingBar {
-            BarButton(type: .close)
+            BarButton(.close)
         }
         .task {
             await viewModel.fetchData()

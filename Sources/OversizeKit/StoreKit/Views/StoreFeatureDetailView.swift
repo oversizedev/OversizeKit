@@ -12,12 +12,12 @@ import SwiftUI
 
 struct StoreFeatureDetailView: View {
     @EnvironmentObject var viewModel: StoreViewModel
-    @State var selection: Store.StoreFeature
+    @State var selection: PlistConfiguration.Store.StoreFeature
     @Environment(\.screenSize) var screenSize
     @Environment(\.dismiss) var dismiss
     @Environment(\.isPremium) var isPremium
 
-    init(selection: Store.StoreFeature) {
+    init(selection: PlistConfiguration.Store.StoreFeature) {
         _selection = State(initialValue: selection)
     }
 
@@ -57,7 +57,7 @@ struct StoreFeatureDetailView: View {
         }
     }
 
-    func fetureItem(_ feature: Store.StoreFeature, geometry: GeometryProxy) -> some View {
+    func fetureItem(_ feature: PlistConfiguration.Store.StoreFeature, geometry: GeometryProxy) -> some View {
         Group {
             if let _ = feature.screenURL {
                 screenFetureItem(feature, geometry: geometry)
@@ -67,7 +67,7 @@ struct StoreFeatureDetailView: View {
         }
     }
 
-    func screenFetureItem(_ feature: Store.StoreFeature, geometry: GeometryProxy) -> some View {
+    func screenFetureItem(_ feature: PlistConfiguration.Store.StoreFeature, geometry: GeometryProxy) -> some View {
         VStack(spacing: .zero) {
             Rectangle()
                 .fill(
@@ -104,7 +104,7 @@ struct StoreFeatureDetailView: View {
         }
     }
 
-    func iconFetureItem(_ feature: Store.StoreFeature, geometry: GeometryProxy) -> some View {
+    func iconFetureItem(_ feature: PlistConfiguration.Store.StoreFeature, geometry: GeometryProxy) -> some View {
         VStack(spacing: .xxxSmall) {
             if let IllustrationURLPath = feature.illustrationURL {
                 AsyncImage(url: URL(string: IllustrationURLPath)) { image in
@@ -153,7 +153,7 @@ struct StoreFeatureDetailView: View {
         }
     }
 
-    func backgroundColor(feature: Store.StoreFeature) -> Color {
+    func backgroundColor(feature: PlistConfiguration.Store.StoreFeature) -> Color {
         if let color = feature.backgroundColor {
             return Color(hex: color)
         } else {

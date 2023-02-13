@@ -39,7 +39,6 @@ class EmailPickerViewModel: ObservableObject {
         case let .failure(error):
             state = .error(error)
         }
-
     }
 
     func getContactFromEmail(email: String, contacts: [CNContact]) -> CNContact? {

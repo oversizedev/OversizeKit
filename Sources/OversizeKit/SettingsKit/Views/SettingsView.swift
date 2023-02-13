@@ -29,15 +29,15 @@ import SwiftUI
         @State private var isShowSupport = false
         @State private var isShowFeedback = false
 
-        var rowType: RowTrailingType? {
+        var isShowArrow: Bool {
             #if os(iOS)
                 if !isPortrait, verticalSizeClass == .regular {
-                    return nil
+                    return false
                 } else {
-                    return .arrowIcon
+                    return true
                 }
             #else
-                return .arrowIcon
+                return true
 
             #endif
         }
@@ -107,9 +107,12 @@ import SwiftUI
                         }
                     }
                 }
-                app
-                help
-                about
+                Group {
+                    app
+                    help
+                    about
+                }
+                .surfaceContentRowInsets()
             }
         }
     }
@@ -119,7 +122,7 @@ import SwiftUI
     // Sections
     extension SettingsView {
         private var head: some View {
-            SectionView(verticalPadding: .zero) {
+            SectionView {
                 headSection
             }
         }
@@ -130,9 +133,10 @@ import SwiftUI
                     if FeatureFlags.app.apperance.valueOrFalse {
                         NavigationLink(destination: AppearanceSettingView()
                         ) {
-                            Row(L10n.Settings.apperance)
-                                .rowLeading(.image(apperanceSettingsIcon))
-                                .rowTrailing(rowType)
+                            Row(L10n.Settings.apperance) {
+                                apperanceSettingsIcon
+                            }
+                            .rowArrow(isShowArrow)
                         }
                         .buttonStyle(.row)
                     }
@@ -140,7 +144,10 @@ import SwiftUI
                     if FeatureFlags.app.сloudKit.valueOrFalse || FeatureFlags.app.healthKit.valueOrFalse {
                         NavigationLink(destination: iCloudSettingsView()
                         ) {
-                            Row(L10n.Title.synchronization, leadingType: .image(cloudKitIcon), trallingType: rowType)
+                            Row(L10n.Title.synchronization) {
+                                cloudKitIcon
+                            }
+                            .rowArrow(isShowArrow)
                         }
                         .buttonStyle(.row)
                     }
@@ -155,7 +162,10 @@ import SwiftUI
                     {
                         NavigationLink(destination: SecuritySettingsView()
                         ) {
-                            Row(L10n.Security.title, leadingType: .image(securityIcon), trallingType: rowType)
+                            Row(L10n.Security.title) {
+                                securityIcon
+                            }
+                            .rowArrow(isShowArrow)
                         }
                         .buttonStyle(.row)
                     }
@@ -163,9 +173,10 @@ import SwiftUI
                     if FeatureFlags.app.sounds.valueOrFalse || FeatureFlags.app.vibration.valueOrFalse {
                         NavigationLink(destination: SoundsAndVibrationsSettingsView()
                         ) {
-                            Row(soundsAndVibrationTitle,
-                                leadingType: .image(FeatureFlags.app.sounds.valueOrFalse ? soundIcon : vibrationIcon),
-                                trallingType: rowType)
+                            Row(soundsAndVibrationTitle) {
+                                FeatureFlags.app.sounds.valueOrFalse ? soundIcon : vibrationIcon
+                            }
+                            .rowArrow(isShowArrow)
                         }
                         .buttonStyle(.row)
                     }
@@ -173,7 +184,10 @@ import SwiftUI
                     if FeatureFlags.app.notifications.valueOrFalse {
                         NavigationLink(destination: NotificationsSettingsView()
                         ) {
-                            Row(L10n.Settings.notifications, leadingType: .image(notificationsIcon), trallingType: rowType)
+                            Row(L10n.Settings.notifications) {
+                                notificationsIcon
+                            }
+                            .rowArrow(isShowArrow)
                         }
                         .buttonStyle(.row)
                     }
@@ -253,18 +267,26 @@ import SwiftUI
         private var help: some View {
             SectionView(L10n.Settings.supportSection) {
                 VStack(alignment: .leading) {
-                    Row("Get help", leadingType: .image(helpIcon), trallingType: rowType) {
+                    Row("Get help") {
                         isShowSupport.toggle()
+                    } leading: {
+                        helpIcon
                     }
+                    .rowArrow(isShowArrow)
+
                     .buttonStyle(.row)
                     .sheet(isPresented: $isShowSupport) {
                         SupportView()
                             .presentationDetents([.medium])
                     }
 
-                    Row("Send feedback", leadingType: .image(chatIcon), trallingType: rowType) {
+                    Row("Send feedback") {
                         isShowFeedback.toggle()
+                    } leading: {
+                        chatIcon
                     }
+                    .rowArrow(isShowArrow)
+
                     .buttonStyle(.row)
                     .sheet(isPresented: $isShowFeedback) {
                         FeedbackView()
@@ -353,9 +375,10 @@ import SwiftUI
             SectionView {
                 VStack(spacing: .zero) {
                     NavigationLink(destination: AboutView()) {
-                        Row(L10n.Settings.about,
-                            leadingType: .image(infoIcon),
-                            trallingType: rowType)
+                        Row(L10n.Settings.about) {
+                            infoIcon
+                        }
+                        .rowArrow(isShowArrow)
                     }
                     .buttonStyle(.row)
                 }

@@ -26,7 +26,7 @@ import SwiftUI
                 if !isPortrait, verticalSizeClass == .regular {
                     EmptyView()
                 } else {
-                    BarButton(type: .back)
+                    BarButton(.back)
                 }
             }
             .backgroundSecondary()
@@ -46,27 +46,30 @@ import SwiftUI
             SectionView {
                 VStack(spacing: .zero) {
                     if FeatureFlags.app.сloudKit.valueOrFalse {
-                        Row(L10n.Settings.iCloudSync)
-                            .rowLeading(.icon(.cloud))
-                            .rowTrailing(.toggle(isOn: $settingsService.cloudKitEnabled))
+                        Switch(isOn: $settingsService.cloudKitEnabled) {
+                            Row(L10n.Settings.iCloudSync) {
+                                Icon(.cloud)
+                            }
                             .premium()
                             .onPremiumTap()
+                        }
                     }
 
                     if FeatureFlags.secure.CVVCodes.valueOrFalse {
-                        Row(L10n.Security.iCloudSyncCVV,
-                            subtitle: settingsService.cloudKitCVVEnabled ? L10n.Security.iCloudSyncCVVDescriptionCloudKit : L10n.Security.iCloudSyncCVVDescriptionLocal,
-                            trallingType: .toggle(isOn: $settingsService.cloudKitCVVEnabled))
-                            .premium()
-                            .onPremiumTap()
+                        Switch(isOn: $settingsService.cloudKitCVVEnabled) {
+                            Row(L10n.Security.iCloudSyncCVVDescriptionCloudKit,
+                                subtitle: settingsService.cloudKitCVVEnabled ? L10n.Security.iCloudSyncCVVDescriptionCloudKit : L10n.Security.iCloudSyncCVVDescriptionLocal)
+                                .premium()
+                                .onPremiumTap()
+                        }
                     }
 
                     if FeatureFlags.app.healthKit.valueOrFalse {
-                        Row("HealthKit synchronization", subtitle: "After switching on, data from the Health app will be downloaded")
-                            .rowLeading(.icon(.heart))
-                            .rowTrailing(.toggle(isOn: $settingsService.healthKitEnabled))
-                        // .premium()
-                        // .onPremiumTap()
+                        Switch(isOn: $settingsService.healthKitEnabled) {
+                            Row("HealthKit synchronization", subtitle: "After switching on, data from the Health app will be downloaded") {
+                                Icon(.heart)
+                            }
+                        }
                     }
                 }
             }

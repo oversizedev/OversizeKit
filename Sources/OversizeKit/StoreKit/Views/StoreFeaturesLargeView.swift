@@ -25,15 +25,15 @@ struct StoreFeaturesLargeView: View {
         }
     }
 
-    func fetureScreenItem(_ feature: Store.StoreFeature) -> some View {
+    func fetureScreenItem(_ feature: PlistConfiguration.Store.StoreFeature) -> some View {
         Surface {
             VStack(spacing: .zero) {
                 RoundedRectangle(cornerRadius: .medium, style: .continuous)
                     .fill(
                         LinearGradient(gradient: Gradient(colors: [Color(hex: feature.backgroundColor != nil ? feature.backgroundColor : "637DFA"),
                                                                    Color(hex: feature.backgroundColor != nil ? feature.backgroundColor : "872BFF")]),
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing)
+                                       startPoint: .topLeading,
+                                       endPoint: .bottomTrailing)
                     )
                     .frame(height: 310)
                     .overlay(alignment: feature.topScreenAlignment ?? true ? .top : .bottom) {
@@ -65,12 +65,12 @@ struct StoreFeaturesLargeView: View {
             .multilineTextAlignment(.center)
         }
         .controlRadius(.large)
-        .controlPadding(.xxxSmall)
+        .surfaceContentInsets(.xxxSmall)
         .padding(.vertical, .large)
         .elevation(.z3)
     }
 
-    func fetureItem(_ feature: Store.StoreFeature) -> some View {
+    func fetureItem(_ feature: PlistConfiguration.Store.StoreFeature) -> some View {
         VStack(spacing: .zero) {
             if let IllustrationURLPath = feature.illustrationURL {
                 AsyncImage(url: URL(string: IllustrationURLPath)) { image in
@@ -128,7 +128,7 @@ struct StoreFeaturesLargeView: View {
         .padding(.vertical, .large)
     }
 
-    func backgroundColor(feature: Store.StoreFeature) -> Color {
+    func backgroundColor(feature: PlistConfiguration.Store.StoreFeature) -> Color {
         if let color = feature.backgroundColor {
             return Color(hex: color)
         } else {

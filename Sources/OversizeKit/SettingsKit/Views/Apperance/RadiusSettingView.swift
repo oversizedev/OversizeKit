@@ -16,7 +16,7 @@ struct RadiusSettingView: View {
             settings
         }
         .leadingBar {
-            BarButton(type: .back)
+            BarButton(.back)
         }
         .backgroundSecondary()
     }
@@ -30,13 +30,13 @@ struct RadiusSettingView: View {
                             VStack(spacing: Space.xxSmall.rawValue) {
                                 HStack {
                                     Text("Size")
-                                        .fontStyle(.subheadline)
+                                        .subheadline()
                                         .foregroundColor(.onSurfaceHighEmphasis)
 
                                     Spacer()
 
                                     Text(String(format: "%.0f", theme.radius) + "  px")
-                                        .fontStyle(.subheadline)
+                                        .subheadline()
                                         .foregroundColor(.onSurfaceHighEmphasis)
                                 }
 
@@ -53,7 +53,7 @@ struct RadiusSettingView: View {
             Spacer()
         }
 //        .navigationBar("Radius", style: .fixed($offset)) {
-//            BarButton(type: .back)
+//            BarButton(.back)
 //        } trailingBar: {} bottomBar: {}
 //        .background(Color.backgroundSecondary.ignoresSafeArea(.all))
 //        .preferredColorScheme(theme.appearance.colorScheme)

@@ -24,7 +24,7 @@ public struct OurResorsesView: View {
             links
         }
         .leadingBar {
-            BarButton(type: .back)
+            BarButton(.back)
         }
         .backgroundSecondary()
     }

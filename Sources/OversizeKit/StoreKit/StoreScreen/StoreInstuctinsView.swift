@@ -53,7 +53,7 @@ public struct StoreInstuctinsView: View {
                     PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: .medium)
                 }
                 .trailingBar {
-                    BarButton(type: .close)
+                    BarButton(.close)
                 }
                 .bottomToolbar(style: .none, ignoreSafeArea: false) {
                     VStack(spacing: .zero) {

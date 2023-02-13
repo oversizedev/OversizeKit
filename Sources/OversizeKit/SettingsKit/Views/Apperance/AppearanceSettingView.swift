@@ -71,7 +71,7 @@ import SwiftUI
                     if !isPortrait, verticalSizeClass == .regular {
                         EmptyView()
                     } else {
-                        BarButton(type: .back)
+                        BarButton(.back)
                     }
                 }
                 .backgroundSecondary()
@@ -220,19 +220,30 @@ import SwiftUI
                                    selection: $pageDestenation) { EmptyView() }
 
                     VStack(spacing: .zero) {
-                        Row("Fonts", leadingType: .image(textIcon), trallingType: .arrowIcon) {
+                        Row("Fonts") {
                             pageDestenation = .font
+                        } leading: {
+                            textIcon
                         }
+                        .rowArrow()
                         .premium()
                         .onPremiumTap()
 
-                        Row("Borders", leadingType: .image(borderIcon), trallingType: .toggleWithArrowButton(isOn: theme.$borderApp, action: {
-                            pageDestenation = .border
-                        })) {
-                            pageDestenation = .border
+                        Switch(isOn: theme.$borderApp) {
+                            Row("Borders") {
+                                pageDestenation = .border
+                            } leading: {
+                                borderIcon
+                            }
+                            .premium()
+                            .onPremiumTap()
                         }
-                        .premium()
-                        .onPremiumTap()
+//                        Row("Borders", leadingType: .image(borderIcon), trallingType: .toggleWithArrowButton(isOn: theme.$borderApp, action: {
+//                            pageDestenation = .border
+//                        })) {
+//                            pageDestenation = .border
+//                        }
+
                         .onChange(of: theme.borderApp) { value in
                             theme.borderSurface = value
                             theme.borderButtons = value
@@ -240,9 +251,12 @@ import SwiftUI
                             theme.borderTextFields = value
                         }
 
-                        Row("Radius", leadingType: .image(radiusIcon), trallingType: .arrowIcon) {
+                        Row("Radius") {
                             pageDestenation = .radius
+                        } leading: {
+                            radiusIcon
                         }
+                        .rowArrow()
                         .premium()
                         .onPremiumTap()
                     }

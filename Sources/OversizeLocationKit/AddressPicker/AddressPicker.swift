@@ -43,7 +43,7 @@ public struct AddressPicker: View {
                         Spacer()
                     }
                     .title3()
-                    .foregroundOnSurfaceMediumEmphasis()
+                    .onSurfaceMediumEmphasisForegroundColor()
                     .padding(.vertical, .xxSmall)
                     .paddingContent(.horizontal)
 
@@ -54,7 +54,7 @@ public struct AddressPicker: View {
             }
         }
         .leadingBar {
-            BarButton(type: .close)
+            BarButton(.close)
         }
         .topToolbar {
             TextField("Search places or addresses", text: $viewModel.searchTerm)

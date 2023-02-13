@@ -70,7 +70,7 @@ import SwiftUI
                     if !isPortrait, verticalSizeClass == .regular {
                         EmptyView()
                     } else {
-                        BarButton(type: .back)
+                        BarButton(.back)
                     }
                 }
                 .backgroundSecondary()
@@ -256,8 +256,8 @@ import SwiftUI
                 SectionView {
                     VStack(spacing: .zero) {
                         NavigationLink(destination: OurResorsesView()) {
-                            Row("Our open resources",
-                                trallingType: .arrowIcon)
+                            Row("Our open resources")
+                                .rowTrailing(.arrowIcon)
                         }
                         .buttonStyle(.row)
 
