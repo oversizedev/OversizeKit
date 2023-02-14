@@ -102,7 +102,7 @@ import SwiftUI
             VStack(alignment: .center, spacing: 0) {
                 if let stoteKit = FeatureFlags.app.storeKit {
                     if stoteKit {
-                        SectionView(verticalPadding: .zero) {
+                        SectionView {
                             PrmiumBannerRow()
                         }
                     }

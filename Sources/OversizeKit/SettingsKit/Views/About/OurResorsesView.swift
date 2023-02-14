@@ -34,16 +34,18 @@ public struct OurResorsesView: View {
             VStack(alignment: .leading, spacing: .zero) {
                 if let gitHubUrl = URL(string: "https://github.com/oversizedev") {
                     Link(destination: gitHubUrl) {
-                        Row("GitHub Open Source")
-                            .rowLeading(.image(githubIcon))
+                        Row("GitHub Open Source") {
+                            githubIcon
+                        }
                     }
                     .buttonStyle(.row)
                 }
 
                 if let figmaUrl = URL(string: "https://www.figma.com/@oversizedesign") {
                     Link(destination: figmaUrl) {
-                        Row("Figma Community")
-                            .rowLeading(.image(figmaIcon))
+                        Row("Figma Community") {
+                            figmaIcon
+                        }
                     }
                     .buttonStyle(.row)
                 }

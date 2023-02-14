@@ -173,7 +173,8 @@ public struct LockscreenView: View {
             }
 
             Text(errorText ?? "")
-                .fontStyle(.subheadline, color: .error)
+                .subheadline()
+                .errorForegroundColor()
                 .opacity(state == .error ? 1 : 0)
 
             if isShowTitle {

@@ -110,8 +110,10 @@ public struct AddressPicker: View {
             } else {
                 onSaveCurrntPosition()
             }
+        } leading: {
+            Icon(.navigation)
+                .iconOnSurface()
         }
-        .rowLeading(.iconOnSurface(.navigation))
         .padding(.bottom, viewModel.searchTerm.isEmpty ? .small : .zero)
         .loading(viewModel.isSaveCurentPositon)
     }
@@ -125,8 +127,10 @@ public struct AddressPicker: View {
                 } else {
                     onCompleteSearth(seletedAddress: address.address, seletedLocation: nil, seletedPlace: address.place, saveToHistory: false)
                 }
+            } leading: {
+                Icon(.mapPin)
+                    .iconOnSurface()
             }
-            .rowLeading(.iconOnSurface(.mapPin))
             .rowClearButton {
                 if let fooOffset = viewModel.lastSearchAddresses.firstIndex(where: { $0.id == address.id }) {
                     viewModel.lastSearchAddresses.remove(at: fooOffset)
@@ -140,8 +144,10 @@ public struct AddressPicker: View {
 
             Row(location.title, subtitle: location.subtitle) {
                 reverseGeo(location: location)
+            } leading: {
+                Icon(.mapPin)
+                    .iconOnSurface()
             }
-            .rowLeading(.iconOnSurface(.mapPin))
         }
     }
 

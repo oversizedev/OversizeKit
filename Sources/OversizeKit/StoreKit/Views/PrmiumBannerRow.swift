@@ -112,7 +112,8 @@ public extension PrmiumBannerRow {
 
                         Text(Info.store.subscriptionsName)
                             .font(.system(size: 20, weight: .heavy))
-                            .fontStyle(.title3, color: Color(hex: "B75375"))
+                            .title3()
+                            .foregroundColor(Color(hex: "B75375"))
                     }
                     .padding(.leading, Space.xSmall)
                     .padding(.vertical, Space.xxSmall)
@@ -126,7 +127,7 @@ public extension PrmiumBannerRow {
 
                 Text(Info.store.subscriptionsDescription)
                     .headline(.semibold)
-                    .foregroundOnPrimaryHighEmphasis()
+                    .onPrimaryHighEmphasisForegroundColor()
                     .multilineTextAlignment(.center)
                     .padding(.top, Space.xSmall)
                     .frame(maxWidth: 260)

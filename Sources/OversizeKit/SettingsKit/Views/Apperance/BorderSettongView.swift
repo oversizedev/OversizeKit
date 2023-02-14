@@ -36,7 +36,7 @@ public struct BorderSettingView: View {
                             theme.borderControls = value
                             theme.borderTextFields = value
                         }
-                        .fontStyle(.headline)
+                        .headline()
                         .foregroundColor(.onSurfaceHighEmphasis)
                         .padding(.horizontal, .medium)
                         .padding(.vertical, .small)
@@ -54,7 +54,7 @@ public struct BorderSettingView: View {
                                             Spacer()
 
                                             Text(String(format: "%.1f", theme.borderSize) + " px")
-                                                .fontStyle(.subheadline)
+                                                .subheadline()
                                                 .foregroundColor(.onSurfaceHighEmphasis)
                                         }
 
@@ -62,7 +62,7 @@ public struct BorderSettingView: View {
                                     }
                                 }
                                 .surfaceStyle(.secondary)
-                                .controlPadding(.small)
+                                .surfaceContentInsets(.small)
                                 .padding(.horizontal, Space.medium)
                                 .padding(.bottom, Space.xxSmall)
 
@@ -74,18 +74,14 @@ public struct BorderSettingView: View {
                                 .padding(.horizontal, theme.borderSurface ? 0 : Space.medium.rawValue)
 
                             VStack(spacing: .zero) {
-                                RowDeprecated("Surface",
-                                              trallingType: .toggle(isOn: theme.$borderSurface),
-                                              paddingVertical: .xSmall)
-                                RowDeprecated("Buttons",
-                                              trallingType: .toggle(isOn: theme.$borderSurface),
-                                              paddingVertical: .xSmall)
-                                RowDeprecated("Text fields",
-                                              trallingType: .toggle(isOn: theme.$borderSurface),
-                                              paddingVertical: .xSmall)
-                                RowDeprecated("Other controls",
-                                              trallingType: .toggle(isOn: theme.$borderSurface),
-                                              paddingVertical: .xSmall)
+                                Switch("Surface", isOn: theme.$borderSurface)
+
+                                Switch("Buttons", isOn: theme.$borderSurface)
+
+                                Switch("Text fields", isOn: theme.$borderSurface)
+
+                                Switch("Other controls", isOn: theme.$borderSurface)
+
                             }.padding(.top, .xxxSmall)
                                 .padding(.vertical, .xxxSmall)
                         }

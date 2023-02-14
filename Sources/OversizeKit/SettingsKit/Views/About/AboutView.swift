@@ -132,8 +132,9 @@ import SwiftUI
                     VStack(spacing: .zero) {
                         if let reviewUrl = Info.url.appStoreReview, let id = Info.app.appStoreID, !id.isEmpty, let appName = Info.app.name {
                             Link(destination: reviewUrl) {
-                                Row("Rate \(appName) on App Store")
-                                    .rowLeading(.image(rateSettingsIcon))
+                                Row("Rate \(appName) on App Store") {
+                                    rateSettingsIcon
+                                }
                             }
                             .buttonStyle(.row)
                         }
@@ -151,8 +152,9 @@ import SwiftUI
 
                             Row(L10n.About.suggestIdea) {
                                 isShowMail.toggle()
+                            } leading: {
+                                ideaSettingsIcon
                             }
-                            .rowLeading(.image(ideaSettingsIcon))
 
                             .buttonStyle(.row)
                             .sheet(isPresented: $isShowMail) {
@@ -164,8 +166,9 @@ import SwiftUI
                             if let shareUrl = Info.url.appInstallShare, let id = Info.app.appStoreID, !id.isEmpty {
                                 Row(L10n.Settings.shareApplication) {
                                     isSharePresented.toggle()
+                                } leading: {
+                                    shareSettingsIcon
                                 }
-                                .rowLeading(.image(shareSettingsIcon))
                                 .sheet(isPresented: $isSharePresented) {
                                     ActivityViewController(activityItems: [shareUrl])
                                         .presentationDetents([.medium, .large])
@@ -257,7 +260,7 @@ import SwiftUI
                     VStack(spacing: .zero) {
                         NavigationLink(destination: OurResorsesView()) {
                             Row("Our open resources")
-                                .rowTrailing(.arrowIcon)
+                                .rowArrow()
                         }
                         .buttonStyle(.row)
 
@@ -359,7 +362,7 @@ import SwiftUI
             }
             .buttonStyle(.scale)
             .frame(maxWidth: 300)
-            .controlPadding(.xSmall)
+            .innerPadding(.xSmall)
             .paddingContent(.horizontal)
         }
 
