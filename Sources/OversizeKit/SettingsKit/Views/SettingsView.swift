@@ -105,6 +105,7 @@ import SwiftUI
                         SectionView {
                             PrmiumBannerRow()
                         }
+                        .surfaceContentInsets(.zero)
                     }
                 }
                 Group {
@@ -195,6 +196,7 @@ import SwiftUI
                     appSection
                 }
             }
+           
         }
 
         var apperanceSettingsIcon: Image {

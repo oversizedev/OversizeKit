@@ -21,20 +21,27 @@ struct StoreFeaturesView: View {
                 ForEach(features) { feature in
                     Row(feature.title.valueOrEmpty, subtitle: feature.subtitle.valueOrEmpty) {
                         selection = feature
+                    } leading: {
+                        Group {
+                            if feature.image != nil {
+                                Image(resourceImage: feature.image.valueOrEmpty)
+                                    .renderingMode(.template)
+                            } else {
+                                Icon.Solid.UserInterface.checkCrFr
+                                    .renderingMode(.template)
+                            }
+                        }
+                        .onPrimaryHighEmphasisForegroundColor()
+                        .iconOnSurface()
                     }
-                    .rowLeading(.imageOnSurface(feature.image != nil
-                            ? Image(resourceImage: feature.image.valueOrEmpty)
-                            : Icon.Solid.UserInterface.checkCrFr,
-                        color: Color.onPrimaryHighEmphasis))
-                    .rowTrailing(.arrowIcon)
+                    .rowArrow()
                     .rowIconBackgroundColor(backgroundColor(feature: feature))
-                    .controlPadding(horizontal: .medium, vertical: .small)
                 }
             }
         }
         .surfaceBorderColor(Color.surfaceSecondary)
         .surfaceBorderWidth(2)
-        .controlPadding(horizontal: .zero, vertical: .xSmall)
+        .surfaceContentRowInsets()
         .sheet(item: $selection) {
             selection = nil
         } content: { feature in

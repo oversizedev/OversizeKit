@@ -17,7 +17,7 @@ struct RateAppScreen: View {
         VStack {
             Text("If you love, evaluate)")
                 .largeTitle(.bold)
-                .foregroundOnSurfaceHighEmphasis()
+                .onSurfaceHighEmphasisForegroundColor()
 
             Spacer()
 
@@ -29,7 +29,7 @@ struct RateAppScreen: View {
 
             Text((Info.app.name ?? "App") + " is developed only one person, and your assessment would very much drop in")
                 .title3()
-                .foregroundOnSurfaceHighEmphasis()
+                .onSurfaceHighEmphasisForegroundColor()
 
             Spacer()
 

@@ -43,7 +43,9 @@ public struct FeedbackView: View {
         SectionView {
             if let reviewUrl = Info.url.appStoreReview, let id = Info.app.appStoreID, !id.isEmpty {
                 Link(destination: reviewUrl) {
-                    RowDeprecated(L10n.Settings.feedbakAppStore, leadingType: .image(heartIcon))
+                    Row(L10n.Settings.feedbakAppStore) {
+                        heartIcon
+                    }
                 }
                 .buttonStyle(.row)
             }
@@ -63,8 +65,9 @@ public struct FeedbackView: View {
 
                         Row(L10n.Settings.feedbakAuthor) {
                             isShowMail.toggle()
+                        } leading: {
+                            mailIcon
                         }
-                        .rowLeading(.image(mailIcon))
 
                         .buttonStyle(.row)
                         .sheet(isPresented: $isShowMail) {
@@ -74,7 +77,9 @@ public struct FeedbackView: View {
                         // Send author
                         if let sendMailUrl = Info.url.developerSendMail {
                             Link(destination: sendMailUrl) {
-                                RowDeprecated(L10n.Settings.feedbakAuthor, leadingType: .image(mailIcon))
+                                Row(L10n.Settings.feedbakAuthor) {
+                                    mailIcon
+                                }
                             }
                             .buttonStyle(.row)
                         }
@@ -84,7 +89,9 @@ public struct FeedbackView: View {
                 // Telegramm chat
                 if let telegramChatUrl = Info.url.appTelegramChat, let id = Info.app.telegramChatID, !id.isEmpty {
                     Link(destination: telegramChatUrl) {
-                        RowDeprecated(L10n.Settings.telegramChat, leadingType: .image(chatIcon))
+                        Row(L10n.Settings.telegramChat) {
+                            chatIcon
+                        }
                     }
                     .buttonStyle(.row)
                 }
@@ -124,15 +131,4 @@ public struct FeedbackView: View {
             return Icon.Duotone.SocialMediaandBrands.telegram
         }
     }
-
-//    var chatIcon: Image {
-//        switch iconStyle {
-//        case .line:
-//            return Icon.Line.Communication.chatDots
-//        case .solid:
-//            return Icon.Solid.Communication.chatDots
-//        case .duotone:
-//            return Icon.Duotone.Communication.chatDots
-//        }
-//    }
 }

@@ -56,8 +56,9 @@ public struct SupportView: View {
 
                         Row("Contact Us") {
                             isShowMail.toggle()
+                        } leading: {
+                            mailIcon
                         }
-                        .rowLeading(.image(mailIcon))
 
                         .buttonStyle(.row)
                         .sheet(isPresented: $isShowMail) {
@@ -67,7 +68,9 @@ public struct SupportView: View {
                         // Send author
                         if let sendMailUrl = Info.url.developerSendMail {
                             Link(destination: sendMailUrl) {
-                                RowDeprecated("Contact Us", leadingType: .image(mailIcon))
+                                Row("Contact Us") {
+                                    mailIcon
+                                }
                             }
                             .buttonStyle(.row)
                         }
@@ -77,7 +80,9 @@ public struct SupportView: View {
                 // Telegramm chat
                 if let telegramChatUrl = Info.url.appTelegramChat, let id = Info.app.telegramChatID, !id.isEmpty {
                     Link(destination: telegramChatUrl) {
-                        RowDeprecated(L10n.Settings.telegramChat, leadingType: .image(chatIcon))
+                        Row(L10n.Settings.telegramChat) {
+                            chatIcon
+                        }
                     }
                     .buttonStyle(.row)
                 }

@@ -27,7 +27,7 @@ public struct SetPINCodeView: View {
                 } label: {
                     Icon(.xMini, color: .onSurfaceHighEmphasis)
                 }
-                .style(.secondary, size: .medium, rounded: .full, width: .round, shadow: true)
+                .buttonStyle(.secondary)
 
                 Spacer()
             }.padding(20)
