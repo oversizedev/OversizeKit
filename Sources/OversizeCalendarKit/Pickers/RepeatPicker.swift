@@ -34,12 +34,13 @@ public struct RepeatPicker: View {
                 SectionView {
                     VStack(spacing: .zero) {
                         ForEach(CalendarEventRecurrenceRules.allCases) { rule in
-                            Row(rule.title) {
+                            Radio(isOn: self.rule.id == rule.id) {
                                 withAnimation {
                                     self.rule = rule
                                 }
+                            } label: {
+                                Row(rule.title)
                             }
-                            .rowTrailing(.radio(isOn: .constant(self.rule.id == rule.id)))
                         }
                     }
                 }
@@ -49,7 +50,7 @@ public struct RepeatPicker: View {
                         VStack(spacing: .zero) {
                             ForEach(CalendarEventEndRecurrenceRules.allCases) { rule in
                                 VStack(spacing: .xxSmall) {
-                                    Row(rule.title) {
+                                    Radio(isOn: endRule.id == rule.id) {
                                         endRule = rule
                                         if case .occurrenceCount = endRule {
                                             isFocusedRepitCount = true
@@ -60,8 +61,9 @@ public struct RepeatPicker: View {
                                             isFocusedRepitCount = true
                                             scrollView.scrollTo(rule.id)
                                         }
+                                    } label: {
+                                        Row(rule.title)
                                     }
-                                    .rowTrailing(.radio(isOn: .constant(endRule.id == rule.id)))
 
                                     if endRule.id == rule.id {
                                         repartPicker(rules: rule)
@@ -90,6 +92,7 @@ public struct RepeatPicker: View {
                     }))
                 }
             }
+            .surfaceContentRowInsets()
         }
         .presentationDetents(rule == .never ? [.height(630), .large] : [.large])
         .presentationDragIndicator(.hidden)

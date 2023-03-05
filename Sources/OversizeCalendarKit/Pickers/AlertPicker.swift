@@ -23,31 +23,29 @@ public struct AlarmPicker: View {
             SectionView {
                 VStack(spacing: .zero) {
                     ForEach(CalendarAlertsTimes.allCases) { alert in
-                        Row(alert.title) {
+                        Checkbox(alert.title, isOn: .constant((selectedAlerts.first { $0.id == alert.id } != nil) ? true : false)) {
                             if !selectedAlerts.isEmpty, let _ = selectedAlerts.first(where: { $0.id == alert.id }) {
                                 selectedAlerts.remove(alert)
                             } else {
                                 selectedAlerts.append(alert)
                             }
+                            
                         }
-                        .rowTrailing(.checkbox(isOn: .constant((selectedAlerts.first { $0.id == alert.id } != nil) ? true : false)))
                     }
                 }
             }
+            .surfaceContentRowInsets()
         }
         .backgroundSecondary()
         .leadingBar {
             BarButton(.close)
         }
         .trailingBar {
-            if selectedAlerts.isEmpty {
-                BarButton(.disabled("Done"))
-            } else {
-                BarButton(.accent("Done", action: {
-                    selection = selectedAlerts
-                    dismiss()
-                }))
-            }
+            BarButton(.accent("Done", action: {
+                selection = selectedAlerts
+                dismiss()
+            }))
+            .disabled(selectedAlerts.isEmpty)
         }
     }
 }
