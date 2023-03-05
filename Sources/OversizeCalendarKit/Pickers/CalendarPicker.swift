@@ -44,16 +44,16 @@ public struct CalendarPicker: View {
         SectionView(source.title) {
             VStack(spacing: .zero) {
                 ForEach(calendars, id: \.calendarIdentifier) { calendar in
-                    Row(calendar.title) {
+                    Radio(isOn: selection?.calendarIdentifier == calendar.calendarIdentifier) {
                         selection = calendar
                         dismiss()
+                    } label: {
+                        Row(calendar.title) {
+                            Circle()
+                                .fill(Color(calendar.cgColor))
+                                .frame(width: 16, height: 16)
+                        }
                     }
-                    .rowLeading(.view(AnyView(
-                        Circle()
-                            .fill(Color(calendar.cgColor))
-                            .frame(width: 16, height: 16)
-                    )))
-                    .rowTrailing(.radio(isOn: .constant(selection?.calendarIdentifier == calendar.calendarIdentifier)))
                 }
             }
         }
