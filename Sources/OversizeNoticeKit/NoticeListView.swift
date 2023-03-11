@@ -73,7 +73,8 @@ public struct NoticeListView: View {
 
                     NoticeView(event.specialOfferBannerTitle,
                                subtitle: event.specialOfferDescription,
-                               imageURL: url) {
+                               imageURL: url)
+                    {
                         Button {
                             isShowOfferSheet.toggle()
                         } label: {

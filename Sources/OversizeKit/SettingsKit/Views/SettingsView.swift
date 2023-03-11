@@ -196,7 +196,6 @@ import SwiftUI
                     appSection
                 }
             }
-           
         }
 
         var apperanceSettingsIcon: Image {

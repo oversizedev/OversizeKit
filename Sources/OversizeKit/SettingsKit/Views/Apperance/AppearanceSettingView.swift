@@ -177,11 +177,11 @@ import SwiftUI
                                         if index != 0, isPremium == false {
                                             isShowPremium.toggle()
                                         } else {
-                                            let defaultIconIndex = self.iconSettings.iconNames
+                                            let defaultIconIndex = iconSettings.iconNames
                                                 .firstIndex(of: UIApplication.shared.alternateIconName) ?? 0
                                             if defaultIconIndex != index {
                                                 // swiftlint:disable line_length
-                                                UIApplication.shared.setAlternateIconName(self.iconSettings.iconNames[index]) { error in
+                                                UIApplication.shared.setAlternateIconName(iconSettings.iconNames[index]) { error in
                                                     if let error {
                                                         log(error.localizedDescription)
                                                     } else {

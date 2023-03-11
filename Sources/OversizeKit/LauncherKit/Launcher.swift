@@ -95,10 +95,11 @@ public struct Launcher<Content: View, Onboarding: View>: View {
                        errorText: L10n.Security.invalidPIN,
                        pinCodeEnabled: viewModel.settingsService.pinCodeEnabend,
                        biometricEnabled: viewModel.settingsService.biometricEnabled,
-                       biometricType: viewModel.biometricService.biometricType) {
-            self.viewModel.checkPassword()
+                       biometricType: viewModel.biometricService.biometricType)
+        {
+            viewModel.checkPassword()
         } biometricAction: {
-            self.viewModel.appLockValidation()
+            viewModel.appLockValidation()
         }
         .onAppear {
             if viewModel.settingsService.biometricEnabled, scenePhase != .background {

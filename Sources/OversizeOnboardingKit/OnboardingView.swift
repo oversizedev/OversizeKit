@@ -47,7 +47,7 @@ public struct OnboardingView<Content: View>: View {
             Color.backgroundSecondary.ignoresSafeArea()
         )
         .onPreferenceChange(OnboardingItemPreferenceKey.self) { value in
-            self.slides = value
+            slides = value
         }
     }
 

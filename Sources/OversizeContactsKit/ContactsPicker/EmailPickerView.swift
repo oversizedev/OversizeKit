@@ -78,7 +78,7 @@ public struct EmailPickerView: View {
     private func newEmailView() -> some View {
         if !viewModel.searchText.isEmpty {
             Row(viewModel.searchText, subtitle: "New member")
-                .rowLeading(.avatar(AvatarView(firstName: viewModel.searchText)))
+                .rowLeading(.avatar(Avatar(firstName: viewModel.searchText)))
                 .rowTrailing(.checkbox(isOn: .constant(viewModel.searchText.isEmail)))
                 .padding(.bottom, .small)
         }
@@ -108,7 +108,7 @@ public struct EmailPickerView: View {
                     Row(email) {
                         onContactClick(email: email)
                     }
-                    .rowLeading(.avatar(AvatarView(firstName: email)))
+                    .rowLeading(.avatar(Avatar(firstName: email)))
                     .rowTrailing(.checkbox(isOn: .constant(isSelected)))
                 }
             }
@@ -123,7 +123,7 @@ public struct EmailPickerView: View {
                 Spacer()
             }
             .title3()
-            .foregroundOnSurfaceMediumEmphasis()
+            .onSurfaceMediumEmphasisForegroundColor()
             .padding(.vertical, .xxSmall)
             .paddingContent(.horizontal)
             .padding(.top, viewModel.lastSelectedEmails.isEmpty ? .zero : .small)
@@ -146,13 +146,13 @@ public struct EmailPickerView: View {
             Row(contact.givenName + " " + contact.familyName, subtitle: email) {
                 onContactClick(email: email)
             }
-            .rowLeading(.avatar(AvatarView(firstName: contact.givenName, lastName: contact.familyName, avatar: Image(uiImage: avatarThumbnail))))
+            .rowLeading(.avatar(Avatar(firstName: contact.givenName, lastName: contact.familyName, avatar: Image(uiImage: avatarThumbnail))))
             .rowTrailing(.checkbox(isOn: .constant(isSelected)))
         } else {
             Row(contact.givenName + " " + contact.familyName, subtitle: email) {
                 onContactClick(email: email)
             }
-            .rowLeading(.avatar(AvatarView(firstName: contact.givenName, lastName: contact.familyName)))
+            .rowLeading(.avatar(Avatar(firstName: contact.givenName, lastName: contact.familyName)))
             .rowTrailing(.checkbox(isOn: .constant(isSelected)))
         }
     }

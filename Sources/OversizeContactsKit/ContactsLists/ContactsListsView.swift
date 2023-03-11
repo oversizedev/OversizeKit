@@ -56,7 +56,7 @@ public struct ContactsListsView: View {
                 }
             } else {
                 Row(email)
-                    .rowLeading(.avatar(AvatarView(firstName: email)))
+                    .rowLeading(.avatar(Avatar(firstName: email)))
             }
         }
     }
@@ -66,10 +66,10 @@ public struct ContactsListsView: View {
         let email = email.value as String
         if let avatarThumbnailData = contact.thumbnailImageData, let avatarThumbnail = UIImage(data: avatarThumbnailData) {
             Row(contact.givenName + " " + contact.familyName, subtitle: email)
-                .rowLeading(.avatar(AvatarView(firstName: contact.givenName, lastName: contact.familyName, avatar: Image(uiImage: avatarThumbnail))))
+                .rowLeading(.avatar(Avatar(firstName: contact.givenName, lastName: contact.familyName, avatar: Image(uiImage: avatarThumbnail))))
         } else {
             Row(contact.givenName + " " + contact.familyName, subtitle: email)
-                .rowLeading(.avatar(AvatarView(firstName: contact.givenName, lastName: contact.familyName)))
+                .rowLeading(.avatar(Avatar(firstName: contact.givenName, lastName: contact.familyName)))
         }
     }
 
@@ -77,7 +77,7 @@ public struct ContactsListsView: View {
     private func placeholder() -> some View {
         ForEach(emails, id: \.self) { email in
             Row(email)
-                .rowLeading(.avatar(AvatarView(firstName: email)))
+                .rowLeading(.avatar(Avatar(firstName: email)))
         }
     }
 }

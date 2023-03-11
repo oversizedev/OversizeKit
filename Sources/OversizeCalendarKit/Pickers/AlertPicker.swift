@@ -29,7 +29,6 @@ public struct AlarmPicker: View {
                             } else {
                                 selectedAlerts.append(alert)
                             }
-                            
                         }
                     }
                 }

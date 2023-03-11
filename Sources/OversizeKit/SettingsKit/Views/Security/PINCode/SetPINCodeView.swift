@@ -42,7 +42,8 @@ public struct SetPINCodeView: View {
                            state: $viewModel.authState,
                            maxCount: viewModel.maxCount,
                            title: L10n.Security.oldPINCode,
-                           errorText: viewModel.errorText) {
+                           errorText: viewModel.errorText)
+            {
                 viewModel.chekOldPINCode()
             } biometricAction: {}
 
@@ -51,7 +52,8 @@ public struct SetPINCodeView: View {
                            state: $viewModel.authState,
                            maxCount: viewModel.maxCount,
                            title: L10n.Security.newPINCode,
-                           errorText: viewModel.errorText) {
+                           errorText: viewModel.errorText)
+            {
                 viewModel.checkNewPINCode()
             } biometricAction: {}
         case .confirmNewPINField:
@@ -59,7 +61,8 @@ public struct SetPINCodeView: View {
                            state: $viewModel.authState,
                            maxCount: viewModel.maxCount,
                            title: L10n.Security.confirmPINCode,
-                           errorText: viewModel.errorText) {
+                           errorText: viewModel.errorText)
+            {
                 Task {
                     let result = await viewModel.checkConfirmNewPINCode()
                     switch result {

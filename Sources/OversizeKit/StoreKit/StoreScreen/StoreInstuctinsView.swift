@@ -33,7 +33,7 @@ public struct StoreInstuctinsView: View {
                             contentPlaceholder()
                                 .task {
                                     await viewModel.fetchData()
-                                    if case let .result(products) = self.viewModel.state {
+                                    if case let .result(products) = viewModel.state {
                                         await viewModel.updateState(products: products)
                                     }
                                 }
