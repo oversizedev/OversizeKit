@@ -1,5 +1,5 @@
 //
-// Copyright © 2022 Alexander Romanov
+// Copyright © 2023 Alexander Romanov
 // Launcher.swift
 //
 
