@@ -98,6 +98,16 @@ public struct ErrorView: View {
                 } else {
                     return nil
                 }
+            case let .notifications(type: type):
+                if type == .notAccess {
+                    return .accent(L10n.Button.goToSettings, action: {
+                        #if os(iOS)
+                            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+                        #endif
+                    })
+                } else {
+                    return nil
+                }
             }
         }
     }
