@@ -6,7 +6,7 @@
 import EventKit
 import Foundation
 
-public enum LocalNotificationAlertsTimes: CaseIterable, Equatable, Identifiable {
+public enum LocalNotificationTime: CaseIterable, Equatable, Identifiable {
     case oneMinuteBefore, fiveMinutesBefore, tenMinutesBefore, thirtyMinutesBefore, oneHourBefore, twoHoursBefore, oneDayBefore, twoDaysBefore, oneWeekBefore
 
     public var title: String {
@@ -59,5 +59,5 @@ public enum LocalNotificationAlertsTimes: CaseIterable, Equatable, Identifiable 
         title
     }
 
-    public static var allCases: [LocalNotificationAlertsTimes] = [.oneMinuteBefore, .fiveMinutesBefore, .tenMinutesBefore, .thirtyMinutesBefore, .oneHourBefore, .twoHoursBefore, .oneDayBefore, .twoDaysBefore, .oneWeekBefore]
+    public static var allCases: [LocalNotificationTime] = [.oneMinuteBefore, .fiveMinutesBefore, .tenMinutesBefore, .thirtyMinutesBefore, .oneHourBefore, .twoHoursBefore, .oneDayBefore, .twoDaysBefore, .oneWeekBefore]
 }
