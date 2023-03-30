@@ -5,20 +5,18 @@
 
 import OversizeCore
 import OversizeLocalizable
-
 import OversizeServices
-
+import OversizeStoreService
 import OversizeUI
 import SwiftUI
 
 public struct SystemServicesModifier: ViewModifier {
-    @Environment(\.scenePhase) var scenePhase
-    @Environment(\.theme) var theme
+    @Injected(Container.appStateService) var appState: AppStateService
+    @Injected(Container.settingsService) var settingsService: SettingsServiceProtocol
+    @Injected(Container.appStoreReviewService) var appStoreReviewService: AppStoreReviewServiceProtocol
 
-    @Injected(Container.appStateService) var appState
-    @Injected(Container.settingsService) var settingsService
-    @Injected(Container.appStoreReviewService) var appStoreReviewService
-
+    @Environment(\.scenePhase) var scenePhase: ScenePhase
+    @Environment(\.theme) var theme: ThemeSettings
     @AppStorage("AppState.PremiumState") var isPremium: Bool = false
 
     @StateObject var hudState = HUD()
@@ -71,7 +69,6 @@ public struct SystemServicesModifier: ViewModifier {
                 .premiumStatus(isPremium)
                 .theme(ThemeSettings())
                 .screenSize(geometry)
-                // overlays
                 .hud(isPresented: $hudState.isPresented, type: $hudState.type) {
                     HUDContent(title: hudState.title, image: hudState.image, type: hudState.type)
                 }

@@ -39,8 +39,8 @@ public struct PhotosGalleryView: View {
     }
 }
 
- struct PhotosGalleryView_Previews: PreviewProvider {
+struct PhotosGalleryView_Previews: PreviewProvider {
     static var previews: some View {
         PhotosGalleryView(images: [])
     }
- }
+}

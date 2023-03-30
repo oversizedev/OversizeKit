@@ -294,7 +294,7 @@ public struct CreateEventView: View {
 
                     if let location = viewModel.location {
                         let region = MKCoordinateRegion(center: location, latitudinalMeters: 10000, longitudinalMeters: 10000)
-                        let annotations = [MapPoint(name: "\(viewModel.locationName ?? "")", coordinate: location)]
+                        let annotations = [MapPreviewPoint(name: "\(viewModel.locationName ?? "")", coordinate: location)]
                         Map(coordinateRegion: .constant(region), annotationItems: annotations) {
                             MapMarker(coordinate: $0.coordinate)
                         }
