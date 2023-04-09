@@ -98,7 +98,8 @@ public struct EmailPickerView: View {
 
             ForEach(viewModel.lastSelectedEmails, id: \.self) { email in
                 if let contact = viewModel.getContactFromEmail(email: email, contacts: data) {
-                    if let emails = contact.emailAddresses, !emails.isEmpty {
+                    let emails = contact.emailAddresses
+                    if !emails.isEmpty {
                         ForEach(emails, id: \.identifier) { email in
                             emailRow(email: email, contact: contact)
                         }
@@ -129,7 +130,8 @@ public struct EmailPickerView: View {
             .padding(.top, viewModel.lastSelectedEmails.isEmpty ? .zero : .small)
 
             ForEach(data, id: \.identifier) { contact in
-                if let emails = contact.emailAddresses, !emails.isEmpty {
+                let emails = contact.emailAddresses
+                if !emails.isEmpty {
                     ForEach(emails, id: \.identifier) { email in
                         emailRow(email: email, contact: contact)
                     }

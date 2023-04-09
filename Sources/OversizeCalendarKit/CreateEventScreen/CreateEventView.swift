@@ -240,10 +240,10 @@ public struct CreateEventView: View {
     @ViewBuilder
     var alarmView: some View {
         Group {
-            if let alarms = viewModel.alarms, !alarms.isEmpty {
+            if !viewModel.alarms.isEmpty {
                 Surface {
                     VStack(spacing: .zero) {
-                        ForEach(alarms) { alarm in
+                        ForEach(viewModel.alarms) { alarm in
                             Row(alarm.title) {
                                 viewModel.present(.alarm)
                             } leading: {
