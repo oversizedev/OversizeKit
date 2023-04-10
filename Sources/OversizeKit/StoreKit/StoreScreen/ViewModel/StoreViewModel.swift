@@ -9,6 +9,7 @@ import OversizeServices
 import OversizeStoreService
 import StoreKit
 import SwiftUI
+import Factory
 
 @MainActor
 class StoreViewModel: ObservableObject {
@@ -19,7 +20,7 @@ class StoreViewModel: ObservableObject {
         case error(AppError)
     }
 
-    @Injected(Container.storeKitService) var storeKitService: StoreKitService
+    @Injected(\.storeKitService) var storeKitService: StoreKitService
     @Published var state = State.initial
 
     public var updateListenerTask: Task<Void, Error>?

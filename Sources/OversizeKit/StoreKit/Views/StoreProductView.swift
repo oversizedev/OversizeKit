@@ -8,13 +8,14 @@ import OversizeStoreService
 import OversizeUI
 import StoreKit
 import SwiftUI
+import Factory
 
 public struct StoreProductView: View {
     public enum StoreProductViewType {
         case row, collumn
     }
 
-    @Injected(Container.storeKitService) private var store: StoreKitService
+    @Injected(\.storeKitService) private var store: StoreKitService
     @State var isPurchased: Bool = false
 
     @Binding var isSelected: Bool

@@ -9,10 +9,11 @@ import OversizeContactsService
 import OversizeCore
 import OversizeServices
 import SwiftUI
+import Factory
 
 @MainActor
 class AttendeesViewModel: ObservableObject {
-    @Injected(Container.contactsService) private var contactsService: ContactsService
+    @Injected(\.contactsService) private var contactsService: ContactsService
     @Published var state = AttendeesViewModelState.initial
     @Published var searchText: String = .init()
 

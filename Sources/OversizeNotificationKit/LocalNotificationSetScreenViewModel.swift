@@ -7,10 +7,11 @@ import OversizeCore
 import OversizeNotificationService
 import OversizeServices
 import SwiftUI
+import Factory
 
 @MainActor
 class LocalNotificationSetScreenViewModel: ObservableObject {
-    @Injected(Container.localNotificationService) var localNotificationService: LocalNotificationServiceProtocol
+    @Injected(\.localNotificationService) var localNotificationService: LocalNotificationServiceProtocol
     @Published var state = State.initial
 
     public let id: UUID

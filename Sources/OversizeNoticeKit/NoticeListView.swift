@@ -9,9 +9,10 @@ import OversizeStoreService
 import OversizeUI
 import StoreKit
 import SwiftUI
+import Factory
 
 public struct NoticeListView: View {
-    @Injected(Container.appStoreReviewService) var reviewService
+    @Injected(\.appStoreReviewService) var reviewService
     @Environment(\.isPremium) var isPremium: Bool
 
     @State private var isBannerClosed = false

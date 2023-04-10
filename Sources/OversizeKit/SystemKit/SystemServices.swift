@@ -9,11 +9,12 @@ import OversizeServices
 import OversizeStoreService
 import OversizeUI
 import SwiftUI
+import Factory
 
 public struct SystemServicesModifier: ViewModifier {
-    @Injected(Container.appStateService) var appState: AppStateService
-    @Injected(Container.settingsService) var settingsService: SettingsServiceProtocol
-    @Injected(Container.appStoreReviewService) var appStoreReviewService: AppStoreReviewServiceProtocol
+    @Injected(\.appStateService) var appState: AppStateService
+    @Injected(\.settingsService) var settingsService: SettingsServiceProtocol
+    @Injected(\.appStoreReviewService) var appStoreReviewService: AppStoreReviewServiceProtocol
 
     @Environment(\.scenePhase) var scenePhase: ScenePhase
     @Environment(\.theme) var theme: ThemeSettings

@@ -9,6 +9,7 @@ import OversizeCore
 import OversizeLocationService
 import OversizeServices
 import SwiftUI
+import Factory
 
 public enum CreateEventType: Equatable {
     case new(Date?, calendar: EKCalendar?)
@@ -17,8 +18,8 @@ public enum CreateEventType: Equatable {
 
 @MainActor
 public class CreateEventViewModel: ObservableObject {
-    @Injected(Container.calendarService) private var calendarService: CalendarService
-    @Injected(Container.locationService) private var locationService: LocationServiceProtocol
+    @Injected(\.calendarService) private var calendarService: CalendarService
+    @Injected(\.locationService) private var locationService: LocationServiceProtocol
 
     @Published var state = CreateEventViewModelState.initial
     @Published var sheet: CreateEventViewModel.Sheet? = nil

@@ -5,14 +5,14 @@
 
 import OversizeLocalizable
 import OversizeServices
-
 import OversizeUI
 import SwiftUI
+import Factory
 
 // swiftlint:disable line_length
 #if os(iOS)
     public struct SecuritySettingsView: View {
-        @Injected(Container.biometricService) var biometricService
+        @Injected(\.biometricService) var biometricService
         @Environment(\.verticalSizeClass) private var verticalSizeClass
         @Environment(\.isPortrait) var isPortrait
         @Environment(\.presentationMode) var presentationMode
