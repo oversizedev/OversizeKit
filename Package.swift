@@ -4,12 +4,12 @@
 import PackageDescription
 
 let productionDependencies: [PackageDescription.Package.Dependency] = { [
-    .package(url: "https://github.com/oversizedev/OversizeUI.git", branch: "main"),
-    .package(url: "https://github.com/oversizedev/OversizeServices.git", branch: "main"),
-    .package(url: "https://github.com/oversizedev/OversizeLocalizable.git", branch: "main"),
-    .package(url: "https://github.com/oversizedev/OversizeCore.git", branch: "main"),
-    .package(url: "https://github.com/oversizedev/OversizeComponents.git", branch: "main"),
-    .package(url: "https://github.com/oversizedev/OversizeResources.git", branch: "main"),
+    .package(url: "https://github.com/oversizedev/OversizeUI.git", .upToNextMajor(from: "3.0.2")),
+    .package(url: "https://github.com/oversizedev/OversizeCore.git", .upToNextMajor(from: "1.3.0")),
+    .package(url: "https://github.com/oversizedev/OversizeServices.git", .upToNextMajor(from: "1.4.0")),
+    .package(url: "https://github.com/oversizedev/OversizeLocalizable.git", .upToNextMajor(from: "1.4.0")),
+    .package(url: "https://github.com/oversizedev/OversizeComponents.git", .upToNextMajor(from: "1.2.0")),
+    .package(url: "https://github.com/oversizedev/OversizeResources.git", .upToNextMajor(from: "1.3.0")),
     .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "2.1.3"))
 ] }()
 
