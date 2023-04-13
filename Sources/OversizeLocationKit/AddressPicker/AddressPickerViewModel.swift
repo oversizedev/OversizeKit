@@ -9,10 +9,11 @@ import MapKit
 import OversizeLocationService
 import OversizeServices
 import SwiftUI
+import Factory
 
 @MainActor
 class AddressPickerViewModel: NSObject, ObservableObject {
-    @Injected(Container.locationService) var locationService: LocationServiceProtocol
+    @Injected(\.locationService) var locationService: LocationServiceProtocol
 
     @Published var locationResults: [MKLocalSearchCompletion] = .init()
     @Published var searchTerm: String = .init()

@@ -180,16 +180,13 @@ public struct StoreInstuctinsView: View {
             SubscriptionPrivacyView(products: data)
         }
         .padding(.bottom, 220)
-
         .onAppear {
             Task {
-                // When this view appears, get the latest subscription status.
                 await viewModel.updateSubscriptionStatus(products: data)
             }
         }
         .onChange(of: data.purchasedAutoRenewable) { _ in
             Task {
-                // When `purchasedSubscriptions` changes, get the latest subscription status.
                 await viewModel.updateSubscriptionStatus(products: data)
             }
         }

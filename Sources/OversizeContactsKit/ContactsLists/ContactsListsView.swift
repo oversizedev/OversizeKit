@@ -49,7 +49,8 @@ public struct ContactsListsView: View {
     private func content(data: [CNContact]) -> some View {
         ForEach(emails, id: \.self) { email in
             if let contact = viewModel.getContactFromEmail(email: email, contacts: data) {
-                if let emails = contact.emailAddresses, !emails.isEmpty {
+                let emails = contact.emailAddresses
+                if !emails.isEmpty {
                     ForEach(emails, id: \.identifier) { email in
                         emailRow(email: email, contact: contact)
                     }

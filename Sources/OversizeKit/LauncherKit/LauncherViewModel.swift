@@ -11,14 +11,15 @@ import SwiftUI
 #if canImport(LocalAuthentication)
     import LocalAuthentication
 #endif
+import Factory
 
 @MainActor
 public final class LauncherViewModel: ObservableObject {
-    @Injected(Container.biometricService) var biometricService
-    @Injected(Container.appStateService) var appStateService: AppStateService
-    @Injected(Container.settingsService) var settingsService
-    @Injected(Container.appStoreReviewService) var reviewService: AppStoreReviewServiceProtocol
-    @Injected(Container.storeKitService) private var storeKitService: StoreKitService
+    @Injected(\.biometricService) var biometricService
+    @Injected(\.appStateService) var appStateService: AppStateService
+    @Injected(\.settingsService) var settingsService
+    @Injected(\.appStoreReviewService) var reviewService: AppStoreReviewServiceProtocol
+    @Injected(\.storeKitService) private var storeKitService: StoreKitService
 
     @AppStorage("AppState.PremiumState") var isPremium: Bool = false
     @AppStorage("AppState.SubscriptionsState") var subscriptionsState: RenewalState = .expired

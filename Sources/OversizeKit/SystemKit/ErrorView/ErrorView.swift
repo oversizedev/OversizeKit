@@ -1,5 +1,5 @@
 //
-// Copyright © 2022 Alexander Romanov
+// Copyright © 2023 Alexander Romanov
 // ErrorView.swift
 //
 
@@ -89,6 +89,16 @@ public struct ErrorView: View {
                     return nil
                 }
             case let .contacts(type: type):
+                if type == .notAccess {
+                    return .accent(L10n.Button.goToSettings, action: {
+                        #if os(iOS)
+                            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+                        #endif
+                    })
+                } else {
+                    return nil
+                }
+            case let .notifications(type: type):
                 if type == .notAccess {
                     return .accent(L10n.Button.goToSettings, action: {
                         #if os(iOS)

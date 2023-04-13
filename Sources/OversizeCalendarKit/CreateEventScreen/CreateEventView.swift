@@ -240,10 +240,10 @@ public struct CreateEventView: View {
     @ViewBuilder
     var alarmView: some View {
         Group {
-            if let alarms = viewModel.alarms, !alarms.isEmpty {
+            if !viewModel.alarms.isEmpty {
                 Surface {
                     VStack(spacing: .zero) {
-                        ForEach(alarms) { alarm in
+                        ForEach(viewModel.alarms) { alarm in
                             Row(alarm.title) {
                                 viewModel.present(.alarm)
                             } leading: {
@@ -294,7 +294,7 @@ public struct CreateEventView: View {
 
                     if let location = viewModel.location {
                         let region = MKCoordinateRegion(center: location, latitudinalMeters: 10000, longitudinalMeters: 10000)
-                        let annotations = [MapPoint(name: "\(viewModel.locationName ?? "")", coordinate: location)]
+                        let annotations = [MapPreviewPoint(name: "\(viewModel.locationName ?? "")", coordinate: location)]
                         Map(coordinateRegion: .constant(region), annotationItems: annotations) {
                             MapMarker(coordinate: $0.coordinate)
                         }
