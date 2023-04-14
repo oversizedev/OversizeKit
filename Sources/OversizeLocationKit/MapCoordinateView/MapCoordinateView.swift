@@ -4,7 +4,6 @@
 //
 
 import MapKit
-import OversizeResources
 import OversizeUI
 import SwiftUI
 
