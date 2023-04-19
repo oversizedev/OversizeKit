@@ -10,6 +10,7 @@ import SwiftUI
 
 public struct AddressField: View {
     @Environment(\.theme) private var theme: ThemeSettings
+    @Environment(\.fieldLabelPosition) private var fieldPlaceholderPosition: FieldLabelPosition
     @Binding private var seletedAddress: String?
     @Binding private var seletedLocation: CLLocationCoordinate2D?
     @Binding private var seletedPlace: LocationAddress?
@@ -29,9 +30,17 @@ public struct AddressField: View {
         _seletedPlace = place
     }
 
-    var addressText: String {
+    var isSlectedAddress: Bool {
         if let seletedAddress, !seletedAddress.isEmpty {
-            return seletedAddress
+            return true
+        } else {
+            return false
+        }
+    }
+
+    var addressText: String {
+        if isSlectedAddress {
+            return seletedAddress ?? "Address selected"
         } else if let seletedLocation {
             return "Сoordinates: \(seletedLocation.latitude), \(seletedLocation.longitude)"
         } else {
@@ -43,32 +52,53 @@ public struct AddressField: View {
         Button {
             isShowPicker.toggle()
         } label: {
-            HStack {
-                Text(title)
-                Spacer()
-                Icon(.chevronDown, color: .onSurfaceHighEmphasis)
+            VStack(alignment: .leading, spacing: .xSmall) {
+                if fieldPlaceholderPosition == .adjacent {
+                    HStack {
+                        Text(title)
+                            .subheadline(.medium)
+                            .foregroundColor(.onSurfaceHighEmphasis)
+                        Spacer()
+                    }
+                }
+
+                HStack {
+                    ZStack(alignment: .leading) {
+                        if fieldPlaceholderPosition == .overInput {
+                            Text(title)
+                                .font(!isSlectedAddress ? .headline : .subheadline)
+                                .fontWeight(!isSlectedAddress ? .medium : .semibold)
+                                .onSurfaceDisabledForegroundColor()
+                                .offset(y: !isSlectedAddress ? 0 : -13)
+                                .opacity(!isSlectedAddress ? 0 : 1)
+                        }
+
+                        Text(addressText)
+                            .padding(.vertical, fieldPlaceholderPosition == .overInput ? .xxxSmall : .zero)
+                            .offset(y: fieldOffset)
+                            .lineLimit(1)
+                    }
+                    Spacer()
+                    Icon(.chevronDown, color: .onSurfaceHighEmphasis)
+                }
             }
             .contentShape(Rectangle())
         }
-        .frame(minWidth: 0, maxWidth: .infinity)
-        .padding()
-        .background(
-            RoundedRectangle(cornerRadius: Radius.medium,
-                             style: .continuous)
-                .fill(Color.surfaceSecondary)
-                .overlay(
-                    RoundedRectangle(cornerRadius: Radius.medium,
-                                     style: .continuous)
-                        .stroke(theme.borderTextFields
-                            ? Color.border
-                            : Color.surfaceSecondary, lineWidth: CGFloat(theme.borderSize))
-                )
-        )
-        .headline()
         .foregroundColor(.onSurfaceHighEmphasis)
-        .buttonStyle(.scale)
+        .buttonStyle(.field)
         .sheet(isPresented: $isShowPicker) {
             AddressPicker(address: $seletedAddress, location: $seletedLocation, place: $seletedPlace)
+        }
+    }
+
+    private var fieldOffset: CGFloat {
+        switch fieldPlaceholderPosition {
+        case .default:
+            return 0
+        case .adjacent:
+            return 0
+        case .overInput:
+            return !isSlectedAddress ? 0 : 10
         }
     }
 }

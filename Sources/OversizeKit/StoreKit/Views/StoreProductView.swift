@@ -3,12 +3,12 @@
 // StoreProductView.swift
 //
 
+import Factory
 import OversizeServices
 import OversizeStoreService
 import OversizeUI
 import StoreKit
 import SwiftUI
-import Factory
 
 public struct StoreProductView: View {
     public enum StoreProductViewType {

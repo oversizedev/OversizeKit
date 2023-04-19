@@ -3,11 +3,11 @@
 // LocalNotificationSetScreenViewModel.swift
 //
 
+import Factory
 import OversizeCore
 import OversizeNotificationService
 import OversizeServices
 import SwiftUI
-import Factory
 
 @MainActor
 class LocalNotificationSetScreenViewModel: ObservableObject {

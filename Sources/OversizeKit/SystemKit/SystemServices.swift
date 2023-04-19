@@ -3,13 +3,13 @@
 // SystemServices.swift
 //
 
+import Factory
 import OversizeCore
 import OversizeLocalizable
 import OversizeServices
 import OversizeStoreService
 import OversizeUI
 import SwiftUI
-import Factory
 
 public struct SystemServicesModifier: ViewModifier {
     @Injected(\.appStateService) var appState: AppStateService

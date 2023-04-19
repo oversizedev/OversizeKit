@@ -3,13 +3,13 @@
 // NoticeListView.swift
 //
 
+import Factory
 import OversizeKit
 import OversizeServices
 import OversizeStoreService
 import OversizeUI
 import StoreKit
 import SwiftUI
-import Factory
 
 public struct NoticeListView: View {
     @Injected(\.appStoreReviewService) var reviewService

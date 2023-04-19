@@ -4,12 +4,12 @@
 //
 
 import EventKit
+import Factory
 import OversizeCalendarService
 import OversizeCore
 import OversizeLocationService
 import OversizeServices
 import SwiftUI
-import Factory
 
 public enum CreateEventType: Equatable {
     case new(Date?, calendar: EKCalendar?)
