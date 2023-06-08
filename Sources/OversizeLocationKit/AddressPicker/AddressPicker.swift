@@ -111,7 +111,7 @@ public struct AddressPicker: View {
                 onSaveCurrntPosition()
             }
         } leading: {
-            Icon(.navigation)
+            IconDeprecated(.navigation)
                 .iconOnSurface()
         }
         .padding(.bottom, viewModel.searchTerm.isEmpty ? .small : .zero)
@@ -128,7 +128,7 @@ public struct AddressPicker: View {
                     onCompleteSearth(seletedAddress: address.address, seletedLocation: nil, seletedPlace: address.place, saveToHistory: false)
                 }
             } leading: {
-                Icon(.mapPin)
+                IconDeprecated(.mapPin)
                     .iconOnSurface()
             }
             .rowClearButton {
@@ -145,7 +145,7 @@ public struct AddressPicker: View {
             Row(location.title, subtitle: location.subtitle) {
                 reverseGeo(location: location)
             } leading: {
-                Icon(.mapPin)
+                IconDeprecated(.mapPin)
                     .iconOnSurface()
             }
         }

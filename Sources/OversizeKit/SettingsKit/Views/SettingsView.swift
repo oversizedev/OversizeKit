@@ -18,7 +18,7 @@ import SwiftUI
         @Environment(\.iconStyle) var iconStyle: IconStyle
         @Environment(\.theme) var theme: ThemeSettings
         @StateObject var settingsService = SettingsService()
-        @EnvironmentObject var hudState: HUD
+        @EnvironmentObject var hudState: HUDDeprecated
 
         let appSection: AppSection
         let headSection: HeadSection
@@ -292,15 +292,6 @@ import SwiftUI
                         FeedbackView()
                             .presentationDetents([.medium])
                     }
-
-//
-//                    // Telegramm chat
-//                    if let telegramChatUrl = AppInfo.url.appTelegramChat, let id = AppInfo.app.telegramChatID, !id.isEmpty {
-//                        Link(destination: telegramChatUrl) {
-//                            Row(L10n.Settings.telegramChat, leadingType: .image(chatIcon), trallingType: rowType)
-//                        }
-//                        .buttonStyle(.row)
-//                    }
                 }
             }
         }

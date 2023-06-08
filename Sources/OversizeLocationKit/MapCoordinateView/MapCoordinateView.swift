@@ -77,7 +77,7 @@ public struct MapCoordinateView: View {
                 Button {
                     viewModel.zoomIn()
                 } label: {
-                    Icon(.plus)
+                    IconDeprecated(.plus)
                         .onSurfaceMediumEmphasisForegroundColor()
                         .padding(.xxSmall)
                 }
@@ -85,7 +85,7 @@ public struct MapCoordinateView: View {
                 Button {
                     viewModel.zoomOut()
                 } label: {
-                    Icon(.minus)
+                    IconDeprecated(.minus)
                         .onSurfaceMediumEmphasisForegroundColor()
                         .padding(.xxSmall)
                 }
@@ -102,7 +102,7 @@ public struct MapCoordinateView: View {
                 viewModel.positionInLocation()
 
             } label: {
-                Icon(.navigation)
+                IconDeprecated(.navigation)
                     .onSurfaceMediumEmphasisForegroundColor()
                     .padding(.xxSmall)
             }

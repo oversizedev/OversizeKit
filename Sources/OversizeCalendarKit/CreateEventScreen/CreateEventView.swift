@@ -187,7 +187,7 @@ public struct CreateEventView: View {
                     Row(viewModel.repitRule.title, subtitle: repeatSubtitleText) {
                         viewModel.present(.repeat)
                     } leading: {
-                        Icon(.refresh)
+                        IconDeprecated(.refresh)
                             .iconColor(.onSurfaceHighEmphasis)
                     }
                     .rowClearButton(style: .onSurface) {
@@ -213,7 +213,7 @@ public struct CreateEventView: View {
                             Row(email) {
                                 viewModel.present(.invites)
                             } leading: {
-                                Icon(.user)
+                                IconDeprecated(.user)
                                     .iconColor(.onSurfaceHighEmphasis)
                             }
                             .rowClearButton(style: .onSurface) {
@@ -247,7 +247,7 @@ public struct CreateEventView: View {
                             Row(alarm.title) {
                                 viewModel.present(.alarm)
                             } leading: {
-                                Icon(.bell)
+                                IconDeprecated(.bell)
                                     .iconColor(.onSurfaceHighEmphasis)
                             }
                             .rowClearButton(style: .onSurface) {
@@ -281,7 +281,7 @@ public struct CreateEventView: View {
                             Row(locationName) {
                                 viewModel.present(.location)
                             } leading: {
-                                Icon(.mapPin)
+                                IconDeprecated(.mapPin)
                                     .iconColor(.onSurfaceHighEmphasis)
                             }
                             .rowClearButton(style: .onSurface) {
@@ -426,7 +426,7 @@ public struct CreateEventView: View {
                 if viewModel.isFetchUpdatePositon {
                     ProgressView()
                 } else {
-                    Icon(.mapPin)
+                    IconDeprecated(.mapPin)
 //                    Icon.Solid.NavigationandTravel.location
 //                        .renderingMode(.template)
                 }
@@ -434,25 +434,25 @@ public struct CreateEventView: View {
             .disabled(viewModel.isFetchUpdatePositon)
 
             Button { viewModel.present(.alarm) } label: {
-                Icon(.bell)
+                IconDeprecated(.bell)
 //                Icon.Solid.UserInterface.bell
 //                    .renderingMode(.template)
             }
 
             Button { viewModel.present(.repeat) } label: {
-                Icon(.refresh)
+                IconDeprecated(.refresh)
             }
 
             /*
              Button { viewModel.present(.attachment) } label: {
-                 Icon(.moreHorizontal)
+                IconDeprecated(.moreHorizontal)
              }
               */
 
             Spacer()
 
             Button { viewModel.present(.invites) } label: {
-                Icon(.userPlus)
+                IconDeprecated(.userPlus)
             }
 
 //            Icon.Solid.UserInterface.plusCrFr

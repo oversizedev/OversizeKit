@@ -152,7 +152,7 @@ public struct StoreProductView: View {
                     .fill(Color.onPrimaryHighEmphasis)
                     .frame(width: 20, height: 20)
                     .overlay {
-                        Icon(.checkMini, color: topLabelbackgroundColor)
+                        IconDeprecated(.checkMini, color: topLabelbackgroundColor)
                     }
                     .padding(.trailing, .xxSmall)
             }
@@ -210,7 +210,7 @@ public struct StoreProductView: View {
                                 .fill(topLabelbackgroundColor)
                                 .frame(width: 20, height: 20)
                                 .overlay {
-                                    Icon(.checkMini, color: Color.onPrimaryHighEmphasis)
+                                    IconDeprecated(.checkMini, color: Color.onPrimaryHighEmphasis)
                                 }
                                 .padding(.top, .xxxSmall)
                                 .padding(.trailing, .xxxSmall)

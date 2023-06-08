@@ -130,9 +130,9 @@ import SwiftUI
                                         .padding(.vertical, .medium)
 
                                     if appearance == theme.appearance {
-                                        Icon(.checkCircle, color: Color.accent)
+                                        IconDeprecated(.checkCircle, color: Color.accent)
                                     } else {
-                                        Icon(.circle, color: .onSurfaceMediumEmphasis)
+                                        IconDeprecated(.circle, color: .onSurfaceMediumEmphasis)
                                     }
                                 }
                                 Spacer()

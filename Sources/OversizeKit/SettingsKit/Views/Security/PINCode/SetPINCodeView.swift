@@ -4,13 +4,12 @@
 //
 
 import OversizeLocalizable
-
 import OversizeUI
 import SwiftUI
 
 public struct SetPINCodeView: View {
     @ObservedObject var viewModel: SetPINCodeViewModel
-    @EnvironmentObject private var hud: HUD
+    @EnvironmentObject private var hud: HUDDeprecated
     @Environment(\.dismiss) var dismiss
 
     public init(action: PINCodeAction) {
@@ -25,7 +24,7 @@ public struct SetPINCodeView: View {
                 Button {
                     dismiss()
                 } label: {
-                    Icon(.xMini, color: .onSurfaceHighEmphasis)
+                    IconDeprecated(.xMini, color: .onSurfaceHighEmphasis)
                 }
                 .buttonStyle(.secondary)
 

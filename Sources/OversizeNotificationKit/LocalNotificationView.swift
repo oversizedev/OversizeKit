@@ -87,7 +87,7 @@ public struct LocalNotificationView: View {
                                 isPendingNotification = false
                                 dismiss()
                             } trailing: {
-                                Icon(.trash)
+                                IconDeprecated(.trash)
                                     .iconColor(Color.error)
                             }
                         }

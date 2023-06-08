@@ -4,11 +4,11 @@
 //
 
 import Contacts
+import Factory
 import OversizeContactsService
 import OversizeCore
 import OversizeServices
 import SwiftUI
-import Factory
 
 @MainActor
 public class ContactsListsViewModel: ObservableObject {

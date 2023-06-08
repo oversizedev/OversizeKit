@@ -3,9 +3,9 @@
 // RateAppScreen.swift
 //
 
+import Factory
 import OversizeResources
 import OversizeServices
-import Factory
 import OversizeUI
 import SwiftUI
 
@@ -36,7 +36,7 @@ struct RateAppScreen: View {
             if let reviewUrl = Info.url.appStoreReview {
                 HStack(spacing: .large) {
                     Link(destination: reviewUrl) {
-                        Icon(.thumbsUp, color: .onPrimaryHighEmphasis)
+                        IconDeprecated(.thumbsUp, color: .onPrimaryHighEmphasis)
                     }
                     .buttonStyle(.primary(infinityWidth: false))
                     .accent()
@@ -49,7 +49,7 @@ struct RateAppScreen: View {
                         reviewService.estimate(goodRating: false)
                         dismiss()
                     } label: {
-                        Icon(.thumbsDown, color: .onSurfaceHighEmphasis)
+                        IconDeprecated(.thumbsDown, color: .onSurfaceHighEmphasis)
                     }
                     .buttonStyle(.secondary(infinityWidth: false))
                 }
@@ -65,7 +65,7 @@ struct RateAppScreen: View {
                 reviewService.rewiewBunnerClosed()
                 dismiss()
             } label: {
-                Icon(.xMini, color: .onSurfaceHighEmphasis)
+                IconDeprecated(.xMini, color: .onSurfaceHighEmphasis)
             }
             .buttonStyle(.tertiary(infinityWidth: false))
             .controlSize(.mini)

@@ -3,8 +3,6 @@
 // PhotoViewerView.swift
 //
 
-import SwiftUI
-
 import OversizePhotoComponents
 import OversizeUI
 import SwiftUI

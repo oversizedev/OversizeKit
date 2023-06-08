@@ -60,7 +60,7 @@ import SwiftUI
                     if FeatureFlags.app.sounds.valueOrFalse {
                         Switch(isOn: $settingsService.soundsEnabled) {
                             Row(L10n.Settings.sounds) {
-                                Icon(.music)
+                                IconDeprecated(.music)
                             }
                         }
                     }
@@ -68,7 +68,7 @@ import SwiftUI
                     if FeatureFlags.app.vibration.valueOrFalse {
                         Switch(isOn: $settingsService.vibrationEnabled) {
                             Row(L10n.Settings.vibration) {
-                                Icon(.radio)
+                                IconDeprecated(.radio)
                             }
                         }
                     }

@@ -3,11 +3,11 @@
 // SecuritySettingsView.swift
 //
 
+import Factory
 import OversizeLocalizable
 import OversizeServices
 import OversizeUI
 import SwiftUI
-import Factory
 
 // swiftlint:disable line_length
 #if os(iOS)
@@ -61,7 +61,7 @@ import Factory
                             })
                         ) {
                             Row(biometricService.biometricType.rawValue) {
-                                Icon(.file)
+                                IconDeprecated(.file)
                                 // leadingType: .systemImage(biometricImageName)
                             }
                         }
@@ -80,7 +80,7 @@ import Factory
                             })
                         ) {
                             Row(biometricService.biometricType.rawValue) {
-                                Icon(.lock)
+                                IconDeprecated(.lock)
                             }
                         }.sheet(item: $isSetPINCodeSheet) { sheet in
                             SetPINCodeView(action: sheet)

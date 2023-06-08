@@ -7,7 +7,6 @@ import OversizeComponents
 import OversizeLocalizable
 import OversizeResources
 import OversizeServices
-
 import OversizeUI
 import SwiftUI
 
@@ -238,7 +237,7 @@ import SwiftUI
                                                     .foregroundColor(.surfaceSecondary)
                                                     .frame(width: 74, height: 74)
 
-                                                Icon(.externalLink)
+                                                IconDeprecated(.externalLink)
                                             }
                                         }
 

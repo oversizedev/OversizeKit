@@ -44,7 +44,7 @@ struct StoreFeatureDetailView: View {
                     Button {
                         dismiss()
                     } label: {
-                        Icon(.xMini, color: selection.screenURL != nil ? .onPrimaryHighEmphasis : .onSurfaceDisabled)
+                        IconDeprecated(.xMini, color: selection.screenURL != nil ? .onPrimaryHighEmphasis : .onSurfaceDisabled)
                             .padding(.xxSmall)
                             .background {
                                 Circle()

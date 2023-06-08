@@ -79,7 +79,7 @@ public struct AddressField: View {
                             .lineLimit(1)
                     }
                     Spacer()
-                    Icon(.chevronDown, color: .onSurfaceHighEmphasis)
+                    IconDeprecated(.chevronDown, color: .onSurfaceHighEmphasis)
                 }
             }
             .contentShape(Rectangle())

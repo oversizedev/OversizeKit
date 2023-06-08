@@ -3,13 +3,13 @@
 // StoreViewModel.swift
 //
 
+import Factory
 import OversizeCore
 import OversizeLocalizable
 import OversizeServices
 import OversizeStoreService
 import StoreKit
 import SwiftUI
-import Factory
 
 @MainActor
 class StoreViewModel: ObservableObject {

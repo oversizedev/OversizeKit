@@ -15,12 +15,12 @@ public struct AttachmentView: View {
             SectionView {
                 VStack(spacing: .zero) {
                     Row("Add investment") {
-                        Icon(.paperclip)
+                        IconDeprecated(.paperclip)
                             .iconColor(.onSurfaceHighEmphasis)
                     }
 
                     Row("Add link") {
-                        Icon(.link)
+                        IconDeprecated(.link)
                             .iconColor(.onSurfaceHighEmphasis)
                     }
                 }

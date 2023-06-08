@@ -5,11 +5,11 @@
 
 import Combine
 import CoreLocation
+import Factory
 import MapKit
 import OversizeLocationService
 import OversizeServices
 import SwiftUI
-import Factory
 
 @MainActor
 class AddressPickerViewModel: NSObject, ObservableObject {

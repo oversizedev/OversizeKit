@@ -5,7 +5,6 @@
 
 import OversizeLocalizable
 import OversizeServices
-
 import OversizeUI
 import SwiftUI
 
@@ -48,7 +47,7 @@ import SwiftUI
                     if FeatureFlags.app.сloudKit.valueOrFalse {
                         Switch(isOn: $settingsService.cloudKitEnabled) {
                             Row(L10n.Settings.iCloudSync) {
-                                Icon(.cloud)
+                                IconDeprecated(.cloud)
                             }
                             .premium()
                             .onPremiumTap()
@@ -67,7 +66,7 @@ import SwiftUI
                     if FeatureFlags.app.healthKit.valueOrFalse {
                         Switch(isOn: $settingsService.healthKitEnabled) {
                             Row("HealthKit synchronization", subtitle: "After switching on, data from the Health app will be downloaded") {
-                                Icon(.heart)
+                                IconDeprecated(.heart)
                             }
                         }
                     }

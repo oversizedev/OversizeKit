@@ -20,7 +20,7 @@ public struct SystemServicesModifier: ViewModifier {
     @Environment(\.theme) var theme: ThemeSettings
     @AppStorage("AppState.PremiumState") var isPremium: Bool = false
 
-    @StateObject var hudState = HUD()
+    @StateObject var hudState = HUDDeprecated()
     @State var blurRadius: CGFloat = 0
     @State var oppacity: CGFloat = 1
 
@@ -70,7 +70,7 @@ public struct SystemServicesModifier: ViewModifier {
                 .premiumStatus(isPremium)
                 .theme(ThemeSettings())
                 .screenSize(geometry)
-                .hud(isPresented: $hudState.isPresented, type: $hudState.type) {
+                .hudDeprecated(isPresented: $hudState.isPresented, type: $hudState.type) {
                     HUDContent(title: hudState.title, image: hudState.image, type: hudState.type)
                 }
                 .environmentObject(hudState)
