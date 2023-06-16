@@ -20,6 +20,7 @@ import SwiftUI
         public var body: some View {
             PageView(L10n.Title.synchronization) {
                 iOSSettings
+                    .surfaceContentRowInsets()
             }
             .leadingBar {
                 if !isPortrait, verticalSizeClass == .regular {

@@ -64,13 +64,17 @@ import SwiftUI
             #if os(iOS)
                 PageView(L10n.Settings.about, onOffsetChanged: { offset = $0 }) {
                     list
+                        .surfaceContentRowInsets()
                 }
                 .leadingBar {
+                    /*
                     if !isPortrait, verticalSizeClass == .regular {
                         EmptyView()
                     } else {
                         BarButton(.back)
                     }
+                     */
+                    BarButton(.back)
                 }
                 .backgroundSecondary()
 

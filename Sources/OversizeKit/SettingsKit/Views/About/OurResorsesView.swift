@@ -22,6 +22,7 @@ public struct OurResorsesView: View {
     public var body: some View {
         PageView("Our open resources") {
             links
+                .surfaceContentRowInsets()
         }
         .leadingBar {
             BarButton(.back)

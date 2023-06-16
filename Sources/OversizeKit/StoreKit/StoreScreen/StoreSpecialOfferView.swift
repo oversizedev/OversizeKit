@@ -70,7 +70,7 @@ public struct StoreSpecialOfferView: View {
                     dismiss()
                 })
             }
-            .bottomToolbar(style: .none, ignoreSafeArea: false) {
+            .bottomToolbar(style: .none) {
                 VStack(spacing: .zero) {
                     StorePaymentButtonBar()
                         .environmentObject(viewModel)

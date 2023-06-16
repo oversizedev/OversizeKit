@@ -23,7 +23,6 @@ import SwiftUI
         let appSection: AppSection
         let headSection: HeadSection
 
-        @State private var offset = CGPoint(x: 0, y: 0)
         @State private var isPortrait = false
         @State private var isShowSupport = false
         @State private var isShowFeedback = false
@@ -278,6 +277,9 @@ import SwiftUI
                     .sheet(isPresented: $isShowSupport) {
                         SupportView()
                             .presentationDetents([.medium])
+                            .presentationContentInteraction(.resizes)
+                            .presentationCompactAdaptation(.sheet)
+                            .scrollDisabled(true)
                     }
 
                     Row("Send feedback") {
@@ -291,6 +293,9 @@ import SwiftUI
                     .sheet(isPresented: $isShowFeedback) {
                         FeedbackView()
                             .presentationDetents([.medium])
+                            .presentationContentInteraction(.resizes)
+                            .presentationCompactAdaptation(.sheet)
+                            .scrollDisabled(true)
                     }
                 }
             }

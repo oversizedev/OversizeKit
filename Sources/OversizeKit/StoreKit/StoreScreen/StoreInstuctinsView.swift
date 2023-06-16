@@ -55,7 +55,7 @@ public struct StoreInstuctinsView: View {
                 .trailingBar {
                     BarButton(.close)
                 }
-                .bottomToolbar(style: .none, ignoreSafeArea: false) {
+                .bottomToolbar(style: .none) {
                     VStack(spacing: .zero) {
                         StorePaymentButtonBar {
                             isShowAllPlans = true

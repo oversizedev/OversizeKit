@@ -20,13 +20,12 @@ import SwiftUI
         public var body: some View {
             PageView(L10n.Settings.notifications) {
                 soundsAndVibrations
+                    .surfaceContentRowInsets()
             }
             .leadingBar {
-                if !isPortrait, verticalSizeClass == .regular {
-                    EmptyView()
-                } else {
+
                     BarButton(.back)
-                }
+                
             }
             .backgroundSecondary()
         }

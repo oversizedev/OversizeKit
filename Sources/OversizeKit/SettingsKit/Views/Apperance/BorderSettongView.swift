@@ -14,6 +14,7 @@ public struct BorderSettingView: View {
     public var body: some View {
         PageView("Borders in app") {
             settings
+                .surfaceContentRowInsets()
         }
         .leadingBar {
             // if !isPortrait, verticalSizeClass == .regular {

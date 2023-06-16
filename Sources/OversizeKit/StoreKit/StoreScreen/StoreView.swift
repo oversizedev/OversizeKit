@@ -64,8 +64,7 @@ import SwiftUI
                     BarButton(.close)
                 }
             }
-
-            .bottomToolbar(style: .none, ignoreSafeArea: false) {
+            .bottomToolbar(style: .none) {
                 if !viewModel.isPremium {
                     StorePaymentButtonBar()
                         .environmentObject(viewModel)
