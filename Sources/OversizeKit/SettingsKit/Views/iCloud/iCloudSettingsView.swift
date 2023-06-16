@@ -23,11 +23,7 @@ import SwiftUI
                     .surfaceContentRowInsets()
             }
             .leadingBar {
-                if !isPortrait, verticalSizeClass == .regular {
-                    EmptyView()
-                } else {
-                    BarButton(.back)
-                }
+                BarButton(.back)
             }
             .backgroundSecondary()
         }

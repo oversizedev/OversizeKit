@@ -70,12 +70,12 @@ import SwiftUI
                 }
                 .leadingBar {
                     /*
-                    if !isPortrait, verticalSizeClass == .regular {
-                        EmptyView()
-                    } else {
-                        BarButton(.back)
-                    }
-                     */
+                     if !isPortrait, verticalSizeClass == .regular {
+                         EmptyView()
+                     } else {
+                         BarButton(.back)
+                     }
+                      */
                     BarButton(.back)
                 }
                 .backgroundSecondary()

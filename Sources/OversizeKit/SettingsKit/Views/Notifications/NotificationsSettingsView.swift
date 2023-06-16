@@ -23,9 +23,7 @@ import SwiftUI
                     .surfaceContentRowInsets()
             }
             .leadingBar {
-
-                    BarButton(.back)
-                
+                BarButton(.back)
             }
             .backgroundSecondary()
         }
