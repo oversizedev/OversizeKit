@@ -14,12 +14,16 @@ public struct OnPremiumTap: ViewModifier {
             content
         } else {
             content
+                .disabled(true)
+                .highPriorityGesture(
+                    TapGesture()
+                        .onEnded { _ in
+                            isShowPremium.toggle()
+                        }
+                )
                 .sheet(isPresented: $isShowPremium) {
                     StoreView()
                         .systemServices()
-                }
-                .onTapGesture {
-                    isShowPremium.toggle()
                 }
         }
     }

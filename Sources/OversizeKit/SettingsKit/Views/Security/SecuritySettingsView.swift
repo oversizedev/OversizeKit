@@ -138,8 +138,9 @@ import SwiftUI
                         Switch(isOn: $settingsService.blurMinimizeEnabend) {
                             Row(L10n.Security.blurMinimize)
                                 .premium()
-                                .onPremiumTap()
+                               
                         }
+                        .onPremiumTap()
                     }
 
 //                    if FeatureFlags.secure.lookscreen.valueOrFalse {
