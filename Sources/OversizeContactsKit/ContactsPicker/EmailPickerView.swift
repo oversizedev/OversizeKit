@@ -41,13 +41,10 @@ public struct EmailPickerView: View {
             BarButton(.close)
         }
         .trailingBar {
-            if selectedEmails.isEmpty, !viewModel.searchText.isEmail {
-                BarButton(.disabled("Done"))
-            } else {
-                BarButton(.accent("Done", action: {
-                    onDoneAction()
-                }))
-            }
+            BarButton(.accent("Done", action: {
+                onDoneAction()
+            }))
+            .disabled(selectedEmails.isEmpty && !viewModel.searchText.isEmail)
         }
         .topToolbar {
             TextField("Email or name", text: $viewModel.searchText)
@@ -77,10 +74,15 @@ public struct EmailPickerView: View {
     @ViewBuilder
     private func newEmailView() -> some View {
         if !viewModel.searchText.isEmpty {
-            Row(viewModel.searchText, subtitle: "New member")
-                .rowLeading(.avatar(Avatar(firstName: viewModel.searchText)))
-                .rowTrailing(.checkbox(isOn: .constant(viewModel.searchText.isEmail)))
-                .padding(.bottom, .small)
+            Checkbox(
+                isOn: .constant(viewModel.searchText.isEmail),
+                label: {
+                    Row(viewModel.searchText, subtitle: "New member") {
+                        Avatar(firstName: viewModel.searchText)
+                    }
+                }
+            )
+            .padding(.bottom, .small)
         }
     }
 
@@ -92,7 +94,7 @@ public struct EmailPickerView: View {
                 Spacer()
             }
             .title3()
-            .foregroundOnSurfaceMediumEmphasis()
+            .onSurfaceMediumEmphasisForegroundColor()
             .padding(.vertical, .xxSmall)
             .paddingContent(.horizontal)
 
@@ -106,11 +108,17 @@ public struct EmailPickerView: View {
                     }
                 } else {
                     let isSelected = selectedEmails.contains(email)
-                    Row(email) {
-                        onContactClick(email: email)
-                    }
-                    .rowLeading(.avatar(Avatar(firstName: email)))
-                    .rowTrailing(.checkbox(isOn: .constant(isSelected)))
+                    Checkbox(
+                        isOn: Binding(
+                            get: { isSelected },
+                            set: { _ in onContactClick(email: email) }
+                        ),
+                        label: {
+                            Row(email) {
+                                Avatar(firstName: email)
+                            }
+                        }
+                    )
                 }
             }
         }
@@ -145,17 +153,25 @@ public struct EmailPickerView: View {
         let email = email.value as String
         let isSelected = selectedEmails.contains(email)
         if let avatarThumbnailData = contact.thumbnailImageData, let avatarThumbnail = UIImage(data: avatarThumbnailData) {
-            Row(contact.givenName + " " + contact.familyName, subtitle: email) {
-                onContactClick(email: email)
-            }
-            .rowLeading(.avatar(Avatar(firstName: contact.givenName, lastName: contact.familyName, avatar: Image(uiImage: avatarThumbnail))))
-            .rowTrailing(.checkbox(isOn: .constant(isSelected)))
+            Checkbox(isOn: Binding(
+                get: { isSelected },
+                set: { _ in onContactClick(email: email) }
+            ), label: {
+                Row(contact.givenName + " " + contact.familyName, subtitle: email) {
+                    Avatar(firstName: contact.givenName, lastName: contact.familyName, avatar: Image(uiImage: avatarThumbnail))
+                }
+
+            })
         } else {
-            Row(contact.givenName + " " + contact.familyName, subtitle: email) {
-                onContactClick(email: email)
-            }
-            .rowLeading(.avatar(Avatar(firstName: contact.givenName, lastName: contact.familyName)))
-            .rowTrailing(.checkbox(isOn: .constant(isSelected)))
+            Checkbox(isOn: Binding(
+                get: { isSelected },
+                set: { _ in onContactClick(email: email) }
+            ), label: {
+                Row(contact.givenName + " " + contact.familyName, subtitle: email) {
+                    Avatar(firstName: contact.givenName, lastName: contact.familyName)
+                }
+
+            })
         }
     }
 

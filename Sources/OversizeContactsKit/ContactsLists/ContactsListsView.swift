@@ -56,8 +56,9 @@ public struct ContactsListsView: View {
                     }
                 }
             } else {
-                Row(email)
-                    .rowLeading(.avatar(Avatar(firstName: email)))
+                Row(email) {
+                    Avatar(firstName: email)
+                }
             }
         }
     }
@@ -66,19 +67,22 @@ public struct ContactsListsView: View {
     private func emailRow(email: CNLabeledValue<NSString>, contact: CNContact) -> some View {
         let email = email.value as String
         if let avatarThumbnailData = contact.thumbnailImageData, let avatarThumbnail = UIImage(data: avatarThumbnailData) {
-            Row(contact.givenName + " " + contact.familyName, subtitle: email)
-                .rowLeading(.avatar(Avatar(firstName: contact.givenName, lastName: contact.familyName, avatar: Image(uiImage: avatarThumbnail))))
+            Row(contact.givenName + " " + contact.familyName, subtitle: email) {
+                Avatar(firstName: contact.givenName, lastName: contact.familyName, avatar: Image(uiImage: avatarThumbnail))
+            }
         } else {
-            Row(contact.givenName + " " + contact.familyName, subtitle: email)
-                .rowLeading(.avatar(Avatar(firstName: contact.givenName, lastName: contact.familyName)))
+            Row(contact.givenName + " " + contact.familyName, subtitle: email) {
+                Avatar(firstName: contact.givenName, lastName: contact.familyName)
+            }
         }
     }
 
     @ViewBuilder
     private func placeholder() -> some View {
         ForEach(emails, id: \.self) { email in
-            Row(email)
-                .rowLeading(.avatar(Avatar(firstName: email)))
+            Row(email) {
+                Avatar(firstName: email)
+            }
         }
     }
 }

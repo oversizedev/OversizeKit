@@ -138,7 +138,6 @@ import SwiftUI
                         Switch(isOn: $settingsService.blurMinimizeEnabend) {
                             Row(L10n.Security.blurMinimize)
                                 .premium()
-                               
                         }
                         .onPremiumTap()
                     }

@@ -52,17 +52,15 @@ public struct AttendeesView: View {
         if let attendees = viewModel.event.attendees {
             VStack(spacing: .zero) {
                 if let organizer = viewModel.event.organizer {
-                    Row(organizer.name ?? organizer.url.absoluteString, subtitle: "Organizer")
-                        .rowLeading(.view(AnyView(
-                            userAvatarView(participant: organizer)
-                        )))
+                    Row(organizer.name ?? organizer.url.absoluteString, subtitle: "Organizer") {
+                        userAvatarView(participant: organizer)
+                    }
                 }
 
                 ForEach(attendees, id: \.self) { attender in
-                    Row(attender.name ?? attender.url.absoluteString, subtitle: attender.participantRole.title)
-                        .rowLeading(.view(AnyView(
-                            userAvatarView(participant: attender)
-                        )))
+                    Row(attender.name ?? attender.url.absoluteString, subtitle: attender.participantRole.title) {
+                        userAvatarView(participant: attender)
+                    }
                 }
             }
         }
@@ -83,7 +81,7 @@ public struct AttendeesView: View {
                             .fillBackgroundPrimary()
                     }
                 Image(systemName: participant.symbolName)
-                    .foregroundOnPrimaryHighEmphasis()
+                    .onPrimaryHighEmphasisForegroundColor()
                     .font(.system(size: 9, weight: .black))
             }
         }

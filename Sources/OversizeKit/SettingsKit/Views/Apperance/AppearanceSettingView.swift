@@ -233,21 +233,15 @@ import SwiftUI
                         .premium()
                         .onPremiumTap()
 
-                        //Switch(isOn: theme.$borderApp) {
+                        Switch(isOn: theme.$borderApp) {
                             Row("Borders") {
                                 pageDestenation = .border
                             } leading: {
                                 borderIcon
-                            } trailing: {
-                                Toggle("", isOn: theme.$borderApp)
-                                    .labelsHidden()
-                                    .disabled(!isPremium)
                             }
                             .premium()
-                            .onPremiumTap()
-                            
-                       // }
-                       
+                        }
+                        .onPremiumTap()
 //                        Row("Borders", leadingType: .image(borderIcon), trallingType: .toggleWithArrowButton(isOn: theme.$borderApp, action: {
 //                            pageDestenation = .border
 //                        })) {

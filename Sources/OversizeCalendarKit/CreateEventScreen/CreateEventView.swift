@@ -33,28 +33,25 @@ public struct CreateEventView: View {
             })
         }
         .trailingBar {
-            if viewModel.title.isEmpty {
-                BarButton(.disabled(L10n.Button.save))
-            } else {
-                BarButton(.accent(L10n.Button.save, action: {
-                    switch viewModel.type {
-                    case .new:
+            BarButton(.accent(L10n.Button.save, action: {
+                switch viewModel.type {
+                case .new:
+                    Task {
+                        _ = await viewModel.save()
+                        dismiss()
+                    }
+                case .update:
+                    if viewModel.span == nil, viewModel.repitRule != .never {
+                        viewModel.present(.span)
+                    } else {
                         Task {
                             _ = await viewModel.save()
                             dismiss()
                         }
-                    case .update:
-                        if viewModel.span == nil, viewModel.repitRule != .never {
-                            viewModel.present(.span)
-                        } else {
-                            Task {
-                                _ = await viewModel.save()
-                                dismiss()
-                            }
-                        }
                     }
-                }))
-            }
+                }
+            }))
+            .disabled(viewModel.title.isEmpty)
         }
         .titleLabel {
             Button { viewModel.present(.calendar) } label: {

@@ -82,15 +82,12 @@ public struct RepeatPicker: View {
                 BarButton(.close)
             }
             .trailingBar {
-                if rule == .never {
-                    BarButton(.disabled("Done"))
-                } else {
-                    BarButton(.accent("Done", action: {
-                        selectionRule = rule
-                        selectionEndRule = endRule
-                        dismiss()
-                    }))
-                }
+                BarButton(.accent("Done", action: {
+                    selectionRule = rule
+                    selectionEndRule = endRule
+                    dismiss()
+                }))
+                .disabled(rule == .never)
             }
             .surfaceContentRowInsets()
         }
