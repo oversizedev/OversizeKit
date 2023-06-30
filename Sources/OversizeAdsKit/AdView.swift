@@ -9,11 +9,15 @@ import OversizeUI
 import SwiftUI
 
 public struct AdView: View {
-    @Environment(\.isPremium) var isPremium: Bool
 
-    let app = Info.all?.apps.filter { $0.id != Info.app.appStoreID }.randomElement()
+    @Environment(\.isPremium) var isPremium: Bool
+    
+    @StateObject var viewModel: AdViewModel
+
     @State var isShowProduct = false
-    public init() {}
+    public init() {
+        _viewModel = StateObject(wrappedValue: AdViewModel())
+    }
 
     public var body: some View {
         if isPremium { EmptyView() } else {
@@ -22,7 +26,7 @@ public struct AdView: View {
                     isShowProduct.toggle()
                 } label: {
                     HStack(spacing: .zero) {
-                        AsyncImage(url: URL(string: "\(Info.links?.company.cdnString ?? "")/assets/apps/\(app?.path ?? "")/icon.png"), content: {
+                        AsyncImage(url: URL(string: "\(Info.links?.company.cdnString ?? "")/assets/apps/\(viewModel.appAd?.path ?? "")/icon.png"), content: {
                             $0
                                 .resizable()
                                 .frame(width: 64, height: 64)
@@ -46,7 +50,7 @@ public struct AdView: View {
 
                         VStack(alignment: .leading, spacing: .xxxSmall) {
                             HStack {
-                                Text(app?.name ?? "")
+                                Text(viewModel.appAd?.name ?? "")
                                     .subheadline(.bold)
                                     .onSurfaceHighEmphasisForegroundColor()
 
@@ -56,7 +60,7 @@ public struct AdView: View {
                                 }
                             }
 
-                            Text(app?.title ?? "")
+                            Text(viewModel.appAd?.title ?? "")
                                 .subheadline()
                                 .onSurfaceMediumEmphasisForegroundColor()
                         }
@@ -75,10 +79,16 @@ public struct AdView: View {
                     }
                 }
                 .surfaceContentInsets(.xSmall)
-                .appStoreOverlay(isPresent: $isShowProduct, appId: app?.id ?? "")
+                //.appStoreOverlay(isPresent: $isShowProduct, appId: String(viewModel.appAd?.id ?? 0))
             #else
                 EmptyView()
             #endif
         }
+    }
+}
+
+struct AdView_Previews: PreviewProvider {
+    static var previews: some View {
+        AdView()
     }
 }
