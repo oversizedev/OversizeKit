@@ -276,7 +276,7 @@ extension StoreViewModel {
         }
     }
 
-    func buy(product: Product, trialNotification: Bool = false) async -> Bool {
+    func buy(product: Product) async -> Bool {
         isBuyLoading = true
         do {
             let result = try await storeKitService.purchase(product)
@@ -285,21 +285,6 @@ extension StoreViewModel {
                 isPremium = true
                 isPremiumActivated = true
                 isBuyLoading = false
-                if trialNotification, product.type == .autoRenewable, product.subscription?.introductoryOffer != nil {
-                    let result = await localNotificationService.requestAccess()
-                    if case let .success(status) = result, status, let trialDaysCount = product.trialDaysCount {
-                        let timeInterval = TimeInterval((trialDaysCount - 2) * 24 * 60 * 60)
-                        let notificationTime = Date().addingTimeInterval(timeInterval)
-                        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: notificationTime)
-                        await localNotificationService.schedule(localNotification: .init(
-                            id: UUID(),
-                            title: "Trial ends soon",
-                            body: "Subscription ends in 2 days",
-                            dateComponents: dateComponents,
-                            repeats: false
-                        ))
-                    }
-                }
                 return true
             case .failure:
                 isBuyLoading = false
@@ -313,6 +298,24 @@ extension StoreViewModel {
             isBuyLoading = false
             log("Failed purchase for \(product.id): \(error)")
             return false
+        }
+    }
+
+    func addTrialNotification(product: Product) async {
+        if product.type == .autoRenewable, product.subscription?.introductoryOffer != nil {
+            let result = await localNotificationService.requestAccess()
+            if case let .success(status) = result, status, let trialDaysCount = product.trialDaysCount {
+                let timeInterval = TimeInterval((trialDaysCount - 2) * 24 * 60 * 60)
+                let notificationTime = Date().addingTimeInterval(timeInterval)
+                let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: notificationTime)
+                await localNotificationService.schedule(localNotification: .init(
+                    id: UUID(),
+                    title: "Trial ends soon",
+                    body: "Subscription ends in 2 days",
+                    dateComponents: dateComponents,
+                    repeats: false
+                ))
+            }
         }
     }
 }

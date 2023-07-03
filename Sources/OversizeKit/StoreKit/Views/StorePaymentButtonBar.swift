@@ -26,7 +26,10 @@ struct StorePaymentButtonBar: View {
             Button {
                 if let selectedProduct = viewModel.selectedProduct {
                     Task {
-                        await viewModel.buy(product: selectedProduct, trialNotification: trialNotification)
+                        let status = await viewModel.buy(product: selectedProduct)
+                        if trialNotification, status {
+                            await viewModel.addTrialNotification(product: selectedProduct)
+                        }
                     }
                 }
             } label: {
