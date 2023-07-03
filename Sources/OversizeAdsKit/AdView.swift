@@ -24,64 +24,68 @@ public struct AdView: View {
                 Surface {
                     isShowProduct.toggle()
                 } label: {
-                    HStack(spacing: .zero) {
-                        AsyncImage(url: URL(string: "\(Info.links?.company.cdnString ?? "")/assets/apps/\(viewModel.appAd?.path ?? "")/icon.png"), content: {
-                            $0
-                                .resizable()
-                                .frame(width: 64, height: 64)
-                                .mask(RoundedRectangle(cornerRadius: .large,
-                                                       style: .continuous))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 16,
-                                                     style: .continuous)
-                                        .stroke(lineWidth: 1)
-                                        .opacity(0.15)
-                                )
-                                .onTapGesture {
-                                    isShowProduct.toggle()
-                                }
-
-                        }, placeholder: {
-                            RoundedRectangle(cornerRadius: .large, style: .continuous)
-                                .fillSurfaceSecondary()
-                                .frame(width: 64, height: 64)
-                        })
-
-                        VStack(alignment: .leading, spacing: .xxxSmall) {
-                            HStack {
-                                Text(viewModel.appAd?.name ?? "")
-                                    .subheadline(.bold)
-                                    .onSurfaceHighEmphasisForegroundColor()
-
-                                Bage(color: .warning) {
-                                    Text("Our app")
-                                        .bold()
-                                }
-                            }
-
-                            Text(viewModel.appAd?.title ?? "")
-                                .subheadline()
-                                .onSurfaceMediumEmphasisForegroundColor()
-                        }
-                        .padding(.leading, .xSmall)
-
-                        Spacer()
-
-                        Button("Get") {
-                            isShowProduct.toggle()
-                        }
-                        .buttonStyle(.tertiary)
-                        .controlBorderShape(.capsule)
-                        .controlSize(.small)
-                        .padding(.trailing, .xxxSmall)
-                        .loading(isShowProduct)
-                    }
+                    premiumBanner
                 }
                 .surfaceContentInsets(.xSmall)
                 .appStoreOverlay(isPresent: $isShowProduct, appId: viewModel.appAd?.id ?? "")
             #else
                 EmptyView()
             #endif
+        }
+    }
+
+    var premiumBanner: some View {
+        HStack(spacing: .zero) {
+            AsyncImage(url: URL(string: "\(Info.links?.company.cdnString ?? "")/assets/apps/\(viewModel.appAd?.path ?? "")/icon.png"), content: {
+                $0
+                    .resizable()
+                    .frame(width: 64, height: 64)
+                    .mask(RoundedRectangle(cornerRadius: .large,
+                                           style: .continuous))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16,
+                                         style: .continuous)
+                            .stroke(lineWidth: 1)
+                            .opacity(0.15)
+                    )
+                    .onTapGesture {
+                        isShowProduct.toggle()
+                    }
+
+            }, placeholder: {
+                RoundedRectangle(cornerRadius: .large, style: .continuous)
+                    .fillSurfaceSecondary()
+                    .frame(width: 64, height: 64)
+            })
+
+            VStack(alignment: .leading, spacing: .xxxSmall) {
+                HStack {
+                    Text(viewModel.appAd?.name ?? "")
+                        .subheadline(.bold)
+                        .onSurfaceHighEmphasisForegroundColor()
+
+                    Bage(color: .warning) {
+                        Text("Our app")
+                            .bold()
+                    }
+                }
+
+                Text(viewModel.appAd?.title ?? "")
+                    .subheadline()
+                    .onSurfaceMediumEmphasisForegroundColor()
+            }
+            .padding(.leading, .xSmall)
+
+            Spacer()
+
+            Button("Get") {
+                isShowProduct.toggle()
+            }
+            .buttonStyle(.tertiary)
+            .controlBorderShape(.capsule)
+            .controlSize(.small)
+            .padding(.trailing, .xxxSmall)
+            .loading(isShowProduct)
         }
     }
 }

@@ -10,7 +10,7 @@ import SwiftUI
 
 @MainActor
 public class AdViewModel: ObservableObject {
-    @Published var appAd = Info.all?.apps.filter { $0.id != Info.app.appStoreID }.randomElement()
+    let appAd = Info.all?.apps.filter { $0.id != Info.app.appStoreID }.randomElement()
     /*
      @Injected(\.networkService) var networkService
 
