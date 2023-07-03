@@ -9,9 +9,8 @@ import OversizeUI
 import SwiftUI
 
 public struct AdView: View {
-
     @Environment(\.isPremium) var isPremium: Bool
-    
+
     @StateObject var viewModel: AdViewModel
 
     @State var isShowProduct = false
@@ -79,7 +78,7 @@ public struct AdView: View {
                     }
                 }
                 .surfaceContentInsets(.xSmall)
-                //.appStoreOverlay(isPresent: $isShowProduct, appId: String(viewModel.appAd?.id ?? 0))
+                .appStoreOverlay(isPresent: $isShowProduct, appId: viewModel.appAd?.id ?? "")
             #else
                 EmptyView()
             #endif

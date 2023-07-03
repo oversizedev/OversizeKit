@@ -53,7 +53,7 @@ public struct PrmiumBannerRow: View {
                 #endif
 
                 #if os(macOS)
-                    Image(nsImage: Illustrations.Images.zap.image)
+                    Resource.Store.zap
                         .padding(.horizontal, Space.xxSmall)
                         .padding(.vertical, Space.xxSmall)
                 #endif
@@ -107,7 +107,7 @@ public extension PrmiumBannerRow {
                         #endif
 
                         #if os(macOS)
-                            Image(nsImage: OversizeCraft.Illustrations.Images.zap.image)
+                            Resource.Store.zap
                         #endif
 
                         Text(Info.store.subscriptionsName)

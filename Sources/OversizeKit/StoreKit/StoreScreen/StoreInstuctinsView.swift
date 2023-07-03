@@ -57,7 +57,7 @@ public struct StoreInstuctinsView: View {
                 }
                 .bottomToolbar(style: .none) {
                     VStack(spacing: .zero) {
-                        StorePaymentButtonBar {
+                        StorePaymentButtonBar(trialNotification: true) {
                             isShowAllPlans = true
                             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                                 withAnimation {

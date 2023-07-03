@@ -13,8 +13,10 @@ public enum LockscreenViewState {
 }
 
 public struct LockscreenView: View {
-    @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
-    @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
+    #if os(iOS)
+        @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
+        @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
+    #endif
     @Environment(\.scenePhase) var scenePhase: ScenePhase
 
     @Binding private var pinCode: String
@@ -44,15 +46,19 @@ public struct LockscreenView: View {
     private let biometricType: BiometricType
 
     private var isShowTitle: Bool {
-        if horizontalSizeClass == .compact, verticalSizeClass == .regular {
+        #if os(iOS)
+            if horizontalSizeClass == .compact, verticalSizeClass == .regular {
+                return true
+            } else if horizontalSizeClass == .regular, verticalSizeClass == .compact {
+                return false
+            } else if horizontalSizeClass == .regular, verticalSizeClass == .regular {
+                return true
+            } else {
+                return true
+            }
+        #else
             return true
-        } else if horizontalSizeClass == .regular, verticalSizeClass == .compact {
-            return false
-        } else if horizontalSizeClass == .regular, verticalSizeClass == .regular {
-            return true
-        } else {
-            return true
-        }
+        #endif
     }
 
     public init(pinCode: Binding<String>,

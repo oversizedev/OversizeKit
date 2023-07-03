@@ -77,7 +77,7 @@ public extension LauncherViewModel {
         }
 
         if let subscriptionStatus = status.1 {
-            if #available(iOS 15.4, *) {
+            if #available(iOS 15.4, macOS 12.3, *) {
                 log("📝 Subscription: \(subscriptionStatus.localizedDescription)")
             }
             subscriptionsState = subscriptionStatus

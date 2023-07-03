@@ -9,8 +9,10 @@ struct StorePaymentButtonBar: View {
     @EnvironmentObject var viewModel: StoreViewModel
 
     let action: (() -> Void)?
+    let trialNotification: Bool
 
-    init(action: (() -> Void)? = nil) {
+    init(trialNotification: Bool = false, action: (() -> Void)? = nil) {
+        self.trialNotification = trialNotification
         self.action = action
     }
 
@@ -24,7 +26,7 @@ struct StorePaymentButtonBar: View {
             Button {
                 if let selectedProduct = viewModel.selectedProduct {
                     Task {
-                        await viewModel.buy(product: selectedProduct)
+                        await viewModel.buy(product: selectedProduct, trialNotification: trialNotification)
                     }
                 }
             } label: {
