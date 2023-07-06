@@ -11,10 +11,13 @@ let productionDependencies: [PackageDescription.Package.Dependency] = { [
     .package(url: "https://github.com/oversizedev/OversizeComponents.git", .upToNextMajor(from: "1.2.0")),
     .package(url: "https://github.com/oversizedev/OversizeResources.git", .upToNextMajor(from: "1.3.0")),
     .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "2.1.3")),
-//    .package(name: "OversizeNetwork", path: "../OversizeNetwork"),
-//    .package(url: "https://github.com/apple/swift-openapi-runtime", .upToNextMinor(from: "0.1.0")),
-//    .package(url: "https://github.com/apple/swift-openapi-urlsession", .upToNextMinor(from: "0.1.0")),
-    // .package(url: "https://github.com/oversizedev/OversizeNetwork.git", .upToNextMajor(from: "0.1.0"))
+    .package(url: "https://github.com/lorenzofiamingo/swiftui-cached-async-image.git", .upToNextMajor(from: "2.1.1")),
+    /*
+        .package(name: "OversizeNetwork", path: "../OversizeNetwork"),
+        .package(url: "https://github.com/apple/swift-openapi-runtime", .upToNextMinor(from: "0.1.0")),
+        .package(url: "https://github.com/apple/swift-openapi-urlsession", .upToNextMinor(from: "0.1.0")),
+        .package(url: "https://github.com/oversizedev/OversizeNetwork.git", .upToNextMajor(from: "0.1.0"))
+         */
 ] }()
 
 let developmentDependencies: [PackageDescription.Package.Dependency] = { [
@@ -25,9 +28,12 @@ let developmentDependencies: [PackageDescription.Package.Dependency] = { [
     .package(name: "OversizeComponents", path: "../OversizeComponents"),
     .package(name: "OversizeResources", path: "../OversizeResources"),
     .package(name: "OversizeNetwork", path: "../OversizeNetwork"),
-//    .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "2.1.3")),
-//    .package(url: "https://github.com/apple/swift-openapi-runtime", .upToNextMinor(from: "0.1.0")),
-//    .package(url: "https://github.com/apple/swift-openapi-urlsession", .upToNextMinor(from: "0.1.0")),
+    .package(url: "https://github.com/lorenzofiamingo/swiftui-cached-async-image.git", .upToNextMajor(from: "2.1.1")),
+    /*
+        .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "2.1.3")),
+        .package(url: "https://github.com/apple/swift-openapi-runtime", .upToNextMinor(from: "0.1.0")),
+        .package(url: "https://github.com/apple/swift-openapi-urlsession", .upToNextMinor(from: "0.1.0")),
+         */
 ] }()
 
 let package = Package(
@@ -63,6 +69,7 @@ let package = Package(
                 .product(name: "OversizeResources", package: "OversizeResources"),
                 .product(name: "OversizeNotificationService", package: "OversizeServices"),
                 .product(name: "Factory", package: "Factory"),
+                .product(name: "CachedAsyncImage", package: "swiftui-cached-async-image"),
             ]
         ),
         .target(
@@ -72,12 +79,15 @@ let package = Package(
                 .product(name: "Factory", package: "Factory"),
                 .product(name: "OversizeUI", package: "OversizeUI"),
                 .product(name: "OversizeServices", package: "OversizeServices"),
-//                .product(name: "OversizeNetwork", package: "OversizeNetwork"),
-//                .product(name: "OpenAPIRuntime", package: "swift-openapi-runtime"),
-//                .product(
-//                    name: "OpenAPIURLSession",
-//                    package: "swift-openapi-urlsession"
-//                ),
+                .product(name: "CachedAsyncImage", package: "swiftui-cached-async-image"),
+                /*
+                                   .product(name: "OversizeNetwork", package: "OversizeNetwork"),
+                                   .product(name: "OpenAPIRuntime", package: "swift-openapi-runtime"),
+                                   .product(
+                                       name: "OpenAPIURLSession",
+                                       package: "swift-openapi-urlsession"
+                                   ),
+                    */
             ]
         ),
         .target(

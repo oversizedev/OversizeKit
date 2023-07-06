@@ -3,6 +3,7 @@
 // AboutView.swift
 //
 
+import CachedAsyncImage
 import OversizeComponents
 import OversizeLocalizable
 import OversizeResources
@@ -203,7 +204,7 @@ import SwiftUI
                                     } label: {
                                         VStack(spacing: .xSmall) {
                                             let imageUrl = "\(Info.links?.company.cdnString ?? "")/assets/apps/\(app.path ?? "")/icon.png"
-                                            AsyncImage(url: URL(string: imageUrl), content: {
+                                            CachedAsyncImage(url: URL(string: imageUrl), content: {
                                                 $0
                                                     .resizable()
                                                     .frame(width: 74, height: 74)
@@ -373,7 +374,7 @@ import SwiftUI
             HStack {
                 VStack(alignment: .center) {
                     ZStack(alignment: .top) {
-                        AsyncImage(url: URL(string: "https://cdn.oversize.design/assets/illustrations/scenes/about-layer3.png"), scale: scale) {
+                        CachedAsyncImage(url: URL(string: "https://cdn.oversize.design/assets/illustrations/scenes/about-layer3.png"), scale: scale) {
                             $0
                                 .resizable()
                                 .scaledToFit()
@@ -387,7 +388,7 @@ import SwiftUI
                         }
                         .offset(y: -offset * 0.1)
 
-                        AsyncImage(url: URL(string: "https://cdn.oversize.design/assets/illustrations/scenes/about-layer2.png"), scale: scale) {
+                        CachedAsyncImage(url: URL(string: "https://cdn.oversize.design/assets/illustrations/scenes/about-layer2.png"), scale: scale) {
                             $0
                                 .resizable()
                                 .scaledToFit()
@@ -403,7 +404,7 @@ import SwiftUI
                                 }
                         }
 
-                        AsyncImage(url: URL(string: "https://cdn.oversize.design/assets/illustrations/scenes/about-layer1.png"), scale: scale) {
+                        CachedAsyncImage(url: URL(string: "https://cdn.oversize.design/assets/illustrations/scenes/about-layer1.png"), scale: scale) {
                             $0
                                 .resizable()
                                 .scaledToFit()

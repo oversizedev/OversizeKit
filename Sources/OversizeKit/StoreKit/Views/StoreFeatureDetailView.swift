@@ -3,6 +3,7 @@
 // StoreFeatureDetailView.swift
 //
 
+import CachedAsyncImage
 import OversizeComponents
 import OversizeCore
 import OversizeResources
@@ -107,7 +108,7 @@ struct StoreFeatureDetailView: View {
     func iconFetureItem(_ feature: PlistConfiguration.Store.StoreFeature, geometry: GeometryProxy) -> some View {
         VStack(spacing: .xxxSmall) {
             if let IllustrationURLPath = feature.illustrationURL {
-                AsyncImage(url: URL(string: IllustrationURLPath)) { image in
+                CachedAsyncImage(url: URL(string: IllustrationURLPath)) { image in
                     image
                         .resizable()
                         .scaledToFill()

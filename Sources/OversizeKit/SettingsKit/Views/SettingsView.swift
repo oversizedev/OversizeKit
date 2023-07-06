@@ -292,7 +292,7 @@ import SwiftUI
                     .buttonStyle(.row)
                     .sheet(isPresented: $isShowFeedback) {
                         FeedbackView()
-                            .presentationDetents([.height(600)])
+                            .presentationDetents([.height(560)])
                             .presentationContentInteraction(.resizes)
                             .presentationCompactAdaptation(.sheet)
                             .scrollDisabled(true)
