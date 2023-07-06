@@ -4,6 +4,7 @@
 //
 
 import CachedAsyncImage
+import OversizeCore
 import OversizeKit
 import OversizeServices
 import OversizeUI
@@ -37,7 +38,7 @@ public struct AdView: View {
 
     var premiumBanner: some View {
         HStack(spacing: .zero) {
-            CachedAsyncImage(url: URL(string: "\(Info.links?.company.cdnString ?? "")/assets/apps/\(viewModel.appAd?.path ?? "")/icon.png"), content: {
+            CachedAsyncImage(url: URL(string: "\(Info.links?.company.cdnString ?? "")/assets/apps/\(viewModel.appAd?.path ?? "")/icon.png"), urlCache: .imageCache, content: {
                 $0
                     .resizable()
                     .frame(width: 64, height: 64)

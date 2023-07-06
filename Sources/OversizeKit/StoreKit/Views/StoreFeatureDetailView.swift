@@ -108,7 +108,7 @@ struct StoreFeatureDetailView: View {
     func iconFetureItem(_ feature: PlistConfiguration.Store.StoreFeature, geometry: GeometryProxy) -> some View {
         VStack(spacing: .xxxSmall) {
             if let IllustrationURLPath = feature.illustrationURL {
-                CachedAsyncImage(url: URL(string: IllustrationURLPath)) { image in
+                CachedAsyncImage(url: URL(string: IllustrationURLPath), urlCache: .imageCache) { image in
                     image
                         .resizable()
                         .scaledToFill()

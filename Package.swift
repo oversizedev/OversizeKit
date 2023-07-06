@@ -80,6 +80,7 @@ let package = Package(
                 .product(name: "OversizeUI", package: "OversizeUI"),
                 .product(name: "OversizeServices", package: "OversizeServices"),
                 .product(name: "CachedAsyncImage", package: "swiftui-cached-async-image"),
+                .product(name: "OversizeCore", package: "OversizeCore"),
                 /*
                                    .product(name: "OversizeNetwork", package: "OversizeNetwork"),
                                    .product(name: "OpenAPIRuntime", package: "swift-openapi-runtime"),
