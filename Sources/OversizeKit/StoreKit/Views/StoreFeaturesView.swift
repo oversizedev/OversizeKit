@@ -32,7 +32,7 @@ struct StoreFeaturesView: View {
                             }
                         }
                         .onPrimaryHighEmphasisForegroundColor()
-                        .iconOnSurface()
+                        .iconOnSurface(surfaceSolor: backgroundColor(feature: feature))
                     }
                     .rowArrow()
                     .rowIconBackgroundColor(backgroundColor(feature: feature))
