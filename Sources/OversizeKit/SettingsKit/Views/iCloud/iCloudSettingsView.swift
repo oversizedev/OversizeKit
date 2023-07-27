@@ -47,8 +47,8 @@ import SwiftUI
                                 IconDeprecated(.cloud)
                             }
                             .premium()
-                            .onPremiumTap()
                         }
+                        .onPremiumTap()
                     }
 
                     if FeatureFlags.secure.CVVCodes.valueOrFalse {

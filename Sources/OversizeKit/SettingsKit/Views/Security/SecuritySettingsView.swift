@@ -58,8 +58,10 @@ import SwiftUI
                             })
                         ) {
                             Row(biometricService.biometricType.rawValue) {
-                                IconDeprecated(.file)
-                                // leadingType: .systemImage(biometricImageName)
+                                Image(systemName: biometricImageName)
+                                    .foregroundColor(Color.onBackgroundHighEmphasis)
+                                    .font(.system(size: 24))
+                                    .frame(width: 24, height: 24, alignment: .center)
                             }
                         }
                     }
@@ -76,7 +78,7 @@ import SwiftUI
                                 }
                             })
                         ) {
-                            Row(biometricService.biometricType.rawValue) {
+                            Row(L10n.Security.pinCode) {
                                 IconDeprecated(.lock)
                             }
                         }.sheet(item: $isSetPINCodeSheet) { sheet in
