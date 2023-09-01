@@ -26,7 +26,7 @@ import SwiftUI
         public var body: some View {
             PageView(L10n.Security.title) {
                 iOSSettings
-                    .surfaceContentRowInsets()
+                    .surfaceContentRowMargins()
             }
             .leadingBar {
                 BarButton(.back)
@@ -60,7 +60,8 @@ import SwiftUI
                             Row(biometricService.biometricType.rawValue) {
                                 Image(systemName: biometricImageName)
                                     .foregroundColor(Color.onBackgroundHighEmphasis)
-                                    .font(.system(size: 24))
+
+                                    .font(.system(size: 20, weight: .semibold))
                                     .frame(width: 24, height: 24, alignment: .center)
                             }
                         }
@@ -79,7 +80,7 @@ import SwiftUI
                             })
                         ) {
                             Row(L10n.Security.pinCode) {
-                                IconDeprecated(.lock)
+                                Image.Security.lock
                             }
                         }.sheet(item: $isSetPINCodeSheet) { sheet in
                             SetPINCodeView(action: sheet)

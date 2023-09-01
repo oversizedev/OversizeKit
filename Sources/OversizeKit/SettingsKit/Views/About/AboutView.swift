@@ -93,7 +93,7 @@ import SwiftUI
 
                 if isLargeScreen {
                     HStack(spacing: .xxSmall) {
-                        Icon.Solid.SocialMediaandBrands.oversize
+                        Image.Brands.Oversize.fill
                             .resizable()
                             .renderingMode(.template)
                             .foregroundColor(Color.onSurfaceHighEmphasis)
@@ -108,7 +108,7 @@ import SwiftUI
 
                 } else {
                     VStack(spacing: .xxSmall) {
-                        Icon.Solid.SocialMediaandBrands.oversize
+                        Image.Brands.Oversize.fill
                             .resizable()
                             .renderingMode(.template)
                             .foregroundColor(Color.onSurfaceHighEmphasis)
@@ -300,7 +300,7 @@ import SwiftUI
                         // Surface {
                         HStack {
                             Spacer()
-                            Icon.Solid.SocialMediaandBrands.facebook
+                            Image.Brands.Facebook.Circle.fill
                                 .renderingMode(.template)
                                 .foregroundColor(Color.onSurfaceMediumEmphasis)
                             Spacer()
@@ -314,7 +314,7 @@ import SwiftUI
                         // Surface {
                         HStack {
                             Spacer()
-                            Icon.Solid.SocialMediaandBrands.instagram
+                            Image.Brands.Instagram.fill
                                 .renderingMode(.template)
                                 .foregroundColor(Color.onSurfaceMediumEmphasis)
                             Spacer()
@@ -328,7 +328,7 @@ import SwiftUI
                         // Surface {
                         HStack {
                             Spacer()
-                            Icon.Solid.SocialMediaandBrands.twitter
+                            Image.Brands.xCom
                                 .renderingMode(.template)
                                 .foregroundColor(Color.onSurfaceMediumEmphasis)
                             Spacer()
@@ -342,7 +342,7 @@ import SwiftUI
                         // Surface {
                         HStack {
                             Spacer()
-                            Icon.Solid.SocialMediaandBrands.telegram
+                            Image.Brands.Telegram.fill
                                 .renderingMode(.template)
                                 .foregroundColor(Color.onSurfaceMediumEmphasis)
                             Spacer()
@@ -356,7 +356,7 @@ import SwiftUI
                         //  Surface {
                         HStack {
                             Spacer()
-                            Icon.Solid.SocialMediaandBrands.dribbble
+                            Image.Brands.Dribbble.fill
                                 .renderingMode(.template)
                                 .foregroundColor(Color.onSurfaceMediumEmphasis)
                             Spacer()
@@ -458,33 +458,33 @@ import SwiftUI
         var rateSettingsIcon: Image {
             switch iconStyle {
             case .line:
-                return Icon.Line.UserInterface.heart
-            case .solid:
-                return Icon.Solid.UserInterface.heart
-            case .duotone:
-                return Icon.Duotone.UserInterface.heart
+                return Image.Base.heart
+            case .fill:
+                return Image.Base.Heart.fill
+            case .twoTone:
+                return Image.Base.Heart.TwoTone.fill
             }
         }
 
         var ideaSettingsIcon: Image {
             switch iconStyle {
             case .line:
-                return Icon.Line.DevicesandElectronics.lightBulb
-            case .solid:
-                return Icon.Solid.DevicesandElectronics.lightBulb
-            case .duotone:
-                return Icon.Duotone.DevicesandElectronics.lightBulb
+                return Image.Electricity.lamp
+            case .fill:
+                return Image.Electricity.Lamp.fill
+            case .twoTone:
+                return Image.Electricity.Lamp.TwoTone.fill
             }
         }
 
         var shareSettingsIcon: Image {
             switch iconStyle {
             case .line:
-                return Icon.Line.UserInterface.export
-            case .solid:
-                return Icon.Solid.UserInterface.export
-            case .duotone:
-                return Icon.Duotone.UserInterface.export
+                return Image.Base.send
+            case .fill:
+                return Image.Base.Send.fill
+            case .twoTone:
+                return Image.Base.Send.TwoTone.fill
             }
         }
     }

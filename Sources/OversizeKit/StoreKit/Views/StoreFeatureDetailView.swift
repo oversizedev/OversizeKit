@@ -6,7 +6,6 @@
 import CachedAsyncImage
 import OversizeComponents
 import OversizeCore
-import OversizeResources
 import OversizeServices
 import OversizeUI
 import SwiftUI
@@ -135,7 +134,7 @@ struct StoreFeatureDetailView: View {
                     .padding(.bottom, geometry.size.height * 0.07)
 
             } else {
-                Icon.Solid.UserInterface.checkCrFr
+                Image.Base.Check.square
                     .resizable()
                     .renderingMode(.template)
                     .foregroundColor(Color.accent)

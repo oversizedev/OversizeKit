@@ -5,9 +5,7 @@
 
 import OversizeCore
 import OversizeLocalizable
-import OversizeResources
 import OversizeServices
-
 import OversizeUI
 import SwiftUI
 
@@ -66,7 +64,7 @@ import SwiftUI
             #if os(iOS)
                 PageView(L10n.Settings.apperance) {
                     iOSSettings
-                        .surfaceContentRowInsets()
+                        .surfaceContentRowMargins()
                 }
                 .leadingBar {
                     /*
@@ -271,33 +269,33 @@ import SwiftUI
         var textIcon: Image {
             switch iconStyle {
             case .line:
-                return Icon.Line.Design.text
-            case .solid:
-                return Icon.Solid.Design.text
-            case .duotone:
-                return Icon.Duotone.Design.text
+                return Image.Editor.Font.square
+            case .fill:
+                return Image.Editor.Font.Square.fill
+            case .twoTone:
+                return Image.Editor.Font.Square.TwoTone.fill
             }
         }
 
         var borderIcon: Image {
             switch iconStyle {
             case .line:
-                return Icon.Line.Design.scale
-            case .solid:
-                return Icon.Solid.Design.scale
-            case .duotone:
-                return Icon.Duotone.Design.scale
+                return Image.Design.verticalMirror
+            case .fill:
+                return Image.Editor.Font.Square.fill
+            case .twoTone:
+                return Image.Editor.Font.Square.TwoTone.fill
             }
         }
 
         var radiusIcon: Image {
             switch iconStyle {
             case .line:
-                return Icon.Line.Design.vectorEditCircle
-            case .solid:
-                return Icon.Solid.Design.vectorEditCircle
-            case .duotone:
-                return Icon.Duotone.Design.vectorEditCircle
+                return Image.Design.path
+            case .fill:
+                return Image.Design.Path.fill
+            case .twoTone:
+                return Image.Design.Path.twoTone
             }
         }
     }

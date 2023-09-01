@@ -44,7 +44,7 @@ import SwiftUI
                     if FeatureFlags.app.сloudKit.valueOrFalse {
                         Switch(isOn: $settingsService.cloudKitEnabled) {
                             Row(L10n.Settings.iCloudSync) {
-                                IconDeprecated(.cloud)
+                                Image.Weather.Cloud.square
                             }
                             .premium()
                         }
@@ -55,15 +55,19 @@ import SwiftUI
                         Switch(isOn: $settingsService.cloudKitCVVEnabled) {
                             Row(L10n.Security.iCloudSyncCVVDescriptionCloudKit,
                                 subtitle: settingsService.cloudKitCVVEnabled ? L10n.Security.iCloudSyncCVVDescriptionCloudKit : L10n.Security.iCloudSyncCVVDescriptionLocal)
-                                .premium()
-                                .onPremiumTap()
+                            {
+                                Image.Security.cloudLock
+                                    .frame(width: 24, height: 24)
+                            }
+                            .premium()
+                            .onPremiumTap()
                         }
                     }
 
                     if FeatureFlags.app.healthKit.valueOrFalse {
                         Switch(isOn: $settingsService.healthKitEnabled) {
                             Row("HealthKit synchronization", subtitle: "After switching on, data from the Health app will be downloaded") {
-                                IconDeprecated(.heart)
+                                Image.Romantic.heart
                             }
                         }
                     }

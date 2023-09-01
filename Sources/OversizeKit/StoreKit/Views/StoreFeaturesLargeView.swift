@@ -5,7 +5,6 @@
 
 import CachedAsyncImage
 import OversizeComponents
-import OversizeResources
 import OversizeServices
 import OversizeUI
 import SwiftUI
@@ -66,7 +65,7 @@ struct StoreFeaturesLargeView: View {
             .multilineTextAlignment(.center)
         }
         .controlRadius(.large)
-        .surfaceContentInsets(.xxxSmall)
+        .surfaceContentMargins(.xxxSmall)
         .padding(.vertical, .large)
         .elevation(.z3)
     }
@@ -103,7 +102,7 @@ struct StoreFeaturesLargeView: View {
                     .padding(.bottom, .large)
 
             } else {
-                Icon.Solid.UserInterface.checkCrFr
+                Image.Base.Check.square
                     .resizable()
                     .renderingMode(.template)
                     .foregroundColor(Color.accent)

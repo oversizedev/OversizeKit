@@ -103,7 +103,7 @@ import SwiftUI
                         SectionView {
                             PrmiumBannerRow()
                         }
-                        .surfaceContentInsets(.zero)
+                        .surfaceContentMargins(.zero)
                     }
                 }
                 Group {
@@ -111,7 +111,7 @@ import SwiftUI
                     help
                     about
                 }
-                .surfaceContentRowInsets()
+                .surfaceContentRowMargins()
             }
         }
     }
@@ -133,7 +133,7 @@ import SwiftUI
                         NavigationLink(destination: AppearanceSettingView()
                         ) {
                             Row(L10n.Settings.apperance) {
-                                apperanceSettingsIcon
+                                apperanceSettingsIcon.icon()
                             }
                             .rowArrow(isShowArrow)
                         }
@@ -144,7 +144,7 @@ import SwiftUI
                         NavigationLink(destination: iCloudSettingsView()
                         ) {
                             Row(L10n.Title.synchronization) {
-                                cloudKitIcon
+                                cloudKitIcon.icon()
                             }
                             .rowArrow(isShowArrow)
                         }
@@ -162,7 +162,7 @@ import SwiftUI
                         NavigationLink(destination: SecuritySettingsView()
                         ) {
                             Row(L10n.Security.title) {
-                                securityIcon
+                                securityIcon.icon()
                             }
                             .rowArrow(isShowArrow)
                         }
@@ -173,7 +173,7 @@ import SwiftUI
                         NavigationLink(destination: SoundsAndVibrationsSettingsView()
                         ) {
                             Row(soundsAndVibrationTitle) {
-                                FeatureFlags.app.sounds.valueOrFalse ? soundIcon : vibrationIcon
+                                FeatureFlags.app.sounds.valueOrFalse ? soundIcon.icon() : vibrationIcon.icon()
                             }
                             .rowArrow(isShowArrow)
                         }
@@ -184,7 +184,7 @@ import SwiftUI
                         NavigationLink(destination: NotificationsSettingsView()
                         ) {
                             Row(L10n.Settings.notifications) {
-                                notificationsIcon
+                                notificationsIcon.icon()
                             }
                             .rowArrow(isShowArrow)
                         }
@@ -199,66 +199,66 @@ import SwiftUI
         var apperanceSettingsIcon: Image {
             switch iconStyle {
             case .line:
-                return Icon.Line.Design.brush
-            case .solid:
-                return Icon.Solid.Design.brush
-            case .duotone:
-                return Icon.Duotone.Design.brush
+                return Image.Design.paintingPalette
+            case .fill:
+                return Image.Design.PaintingPalette.fill
+            case .twoTone:
+                return Image.Design.PaintingPalette.twoTone
             }
         }
 
         var cloudKitIcon: Image {
             switch iconStyle {
             case .line:
-                return Icon.Line.Weather.cloudy02
-            case .solid:
-                return Icon.Solid.Weather.cloudy02
-            case .duotone:
-                return Icon.Duotone.Weather.cloudy02
+                return Image.Weather.cloud2
+            case .fill:
+                return Image.Weather.Cloud.Square.fill
+            case .twoTone:
+                return Image.Weather.Cloud.Square.twoTone
             }
         }
 
         var securityIcon: Image {
             switch iconStyle {
             case .line:
-                return Icon.Line.UserInterface.lock
-            case .solid:
-                return Icon.Solid.UserInterface.lock
-            case .duotone:
-                return Icon.Duotone.UserInterface.lock
+                return Image.Base.lock
+            case .fill:
+                return Image.Base.Lock.fill
+            case .twoTone:
+                return Image.Base.Lock.TwoTone.fill
             }
         }
 
         var soundIcon: Image {
             switch iconStyle {
             case .line:
-                return Icon.Line.MediaControls.musicalNote02
-            case .solid:
-                return Icon.Solid.MediaControls.musicalNote02
-            case .duotone:
-                return Icon.Duotone.MediaControls.musicalNote02
+                return Image.Base.volumeUp
+            case .fill:
+                return Image.Base.VolumeUp.fill
+            case .twoTone:
+                return Image.Base.VolumeUp.TwoTone.fill
             }
         }
 
         var vibrationIcon: Image {
             switch iconStyle {
             case .line:
-                return Icon.Line.Weather.windy
-            case .solid:
-                return Icon.Solid.Weather.windy
-            case .duotone:
-                return Icon.Duotone.Weather.windy
+                return Image.Mobile.vibration
+            case .fill:
+                return Image.Mobile.Vibration.fill
+            case .twoTone:
+                return Image.Mobile.Vibration.twoTone
             }
         }
 
         var notificationsIcon: Image {
             switch iconStyle {
             case .line:
-                return Icon.Line.UserInterface.bell
-            case .solid:
-                return Icon.Solid.UserInterface.bell
-            case .duotone:
-                return Icon.Duotone.UserInterface.bell
+                return Image.Base.notification
+            case .fill:
+                return Image.Base.Notification.fill
+            case .twoTone:
+                return Image.Base.Notification.TwoTone.fill
             }
         }
 
@@ -269,7 +269,7 @@ import SwiftUI
                     Row("Get help") {
                         isShowSupport.toggle()
                     } leading: {
-                        helpIcon
+                        helpIcon.icon()
                     }
                     .rowArrow(isShowArrow)
 
@@ -285,7 +285,7 @@ import SwiftUI
                     Row("Send feedback") {
                         isShowFeedback.toggle()
                     } leading: {
-                        chatIcon
+                        chatIcon.icon()
                     }
                     .rowArrow(isShowArrow)
 
@@ -304,66 +304,66 @@ import SwiftUI
         var heartIcon: Image {
             switch iconStyle {
             case .line:
-                return Icon.Line.UserInterface.heart
-            case .solid:
-                return Icon.Solid.UserInterface.heart
-            case .duotone:
-                return Icon.Duotone.UserInterface.heart
+                return Image.Base.heart
+            case .fill:
+                return Image.Base.Heart.fill
+            case .twoTone:
+                return Image.Base.Heart.TwoTone.fill
             }
         }
 
         var mailIcon: Image {
             switch iconStyle {
             case .line:
-                return Icon.Line.Communication.mail
-            case .solid:
-                return Icon.Solid.Communication.mail
-            case .duotone:
-                return Icon.Duotone.Communication.mail
+                return Image.Base.message
+            case .fill:
+                return Image.Base.Message.fill
+            case .twoTone:
+                return Image.Base.Message.TwoTone.fill
             }
         }
 
         var chatIcon: Image {
             switch iconStyle {
             case .line:
-                return Icon.Line.Communication.chatDots
-            case .solid:
-                return Icon.Solid.Communication.chatDots
-            case .duotone:
-                return Icon.Duotone.Communication.chatDots
+                return Image.Base.chat
+            case .fill:
+                return Image.Base.Chat.fill
+            case .twoTone:
+                return Image.Base.Chat.twoTone
             }
         }
 
         var infoIcon: Image {
             switch iconStyle {
             case .line:
-                return Icon.Line.UserInterface.infoCrFr
-            case .solid:
-                return Icon.Solid.UserInterface.infoCrFr
-            case .duotone:
-                return Icon.Duotone.UserInterface.infoCrFr
+                return Image.Base.info
+            case .fill:
+                return Image.Base.Info.Circle.fill
+            case .twoTone:
+                return Image.Base.Info.Circle.twoTone
             }
         }
 
         var oversizeIcon: Image {
             switch iconStyle {
             case .line:
-                return Icon.Line.SocialMediaandBrands.oversize
-            case .solid:
-                return Icon.Solid.SocialMediaandBrands.oversize
-            case .duotone:
-                return Icon.Duotone.SocialMediaandBrands.oversize
+                return Image.Brands.oversize
+            case .fill:
+                return Image.Brands.Oversize.fill
+            case .twoTone:
+                return Image.Brands.Oversize.TwoTone.fill
             }
         }
 
         var helpIcon: Image {
             switch iconStyle {
             case .line:
-                return Icon.Line.UserInterface.questionMarkCrFr
-            case .solid:
-                return Icon.Solid.UserInterface.questionMarkCrFr
-            case .duotone:
-                return Icon.Duotone.UserInterface.questionMarkCrFr
+                return Image.Alert.Help.circle
+            case .fill:
+                return Image.Alert.Help.Circle.fill
+            case .twoTone:
+                return Image.Alert.Help.Circle.twoTone
             }
         }
 
@@ -372,7 +372,7 @@ import SwiftUI
                 VStack(spacing: .zero) {
                     NavigationLink(destination: AboutView()) {
                         Row(L10n.Settings.about) {
-                            infoIcon
+                            infoIcon.icon()
                         }
                         .rowArrow(isShowArrow)
                     }

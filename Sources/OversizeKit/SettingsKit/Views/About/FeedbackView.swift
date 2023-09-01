@@ -10,7 +10,6 @@ import OversizeComponents
 import OversizeLocalizable
 import OversizeResources
 import OversizeServices
-
 import OversizeUI
 import SwiftUI
 
@@ -102,33 +101,33 @@ public struct FeedbackView: View {
     var heartIcon: Image {
         switch iconStyle {
         case .line:
-            return Icon.Line.SocialMediaandBrands.apple
-        case .solid:
-            return Icon.Solid.SocialMediaandBrands.apple
-        case .duotone:
-            return Icon.Duotone.SocialMediaandBrands.apple
+            return Image.Brands.appStore
+        case .fill:
+            return Image.Brands.AppStore.fill
+        case .twoTone:
+            return Image.Brands.AppStore.twoTone
         }
     }
 
     var mailIcon: Image {
         switch iconStyle {
         case .line:
-            return Icon.Line.Communication.mail
-        case .solid:
-            return Icon.Solid.Communication.mail
-        case .duotone:
-            return Icon.Duotone.Communication.mail
+            return Image.Email.email
+        case .fill:
+            return Image.Email.Email.fill
+        case .twoTone:
+            return Image.Email.Email.twoTone
         }
     }
 
     var chatIcon: Image {
         switch iconStyle {
         case .line:
-            return Icon.Line.SocialMediaandBrands.telegram
-        case .solid:
-            return Icon.Solid.SocialMediaandBrands.telegram
-        case .duotone:
-            return Icon.Duotone.SocialMediaandBrands.telegram
+            return Image.Brands.telegram
+        case .fill:
+            return Image.Brands.Telegram.fill
+        case .twoTone:
+            return Image.Brands.Telegram.twoTone
         }
     }
 }

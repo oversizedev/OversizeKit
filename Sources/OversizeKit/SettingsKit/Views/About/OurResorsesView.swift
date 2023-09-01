@@ -10,7 +10,6 @@ import OversizeComponents
 import OversizeLocalizable
 import OversizeResources
 import OversizeServices
-
 import OversizeUI
 import SwiftUI
 
@@ -22,7 +21,7 @@ public struct OurResorsesView: View {
     public var body: some View {
         PageView("Our open resources") {
             links
-                .surfaceContentRowInsets()
+                .surfaceContentRowMargins()
         }
         .leadingBar {
             BarButton(.back)
@@ -57,22 +56,22 @@ public struct OurResorsesView: View {
     var figmaIcon: Image {
         switch iconStyle {
         case .line:
-            return Icon.Line.SocialMediaandBrands.figma
-        case .solid:
-            return Icon.Solid.SocialMediaandBrands.figma
-        case .duotone:
-            return Icon.Duotone.SocialMediaandBrands.figma
+            return Image.Brands.figma
+        case .fill:
+            return Image.Brands.figma
+        case .twoTone:
+            return Image.Brands.figma
         }
     }
 
     var githubIcon: Image {
         switch iconStyle {
         case .line:
-            return Icon.Line.SocialMediaandBrands.github
-        case .solid:
-            return Icon.Solid.SocialMediaandBrands.github
-        case .duotone:
-            return Icon.Duotone.SocialMediaandBrands.github
+            return Image.Brands.github
+        case .fill:
+            return Image.Brands.github
+        case .twoTone:
+            return Image.Brands.github
         }
     }
 }

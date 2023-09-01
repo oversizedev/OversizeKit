@@ -4,7 +4,6 @@
 //
 
 import OversizeCore
-import OversizeResources
 import OversizeServices
 import OversizeUI
 import SwiftUI
@@ -27,7 +26,7 @@ struct StoreFeaturesView: View {
                                 Image(resourceImage: feature.image.valueOrEmpty)
                                     .renderingMode(.template)
                             } else {
-                                Icon.Solid.UserInterface.checkCrFr
+                                Image.Base.Check.square
                                     .renderingMode(.template)
                             }
                         }
@@ -41,7 +40,7 @@ struct StoreFeaturesView: View {
         }
         .surfaceBorderColor(Color.surfaceSecondary)
         .surfaceBorderWidth(2)
-        .surfaceContentRowInsets()
+        .surfaceContentRowMargins()
         .sheet(item: $selection) {
             selection = nil
         } content: { feature in

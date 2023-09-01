@@ -116,13 +116,13 @@ public struct StoreInstuctinsView: View {
                     .foregroundColor(.onSurfaceHighEmphasis.opacity(0.3))
                     .frame(width: 30)
                     .offset(y: screenSize.safeAreaHeight - 300)
-                    //.opacity(1 - (offset * 0.01))
+                // .opacity(1 - (offset * 0.01))
             }
 
             StoreFeaturesLargeView()
                 .paddingContent(.horizontal)
                 .environmentObject(viewModel)
-                //.opacity(0 + (offset * 0.01))
+            // .opacity(0 + (offset * 0.01))
         }
         .padding(.bottom, 220)
     }
@@ -164,13 +164,13 @@ public struct StoreInstuctinsView: View {
                     .foregroundColor(.onSurfaceHighEmphasis.opacity(0.3))
                     .frame(width: 30)
                     .offset(y: screenSize.safeAreaHeight - 300)
-                    //.opacity(1 - (offset * 0.01))
+                // .opacity(1 - (offset * 0.01))
             }
 
             StoreFeaturesLargeView()
                 .paddingContent(.horizontal)
                 .environmentObject(viewModel)
-                //.opacity(0 + (offset * 0.01))
+            // .opacity(0 + (offset * 0.01))
 
             if isShowAllPlans {
                 productsLust(data: data)
@@ -230,7 +230,7 @@ public struct StoreInstuctinsView: View {
             }
 
             HStack(alignment: .top, spacing: .small) {
-                Icon.Solid.UserInterface.bell
+                Image.Base.Notification.fill
                     .renderingMode(.template)
                     .foregroundColor(Color.onSurfaceDisabled)
                     .padding(14)
@@ -256,7 +256,7 @@ public struct StoreInstuctinsView: View {
             }
 
             HStack(alignment: .top, spacing: .small) {
-                Icon.Solid.UserInterface.star
+                Image.Base.Star.fill
                     .renderingMode(.template)
                     .foregroundColor(Color.onSurfaceDisabled)
                     .padding(14)
