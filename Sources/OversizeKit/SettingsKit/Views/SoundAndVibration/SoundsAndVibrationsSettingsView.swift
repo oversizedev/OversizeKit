@@ -13,6 +13,7 @@ import SwiftUI
 #if os(iOS)
     public struct SoundsAndVibrationsSettingsView: View {
         @Environment(\.verticalSizeClass) private var verticalSizeClass
+        @Environment(\.iconStyle) var iconStyle: IconStyle
         @Environment(\.isPortrait) var isPortrait
         @Environment(\.presentationMode) var presentationMode
         @State var offset = CGPoint(x: 0, y: 0)
@@ -21,7 +22,7 @@ import SwiftUI
         public var body: some View {
             PageView(title) {
                 iOSSettings
-                    .surfaceContentRowInsets()
+                    .surfaceContentRowMargins()
             }
             .leadingBar {
                 if !isPortrait, verticalSizeClass == .regular {
@@ -69,11 +70,22 @@ import SwiftUI
                     if FeatureFlags.app.vibration.valueOrFalse {
                         Switch(isOn: $settingsService.vibrationEnabled) {
                             Row(L10n.Settings.vibration) {
-                                IconDeprecated(.radio)
+                                vibrationIcon
                             }
                         }
                     }
                 }
+            }
+        }
+
+        var vibrationIcon: Image {
+            switch iconStyle {
+            case .line:
+                return Image.Mobile.vibration
+            case .fill:
+                return Image.Mobile.Vibration.fill
+            case .twoTone:
+                return Image.Mobile.Vibration.twoTone
             }
         }
     }

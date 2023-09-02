@@ -337,7 +337,7 @@ import SwiftUI
         var infoIcon: Image {
             switch iconStyle {
             case .line:
-                return Image.Base.info
+                return Image.Base.Info.circle
             case .fill:
                 return Image.Base.Info.Circle.fill
             case .twoTone:
