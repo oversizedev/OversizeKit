@@ -24,7 +24,7 @@ public struct SaveForView: View {
                         span = .thisEvent
                         dismiss()
                     } leading: {
-                        Icon.Line.DateandTime.calendar05
+                        Image.Date.calendar
                             .renderingMode(.template)
                             .foregroundColor(.onSurfaceHighEmphasis)
                     }
@@ -33,13 +33,13 @@ public struct SaveForView: View {
                         span = .futureEvents
                         dismiss()
                     } leading: {
-                        Icon.Line.DateandTime.calendar03
+                        Image.Base.calendar
                             .renderingMode(.template)
                             .foregroundColor(.onSurfaceHighEmphasis)
                     }
                 }
             }
-            .surfaceContentRowInsets()
+            .surfaceContentRowMargins()
         }
         .backgroundSecondary()
         .leadingBar {
