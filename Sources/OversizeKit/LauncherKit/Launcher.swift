@@ -33,8 +33,6 @@ public struct Launcher<Content: View, Onboarding: View>: View {
 //                    viewModel.appStateService.restAppRunCount()
 //                #endif
                 viewModel.appStateService.appRun()
-                viewModel.launcherSheetsChek()
-                initialize()
             }
             .task {
                 await viewModel.checkPremium()
@@ -73,6 +71,7 @@ public struct Launcher<Content: View, Onboarding: View>: View {
                 content
                     .onAppear {
                         viewModel.reviewService.launchEvent()
+                        viewModel.launcherSheetsChek()
                     }
             }
         }
@@ -112,11 +111,6 @@ public struct Launcher<Content: View, Onboarding: View>: View {
         var control = self
         control.onboarding = onboarding()
         return control
-    }
-
-    func initialize() {
-        // SDWebImageSVGCoder
-        // SDImageCodersManager.shared.addCoder(SDImageSVGCoder.shared)
     }
 }
 
