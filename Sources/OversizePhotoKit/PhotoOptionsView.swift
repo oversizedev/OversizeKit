@@ -48,7 +48,7 @@ public struct PhotoOptionsView<A>: View where A: View {
             Row("Photo", subtitle: date?.formatted(date: .long, time: .omitted)) {
                 image
             }
-            .rowContentInset(.init(horizontal: .zero, vertical: .xSmall))
+            .rowContentMargins(.init(horizontal: .zero, vertical: .xSmall))
         }
         .trailingBar { BarButton(.close) }
         .backgroundSecondary()
@@ -72,7 +72,7 @@ public struct PhotoOptionsView<A>: View where A: View {
                             )
                         ) {
                             Row("Share") {
-                                Icon(Icons.Base.upload)
+                                Image.Base.upload
                             }
                         }
                     }
@@ -81,7 +81,7 @@ public struct PhotoOptionsView<A>: View where A: View {
                 }
                 .buttonStyle(.row)
             }
-            .surfaceContentRowInsets()
+            .surfaceContentRowMargins()
 
             if deleteAction != nil {
                 SectionView {
@@ -92,7 +92,7 @@ public struct PhotoOptionsView<A>: View where A: View {
                         .multilineTextAlignment(.center)
                     }
                 }
-                .surfaceContentRowInsets()
+                .surfaceContentRowMargins()
             }
         }
         .padding(.top, -16)
