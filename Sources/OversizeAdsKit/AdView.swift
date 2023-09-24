@@ -6,6 +6,7 @@
 import CachedAsyncImage
 import OversizeCore
 import OversizeKit
+import OversizeNetwork
 import OversizeServices
 import OversizeUI
 import SwiftUI
@@ -21,24 +22,36 @@ public struct AdView: View {
     }
 
     public var body: some View {
-        if isPremium { EmptyView() } else {
+        switch viewModel.state {
+        case .initial:
+            VStack {}
+                .task {
+                    if !isPremium {
+                        await viewModel.fetchAd()
+                    }
+                }
+        case let .result(appAd) :
             #if os(iOS)
                 Surface {
                     isShowProduct.toggle()
                 } label: {
-                    premiumBanner
+                    premiumBanner(appAd: appAd)
                 }
-                .surfaceContentInsets(.xSmall)
-                .appStoreOverlay(isPresent: $isShowProduct, appId: viewModel.appAd?.id ?? "")
+                .surfaceContentMargins(.xSmall)
+                .appStoreOverlay(isPresent: $isShowProduct, appId: appAd.appStoreId)
+
             #else
                 EmptyView()
             #endif
+
+        case .loading, .error:
+            EmptyView()
         }
     }
 
-    var premiumBanner: some View {
+    func premiumBanner(appAd: Components.Schemas.AppShort) -> some View {
         HStack(spacing: .zero) {
-            CachedAsyncImage(url: URL(string: "\(Info.links?.company.cdnString ?? "")/assets/apps/\(viewModel.appAd?.path ?? "")/icon.png"), urlCache: .imageCache, content: {
+            CachedAsyncImage(url: URL(string: "\(Info.links?.company.cdnString ?? "")/assets/apps/\(appAd.address)/icon.png"), urlCache: .imageCache, content: {
                 $0
                     .resizable()
                     .frame(width: 64, height: 64)
@@ -62,7 +75,7 @@ public struct AdView: View {
 
             VStack(alignment: .leading, spacing: .xxxSmall) {
                 HStack {
-                    Text(viewModel.appAd?.name ?? "")
+                    Text(appAd.name)
                         .subheadline(.bold)
                         .onSurfaceHighEmphasisForegroundColor()
 
@@ -72,7 +85,7 @@ public struct AdView: View {
                     }
                 }
 
-                Text(viewModel.appAd?.title ?? "")
+                Text(appAd.title)
                     .subheadline()
                     .onSurfaceMediumEmphasisForegroundColor()
             }

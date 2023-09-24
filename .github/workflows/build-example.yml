@@ -1,0 +1,32 @@
+name: Build Example
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ main ]
+    
+env:
+  DEVELOPER_DIR: /Applications/Xcode_15.0.app/Contents/Developer
+  PROJECT_DIR: Example
+  PROJECT_NAME: Example.xcodeproj
+  iOSSCHEME: Example
+
+jobs:
+      
+  example:
+    name: Run examples
+    runs-on: macOS-latest
+    strategy:
+        matrix:
+          iosDestination: ['platform=iOS Simulator,OS=16,name=iPhone X','platform=iOS Simulator,OS=17.0,name=iPhone 14']
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Build iOS
+        run: |
+          xcodebuild clean build -project "${{ env.PROJECT_DIR }}/${{ env.PROJECT_NAME }}" -scheme "${{ env.iOSSCHEME }}" | xcpretty
+        env:
+          destination: ${{ matrix.iosDestination }}

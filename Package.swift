@@ -12,12 +12,7 @@ let productionDependencies: [PackageDescription.Package.Dependency] = { [
     .package(url: "https://github.com/oversizedev/OversizeResources.git", .upToNextMajor(from: "2.0.0")),
     .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "2.1.3")),
     .package(url: "https://github.com/lorenzofiamingo/swiftui-cached-async-image.git", .upToNextMajor(from: "2.1.1")),
-    /*
-        .package(name: "OversizeNetwork", path: "../OversizeNetwork"),
-        .package(url: "https://github.com/apple/swift-openapi-runtime", .upToNextMinor(from: "0.1.0")),
-        .package(url: "https://github.com/apple/swift-openapi-urlsession", .upToNextMinor(from: "0.1.0")),
-        .package(url: "https://github.com/oversizedev/OversizeNetwork.git", .upToNextMajor(from: "0.1.0"))
-         */
+    .package(url: "https://github.com/oversizedev/OversizeNetwork.git", .upToNextMajor(from: "0.6.0"))
 ] }()
 
 let developmentDependencies: [PackageDescription.Package.Dependency] = { [
@@ -30,10 +25,6 @@ let developmentDependencies: [PackageDescription.Package.Dependency] = { [
     .package(name: "OversizeNetwork", path: "../OversizeNetwork"),
     .package(url: "https://github.com/lorenzofiamingo/swiftui-cached-async-image.git", .upToNextMajor(from: "2.1.1")),
     .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "2.1.3")),
-    /*
-        .package(url: "https://github.com/apple/swift-openapi-runtime", .upToNextMinor(from: "0.1.0")),
-        .package(url: "https://github.com/apple/swift-openapi-urlsession", .upToNextMinor(from: "0.1.0")),
-         */
 ] }()
 
 let package = Package(
@@ -81,14 +72,7 @@ let package = Package(
                 .product(name: "OversizeServices", package: "OversizeServices"),
                 .product(name: "CachedAsyncImage", package: "swiftui-cached-async-image"),
                 .product(name: "OversizeCore", package: "OversizeCore"),
-                /*
-                                   .product(name: "OversizeNetwork", package: "OversizeNetwork"),
-                                   .product(name: "OpenAPIRuntime", package: "swift-openapi-runtime"),
-                                   .product(
-                                       name: "OpenAPIURLSession",
-                                       package: "swift-openapi-urlsession"
-                                   ),
-                    */
+                .product(name: "OversizeNetwork", package: "OversizeNetwork"),
             ]
         ),
         .target(

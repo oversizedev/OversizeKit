@@ -3,25 +3,39 @@
 // AdViewModel.swift, created on 30.06.2023
 //
 
+import Factory
+import OversizeNetwork
 import OversizeServices
 import SwiftUI
-// import OversizeNetwork
-// import Factory
 
 @MainActor
 public class AdViewModel: ObservableObject {
-    let appAd = Info.all?.apps.filter { $0.id != Info.app.appStoreID }.randomElement()
-    /*
-     @Injected(\.networkService) var networkService
+    @Injected(\.networkService) var networkService
 
-     public func fetchAdBanners() async {
-         let status = await networkService.fetchAdsBanners()
-         switch status {
-         case .success(let banners):
-             appAd = banners.filter { $0.id != Int(Info.app.appStoreID ?? "") }.randomElement()
-         case .failure:
-             break
-         }
-     }
-      */
+    @Published var state = State.initial
+
+    public init() {}
+
+    public func fetchAd() async {
+        let result = await networkService.fetchApps()
+        switch result {
+        case let .success(ads):
+            guard let ad = ads.filter({ $0.appStoreId != Info.app.appStoreID }).randomElement() else {
+                state = .error(.custom(title: "Not ad"))
+                return
+            }
+            state = .result(ad)
+        case let .failure(error):
+            state = .error(error)
+        }
+    }
+}
+
+extension AdViewModel {
+    enum State {
+        case initial
+        case loading
+        case result(Components.Schemas.AppShort)
+        case error(AppError)
+    }
 }

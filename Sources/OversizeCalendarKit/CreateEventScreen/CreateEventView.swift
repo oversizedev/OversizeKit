@@ -136,7 +136,7 @@ public struct CreateEventView: View {
         }
         .surfaceBorderColor(Color.surfaceSecondary)
         .surfaceBorderWidth(1)
-        .surfaceContentInsets(.init(horizontal: .xSmall, vertical: .xSmall))
+        .surfaceContentMargins(.init(horizontal: .xSmall, vertical: .xSmall))
         .controlRadius(.large)
     }
 
@@ -191,11 +191,11 @@ public struct CreateEventView: View {
                         viewModel.repitRule = .never
                         viewModel.repitEndRule = .never
                     }
-                    .surfaceContentInsets(.init(horizontal: .small, vertical: .medium))
+                    .surfaceContentMargins(.init(horizontal: .small, vertical: .medium))
                 }
                 .surfaceBorderColor(Color.surfaceSecondary)
                 .surfaceBorderWidth(1)
-                .surfaceContentInsets(.zero)
+                .surfaceContentMargins(.zero)
                 .controlRadius(.large)
             }
         }
@@ -216,7 +216,7 @@ public struct CreateEventView: View {
                             .rowClearButton(style: .onSurface) {
                                 viewModel.members.remove(email)
                             }
-                            .rowContentInset(.small)
+                            .rowContentMargins(.small)
                             .overlay(alignment: .bottomLeading) {
                                 Rectangle()
                                     .fillSurfaceSecondary()
@@ -228,7 +228,7 @@ public struct CreateEventView: View {
                 }
                 .surfaceBorderColor(Color.surfaceSecondary)
                 .surfaceBorderWidth(1)
-                .surfaceContentInsets(.zero)
+                .surfaceContentMargins(.zero)
                 .controlRadius(.large)
             }
         }
@@ -250,7 +250,7 @@ public struct CreateEventView: View {
                             .rowClearButton(style: .onSurface) {
                                 viewModel.alarms.remove(alarm)
                             }
-                            .surfaceContentInsets(.init(horizontal: .small, vertical: .medium))
+                            .surfaceContentMargins(.init(horizontal: .small, vertical: .medium))
                             .overlay(alignment: .bottomLeading) {
                                 Rectangle()
                                     .fillSurfaceSecondary()
@@ -262,7 +262,7 @@ public struct CreateEventView: View {
                 }
                 .surfaceBorderColor(Color.surfaceSecondary)
                 .surfaceBorderWidth(1)
-                .surfaceContentInsets(.zero)
+                .surfaceContentMargins(.zero)
                 .controlRadius(.large)
             }
         }
@@ -285,7 +285,7 @@ public struct CreateEventView: View {
                                 viewModel.locationName = nil
                                 viewModel.location = nil
                             }
-                            .rowContentInset(.init(horizontal: .small, vertical: .xSmall))
+                            .rowContentMargins(.init(horizontal: .small, vertical: .xSmall))
                         }
                     }
 
@@ -308,7 +308,7 @@ public struct CreateEventView: View {
             }
             .surfaceBorderColor(Color.surfaceSecondary)
             .surfaceBorderWidth(1)
-            .surfaceContentInsets(.zero)
+            .surfaceContentMargins(.zero)
             .controlRadius(.large)
         }
     }

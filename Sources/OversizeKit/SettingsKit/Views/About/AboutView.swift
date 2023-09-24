@@ -367,7 +367,7 @@ import SwiftUI
             }
             .buttonStyle(.scale)
             .frame(maxWidth: 300)
-            .innerPadding(.xSmall)
+            .controlMargin(.xSmall)
             .paddingContent(.horizontal)
         }
 

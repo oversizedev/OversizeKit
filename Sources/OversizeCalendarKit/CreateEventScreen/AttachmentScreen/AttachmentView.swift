@@ -25,7 +25,7 @@ public struct AttachmentView: View {
                     }
                 }
             }
-            .surfaceContentRowInsets()
+            .surfaceContentRowMargins()
         }
         .backgroundSecondary()
         .leadingBar {
