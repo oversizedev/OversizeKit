@@ -2,7 +2,7 @@ name: Build Example
 
 on:
   push:
-    branches: [ develop ]
+    branches: [ main, develop ]
   pull_request:
     branches: [ main ]
     
