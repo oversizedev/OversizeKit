@@ -30,6 +30,6 @@ jobs:
 
       - name: Build iOS
         run: |
-          xcodebuild clean build -project "${{ env.PROJECT_DIR }}/${{ env.PROJECT_NAME }}" -scheme "${{ env.iOSSCHEME }}" | xcpretty
+          xcodebuild clean build -project "Example/Example.xcodeproj" -scheme "Example" | xcpretty
         env:
           destination: ${{ matrix.iosDestination }}
