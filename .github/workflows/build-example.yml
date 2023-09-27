@@ -24,9 +24,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          host: github.com
-          private-key: ${{ secrets.ACTIONS_TOKEN }}
+
+      - name: Enable SSH
+        run: |
+          for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts
 
       - name: Build iOS
         run: |
