@@ -27,9 +27,12 @@ jobs:
         with: 
           token:  ${{ secrets.ACTIONS_TOKEN }}
           repository: oversizedev/OversizeResources
+          
+      - name: Test
+        run: cd "${{ env.PROJECT_DIR }}
 
       - name: Build iOS
         run: |
-          xcodebuild clean build -project "${{ env.PROJECT_DIR }}/${{ env.PROJECT_NAME }}" -scheme "${{ env.iOSSCHEME }}" | xcpretty
+          xcodebuild clean build -project "Example/Example.xcodeproj" -scheme "Example" | xcpretty
         env:
           destination: ${{ matrix.iosDestination }}
