@@ -24,6 +24,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        with:
+          host: github.com
+          private-key: ${{ secrets.ACTIONS_TOKEN }}
 
       - name: Build iOS
         run: |
