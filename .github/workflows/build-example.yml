@@ -25,7 +25,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with: 
-          github_token:  ${{ secrets.ACTIONS_TOKEN }}
+          token:  ${{ secrets.ACTIONS_TOKEN }}
+          repository: oversizedev/OversizeResources
 
       - name: Build iOS
         run: |
