@@ -27,9 +27,6 @@ jobs:
         with: 
           token:  ${{ secrets.ACTIONS_TOKEN }}
           repository: oversizedev/OversizeResources
-          
-      - name: Test
-        run: cd "${{ env.PROJECT_DIR }}
 
       - name: Build iOS
         run: |
