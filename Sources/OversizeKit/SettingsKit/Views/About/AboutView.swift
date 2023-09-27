@@ -66,7 +66,7 @@ import SwiftUI
             #if os(iOS)
                 PageView(L10n.Settings.about, onOffsetChanged: { offset = $0 }) {
                     list
-                        .surfaceContentRowInsets()
+                        .surfaceContentRowMargins()
                 }
                 .leadingBar {
                     /*

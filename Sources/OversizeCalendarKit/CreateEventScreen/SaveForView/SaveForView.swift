@@ -4,7 +4,6 @@
 //
 
 import EventKit
-import OversizeResources
 import OversizeUI
 import SwiftUI
 

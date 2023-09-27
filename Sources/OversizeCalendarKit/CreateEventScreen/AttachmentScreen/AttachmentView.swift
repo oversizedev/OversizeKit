@@ -3,7 +3,6 @@
 // AttachmentView.swift
 //
 
-import OversizeResources
 import OversizeUI
 import SwiftUI
 
@@ -15,13 +14,13 @@ public struct AttachmentView: View {
             SectionView {
                 VStack(spacing: .zero) {
                     Row("Add investment") {
-                        IconDeprecated(.paperclip)
-                            .iconColor(.onSurfaceHighEmphasis)
+                        Image.Base.attach
+                            .icon()
                     }
 
                     Row("Add link") {
-                        IconDeprecated(.link)
-                            .iconColor(.onSurfaceHighEmphasis)
+                        Image.Base.link
+                            .icon()
                     }
                 }
             }
