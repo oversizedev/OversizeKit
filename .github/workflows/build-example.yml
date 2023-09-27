@@ -25,7 +25,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with: 
-          token:  ${{ secrets.ACTIONS_TOKEN }}
+          github_token:  ${{ secrets.ACTIONS_TOKEN }}
 
       - name: Build iOS
         run: |
