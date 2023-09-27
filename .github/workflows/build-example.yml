@@ -8,9 +8,6 @@ on:
     
 env:
   DEVELOPER_DIR: /Applications/Xcode_15.0.app/Contents/Developer
-  PROJECT_DIR: Example
-  PROJECT_NAME: Example.xcodeproj
-  iOSSCHEME: Example
 
 jobs:
       
@@ -19,7 +16,7 @@ jobs:
     runs-on: macOS-13
     strategy:
         matrix:
-          iosDestination: ['platform=iOS Simulator,OS=16,name=iPhone X','platform=iOS Simulator,OS=17.0,name=iPhone 14']
+          iosDestination: ['platform=iOS Simulator,OS=16.0,name=iPhone 14']
 
     steps:
       - name: Checkout
