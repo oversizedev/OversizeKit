@@ -21,12 +21,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with: 
-          token:  ${{ secrets.ACTIONS_TOKEN }}
-          fetch-depth: 0
 
-      - name: Create annotation for build error
-        run: ls -l
+      - name: Set secret
+        run: git config --global url."https://${{ secrets.ACTIONS_TOKEN }}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
 
       - name: Build iOS
         run: |
