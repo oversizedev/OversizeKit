@@ -25,6 +25,15 @@ jobs:
           token:  ${{ secrets.ACTIONS_TOKEN }}
           repository: oversizedev/OversizeResources
 
+      - name: Create annotation for build error
+        run: ls -l
+
+      - name: Create annotation for build error
+        run: cd Example
+
+      - name: Create annotation for build error
+        run: ls -l
+
       - name: Build iOS
         run: |
           xcodebuild clean build -project "Example/Example.xcodeproj" -scheme "Example" | xcpretty
