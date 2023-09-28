@@ -23,7 +23,6 @@ jobs:
         uses: actions/checkout@v4
         with: 
           token:  ${{ secrets.ACTIONS_TOKEN }}
-          repository: oversizedev/OversizeResources
 
       - name: Create annotation for build error
         run: ls -l
