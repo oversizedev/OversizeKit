@@ -30,6 +30,6 @@ jobs:
 
       - name: Build iOS
         run: |
-          xcodebuild clean build -project "Example/Example.xcodeproj" -scheme "Example" | xcpretty
+          xcodebuild clean build -project "Example/Example.xcodeproj" -scheme "Example" | xcpretty && exit ${PIPESTATUS[0]}
         env:
           destination: ${{ matrix.iosDestination }}
