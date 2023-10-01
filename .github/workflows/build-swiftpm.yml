@@ -1,0 +1,25 @@
+name: Build Example
+
+on:
+  workflow_dispatch:
+  workflow_call:
+
+concurrency:
+  group: ${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+
+  swiftpm:
+    name: Build SwiftPM
+    runs-on: macOS-latest
+    strategy:
+        matrix:
+          packages: [OversizeKit, OversizeAdsKit, OversizeCalendarKit, OversizeContactsKit, OversizeLocationKit, OversizeNoticeKit, OversizeNotificationKit, OversizeOnboardingKit, OversizePhotoKit]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Build Package
+        run: xcodebuild clean build -skipPackagePluginValidation -scheme ${{ matrix.packages }} -destination 'platform=iOS Simulator,name=iPhone 8,OS=16.2' | xcpretty && exit ${PIPESTATUS[0]}

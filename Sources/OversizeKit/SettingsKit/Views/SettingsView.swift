@@ -49,7 +49,6 @@ import SwiftUI
 
         public var body: some View {
             #if os(iOS)
-
                 Group {
                     if !isPortrait, verticalSizeClass == .regular {
                         Group {

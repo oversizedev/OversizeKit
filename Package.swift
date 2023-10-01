@@ -46,7 +46,7 @@ let package = Package(
         .library(name: "OversizeNotificationKit", targets: ["OversizeNotificationKit"]),
         .library(name: "OversizePhotoKit", targets: ["OversizePhotoKit"]),
     ],
-    dependencies: productionDependencies,
+    dependencies: developmentDependencies,
     targets: [
         .target(
             name: "OversizeKit",
@@ -59,6 +59,7 @@ let package = Package(
                 .product(name: "OversizeLocalizable", package: "OversizeLocalizable"),
                 .product(name: "OversizeResources", package: "OversizeResources"),
                 .product(name: "OversizeNotificationService", package: "OversizeServices"),
+                .product(name: "OversizeNetwork", package: "OversizeNetwork"),
                 .product(name: "Factory", package: "Factory"),
                 .product(name: "CachedAsyncImage", package: "swiftui-cached-async-image"),
             ]
