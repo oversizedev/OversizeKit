@@ -1,4 +1,4 @@
-name: Build Example
+name: Build SwiftPM
 
 on:
   workflow_dispatch:
@@ -34,5 +34,5 @@ jobs:
       - name: Set SwiftPM Plugin config
         run: defaults write com.apple.dt.Xcode IDESkipPackagePluginFingerprintValidatation -bool YES
         
-      - name: Build Package
+      - name: Build
         run: xcodebuild clean build -skipPackagePluginValidation -scheme ${{ matrix.packages }} -destination 'platform=iOS Simulator,name=iPhone 8,OS=16.4' | xcpretty && exit ${PIPESTATUS[0]}
