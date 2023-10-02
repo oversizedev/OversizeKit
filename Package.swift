@@ -12,7 +12,7 @@ let productionDependencies: [PackageDescription.Package.Dependency] = { [
     .package(url: "https://github.com/oversizedev/OversizeResources.git", .upToNextMajor(from: "2.0.0")),
     .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "2.1.3")),
     .package(url: "https://github.com/lorenzofiamingo/swiftui-cached-async-image.git", .upToNextMajor(from: "2.1.1")),
-    .package(url: "https://github.com/oversizedev/OversizeNetwork.git", .upToNextMajor(from: "0.6.0"))
+    .package(url: "https://github.com/oversizedev/OversizeNetwork.git", .upToNextMajor(from: "0.4.0"))
 ] }()
 
 let developmentDependencies: [PackageDescription.Package.Dependency] = { [
