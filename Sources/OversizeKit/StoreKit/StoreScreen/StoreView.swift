@@ -29,16 +29,7 @@ import SwiftUI
             PageView {
                 Group {
                     switch viewModel.state {
-                    case .initial:
-                        contentPlaceholder()
-                            .task {
-                                await viewModel.fetchData()
-                                if case let .result(products) = viewModel.state {
-                                    await viewModel.updateState(products: products)
-                                }
-                            }
-
-                    case .loading:
+                    case .initial, .loading:
                         contentPlaceholder()
                     case let .result(data):
                         content(data: data)
@@ -74,6 +65,9 @@ import SwiftUI
                 if isShowFireworks {
                     Fireworks()
                 }
+            }
+            .task {
+                await viewModel.fetchData()
             }
         }
 

@@ -1,4 +1,4 @@
-name: Build Example
+name: Build SwiftPM
 
 on:
   workflow_dispatch:
@@ -7,23 +7,23 @@ on:
 concurrency:
   group: ${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
-    
+  
 env:
   DEVELOPER_DIR: /Applications/Xcode_15.0.app/Contents/Developer
 
 jobs:
-      
-  example:
-    name: Run examples
+
+  swiftpm:
+    name: Build SwiftPM
     runs-on: macOS-13
     strategy:
         matrix:
-          iosDestination: ['platform=iOS Simulator,OS=16.0,name=iPhone 14']
+          packages: [OversizeKit, OversizeAdsKit, OversizeCalendarKit, OversizeContactsKit, OversizeLocationKit, OversizeNoticeKit, OversizeNotificationKit, OversizeOnboardingKit, OversizePhotoKit]
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
+        
       - name: Set secret
         run: git config --global url."https://${{ secrets.ACTIONS_TOKEN }}:x-oauth-basic@github.com/".insteadOf "https://github.com/"
 
@@ -33,9 +33,6 @@ jobs:
 
       - name: Set SwiftPM Plugin config
         run: defaults write com.apple.dt.Xcode IDESkipPackagePluginFingerprintValidatation -bool YES
-
-      - name: Build iOS
-        run: |
-          xcodebuild clean build -project "AppExample/Example.xcodeproj" -scheme "Example" | xcpretty && exit ${PIPESTATUS[0]}
-        env:
-          destination: ${{ matrix.iosDestination }}
+        
+      - name: Build
+        run: xcodebuild clean build -skipPackagePluginValidation -scheme ${{ matrix.packages }} -destination 'platform=iOS Simulator,name=iPhone 8,OS=16.4' | xcpretty && exit ${PIPESTATUS[0]}

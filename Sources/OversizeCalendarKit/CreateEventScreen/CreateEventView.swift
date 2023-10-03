@@ -9,7 +9,6 @@ import OversizeCalendarService
 import OversizeComponents
 import OversizeCore
 import OversizeLocalizable
-import OversizeResources
 import OversizeServices
 import OversizeUI
 import SwiftUI

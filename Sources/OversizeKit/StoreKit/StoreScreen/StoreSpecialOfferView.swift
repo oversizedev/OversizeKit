@@ -40,12 +40,6 @@ public struct StoreSpecialOfferView: View {
                             HStack {
                                 Spacer()
                                 ProgressView()
-                                    .task {
-                                        await viewModel.fetchData()
-                                        if case let .result(products) = viewModel.state {
-                                            await viewModel.updateState(products: products)
-                                        }
-                                    }
                                 Spacer()
                             }
                             Spacer()
@@ -81,6 +75,9 @@ public struct StoreSpecialOfferView: View {
                 if status {
                     dismiss()
                 }
+            }
+            .task {
+                await viewModel.fetchData()
             }
         #else
             EmptyView()

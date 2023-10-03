@@ -21,6 +21,12 @@ import SwiftUI
         @Environment(\.presentationMode) var presentationMode
         @Environment(\.screenSize) var screenSize
         @Environment(\.iconStyle) var iconStyle: IconStyle
+        
+        @StateObject var viewModel: AboutViewModel
+
+        public init() {
+            _viewModel = StateObject(wrappedValue: AboutViewModel())
+        }
 
         @State var offset: CGFloat = 0
 
@@ -60,13 +66,14 @@ import SwiftUI
             let scale: CGFloat = 2
         #endif
 
-        public init() {}
-
         public var body: some View {
             #if os(iOS)
                 PageView(L10n.Settings.about, onOffsetChanged: { offset = $0 }) {
                     list
-                        .surfaceContentRowInsets()
+                        .surfaceContentRowMargins()
+                        .task {
+                            await viewModel.fetchApps()
+                        }
                 }
                 .leadingBar {
                     /*
@@ -86,7 +93,82 @@ import SwiftUI
             #endif
         }
 
-        private var list: some View {
+        private func appLinks() -> some View {
+            return ScrollView(.horizontal, showsIndicators: false) {
+                HStack(alignment: .top, spacing: Space.small) {
+                    switch viewModel.state {
+                    case .initial, .loading:
+                        ForEach(0...6, id: \.self) { _ in
+                            RoundedRectangle(cornerRadius: .large, style: .continuous)
+                                .fillSurfaceSecondary()
+                                .frame(width: 74, height: 74)
+                        }
+                    case .result(let apps, _):
+                        ForEach(apps, id: \.appStoreId) { app in
+                            Button {
+                                isPresentStoreProduct = true
+                            } label: {
+                                VStack(spacing: .xSmall) {
+                                    CachedAsyncImage(url: URL(string: "https://cdn.oversize.design/assets/apps/" + app.address + "/icon.png"), urlCache: .imageCache, content: {
+                                        $0
+                                            .resizable()
+                                            .frame(width: 74, height: 74)
+                                            .mask(RoundedRectangle(cornerRadius: .large,
+                                                                   style: .continuous))
+                                            .overlay(
+                                                RoundedRectangle(cornerRadius: 16,
+                                                                 style: .continuous)
+                                                .stroke(lineWidth: 1)
+                                                .opacity(0.15)
+                                            )
+                                        
+                                    }, placeholder: {
+                                        RoundedRectangle(cornerRadius: .large, style: .continuous)
+                                            .fillSurfaceSecondary()
+                                            .frame(width: 74, height: 74)
+                                    })
+                                    
+                                    Text(app.name)
+                                        .caption(.medium)
+                                        .multilineTextAlignment(.center)
+                                        .foregroundColor(.onSurfaceMediumEmphasis)
+                                        .frame(width: 74)
+                                }
+                            }
+                            .buttonStyle(.scale)
+                            .appStoreOverlay(isPresent: $isPresentStoreProduct, appId: app.appStoreId)
+                        }
+                    case .error:
+                        EmptyView()
+                    }
+                    
+                    
+                    if let authorAllApps = Info.url.developerAllApps {
+                        VStack(spacing: .xSmall) {
+                            Link(destination: authorAllApps) {
+                                ZStack {
+                                    RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                        .foregroundColor(.surfaceSecondary)
+                                        .frame(width: 74, height: 74)
+                                    
+                                    IconDeprecated(.externalLink)
+                                }
+                            }
+                            
+                            Text("All apps")
+                                .caption(.medium)
+                                .multilineTextAlignment(.center)
+                                .foregroundColor(.onSurfaceMediumEmphasis)
+                                .frame(width: 74)
+                        }
+                    }
+                    
+                }.padding(.horizontal, .medium)
+            }
+            .padding(.bottom, 16)
+        }
+        
+        var list: some View {
             VStack(spacing: .zero) {
                 image
                     .padding(.top, isLargeScreen ? -70 : 0)
@@ -195,69 +277,7 @@ import SwiftUI
                             Spacer()
                         }
 
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(alignment: .top, spacing: Space.small) {
-                                let data = Info.all?.apps.filter { $0.id != Info.app.appStoreID }
-
-                                ForEach(data ?? []) { app in
-                                    Button {
-                                        isPresentStoreProduct = true
-                                    } label: {
-                                        VStack(spacing: .xSmall) {
-                                            let imageUrl = "\(Info.links?.company.cdnString ?? "")/assets/apps/\(app.path ?? "")/icon.png"
-                                            CachedAsyncImage(url: URL(string: imageUrl), urlCache: .imageCache, content: {
-                                                $0
-                                                    .resizable()
-                                                    .frame(width: 74, height: 74)
-                                                    .mask(RoundedRectangle(cornerRadius: .large,
-                                                                           style: .continuous))
-                                                    .overlay(
-                                                        RoundedRectangle(cornerRadius: 16,
-                                                                         style: .continuous)
-                                                            .stroke(lineWidth: 1)
-                                                            .opacity(0.15)
-                                                    )
-
-                                            }, placeholder: {
-                                                RoundedRectangle(cornerRadius: .large, style: .continuous)
-                                                    .fillSurfaceSecondary()
-                                                    .frame(width: 74, height: 74)
-                                            })
-
-                                            Text(app.name ?? "")
-                                                .caption(.medium)
-                                                .multilineTextAlignment(.center)
-                                                .foregroundColor(.onSurfaceMediumEmphasis)
-                                                .frame(width: 74)
-                                        }
-                                    }
-                                    .buttonStyle(.scale)
-                                    .appStoreOverlay(isPresent: $isPresentStoreProduct, appId: app.id)
-                                }
-
-                                if let authorAllApps = Info.url.developerAllApps {
-                                    VStack(spacing: .xSmall) {
-                                        Link(destination: authorAllApps) {
-                                            ZStack {
-                                                RoundedRectangle(cornerRadius: 16, style: .continuous)
-                                                    .foregroundColor(.surfaceSecondary)
-                                                    .frame(width: 74, height: 74)
-
-                                                IconDeprecated(.externalLink)
-                                            }
-                                        }
-
-                                        Text("All apps")
-                                            .caption(.medium)
-                                            .multilineTextAlignment(.center)
-                                            .foregroundColor(.onSurfaceMediumEmphasis)
-                                            .frame(width: 74)
-                                    }
-                                }
-
-                            }.padding(.horizontal, .medium)
-                        }
-                        .padding(.bottom, 16)
+                        appLinks()
                     }
                 }
 
@@ -295,6 +315,43 @@ import SwiftUI
 
         private var soclal: some View {
             HStack(spacing: .small) {
+//                switch viewModel.state {
+//                case .initial, .loading:
+//                    ForEach(0...6, id: \.self) { _ in
+//                        Circle()
+//                            .fillSurfaceSecondary()
+//                            .frame(width: 24, height: 24)
+//                    }
+//                case .result(_, let info):
+//                    ForEach(info.company.socialNetworks, id: \.title) { link in
+//                        if let linkUrl = URL(string: link.url), let iconUrl = URL(string: link.iconUrl) {
+//                            Link(destination: linkUrl) {
+//                                HStack {
+//                                    Spacer()
+//                                    
+//                                    CachedAsyncImage(url: iconUrl, urlCache: .imageCache, scale: scale) {
+//                                        $0
+//                                            .resizable()
+//                                            .scaledToFit()
+//                                            .blur(radius: blur)
+//                                    } placeholder: {
+//                                        Circle()
+//                                            .fillSurfaceSecondary()
+//                                            .frame(width: 24, height: 24)
+//                                    }
+//                                    .offset(y: -(offset * -0.04))
+//                                    
+//                                    Spacer()
+//                                }
+//                            }
+//                        }
+//                    }
+//                case .error:
+//                    EmptyView()
+//                }
+                
+                
+                
                 if let facebook = Info.url.companyFacebook {
                     Link(destination: facebook) {
                         // Surface {
@@ -495,15 +552,3 @@ import SwiftUI
         }
     }
 #endif
-
-// MARK: - UIScrollView
-
-// #if os(iOS)
-//    import UIKit
-//    extension UIScrollView {
-//        override open var clipsToBounds: Bool {
-//            get { false }
-//            set {}
-//        }
-//    }
-// #endif
