@@ -138,16 +138,6 @@ public extension View {
     }
 }
 
-extension View {
-    func withoutAnimation(action: @escaping () -> Void) {
-        var transaction = Transaction()
-        transaction.disablesAnimations = true
-        withTransaction(transaction) {
-            action()
-        }
-    }
-}
-
 struct LockscreenView_Previews: PreviewProvider {
     static var previews: some View {
         Launcher {

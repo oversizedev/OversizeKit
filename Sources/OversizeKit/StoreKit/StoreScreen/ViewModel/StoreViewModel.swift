@@ -342,7 +342,11 @@ extension StoreViewModel {
                 }
                 state = .result(finalProducts)
                 log("✅ StoeKit fetched")
-            // log(finalProducts)
+                if finalProducts.autoRenewable.isEmpty {
+                    log("❌ NO autoRenewable products")
+                } else {
+                    log("📦 \(finalProducts.autoRenewable.count) autoRenewable products")
+                }
             case let .failure(error):
                 state = .error(error)
                 log("❌ Product not fetched (\(error.title))")

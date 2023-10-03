@@ -29,16 +29,7 @@ public struct StoreInstuctinsView: View {
                 PageView { offset = $0 } content: {
                     Group {
                         switch viewModel.state {
-                        case .initial:
-                            contentPlaceholder()
-                                .task {
-                                    await viewModel.fetchData()
-                                    if case let .result(products) = viewModel.state {
-                                        await viewModel.updateState(products: products)
-                                    }
-                                }
-
-                        case .loading:
+                        case .initial, .loading:
                             contentPlaceholder()
                         case let .result(data):
                             content(data: data)
@@ -72,6 +63,9 @@ public struct StoreInstuctinsView: View {
                     if status {
                         dismiss()
                     }
+                }
+                .task {
+                    await viewModel.fetchData()
                 }
             #else
                 EmptyView()

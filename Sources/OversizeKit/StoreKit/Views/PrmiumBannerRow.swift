@@ -37,9 +37,6 @@ public struct PrmiumBannerRow: View {
         }
         .task {
             await viewModel.fetchData()
-            if case let .result(products) = viewModel.state {
-                await viewModel.updateState(products: products)
-            }
         }
     }
 
