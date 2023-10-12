@@ -1,9 +1,10 @@
-name: CI - Pull Request
+name: CI - Push
+
 on:
-  pull_request:
-    branches:
-      - 'main'
+  push:
+    branches: ["main"]
   workflow_dispatch:
+  
 jobs:
 
   build-swiftpm:
@@ -30,3 +31,10 @@ jobs:
     needs: build-example
     uses: oversizedev/GithubWorkflows/.github/workflows/test.yml@main
     secrets: inherit
+    
+  bump:
+    name: Bump version
+    needs: tests
+    uses: oversizedev/GithubWorkflows/.github/workflows/bump.yml@main
+    secrets: inherit
+    
