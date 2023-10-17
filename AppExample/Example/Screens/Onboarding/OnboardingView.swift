@@ -1,12 +1,12 @@
 //
 // Copyright © 2023 Alexander Romanov
 // OnboardingView.swift, created on 25.09.2023
-//  
+//
 
+import Factory
 import OversizeServices
 import OversizeUI
 import SwiftUI
-import Factory
 
 struct OnboardingView: View {
     @Injected(\.appStateService) var appStateService: AppStateService

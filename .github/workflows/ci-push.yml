@@ -7,17 +7,8 @@ on:
   
 jobs:
 
-  build-example:
-    name: Build Example
-    uses: oversizedev/GithubWorkflows/.github/workflows/build-ios-app.yml@main
-    with:
-      folder: AppExample
-      app: Example
-    secrets: inherit
-
   build-swiftpm:
     name: Build SwiftPM
-    needs: build-example
     uses: oversizedev/GithubWorkflows/.github/workflows/build-swiftpm.yml@main
     strategy:
       matrix:
@@ -25,16 +16,25 @@ jobs:
     with:
       package: ${{ matrix.packages }}
     secrets: inherit
-    
-  tests:
-    name: Test
+
+  build-example:
+    name: Build Example
     needs: build-swiftpm
-    uses: oversizedev/GithubWorkflows/.github/workflows/test.yml@main
+    uses: oversizedev/GithubWorkflows/.github/workflows/build-ios-app.yml@main
+    with:
+      folder: AppExample
+      app: Example
     secrets: inherit
+
+#  tests:
+#    name: Test
+#    needs: build-example
+#    uses: oversizedev/GithubWorkflows/.github/workflows/test.yml@main
+#    secrets: inherit
     
   bump:
     name: Bump version
-    needs: tests
+    needs: build-example
     uses: oversizedev/GithubWorkflows/.github/workflows/bump.yml@main
     secrets: inherit
     

@@ -21,7 +21,7 @@ import SwiftUI
         @Environment(\.presentationMode) var presentationMode
         @Environment(\.screenSize) var screenSize
         @Environment(\.iconStyle) var iconStyle: IconStyle
-        
+
         @StateObject var viewModel: AboutViewModel
 
         public init() {
@@ -94,16 +94,16 @@ import SwiftUI
         }
 
         private func appLinks() -> some View {
-            return ScrollView(.horizontal, showsIndicators: false) {
+            ScrollView(.horizontal, showsIndicators: false) {
                 HStack(alignment: .top, spacing: Space.small) {
                     switch viewModel.state {
                     case .initial, .loading:
-                        ForEach(0...6, id: \.self) { _ in
+                        ForEach(0 ... 6, id: \.self) { _ in
                             RoundedRectangle(cornerRadius: .large, style: .continuous)
                                 .fillSurfaceSecondary()
                                 .frame(width: 74, height: 74)
                         }
-                    case .result(let apps, _):
+                    case let .result(apps, _):
                         ForEach(apps, id: \.appStoreId) { app in
                             Button {
                                 isPresentStoreProduct = true
@@ -118,16 +118,16 @@ import SwiftUI
                                             .overlay(
                                                 RoundedRectangle(cornerRadius: 16,
                                                                  style: .continuous)
-                                                .stroke(lineWidth: 1)
-                                                .opacity(0.15)
+                                                    .stroke(lineWidth: 1)
+                                                    .opacity(0.15)
                                             )
-                                        
+
                                     }, placeholder: {
                                         RoundedRectangle(cornerRadius: .large, style: .continuous)
                                             .fillSurfaceSecondary()
                                             .frame(width: 74, height: 74)
                                     })
-                                    
+
                                     Text(app.name)
                                         .caption(.medium)
                                         .multilineTextAlignment(.center)
@@ -141,8 +141,7 @@ import SwiftUI
                     case .error:
                         EmptyView()
                     }
-                    
-                    
+
                     if let authorAllApps = Info.url.developerAllApps {
                         VStack(spacing: .xSmall) {
                             Link(destination: authorAllApps) {
@@ -150,11 +149,11 @@ import SwiftUI
                                     RoundedRectangle(cornerRadius: 16, style: .continuous)
                                         .foregroundColor(.surfaceSecondary)
                                         .frame(width: 74, height: 74)
-                                    
+
                                     IconDeprecated(.externalLink)
                                 }
                             }
-                            
+
                             Text("All apps")
                                 .caption(.medium)
                                 .multilineTextAlignment(.center)
@@ -162,12 +161,12 @@ import SwiftUI
                                 .frame(width: 74)
                         }
                     }
-                    
+
                 }.padding(.horizontal, .medium)
             }
             .padding(.bottom, 16)
         }
-        
+
         var list: some View {
             VStack(spacing: .zero) {
                 image
@@ -328,7 +327,7 @@ import SwiftUI
 //                            Link(destination: linkUrl) {
 //                                HStack {
 //                                    Spacer()
-//                                    
+//
 //                                    CachedAsyncImage(url: iconUrl, urlCache: .imageCache, scale: scale) {
 //                                        $0
 //                                            .resizable()
@@ -340,7 +339,7 @@ import SwiftUI
 //                                            .frame(width: 24, height: 24)
 //                                    }
 //                                    .offset(y: -(offset * -0.04))
-//                                    
+//
 //                                    Spacer()
 //                                }
 //                            }
@@ -349,9 +348,7 @@ import SwiftUI
 //                case .error:
 //                    EmptyView()
 //                }
-                
-                
-                
+
                 if let facebook = Info.url.companyFacebook {
                     Link(destination: facebook) {
                         // Surface {

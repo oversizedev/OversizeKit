@@ -6,22 +6,23 @@
 import CachedAsyncImage
 import OversizeComponents
 import OversizeCore
+import OversizeModels
 import OversizeServices
 import OversizeUI
 import SwiftUI
 
-struct StoreFeatureDetailView: View {
+public struct StoreFeatureDetailView: View {
     @EnvironmentObject var viewModel: StoreViewModel
     @State var selection: PlistConfiguration.Store.StoreFeature
     @Environment(\.screenSize) var screenSize
     @Environment(\.dismiss) var dismiss
     @Environment(\.isPremium) var isPremium
 
-    init(selection: PlistConfiguration.Store.StoreFeature) {
+    public init(selection: PlistConfiguration.Store.StoreFeature) {
         _selection = State(initialValue: selection)
     }
 
-    var body: some View {
+    public var body: some View {
         GeometryReader { geometry in
             #if os(iOS)
                 VStack(spacing: .zero) {

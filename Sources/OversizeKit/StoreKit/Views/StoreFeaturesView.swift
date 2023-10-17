@@ -4,6 +4,7 @@
 //
 
 import OversizeCore
+import OversizeModels
 import OversizeServices
 import OversizeUI
 import SwiftUI

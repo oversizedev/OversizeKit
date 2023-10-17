@@ -1,7 +1,7 @@
 //
 // Copyright © 2023 Alexander Romanov
 // Tabs.swift, created on 25.09.2023
-//  
+//
 
 import SwiftUI
 
@@ -41,7 +41,7 @@ public enum RootTab: String {
             return "Settings"
         }
     }
-    
+
     var image: Image {
         switch self {
         case .main:

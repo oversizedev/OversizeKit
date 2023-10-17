@@ -6,6 +6,7 @@
 import CachedAsyncImage
 import OversizeCore
 import OversizeKit
+import OversizeModels
 import OversizeNetwork
 import OversizeServices
 import OversizeUI
@@ -30,7 +31,7 @@ public struct AdView: View {
                         await viewModel.fetchAd()
                     }
                 }
-        case let .result(appAd) :
+        case let .result(appAd):
             #if os(iOS)
                 Surface {
                     isShowProduct.toggle()

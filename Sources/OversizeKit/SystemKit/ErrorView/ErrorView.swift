@@ -4,7 +4,7 @@
 //
 
 import OversizeLocalizable
-import OversizeServices
+import OversizeModels
 import OversizeUI
 import SwiftUI
 

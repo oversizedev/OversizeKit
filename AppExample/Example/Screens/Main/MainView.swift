@@ -1,7 +1,7 @@
 //
 // Copyright © 2023 Alexander Romanov
 // MainView.swift, created on 25.09.2023
-//  
+//
 
 import Factory
 import OversizeKit
@@ -11,7 +11,6 @@ import OversizeUI
 import SwiftUI
 
 struct MainView: View {
-    
     @Injected(\.appStateService) var appStateService: AppStateService
     @Environment(\.screenSize) var screenSize
     @EnvironmentObject var router: Router
@@ -25,7 +24,6 @@ struct MainView: View {
     var body: some View {
         Text("Hello, Oversize Kit!")
     }
-
 }
 
 struct MainView_Previews: PreviewProvider {

@@ -8,7 +8,7 @@ import CoreLocation
 import Factory
 import MapKit
 import OversizeLocationService
-import OversizeServices
+import OversizeModels
 import SwiftUI
 
 @MainActor

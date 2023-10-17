@@ -7,7 +7,7 @@ import Contacts
 import Factory
 import OversizeContactsService
 import OversizeCore
-import OversizeServices
+import OversizeModels
 import SwiftUI
 
 @MainActor

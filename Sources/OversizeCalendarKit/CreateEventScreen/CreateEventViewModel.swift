@@ -8,7 +8,7 @@ import Factory
 import OversizeCalendarService
 import OversizeCore
 import OversizeLocationService
-import OversizeServices
+import OversizeModels
 import SwiftUI
 
 public enum CreateEventType: Equatable {

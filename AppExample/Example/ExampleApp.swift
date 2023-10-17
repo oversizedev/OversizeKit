@@ -1,7 +1,7 @@
 //
 // Copyright © 2023 Alexander Romanov
 // ExampleApp.swift, created on 25.09.2023
-//  
+//
 
 import Factory
 import OversizeKit
@@ -11,12 +11,11 @@ import SwiftUI
 
 @main
 struct ExampleApp: App {
-    
     @Injected(\.appStateService) var appStateService: AppStateService
     @ObservedObject private var router = Router()
     @StateObject private var appSettingsViewModel = AppSettingsViewModel()
     let pub = NotificationCenter.default.publisher(for: NSNotification.Name("Deeplink"))
-    
+
     var body: some Scene {
         WindowGroup {
             TabView(selection: $router.tab) {

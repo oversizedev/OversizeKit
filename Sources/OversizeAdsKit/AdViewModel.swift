@@ -4,6 +4,7 @@
 //
 
 import Factory
+import OversizeModels
 import OversizeNetwork
 import OversizeServices
 import SwiftUI

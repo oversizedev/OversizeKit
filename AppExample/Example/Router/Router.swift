@@ -1,13 +1,12 @@
 //
 // Copyright © 2023 Alexander Romanov
 // Router.swift, created on 25.09.2023
-//  
+//
 
 import SwiftUI
 
 @MainActor
 final class Router: ObservableObject {
-    
     // Route and Tabs
     @Published var mainPath: [Screen] = []
     @Published var secondaryPath: [Screen] = []

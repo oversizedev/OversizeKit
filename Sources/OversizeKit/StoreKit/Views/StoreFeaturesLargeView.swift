@@ -5,6 +5,7 @@
 
 import CachedAsyncImage
 import OversizeComponents
+import OversizeModels
 import OversizeServices
 import OversizeUI
 import SwiftUI

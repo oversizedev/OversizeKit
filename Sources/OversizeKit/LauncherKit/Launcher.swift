@@ -7,7 +7,6 @@ import OversizeCore
 import OversizeLocalizable
 import OversizeServices
 import OversizeUI
-// import SDWebImageSVGCoder
 import SwiftUI
 
 public struct Launcher<Content: View, Onboarding: View>: View {
@@ -37,7 +36,7 @@ public struct Launcher<Content: View, Onboarding: View>: View {
             .task {
                 await viewModel.checkPremium()
             }
-            .fullScreenCover(item: $viewModel.activeFullScreenSheet) {
+            .appLaunchCover(item: $viewModel.activeFullScreenSheet) {
                 fullScreenCover(sheet: $0)
                     .systemServices()
             }
@@ -135,6 +134,19 @@ public extension View {
         }
         .onboarding(onboarding: onboarding)
         .systemServices()
+    }
+}
+
+private extension View {
+    func appLaunchCover<Item>(
+        item: Binding<Item?>, onDismiss: (() -> Void)? = nil, @ViewBuilder content: @escaping (Item) -> some View
+    ) -> some View where Item: Identifiable {
+        #if os(macOS)
+            interactiveDismissDisabled()
+                .sheet(item: item, onDismiss: onDismiss, content: content)
+        #else
+            fullScreenCover(item: item, onDismiss: onDismiss, content: content)
+        #endif
     }
 }
 

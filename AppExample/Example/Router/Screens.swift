@@ -1,7 +1,7 @@
 //
 // Copyright © 2023 Alexander Romanov
 // Screens.swift, created on 25.09.2023
-//  
+//
 
 import OversizeComponents
 import OversizeKit

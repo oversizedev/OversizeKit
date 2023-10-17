@@ -6,6 +6,7 @@
 import Factory
 import OversizeCore
 import OversizeLocalizable
+import OversizeModels
 import OversizeNotificationService
 import OversizeServices
 import OversizeStoreService

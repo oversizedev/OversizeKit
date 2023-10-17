@@ -4,13 +4,13 @@
 //
 
 import Factory
+import OversizeModels
 import OversizeNetwork
 import OversizeServices
 import SwiftUI
 
 @MainActor
 public class AboutViewModel: ObservableObject {
-    
     @Injected(\.networkService) var networkService
     @Published var state: AboutViewModel.State = State.initial
 
@@ -22,7 +22,7 @@ public class AboutViewModel: ObservableObject {
         async let resultInfo = networkService.fetchInfo()
         if case let .success(apps) = await resultApps, case let .success(info) = await resultInfo {
             state = .result(apps.filter { $0.appStoreId != Info.app.appStoreID }, info)
-            
+
         } else {
             state = .error(.network(type: .noResponse))
         }

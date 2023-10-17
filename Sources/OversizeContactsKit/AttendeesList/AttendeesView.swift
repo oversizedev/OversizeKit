@@ -10,7 +10,6 @@ import OversizeContactsService
 import OversizeCore
 import OversizeKit
 import OversizeLocalizable
-import OversizeServices
 import OversizeUI
 import SwiftUI
 

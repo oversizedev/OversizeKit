@@ -5,8 +5,8 @@
 
 import Factory
 import OversizeCore
+import OversizeModels
 import OversizeNotificationService
-import OversizeServices
 import SwiftUI
 
 @MainActor

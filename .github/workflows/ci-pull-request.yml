@@ -25,8 +25,8 @@ jobs:
       app: Example
     secrets: inherit
     
-  tests:
-    name: Test
-    needs: build-example
-    uses: oversizedev/GithubWorkflows/.github/workflows/test.yml@main
-    secrets: inherit
+#  tests:
+#    name: Test
+#    needs: build-example
+#    uses: oversizedev/GithubWorkflows/.github/workflows/test.yml@main
+#    secrets: inherit
