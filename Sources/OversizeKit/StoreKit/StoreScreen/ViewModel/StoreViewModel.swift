@@ -14,7 +14,7 @@ import StoreKit
 import SwiftUI
 
 @MainActor
-class StoreViewModel: ObservableObject {
+public class StoreViewModel: ObservableObject {
     enum State {
         case initial
         case loading

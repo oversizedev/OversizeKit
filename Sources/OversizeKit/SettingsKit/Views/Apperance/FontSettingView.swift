@@ -32,7 +32,6 @@ public struct FontSettingView: View {
         }
         .padding(.horizontal)
         .padding(.bottom)
-
         .navigationBar("Fonts", style: .fixed($offset)) {
             BarButton(.back)
         } trailingBar: {} bottomBar: {}

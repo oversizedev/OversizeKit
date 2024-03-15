@@ -22,7 +22,6 @@ public class AboutViewModel: ObservableObject {
         async let resultInfo = networkService.fetchInfo()
         if case let .success(apps) = await resultApps, case let .success(info) = await resultInfo {
             state = .result(apps.filter { $0.appStoreId != Info.app.appStoreID }, info)
-
         } else {
             state = .error(.network(type: .noResponse))
         }

@@ -10,23 +10,24 @@ import SwiftUI
 public struct PremiumBlockOverlay: ViewModifier {
     @Environment(\.colorScheme) var colorScheme
     @State var isShowPremium = false
-    @Environment(\.isPremium) var premiumStatus
+    @Environment(\.isPremium) var isPremium
+    @Binding var isShow: Bool
 
     let title: String
     let subtitle: String?
 
     private let closeAction: (() -> Void)?
+    
 
-    public init(title: String, subtitle: String?, closeAction: (() -> Void)? = nil) {
+    public init(isShow: Binding<Bool> = .constant(true), title: String, subtitle: String?, closeAction: (() -> Void)? = nil) {
+        self._isShow = isShow
         self.title = title
         self.subtitle = subtitle
         self.closeAction = closeAction
     }
 
     public func body(content: Content) -> some View {
-        if premiumStatus {
-            content
-        } else {
+        if !isPremium && isShow {
             ZStack {
                 content
 
@@ -42,14 +43,14 @@ public struct PremiumBlockOverlay: ViewModifier {
                         PremiumLabel(size: .medium)
                             .padding(.bottom, .medium)
 
-                        VStack(spacing: .medium) {
+                        VStack(spacing: .small) {
                             Text(title)
                                 .title()
                                 .foregroundColor(.onSurfaceHighEmphasis)
 
                             if let subtitle {
                                 Text(subtitle)
-                                    .headline()
+                                    .headline(.medium)
                                     .foregroundColor(.onSurfaceMediumEmphasis)
                             }
                         }
@@ -81,12 +82,24 @@ public struct PremiumBlockOverlay: ViewModifier {
                 StoreView()
                     .colorScheme(colorScheme)
             }
+        } else {
+            content
         }
     }
 }
 
 public extension View {
+    
+    func premiumContent(_ title: String, subtitle: String?, closeAction: (() -> Void)? = nil) -> some View {
+        modifier(PremiumBlockOverlay(title: title, subtitle: subtitle, closeAction: closeAction))
+    }
+    
+    @available(*, deprecated, renamed: "premiumContent", message: "Renamed")
     func premiumContent(title: String, subtitle: String?, closeAction: (() -> Void)? = nil) -> some View {
         modifier(PremiumBlockOverlay(title: title, subtitle: subtitle, closeAction: closeAction))
+    }
+    
+    func premiumContent(isShow: Binding<Bool> = .constant(true), title: String, subtitle: String?, closeAction: (() -> Void)? = nil) -> some View {
+        modifier(PremiumBlockOverlay(isShow: isShow, title: title, subtitle: subtitle, closeAction: closeAction))
     }
 }

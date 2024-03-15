@@ -3,97 +3,97 @@
 // NoticeListView.swift
 //
 
-import Factory
 import OversizeKit
+import OversizeNetwork
 import OversizeServices
-import OversizeStoreService
 import OversizeUI
 import StoreKit
 import SwiftUI
 
 public struct NoticeListView: View {
-    @Injected(\.appStoreReviewService) var reviewService
     @Environment(\.isPremium) var isPremium: Bool
+    @StateObject private var viewModel = NoticeListViewModel()
 
     @State private var isBannerClosed = false
-    @State private var showRecommended = false
-
-    private var specialOffer: StoreSpecialOfferEventType? {
-        var specialOffer: StoreSpecialOfferEventType?
-        for event in StoreSpecialOfferEventType.allCases where event.isNow {
-            if lastClosedSpecialOffer != event {
-                specialOffer = event
-            }
-        }
-        return specialOffer
-    }
-
     @State private var isShowOfferSheet: Bool = false
-    @AppStorage("AppState.LastClosedSpecialOfferBanner") var lastClosedSpecialOffer: StoreSpecialOfferEventType = .oldUser
-
-    private var isShowRate: Bool {
-        !isBannerClosed && reviewService.isShowReviewBanner
-    }
-
-    private var isShowNoticeView: Bool {
-        isShowRate && (specialOffer != nil && isPremium == false)
-    }
 
     public init() {}
 
     public var body: some View {
-        if isShowNoticeView {
+        switch viewModel.state {
+        case let .result(offer: offer, isShowRate: isShowRate) where (offer != nil || isShowRate) && !isBannerClosed && !isPremium:
             VStack(spacing: .small) {
-                if isShowRate, let reviewUrl = Info.url.appStoreReview {
-                    NoticeView("How do you like the application?") {
-                        Link(destination: reviewUrl) {
-                            Text("Good")
-                        }
-                        .buttonStyle(.primary(infinityWidth: true))
-                        .accent()
-                        .simultaneousGesture(TapGesture().onEnded {
-                            reviewService.estimate(goodRating: true)
-                            isBannerClosed = true
-                        })
-
-                        Button("Bad") {
-                            reviewService.estimate(goodRating: false)
-                            isBannerClosed = true
-                        }
-                        .buttonStyle(.tertiary(infinityWidth: true))
-
-                    } closeAction: {
-                        reviewService.rewiewBunnerClosed()
-                        isBannerClosed = true
-                    }
-                    .animation(.default, value: isBannerClosed)
+                if isShowRate {
+                    rateNoticeView
                 }
-
-                if let event = specialOffer {
-                    let url = URL(string: "https://cdn.oversize.design/assets/illustrations/\(event.specialOfferImageURL)")
-
-                    NoticeView(event.specialOfferBannerTitle,
-                               subtitle: event.specialOfferDescription,
-                               imageURL: url)
-                    {
-                        Button {
-                            isShowOfferSheet.toggle()
-                        } label: {
-                            Text("Get Free Trial")
-                        }
-                        .accent()
-
-                    } closeAction: {
-                        lastClosedSpecialOffer = event
-                    }
-                    .sheet(isPresented: $isShowOfferSheet) {
-                        StoreSpecialOfferView(event: event)
-                            .systemServices()
-                    }
+                if let offer {
+                    offerView(offer: offer)
                 }
             }
-        } else {
+        case .initial, .loading, .error, .result, .empty:
             EmptyView()
+        }
+    }
+
+    @ViewBuilder
+    private var rateNoticeView: some View {
+        if let reviewUrl = Info.url.appStoreReview {
+            NoticeView("How do you like the \(Info.app.name ?? "app"))?") {
+                Link(destination: reviewUrl) {
+                    Text("Good")
+                }
+                .buttonStyle(.primary(infinityWidth: true))
+                .accent()
+                .simultaneousGesture(TapGesture().onEnded {
+                    viewModel.reviewService.estimate(goodRating: true)
+                    withAnimation {
+                        isBannerClosed = true
+                    }
+                })
+
+                Button("Bad") {
+                    viewModel.reviewService.estimate(goodRating: false)
+                    withAnimation {
+                        isBannerClosed = true
+                    }
+                }
+                .buttonStyle(.tertiary(infinityWidth: true))
+
+            } closeAction: {
+                viewModel.reviewService.rewiewBunnerClosed()
+                withAnimation {
+                    isBannerClosed = true
+                }
+            }
+            .animation(.default, value: isBannerClosed)
+        }
+    }
+
+    @ViewBuilder
+    private func offerView(offer: Components.Schemas.SpecialOffer) -> some View {
+        if let imageUrl = offer.imageURL, let url = URL(string: imageUrl) {
+            NoticeView(
+                viewModel.textPrepere(offer.title),
+                subtitle: viewModel.textPrepere(offer.description ?? ""),
+                imageURL: url
+            ) {
+                Button {
+                    isShowOfferSheet.toggle()
+                } label: {
+                    Text("Accept Offer")
+                }
+                .accent()
+
+            } closeAction: {
+                viewModel.lastClosedSpecialOffer = offer.id
+                withAnimation {
+                    isBannerClosed = true
+                }
+            }
+            .sheet(isPresented: $isShowOfferSheet) {
+                StoreSpecialOfferView(event: offer)
+                    .systemServices()
+            }
         }
     }
 }

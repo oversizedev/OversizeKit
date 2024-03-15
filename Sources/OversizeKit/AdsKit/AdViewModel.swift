@@ -18,7 +18,7 @@ public class AdViewModel: ObservableObject {
     public init() {}
 
     public func fetchAd() async {
-        let result = await networkService.fetchApps()
+        let result = await networkService.fetchAds()
         switch result {
         case let .success(ads):
             guard let ad = ads.filter({ $0.appStoreId != Info.app.appStoreID }).randomElement() else {
@@ -36,7 +36,7 @@ extension AdViewModel {
     enum State {
         case initial
         case loading
-        case result(Components.Schemas.AppShort)
+        case result(Components.Schemas.Ad)
         case error(AppError)
     }
 }

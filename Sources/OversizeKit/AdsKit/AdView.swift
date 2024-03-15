@@ -5,7 +5,6 @@
 
 import CachedAsyncImage
 import OversizeCore
-import OversizeKit
 import OversizeModels
 import OversizeNetwork
 import OversizeServices
@@ -50,33 +49,35 @@ public struct AdView: View {
         }
     }
 
-    func premiumBanner(appAd: Components.Schemas.AppShort) -> some View {
+    func premiumBanner(appAd: Components.Schemas.Ad) -> some View {
         HStack(spacing: .zero) {
-            CachedAsyncImage(url: URL(string: "\(Info.links?.company.cdnString ?? "")/assets/apps/\(appAd.address)/icon.png"), urlCache: .imageCache, content: {
-                $0
-                    .resizable()
-                    .frame(width: 64, height: 64)
-                    .mask(RoundedRectangle(cornerRadius: .large,
-                                           style: .continuous))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16,
-                                         style: .continuous)
-                            .stroke(lineWidth: 1)
-                            .opacity(0.15)
-                    )
-                    .onTapGesture {
-                        isShowProduct.toggle()
-                    }
+            if let iconUrl = appAd.iconURL, let url = URL(string: iconUrl) {
+                CachedAsyncImage(url: url, urlCache: .imageCache, content: {
+                    $0
+                        .resizable()
+                        .frame(width: 64, height: 64)
+                        .mask(RoundedRectangle(cornerRadius: .large,
+                                               style: .continuous))
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 16,
+                                             style: .continuous)
+                                .stroke(lineWidth: 1)
+                                .opacity(0.15)
+                        )
+                        .onTapGesture {
+                            isShowProduct.toggle()
+                        }
 
-            }, placeholder: {
-                RoundedRectangle(cornerRadius: .large, style: .continuous)
-                    .fillSurfaceSecondary()
-                    .frame(width: 64, height: 64)
-            })
+                }, placeholder: {
+                    RoundedRectangle(cornerRadius: .large, style: .continuous)
+                        .fillSurfaceSecondary()
+                        .frame(width: 64, height: 64)
+                })
+            }
 
             VStack(alignment: .leading, spacing: .xxxSmall) {
                 HStack {
-                    Text(appAd.name)
+                    Text(appAd.title)
                         .subheadline(.bold)
                         .onSurfaceHighEmphasisForegroundColor()
 
@@ -86,7 +87,7 @@ public struct AdView: View {
                     }
                 }
 
-                Text(appAd.title)
+                Text(appAd.description)
                     .subheadline()
                     .onSurfaceMediumEmphasisForegroundColor()
             }

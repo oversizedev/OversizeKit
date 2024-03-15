@@ -15,6 +15,7 @@ import SwiftUI
 // swiftlint:disable all
 #if os(iOS)
     import MessageUI
+
     public struct AboutView: View {
         @Environment(\.verticalSizeClass) private var verticalSizeClass
         @Environment(\.isPortrait) var isPortrait
@@ -208,7 +209,6 @@ import SwiftUI
                     .foregroundColor(.onBackgroundHighEmphasis)
                     .padding(.horizontal, isLargeScreen ? 72 : 52)
                     .padding(.bottom, .large)
-
                     .multilineTextAlignment(.center)
 
                 soclal
@@ -219,7 +219,7 @@ import SwiftUI
                         if let reviewUrl = Info.url.appStoreReview, let id = Info.app.appStoreID, !id.isEmpty, let appName = Info.app.name {
                             Link(destination: reviewUrl) {
                                 Row("Rate \(appName) on App Store") {
-                                    rateSettingsIcon
+                                    rateSettingsIcon.icon()
                                 }
                             }
                             .buttonStyle(.row)
@@ -239,7 +239,7 @@ import SwiftUI
                             Row(L10n.About.suggestIdea) {
                                 isShowMail.toggle()
                             } leading: {
-                                ideaSettingsIcon
+                                ideaSettingsIcon.icon()
                             }
 
                             .buttonStyle(.row)
@@ -253,7 +253,7 @@ import SwiftUI
                                 Row(L10n.Settings.shareApplication) {
                                     isSharePresented.toggle()
                                 } leading: {
-                                    shareSettingsIcon
+                                    shareSettingsIcon.icon()
                                 }
                                 .sheet(isPresented: $isSharePresented) {
                                     ActivityViewController(activityItems: [shareUrl])
@@ -491,7 +491,7 @@ import SwiftUI
                                let appName = Info.app.name,
                                let appBuild = Info.app.build
                             {
-                                Text("© 2022 \(developerName). \(appName) \(appVersion) (\(appBuild))")
+                                Text("© 2023 \(developerName). \(appName) \(appVersion) (\(appBuild))")
                                     .footnote()
                                     .foregroundColor(.onBackgroundDisabled)
                             } else {

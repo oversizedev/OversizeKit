@@ -4,8 +4,8 @@ on:
     branches:
       - 'main'
   workflow_dispatch:
+  
 jobs:
-
   build-swiftpm:
     name: Build SwiftPM
     uses: oversizedev/GithubWorkflows/.github/workflows/build-swiftpm.yml@main
@@ -19,10 +19,14 @@ jobs:
   build-example:
     name: Build Example
     needs: build-swiftpm
-    uses: oversizedev/GithubWorkflows/.github/workflows/build-ios-app.yml@main
+    uses: oversizedev/GithubWorkflows/.github/workflows/build-app.yml@main
+    strategy:
+      matrix:
+        destination: ['platform=iOS Simulator,name=iPhone 15 Pro,OS=17.2', 'platform=iOS Simulator,name=iPad Pro (12.9-inch) (6th generation),OS=17.2']
     with:
-      folder: AppExample
-      app: Example
+      path: AppExample/Example
+      scheme: Example
+      destination: ${{ matrix.destination }}
     secrets: inherit
     
 #  tests:

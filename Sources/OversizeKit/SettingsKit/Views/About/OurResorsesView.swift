@@ -35,7 +35,7 @@ public struct OurResorsesView: View {
                 if let gitHubUrl = URL(string: "https://github.com/oversizedev") {
                     Link(destination: gitHubUrl) {
                         Row("GitHub Open Source") {
-                            githubIcon
+                            githubIcon.icon()
                         }
                     }
                     .buttonStyle(.row)
@@ -44,7 +44,7 @@ public struct OurResorsesView: View {
                 if let figmaUrl = URL(string: "https://www.figma.com/@oversizedesign") {
                     Link(destination: figmaUrl) {
                         Row("Figma Community") {
-                            figmaIcon
+                            figmaIcon.icon()
                         }
                     }
                     .buttonStyle(.row)

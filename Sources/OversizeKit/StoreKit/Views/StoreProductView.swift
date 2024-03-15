@@ -47,7 +47,6 @@ public struct StoreProductView: View {
         }
     }
 
-    // Percentage of decrease = |239.88 - 59.99|/239.88 = 179.89/239.88 = 0.74991662497916 = 74.991662497916%
     var saleProcent: String {
         if let monthSubscriptionProduct {
             let yearPriceMonthly = monthSubscriptionProduct.price * 12

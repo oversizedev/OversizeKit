@@ -56,7 +56,7 @@ public struct SupportView: View {
                         Row("Contact Us") {
                             isShowMail.toggle()
                         } leading: {
-                            mailIcon
+                            mailIcon.icon()
                         }
 
                         .buttonStyle(.row)
@@ -68,7 +68,7 @@ public struct SupportView: View {
                         if let sendMailUrl = Info.url.developerSendMail {
                             Link(destination: sendMailUrl) {
                                 Row("Contact Us") {
-                                    mailIcon
+                                    mailIcon.icon()
                                 }
                             }
                             .buttonStyle(.row)
@@ -80,7 +80,7 @@ public struct SupportView: View {
                 if let telegramChatUrl = Info.url.appTelegramChat, let id = Info.app.telegramChatID, !id.isEmpty {
                     Link(destination: telegramChatUrl) {
                         Row(L10n.Settings.telegramChat) {
-                            chatIcon
+                            chatIcon.icon()
                         }
                     }
                     .buttonStyle(.row)

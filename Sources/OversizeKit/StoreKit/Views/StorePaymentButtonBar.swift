@@ -10,18 +10,22 @@ struct StorePaymentButtonBar: View {
 
     let action: (() -> Void)?
     let trialNotification: Bool
+    let showDescription: Bool
 
-    init(trialNotification: Bool = false, action: (() -> Void)? = nil) {
+    init(trialNotification: Bool = false, showDescription: Bool = true, action: (() -> Void)? = nil) {
         self.trialNotification = trialNotification
         self.action = action
+        self.showDescription = showDescription
     }
 
     var body: some View {
         VStack(spacing: .zero) {
-            Text(viewModel.selectedProductButtonDescription)
-                .subheadline(.semibold)
-                .foregroundColor(.onSurfaceMediumEmphasis)
-                .padding(.vertical, 20)
+            if showDescription {
+                Text(viewModel.selectedProductButtonDescription)
+                    .subheadline(.semibold)
+                    .foregroundColor(.onSurfaceMediumEmphasis)
+                    .padding(.vertical, 20)
+            }
 
             Button {
                 if let selectedProduct = viewModel.selectedProduct {
@@ -50,10 +54,12 @@ struct StorePaymentButtonBar: View {
         }
         .padding(.bottom, .xxSmall)
         .background {
-            backgroundView
+            if showDescription {
+                backgroundView
+            }
         }
-        .padding(.bottom, .small)
-        .padding(.horizontal, .small)
+        .padding(.bottom, showDescription ? .small : .zero)
+        .padding(.horizontal, showDescription ? .small : .zero)
     }
 
     var backgroundView: some View {

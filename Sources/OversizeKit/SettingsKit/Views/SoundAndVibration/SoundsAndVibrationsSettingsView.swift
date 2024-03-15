@@ -70,7 +70,7 @@ import SwiftUI
                     if FeatureFlags.app.vibration.valueOrFalse {
                         Switch(isOn: $settingsService.vibrationEnabled) {
                             Row(L10n.Settings.vibration) {
-                                vibrationIcon
+                                vibrationIcon.icon()
                             }
                         }
                     }

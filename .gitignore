@@ -3,4 +3,6 @@
 Package.resolved
 .swiftpm
 xcuserdata/
+/.swiftpm
 DerivedData/
+/AppExample/Example.xcodeproj/project.xcworkspace/xcuserdata/admin.xcuserdatad/UserInterfaceState.xcuserstate

@@ -20,7 +20,7 @@ import SwiftUI
         public var body: some View {
             PageView(L10n.Settings.notifications) {
                 soundsAndVibrations
-                    .surfaceContentRowInsets()
+                    .surfaceContentRowMargins()
             }
             .leadingBar {
                 BarButton(.back)

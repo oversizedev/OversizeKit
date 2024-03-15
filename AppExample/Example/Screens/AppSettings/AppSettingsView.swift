@@ -16,7 +16,6 @@ struct AppSettingsView: View {
                     Image(systemName: "")
                 }
                 .rowArrow()
-
                 .multilineTextAlignment(.leading)
             }
             .buttonStyle(.row)

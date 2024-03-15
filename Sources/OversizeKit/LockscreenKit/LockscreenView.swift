@@ -255,6 +255,11 @@ public struct LockscreenView: View {
                 .font(.system(size: 26))
                 .foregroundColor(Color.onBackgroundHighEmphasis)
                 .frame(width: 24, height: 24, alignment: .center)
+        case .opticID:
+            Image(systemName: "opticid")
+                .font(.system(size: 26))
+                .foregroundColor(Color.onBackgroundHighEmphasis)
+                .frame(width: 24, height: 24, alignment: .center)
         }
     }
 

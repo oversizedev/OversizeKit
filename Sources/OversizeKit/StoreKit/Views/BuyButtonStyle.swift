@@ -88,7 +88,7 @@ public struct PaymentButtonStyle: ButtonStyle {
             return .small
         case .regular:
             return .small
-        case .large:
+        case .large, .extraLarge:
             return .medium
         @unknown default:
             return .zero
@@ -103,7 +103,7 @@ public struct PaymentButtonStyle: ButtonStyle {
             return .xxSmall
         case .regular:
             return .small
-        case .large:
+        case .large, .extraLarge:
             return .medium
         @unknown default:
             return .zero

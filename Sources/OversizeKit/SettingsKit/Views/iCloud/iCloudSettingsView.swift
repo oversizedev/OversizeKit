@@ -20,7 +20,7 @@ import SwiftUI
         public var body: some View {
             PageView(L10n.Title.synchronization) {
                 iOSSettings
-                    .surfaceContentRowInsets()
+                    .surfaceContentRowMargins()
             }
             .leadingBar {
                 BarButton(.back)
@@ -44,7 +44,7 @@ import SwiftUI
                     if FeatureFlags.app.сloudKit.valueOrFalse {
                         Switch(isOn: $settingsService.cloudKitEnabled) {
                             Row(L10n.Settings.iCloudSync) {
-                                Image.Weather.Cloud.square
+                                Image.Weather.Cloud.square.icon()
                             }
                             .premium()
                         }
@@ -57,6 +57,7 @@ import SwiftUI
                                 subtitle: settingsService.cloudKitCVVEnabled ? L10n.Security.iCloudSyncCVVDescriptionCloudKit : L10n.Security.iCloudSyncCVVDescriptionLocal)
                             {
                                 Image.Security.cloudLock
+                                    .icon()
                                     .frame(width: 24, height: 24)
                             }
                             .premium()
@@ -67,7 +68,7 @@ import SwiftUI
                     if FeatureFlags.app.healthKit.valueOrFalse {
                         Switch(isOn: $settingsService.healthKitEnabled) {
                             Row("HealthKit synchronization", subtitle: "After switching on, data from the Health app will be downloaded") {
-                                Image.Romantic.heart
+                                Image.Romantic.heart.icon()
                             }
                         }
                     }

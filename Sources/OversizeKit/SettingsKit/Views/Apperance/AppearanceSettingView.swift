@@ -109,7 +109,6 @@ import SwiftUI
             // swiftlint:disable multiple_closures_with_trailing_closure superfluous_disable_command
 
             .navigationTitle("Appearance")
-
             .preferredColorScheme(theme.appearance.colorScheme)
         }
 
@@ -225,7 +224,7 @@ import SwiftUI
                         Row("Fonts") {
                             pageDestenation = .font
                         } leading: {
-                            textIcon
+                            textIcon.icon()
                         }
                         .rowArrow()
                         .premium()
@@ -235,7 +234,7 @@ import SwiftUI
                             Row("Borders") {
                                 pageDestenation = .border
                             } leading: {
-                                borderIcon
+                                borderIcon.icon()
                             }
                             .premium()
                         }
@@ -256,7 +255,7 @@ import SwiftUI
                         Row("Radius") {
                             pageDestenation = .radius
                         } leading: {
-                            radiusIcon
+                            radiusIcon.icon()
                         }
                         .rowArrow()
                         .premium()

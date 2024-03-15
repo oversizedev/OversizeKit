@@ -14,7 +14,7 @@ struct RadiusSettingView: View {
     public var body: some View {
         PageView("Radius") {
             settings
-                .surfaceContentRowInsets()
+                .surfaceContentRowMargins()
         }
         .leadingBar {
             BarButton(.back)

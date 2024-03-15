@@ -271,7 +271,6 @@ import SwiftUI
                         helpIcon.icon()
                     }
                     .rowArrow(isShowArrow)
-
                     .buttonStyle(.row)
                     .sheet(isPresented: $isShowSupport) {
                         SupportView()
@@ -287,7 +286,6 @@ import SwiftUI
                         chatIcon.icon()
                     }
                     .rowArrow(isShowArrow)
-
                     .buttonStyle(.row)
                     .sheet(isPresented: $isShowFeedback) {
                         FeedbackView()

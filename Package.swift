@@ -1,6 +1,7 @@
-// swift-tools-version: 5.7
+// swift-tools-version: 5.9
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
+import Foundation
 import PackageDescription
 
 let productionDependencies: [PackageDescription.Package.Dependency] = [
@@ -14,6 +15,7 @@ let productionDependencies: [PackageDescription.Package.Dependency] = [
     .package(url: "https://github.com/oversizedev/OversizeModels.git", .upToNextMajor(from: "0.1.0")),
     .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "2.1.3")),
     .package(url: "https://github.com/lorenzofiamingo/swiftui-cached-async-image.git", .upToNextMajor(from: "2.1.1")),
+    .package(url: "https://github.com/GetStream/effects-library.git", .upToNextMajor(from: "1.0.0")),
 ]
 
 let developmentDependencies: [PackageDescription.Package.Dependency] = [
@@ -27,7 +29,10 @@ let developmentDependencies: [PackageDescription.Package.Dependency] = [
     .package(name: "OversizeModels", path: "../OversizeModels"),
     .package(url: "https://github.com/lorenzofiamingo/swiftui-cached-async-image.git", .upToNextMajor(from: "2.1.1")),
     .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "2.1.3")),
+    .package(url: "https://github.com/GetStream/effects-library.git", .upToNextMajor(from: "1.0.0")),
 ]
+
+let isProductionDependencies = ProcessInfo.processInfo.environment["RELEASE_DEPENDENCIES"] == "TRUE"
 
 let package = Package(
     name: "OversizeKit",
@@ -39,7 +44,6 @@ let package = Package(
     ],
     products: [
         .library(name: "OversizeKit", targets: ["OversizeKit"]),
-        .library(name: "OversizeAdsKit", targets: ["OversizeAdsKit"]),
         .library(name: "OversizeOnboardingKit", targets: ["OversizeOnboardingKit"]),
         .library(name: "OversizeNoticeKit", targets: ["OversizeNoticeKit"]),
         .library(name: "OversizeCalendarKit", targets: ["OversizeCalendarKit"]),
@@ -65,19 +69,7 @@ let package = Package(
                 .product(name: "OversizeNetwork", package: "OversizeNetwork"),
                 .product(name: "Factory", package: "Factory"),
                 .product(name: "CachedAsyncImage", package: "swiftui-cached-async-image"),
-            ]
-        ),
-        .target(
-            name: "OversizeAdsKit",
-            dependencies: [
-                "OversizeKit",
-                .product(name: "Factory", package: "Factory"),
-                .product(name: "OversizeUI", package: "OversizeUI"),
-                .product(name: "OversizeServices", package: "OversizeServices"),
-                .product(name: "CachedAsyncImage", package: "swiftui-cached-async-image"),
-                .product(name: "OversizeCore", package: "OversizeCore"),
-                .product(name: "OversizeNetwork", package: "OversizeNetwork"),
-                .product(name: "OversizeModels", package: "OversizeModels"),
+                .product(name: "EffectsLibrary", package: "effects-library"),
             ]
         ),
         .target(

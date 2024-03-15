@@ -43,7 +43,7 @@ public struct FeedbackView: View {
             if let reviewUrl = Info.url.appStoreReview, let id = Info.app.appStoreID, !id.isEmpty {
                 Link(destination: reviewUrl) {
                     Row(L10n.Settings.feedbakAppStore) {
-                        heartIcon
+                        heartIcon.icon()
                     }
                 }
                 .buttonStyle(.row)
@@ -65,7 +65,7 @@ public struct FeedbackView: View {
                         Row(L10n.Settings.feedbakAuthor) {
                             isShowMail.toggle()
                         } leading: {
-                            mailIcon
+                            mailIcon.icon()
                         }
 
                         .buttonStyle(.row)
@@ -77,7 +77,7 @@ public struct FeedbackView: View {
                         if let sendMailUrl = Info.url.developerSendMail {
                             Link(destination: sendMailUrl) {
                                 Row(L10n.Settings.feedbakAuthor) {
-                                    mailIcon
+                                    mailIcon.icon()
                                 }
                             }
                             .buttonStyle(.row)
@@ -89,7 +89,7 @@ public struct FeedbackView: View {
                 if let telegramChatUrl = Info.url.appTelegramChat, let id = Info.app.telegramChatID, !id.isEmpty {
                     Link(destination: telegramChatUrl) {
                         Row(L10n.Settings.telegramChat) {
-                            chatIcon
+                            chatIcon.icon()
                         }
                     }
                     .buttonStyle(.row)

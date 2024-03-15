@@ -4,6 +4,7 @@
 //
 
 import OversizeCore
+import OversizeNetwork
 import OversizeServices
 import OversizeStoreService
 import OversizeUI
@@ -20,14 +21,17 @@ public final class LauncherViewModel: ObservableObject {
     @Injected(\.settingsService) var settingsService
     @Injected(\.appStoreReviewService) var reviewService: AppStoreReviewServiceProtocol
     @Injected(\.storeKitService) private var storeKitService: StoreKitService
+    @Injected(\.networkService) var networkService
 
     @AppStorage("AppState.PremiumState") var isPremium: Bool = false
     @AppStorage("AppState.SubscriptionsState") var subscriptionsState: RenewalState = .expired
-    @AppStorage("AppState.LastClosedSpecialOfferSheet") var lastClosedSpecialOffer: StoreSpecialOfferEventType = .oldUser
+    @AppStorage("AppState.LastClosedSpecialOfferSheet") var lastClosedSpecialOffer: String = ""
     @Published public var pinCodeField: String = ""
     @Published public var authState: LockscreenViewState = .locked
     @Published var activeFullScreenSheet: FullScreenSheet?
     @Published var isShowSplashScreen: Bool = true
+
+    let expectedFormat = Date.ISO8601FormatStyle()
 
     var isShowLockscreen: Bool {
         if FeatureFlags.secure.lookscreen ?? false {
@@ -49,7 +53,7 @@ extension LauncherViewModel {
         case onboarding
         case payWall
         case rate
-        case specialOffer(event: StoreSpecialOfferEventType)
+        case specialOffer(event: Components.Schemas.SpecialOffer)
         public var id: Int {
             switch self {
             case .onboarding: return 0
@@ -130,12 +134,32 @@ public extension LauncherViewModel {
         }
     }
 
-    func checkSpecialOffer() {
-        if !isPremium {
-            for event in StoreSpecialOfferEventType.allCases where event.isNow {
-                if activeFullScreenSheet == nil, lastClosedSpecialOffer != event {
-                    activeFullScreenSheet = .specialOffer(event: event)
+    func fetchAndSetSpecialOffer() async {
+        let result = await networkService.fetchSpecialOffers()
+        switch result {
+        case let .success(offers):
+            if let offer = offers.first(where: { checkDateInSelectedPeriod(startDate: $0.startDate, endDate: $0.endDate) }) {
+                if offer.id != lastClosedSpecialOffer {
+                    activeFullScreenSheet = .specialOffer(event: offer)
                 }
+            }
+        case .failure:
+            break
+        }
+    }
+
+    func checkDateInSelectedPeriod(startDate: Date, endDate: Date) -> Bool {
+        if startDate < endDate {
+            return (startDate ... endDate).contains(Date())
+        } else {
+            return false
+        }
+    }
+
+    func checkSpecialOffer() {
+        if !isPremium, activeFullScreenSheet == nil {
+            Task {
+                await fetchAndSetSpecialOffer()
             }
         }
     }

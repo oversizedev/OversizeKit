@@ -60,7 +60,6 @@ import SwiftUI
                             Row(biometricService.biometricType.rawValue) {
                                 Image(systemName: biometricImageName)
                                     .foregroundColor(Color.onBackgroundHighEmphasis)
-
                                     .font(.system(size: 20, weight: .semibold))
                                     .frame(width: 24, height: 24, alignment: .center)
                             }
@@ -80,7 +79,7 @@ import SwiftUI
                             })
                         ) {
                             Row(L10n.Security.pinCode) {
-                                Image.Security.lock
+                                Image.Security.lock.icon()
                             }
                         }.sheet(item: $isSetPINCodeSheet) { sheet in
                             SetPINCodeView(action: sheet)
@@ -158,12 +157,12 @@ import SwiftUI
             switch biometricService.biometricType {
             case .none:
                 return ""
-
             case .touchID:
                 return "touchid"
-
             case .faceID:
                 return "faceid"
+            case .opticID:
+                return "opticid"
             }
         }
     }

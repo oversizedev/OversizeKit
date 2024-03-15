@@ -33,7 +33,7 @@ public struct AlarmPicker: View {
                     }
                 }
             }
-            .surfaceContentRowInsets()
+            .surfaceContentRowMargins()
         }
         .backgroundSecondary()
         .leadingBar {

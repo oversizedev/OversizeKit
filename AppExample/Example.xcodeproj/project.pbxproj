@@ -22,7 +22,6 @@
 		840CD68E2AC0E39D00C6AAD0 /* ExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840CD68D2AC0E39D00C6AAD0 /* ExampleApp.swift */; };
 		840CD6902AC0E3A600C6AAD0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 840CD68F2AC0E3A600C6AAD0 /* Assets.xcassets */; };
 		840CD6932AC0E3A600C6AAD0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 840CD6922AC0E3A600C6AAD0 /* Preview Assets.xcassets */; };
-		840CD69C2AC0E43000C6AAD0 /* OversizeAdsKit in Frameworks */ = {isa = PBXBuildFile; productRef = 840CD69B2AC0E43000C6AAD0 /* OversizeAdsKit */; };
 		840CD69E2AC0E43000C6AAD0 /* OversizeCalendarKit in Frameworks */ = {isa = PBXBuildFile; productRef = 840CD69D2AC0E43000C6AAD0 /* OversizeCalendarKit */; };
 		840CD6A02AC0E43000C6AAD0 /* OversizeContactsKit in Frameworks */ = {isa = PBXBuildFile; productRef = 840CD69F2AC0E43000C6AAD0 /* OversizeContactsKit */; };
 		840CD6A22AC0E43000C6AAD0 /* OversizeKit in Frameworks */ = {isa = PBXBuildFile; productRef = 840CD6A12AC0E43000C6AAD0 /* OversizeKit */; };
@@ -33,6 +32,7 @@
 		840CD6AC2AC0E43000C6AAD0 /* OversizePhotoKit in Frameworks */ = {isa = PBXBuildFile; productRef = 840CD6AB2AC0E43000C6AAD0 /* OversizePhotoKit */; };
 		840CD6AF2AC0E44E00C6AAD0 /* Factory in Frameworks */ = {isa = PBXBuildFile; productRef = 840CD6AE2AC0E44E00C6AAD0 /* Factory */; };
 		840CD6B12AC0E6E200C6AAD0 /* Products.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 840CD6B02AC0E6E200C6AAD0 /* Products.storekit */; };
+		845A59332BA4FD2B00988D52 /* OversizeModels in Frameworks */ = {isa = PBXBuildFile; productRef = 845A59322BA4FD2B00988D52 /* OversizeModels */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -69,10 +69,10 @@
 				840CD6AF2AC0E44E00C6AAD0 /* Factory in Frameworks */,
 				840CD69E2AC0E43000C6AAD0 /* OversizeCalendarKit in Frameworks */,
 				840CD6A82AC0E43000C6AAD0 /* OversizeNotificationKit in Frameworks */,
-				840CD69C2AC0E43000C6AAD0 /* OversizeAdsKit in Frameworks */,
 				840CD6A22AC0E43000C6AAD0 /* OversizeKit in Frameworks */,
 				840CD6A42AC0E43000C6AAD0 /* OversizeLocationKit in Frameworks */,
 				840CD6A62AC0E43000C6AAD0 /* OversizeNoticeKit in Frameworks */,
+				845A59332BA4FD2B00988D52 /* OversizeModels in Frameworks */,
 				840CD6A02AC0E43000C6AAD0 /* OversizeContactsKit in Frameworks */,
 				840CD6AA2AC0E43000C6AAD0 /* OversizeOnboardingKit in Frameworks */,
 			);
@@ -206,7 +206,6 @@
 			);
 			name = Example;
 			packageProductDependencies = (
-				840CD69B2AC0E43000C6AAD0 /* OversizeAdsKit */,
 				840CD69D2AC0E43000C6AAD0 /* OversizeCalendarKit */,
 				840CD69F2AC0E43000C6AAD0 /* OversizeContactsKit */,
 				840CD6A12AC0E43000C6AAD0 /* OversizeKit */,
@@ -216,6 +215,7 @@
 				840CD6A92AC0E43000C6AAD0 /* OversizeOnboardingKit */,
 				840CD6AB2AC0E43000C6AAD0 /* OversizePhotoKit */,
 				840CD6AE2AC0E44E00C6AAD0 /* Factory */,
+				845A59322BA4FD2B00988D52 /* OversizeModels */,
 			);
 			productName = Example;
 			productReference = 840CD6632AC0E39D00C6AAD0 /* Example.app */;
@@ -248,6 +248,7 @@
 			packageReferences = (
 				840CD69A2AC0E43000C6AAD0 /* XCLocalSwiftPackageReference ".." */,
 				840CD6AD2AC0E44E00C6AAD0 /* XCRemoteSwiftPackageReference "Factory" */,
+				845A59312BA4FD2B00988D52 /* XCRemoteSwiftPackageReference "OversizeModels" */,
 			);
 			productRefGroup = 840CD6642AC0E39D00C6AAD0 /* Products */;
 			projectDirPath = "";
@@ -515,13 +516,17 @@
 				minimumVersion = 2.2.0;
 			};
 		};
+		845A59312BA4FD2B00988D52 /* XCRemoteSwiftPackageReference "OversizeModels" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/oversizedev/OversizeModels.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		840CD69B2AC0E43000C6AAD0 /* OversizeAdsKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = OversizeAdsKit;
-		};
 		840CD69D2AC0E43000C6AAD0 /* OversizeCalendarKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = OversizeCalendarKit;
@@ -558,6 +563,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 840CD6AD2AC0E44E00C6AAD0 /* XCRemoteSwiftPackageReference "Factory" */;
 			productName = Factory;
+		};
+		845A59322BA4FD2B00988D52 /* OversizeModels */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 845A59312BA4FD2B00988D52 /* XCRemoteSwiftPackageReference "OversizeModels" */;
+			productName = OversizeModels;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

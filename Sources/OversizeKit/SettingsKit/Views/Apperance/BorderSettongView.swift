@@ -14,7 +14,7 @@ public struct BorderSettingView: View {
     public var body: some View {
         PageView("Borders in app") {
             settings
-                .surfaceContentRowInsets()
+                .surfaceContentRowMargins()
         }
         .leadingBar {
             // if !isPortrait, verticalSizeClass == .regular {
@@ -63,7 +63,7 @@ public struct BorderSettingView: View {
                                     }
                                 }
                                 .surfaceStyle(.secondary)
-                                .surfaceContentInsets(.small)
+                                .surfaceContentMargins(.small)
                                 .padding(.horizontal, Space.medium)
                                 .padding(.bottom, Space.xxSmall)
 
