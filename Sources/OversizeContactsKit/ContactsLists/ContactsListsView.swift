@@ -65,6 +65,7 @@ public struct ContactsListsView: View {
     @ViewBuilder
     private func emailRow(email: CNLabeledValue<NSString>, contact: CNContact) -> some View {
         let email = email.value as String
+        #if os(iOS)
         if let avatarThumbnailData = contact.thumbnailImageData, let avatarThumbnail = UIImage(data: avatarThumbnailData) {
             Row(contact.givenName + " " + contact.familyName, subtitle: email) {
                 Avatar(firstName: contact.givenName, lastName: contact.familyName, avatar: Image(uiImage: avatarThumbnail))
@@ -74,6 +75,11 @@ public struct ContactsListsView: View {
                 Avatar(firstName: contact.givenName, lastName: contact.familyName)
             }
         }
+        #else
+        Row(contact.givenName + " " + contact.familyName, subtitle: email) {
+            Avatar(firstName: contact.givenName, lastName: contact.familyName)
+        }
+        #endif
     }
 
     @ViewBuilder

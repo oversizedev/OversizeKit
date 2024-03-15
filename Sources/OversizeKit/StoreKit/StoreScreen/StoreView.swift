@@ -234,7 +234,7 @@ import SwiftUI
         }
 
         public func closable(_: Bool = true) -> StoreView {
-            var control = self
+            let control = self
             return control
         }
     }

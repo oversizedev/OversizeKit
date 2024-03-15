@@ -64,6 +64,7 @@ public extension CreateEventView {
         Group {
             switch sheet {
             case .startTime:
+                #if os(iOS)
                 DatePickerSheet(title: "Starts time", selection: $viewModel.dateStart)
                     .onDisappear {
                         if viewModel.dateStart > viewModel.dateEnd {
@@ -71,10 +72,17 @@ public extension CreateEventView {
                         }
                     }
                     .presentationDetents([.height(500)])
+                #else
+                EmptyView()
+                #endif
             case .endTime:
+                #if os(iOS)
                 DatePickerSheet(title: "Ends time", selection: $viewModel.dateEnd)
                     .datePickerMinimumDate(viewModel.dateStart.minute)
                     .presentationDetents([.height(500)])
+                #else
+                EmptyView()
+                #endif
             case .attachment:
                 AttachmentView()
                     .presentationDetents([.height(270)])
