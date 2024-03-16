@@ -15,7 +15,6 @@ let productionDependencies: [PackageDescription.Package.Dependency] = [
     .package(url: "https://github.com/oversizedev/OversizeModels.git", .upToNextMajor(from: "0.1.0")),
     .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "2.1.3")),
     .package(url: "https://github.com/lorenzofiamingo/swiftui-cached-async-image.git", .upToNextMajor(from: "2.1.1")),
-    .package(url: "https://github.com/GetStream/effects-library.git", .upToNextMajor(from: "1.0.0")),
 ]
 
 let developmentDependencies: [PackageDescription.Package.Dependency] = [
@@ -29,7 +28,6 @@ let developmentDependencies: [PackageDescription.Package.Dependency] = [
     .package(name: "OversizeModels", path: "../OversizeModels"),
     .package(url: "https://github.com/lorenzofiamingo/swiftui-cached-async-image.git", .upToNextMajor(from: "2.1.1")),
     .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "2.1.3")),
-    .package(url: "https://github.com/GetStream/effects-library.git", .upToNextMajor(from: "1.0.0")),
 ]
 
 let isProductionDependencies = ProcessInfo.processInfo.environment["RELEASE_DEPENDENCIES"] == "TRUE"
@@ -68,8 +66,7 @@ let package = Package(
                 .product(name: "OversizeModels", package: "OversizeModels"),
                 .product(name: "OversizeNetwork", package: "OversizeNetwork"),
                 .product(name: "Factory", package: "Factory"),
-                .product(name: "CachedAsyncImage", package: "swiftui-cached-async-image"),
-                .product(name: "EffectsLibrary", package: "effects-library"),
+                .product(name: "CachedAsyncImage", package: "swiftui-cached-async-image")
             ]
         ),
         .target(

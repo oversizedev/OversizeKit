@@ -31,7 +31,9 @@ public struct MapCoordinateView: View {
                         })
                         .background(.thickMaterial, ignoresSafeAreaEdges: .top)
                     }
+                    #if os(iOS)
                     .toolbar(.hidden, for: .tabBar)
+                    #endif
             } else {
                 mapView
                     .safeAreaInset(edge: .top) {
@@ -132,7 +134,7 @@ public struct MapCoordinateView: View {
         })
         .backgroundSecondary()
         .disableScrollShadow(true)
-        .surfaceContentRowInsets()
+        .surfaceContentRowMargins()
     }
 
     func onTapAppleMaps() {

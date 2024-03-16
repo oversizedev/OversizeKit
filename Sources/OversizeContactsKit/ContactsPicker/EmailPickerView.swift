@@ -49,7 +49,9 @@ public struct EmailPickerView: View {
             TextField("Email or name", text: $viewModel.searchText)
                 .textFieldStyle(DefaultPlaceholderTextFieldStyle())
                 .focused($isFocusSearth)
+                #if os(iOS)
                 .keyboardType(.emailAddress)
+                #endif
         }
         .onAppear {
             isFocusSearth = true
@@ -151,6 +153,7 @@ public struct EmailPickerView: View {
     private func emailRow(email: CNLabeledValue<NSString>, contact: CNContact) -> some View {
         let email = email.value as String
         let isSelected = selectedEmails.contains(email)
+        #if os(iOS)
         if let avatarThumbnailData = contact.thumbnailImageData, let avatarThumbnail = UIImage(data: avatarThumbnailData) {
             Checkbox(isOn: Binding(
                 get: { isSelected },
@@ -172,6 +175,17 @@ public struct EmailPickerView: View {
 
             })
         }
+        #else
+        Checkbox(isOn: Binding(
+            get: { isSelected },
+            set: { _ in onContactClick(email: email) }
+        ), label: {
+            Row(contact.givenName + " " + contact.familyName, subtitle: email) {
+                Avatar(firstName: contact.givenName, lastName: contact.familyName)
+            }
+
+        })
+        #endif
     }
 
     private func onDoneAction() {

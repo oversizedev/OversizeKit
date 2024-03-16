@@ -40,8 +40,10 @@ public struct OnboardingView<Content: View>: View {
                 // .tag(index)
                 // }
             }
+            #if os(iOS)
             .tabViewStyle(.page(indexDisplayMode: .never))
             .indexViewStyle(.page(backgroundDisplayMode: .never))
+            #endif
         }
         .background(
             Color.backgroundSecondary.ignoresSafeArea()

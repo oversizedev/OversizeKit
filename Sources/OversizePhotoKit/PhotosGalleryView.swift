@@ -35,7 +35,9 @@ public struct PhotosGalleryView: View {
         .leadingBar {
             BarButton(.back)
         }
+        #if os(iOS)
         .photoOverlay(isPresent: $isShowPhoto, selection: $selection, photos: images)
+        #endif
     }
 }
 

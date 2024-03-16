@@ -89,7 +89,7 @@ public struct RepeatPicker: View {
                 }))
                 .disabled(rule == .never)
             }
-            .surfaceContentRowInsets()
+            .surfaceContentRowMargins()
         }
         .presentationDetents(rule == .never ? [.height(630), .large] : [.large])
         .presentationDragIndicator(.hidden)
@@ -107,7 +107,9 @@ public struct RepeatPicker: View {
                 repeatCount = newValue
                 endRule = .occurrenceCount(Int(newValue) ?? 1)
             }))
+            #if os(iOS)
             .keyboardType(.numberPad)
+            #endif
             .textFieldStyle(DefaultPlaceholderTextFieldStyle())
             .focused($isFocusedRepitCount)
         case .endDate:
@@ -117,7 +119,9 @@ public struct RepeatPicker: View {
                 endDate = newDate
                 endRule = .endDate(newDate)
             }))
+            #if os(iOS)
             .datePickerStyle(.wheel)
+            #endif
             .labelsHidden()
         }
     }

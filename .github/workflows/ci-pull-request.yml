@@ -2,7 +2,7 @@ name: CI - Pull Request
 on:
   pull_request:
     branches:
-      - 'main'
+      - main
   workflow_dispatch:
   
 jobs:
@@ -11,7 +11,7 @@ jobs:
     uses: oversizedev/GithubWorkflows/.github/workflows/build-swiftpm.yml@main
     strategy:
       matrix:
-        packages: [OversizeKit, OversizeAdsKit, OversizeCalendarKit, OversizeContactsKit, OversizeLocationKit, OversizeNoticeKit, OversizeNotificationKit, OversizeOnboardingKit, OversizePhotoKit]
+        packages: [OversizeKit, OversizeCalendarKit, OversizeContactsKit, OversizeLocationKit, OversizeNoticeKit, OversizeNotificationKit, OversizeOnboardingKit, OversizePhotoKit]
     with:
       package: ${{ matrix.packages }}
     secrets: inherit

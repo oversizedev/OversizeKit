@@ -4,7 +4,6 @@
 //
 
 import CachedAsyncImage
-import EffectsLibrary
 import OversizeComponents
 import OversizeCore
 import OversizeLocalizable
@@ -97,7 +96,7 @@ public struct StoreSpecialOfferView: View {
                 }
             }
             .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
+                ToolbarItem(placement: .cancellationAction) {
                     Button {
                         lastClosedSpecialOffer = event.id
                         dismiss()
@@ -113,14 +112,7 @@ public struct StoreSpecialOfferView: View {
     var effectsView: some View {
         switch event.effect {
         case .snow:
-            SnowView(config: .init(
-                intensity: .low,
-                lifetime: .long,
-                initialVelocity: .medium,
-                fadeOut: .slow,
-                spreadRadius: .high
-            ))
-            .offset(y: -150)
+            EmptyView()
         default:
             EmptyView()
         }

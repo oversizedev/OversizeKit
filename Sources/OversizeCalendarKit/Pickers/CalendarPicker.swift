@@ -57,7 +57,7 @@ public struct CalendarPicker: View {
                 }
             }
         }
-        .surfaceContentRowInsets()
+        .surfaceContentRowMargins()
     }
 }
 
