@@ -31,9 +31,9 @@ public struct MapCoordinateView: View {
                         })
                         .background(.thickMaterial, ignoresSafeAreaEdges: .top)
                     }
-                    #if os(iOS)
+                #if os(iOS)
                     .toolbar(.hidden, for: .tabBar)
-                    #endif
+                #endif
             } else {
                 mapView
                     .safeAreaInset(edge: .top) {

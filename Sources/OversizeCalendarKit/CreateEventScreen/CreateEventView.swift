@@ -56,7 +56,7 @@ public struct CreateEventView: View {
             Button { viewModel.present(.calendar) } label: {
                 HStack(spacing: .xxxSmall) {
                     Circle()
-                        .fill(Color(viewModel.calendar?.cgColor ?? CGColor.init(red: 0.4, green: 0.4, blue: 0.4, alpha: 1)))
+                        .fill(Color(viewModel.calendar?.cgColor ?? CGColor(red: 0.4, green: 0.4, blue: 0.4, alpha: 1)))
                         .frame(width: 16, height: 16)
                         .padding(.xxxSmall)
 
@@ -150,27 +150,27 @@ public struct CreateEventView: View {
                 .scrollContentBackground(.hidden)
                 .background {
                     #if os(iOS)
-                    RoundedRectangleCorner(radius: 4, corners: [.bottomLeft, .bottomRight])
-                        .fillSurfaceSecondary()
-                        .overlay(alignment: .topLeading) {
-                            if viewModel.note.isEmpty {
-                                Text("Note")
-                                    .body(.medium)
-                                    .onSurfaceDisabledForegroundColor()
-                                    .padding(.small)
+                        RoundedRectangleCorner(radius: 4, corners: [.bottomLeft, .bottomRight])
+                            .fillSurfaceSecondary()
+                            .overlay(alignment: .topLeading) {
+                                if viewModel.note.isEmpty {
+                                    Text("Note")
+                                        .body(.medium)
+                                        .onSurfaceDisabledForegroundColor()
+                                        .padding(.small)
+                                }
                             }
-                        }
                     #else
-                    RoundedRectangle(cornerRadius: .small)
-                        .fillSurfaceSecondary()
-                        .overlay(alignment: .topLeading) {
-                            if viewModel.note.isEmpty {
-                                Text("Note")
-                                    .body(.medium)
-                                    .onSurfaceDisabledForegroundColor()
-                                    .padding(.small)
+                        RoundedRectangle(cornerRadius: .small)
+                            .fillSurfaceSecondary()
+                            .overlay(alignment: .topLeading) {
+                                if viewModel.note.isEmpty {
+                                    Text("Note")
+                                        .body(.medium)
+                                        .onSurfaceDisabledForegroundColor()
+                                        .padding(.small)
+                                }
                             }
-                        }
                     #endif
                 }
                 .frame(minHeight: 76)
@@ -183,11 +183,11 @@ public struct CreateEventView: View {
                 .padding(.vertical, 18)
                 .background {
                     #if os(iOS)
-                    RoundedRectangleCorner(radius: 4, corners: [.topLeft, .topRight])
-                        .fillSurfaceSecondary()
+                        RoundedRectangleCorner(radius: 4, corners: [.topLeft, .topRight])
+                            .fillSurfaceSecondary()
                     #else
-                    RoundedRectangle(cornerRadius: .small)
-                        .fillSurfaceSecondary()
+                        RoundedRectangle(cornerRadius: .small)
+                            .fillSurfaceSecondary()
                     #endif
                 }
         }

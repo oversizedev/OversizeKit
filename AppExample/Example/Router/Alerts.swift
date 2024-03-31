@@ -4,9 +4,9 @@
 //
 
 import OversizeLocalizable
+import OversizeModels
 import OversizeServices
 import SwiftUI
-import OversizeModels
 
 enum RootAlert: Identifiable {
     case dismiss(_ action: () -> Void)

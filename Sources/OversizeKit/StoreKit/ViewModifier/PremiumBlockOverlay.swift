@@ -17,17 +17,16 @@ public struct PremiumBlockOverlay: ViewModifier {
     let subtitle: String?
 
     private let closeAction: (() -> Void)?
-    
 
     public init(isShow: Binding<Bool> = .constant(true), title: String, subtitle: String?, closeAction: (() -> Void)? = nil) {
-        self._isShow = isShow
+        _isShow = isShow
         self.title = title
         self.subtitle = subtitle
         self.closeAction = closeAction
     }
 
     public func body(content: Content) -> some View {
-        if !isPremium && isShow {
+        if !isPremium, isShow {
             ZStack {
                 content
 
@@ -89,16 +88,15 @@ public struct PremiumBlockOverlay: ViewModifier {
 }
 
 public extension View {
-    
     func premiumContent(_ title: String, subtitle: String?, closeAction: (() -> Void)? = nil) -> some View {
         modifier(PremiumBlockOverlay(title: title, subtitle: subtitle, closeAction: closeAction))
     }
-    
+
     @available(*, deprecated, renamed: "premiumContent", message: "Renamed")
     func premiumContent(title: String, subtitle: String?, closeAction: (() -> Void)? = nil) -> some View {
         modifier(PremiumBlockOverlay(title: title, subtitle: subtitle, closeAction: closeAction))
     }
-    
+
     func premiumContent(isShow: Binding<Bool> = .constant(true), title: String, subtitle: String?, closeAction: (() -> Void)? = nil) -> some View {
         modifier(PremiumBlockOverlay(isShow: isShow, title: title, subtitle: subtitle, closeAction: closeAction))
     }
