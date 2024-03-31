@@ -77,7 +77,7 @@ public struct LocalNotificationView: View {
                         }
                     }
                 }
-                .surfaceContentRowInsets()
+                .surfaceContentRowMargins()
                 if isPendingNotification {
                     SectionView {
                         VStack(spacing: .zero) {
@@ -92,7 +92,7 @@ public struct LocalNotificationView: View {
                             }
                         }
                     }
-                    .surfaceContentRowInsets()
+                    .surfaceContentRowMargins()
                 }
             }
         }

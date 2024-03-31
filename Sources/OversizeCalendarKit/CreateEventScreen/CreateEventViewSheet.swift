@@ -65,23 +65,23 @@ public extension CreateEventView {
             switch sheet {
             case .startTime:
                 #if os(iOS)
-                DatePickerSheet(title: "Starts time", selection: $viewModel.dateStart)
-                    .onDisappear {
-                        if viewModel.dateStart > viewModel.dateEnd {
-                            viewModel.dateEnd = viewModel.dateStart.halfHour
+                    DatePickerSheet(title: "Starts time", selection: $viewModel.dateStart)
+                        .onDisappear {
+                            if viewModel.dateStart > viewModel.dateEnd {
+                                viewModel.dateEnd = viewModel.dateStart.halfHour
+                            }
                         }
-                    }
-                    .presentationDetents([.height(500)])
+                        .presentationDetents([.height(500)])
                 #else
-                EmptyView()
+                    EmptyView()
                 #endif
             case .endTime:
                 #if os(iOS)
-                DatePickerSheet(title: "Ends time", selection: $viewModel.dateEnd)
-                    .datePickerMinimumDate(viewModel.dateStart.minute)
-                    .presentationDetents([.height(500)])
+                    DatePickerSheet(title: "Ends time", selection: $viewModel.dateEnd)
+                        .datePickerMinimumDate(viewModel.dateStart.minute)
+                        .presentationDetents([.height(500)])
                 #else
-                EmptyView()
+                    EmptyView()
                 #endif
             case .attachment:
                 AttachmentView()

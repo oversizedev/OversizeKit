@@ -66,19 +66,19 @@ public struct ContactsListsView: View {
     private func emailRow(email: CNLabeledValue<NSString>, contact: CNContact) -> some View {
         let email = email.value as String
         #if os(iOS)
-        if let avatarThumbnailData = contact.thumbnailImageData, let avatarThumbnail = UIImage(data: avatarThumbnailData) {
-            Row(contact.givenName + " " + contact.familyName, subtitle: email) {
-                Avatar(firstName: contact.givenName, lastName: contact.familyName, avatar: Image(uiImage: avatarThumbnail))
+            if let avatarThumbnailData = contact.thumbnailImageData, let avatarThumbnail = UIImage(data: avatarThumbnailData) {
+                Row(contact.givenName + " " + contact.familyName, subtitle: email) {
+                    Avatar(firstName: contact.givenName, lastName: contact.familyName, avatar: Image(uiImage: avatarThumbnail))
+                }
+            } else {
+                Row(contact.givenName + " " + contact.familyName, subtitle: email) {
+                    Avatar(firstName: contact.givenName, lastName: contact.familyName)
+                }
             }
-        } else {
+        #else
             Row(contact.givenName + " " + contact.familyName, subtitle: email) {
                 Avatar(firstName: contact.givenName, lastName: contact.familyName)
             }
-        }
-        #else
-        Row(contact.givenName + " " + contact.familyName, subtitle: email) {
-            Avatar(firstName: contact.givenName, lastName: contact.familyName)
-        }
         #endif
     }
 

@@ -66,7 +66,7 @@ let package = Package(
                 .product(name: "OversizeModels", package: "OversizeModels"),
                 .product(name: "OversizeNetwork", package: "OversizeNetwork"),
                 .product(name: "Factory", package: "Factory"),
-                .product(name: "CachedAsyncImage", package: "swiftui-cached-async-image")
+                .product(name: "CachedAsyncImage", package: "swiftui-cached-async-image"),
             ]
         ),
         .target(
