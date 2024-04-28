@@ -35,7 +35,7 @@ let isProductionDependencies = ProcessInfo.processInfo.environment["RELEASE_DEPE
 let package = Package(
     name: "OversizeKit",
     platforms: [
-        .iOS(.v15),
+        .iOS(.v16),
         .macOS(.v13),
         .tvOS(.v15),
         .watchOS(.v9),
@@ -66,7 +66,7 @@ let package = Package(
                 .product(name: "OversizeModels", package: "OversizeModels"),
                 .product(name: "OversizeNetwork", package: "OversizeNetwork"),
                 .product(name: "Factory", package: "Factory"),
-                .product(name: "CachedAsyncImage", package: "swiftui-cached-async-image")
+                .product(name: "CachedAsyncImage", package: "swiftui-cached-async-image"),
             ]
         ),
         .target(

@@ -12,82 +12,33 @@ import SwiftUI
 // swiftlint:disable line_length
 #if os(iOS)
     public struct SettingsView<AppSection: View, HeadSection: View>: View {
-        @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-        @Environment(\.verticalSizeClass) private var verticalSizeClass
-        @Environment(\.presentationMode) var presentationMode
+        @Environment(\.settingsNavigate) var settingsNavigate
         @Environment(\.iconStyle) var iconStyle: IconStyle
         @Environment(\.theme) var theme: ThemeSettings
         @StateObject var settingsService = SettingsService()
-        @EnvironmentObject var hudState: HUDDeprecated
 
         let appSection: AppSection
         let headSection: HeadSection
 
-        @State private var isPortrait = false
-        @State private var isShowSupport = false
-        @State private var isShowFeedback = false
-
-        var isShowArrow: Bool {
-            #if os(iOS)
-                if !isPortrait, verticalSizeClass == .regular {
-                    return false
-                } else {
-                    return true
-                }
-            #else
-                return true
-
-            #endif
-        }
-
-        public init(@ViewBuilder appSection: () -> AppSection,
-                    @ViewBuilder headSection: () -> HeadSection)
-        {
+        public init(
+            @ViewBuilder appSection: () -> AppSection,
+            @ViewBuilder headSection: () -> HeadSection
+        ) {
             self.appSection = appSection()
             self.headSection = headSection()
         }
 
         public var body: some View {
             #if os(iOS)
-                Group {
-                    if !isPortrait, verticalSizeClass == .regular {
-                        Group {
-                            PageView(L10n.Settings.title) {
-                                iOSSettings
-                            }.backgroundSecondary()
 
-                            AppearanceSettingView()
-                        }
-                        .navigationable()
-                        .navigationViewStyle(DoubleColumnNavigationViewStyle())
-                    } else {
-                        Group {
-                            PageView(L10n.Settings.title) {
-                                iOSSettings
-                            }
-                            .backgroundSecondary()
-                        }
-                        .navigationable()
-                        .navigationViewStyle(StackNavigationViewStyle())
-                    }
-                }
-                .onReceive(NotificationCenter.default.publisher(for: UIDevice.orientationDidChangeNotification)) { _ in
-                    setOrientation()
-                }
-                .onAppear {
-                    setOrientation()
-                }
-                .portraitMode(isPortrait)
+                Page(L10n.Settings.title) {
+                    iOSSettings
+                }.backgroundSecondary()
 
             #else
                 macSettings
 
             #endif
-        }
-
-        func setOrientation() {
-            guard let scene = UIApplication.shared.connectedScenes.first as? UIWindowScene else { return }
-            isPortrait = scene.interfaceOrientation.isPortrait
         }
     }
 #endif
@@ -129,25 +80,21 @@ import SwiftUI
             SectionView("General") {
                 VStack(spacing: .zero) {
                     if FeatureFlags.app.apperance.valueOrFalse {
-                        NavigationLink(destination: AppearanceSettingView()
-                        ) {
-                            Row(L10n.Settings.apperance) {
-                                apperanceSettingsIcon.icon()
-                            }
-                            .rowArrow(isShowArrow)
+                        Row(L10n.Settings.apperance) {
+                            settingsNavigate(.move(.appearance))
+                        } leading: {
+                            apperanceSettingsIcon.icon()
                         }
-                        .buttonStyle(.row)
+                        .rowArrow()
                     }
 
                     if FeatureFlags.app.сloudKit.valueOrFalse || FeatureFlags.app.healthKit.valueOrFalse {
-                        NavigationLink(destination: iCloudSettingsView()
-                        ) {
-                            Row(L10n.Title.synchronization) {
-                                cloudKitIcon.icon()
-                            }
-                            .rowArrow(isShowArrow)
+                        Row(L10n.Title.synchronization) {
+                            settingsNavigate(.move(.sync))
+                        } leading: {
+                            cloudKitIcon.icon()
                         }
-                        .buttonStyle(.row)
+                        .rowArrow()
                     }
 
                     if FeatureFlags.secure.faceID.valueOrFalse
@@ -158,36 +105,30 @@ import SwiftUI
                         || FeatureFlags.secure.bruteForceSecure.valueOrFalse
                         || FeatureFlags.secure.photoBreaker.valueOrFalse
                     {
-                        NavigationLink(destination: SecuritySettingsView()
-                        ) {
-                            Row(L10n.Security.title) {
-                                securityIcon.icon()
-                            }
-                            .rowArrow(isShowArrow)
+                        Row(L10n.Security.title) {
+                            settingsNavigate(.move(.security))
+                        } leading: {
+                            securityIcon.icon()
                         }
-                        .buttonStyle(.row)
+                        .rowArrow()
                     }
 
                     if FeatureFlags.app.sounds.valueOrFalse || FeatureFlags.app.vibration.valueOrFalse {
-                        NavigationLink(destination: SoundsAndVibrationsSettingsView()
-                        ) {
-                            Row(soundsAndVibrationTitle) {
-                                FeatureFlags.app.sounds.valueOrFalse ? soundIcon.icon() : vibrationIcon.icon()
-                            }
-                            .rowArrow(isShowArrow)
+                        Row(soundsAndVibrationTitle) {
+                            settingsNavigate(.move(.soundAndVibration))
+                        } leading: {
+                            FeatureFlags.app.sounds.valueOrFalse ? soundIcon.icon() : vibrationIcon.icon()
                         }
-                        .buttonStyle(.row)
+                        .rowArrow()
                     }
 
                     if FeatureFlags.app.notifications.valueOrFalse {
-                        NavigationLink(destination: NotificationsSettingsView()
-                        ) {
-                            Row(L10n.Settings.notifications) {
-                                notificationsIcon.icon()
-                            }
-                            .rowArrow(isShowArrow)
+                        Row(L10n.Settings.notifications) {
+                            settingsNavigate(.move(.notifications))
+                        } leading: {
+                            notificationsIcon.icon()
                         }
-                        .buttonStyle(.row)
+                        .rowArrow()
                     }
 
                     appSection
@@ -266,34 +207,20 @@ import SwiftUI
             SectionView(L10n.Settings.supportSection) {
                 VStack(alignment: .leading) {
                     Row("Get help") {
-                        isShowSupport.toggle()
+                        settingsNavigate(.present(.support, detents: [.medium]))
                     } leading: {
                         helpIcon.icon()
                     }
-                    .rowArrow(isShowArrow)
+                    .rowArrow()
                     .buttonStyle(.row)
-                    .sheet(isPresented: $isShowSupport) {
-                        SupportView()
-                            .presentationDetents([.medium])
-                            .presentationContentInteraction(.resizes)
-                            .presentationCompactAdaptation(.sheet)
-                            .scrollDisabled(true)
-                    }
 
                     Row("Send feedback") {
-                        isShowFeedback.toggle()
+                        settingsNavigate(.present(.feedback, detents: [.medium]))
                     } leading: {
                         chatIcon.icon()
                     }
-                    .rowArrow(isShowArrow)
+                    .rowArrow()
                     .buttonStyle(.row)
-                    .sheet(isPresented: $isShowFeedback) {
-                        FeedbackView()
-                            .presentationDetents([.height(560)])
-                            .presentationContentInteraction(.resizes)
-                            .presentationCompactAdaptation(.sheet)
-                            .scrollDisabled(true)
-                    }
                 }
             }
         }
@@ -367,14 +294,14 @@ import SwiftUI
         private var about: some View {
             SectionView {
                 VStack(spacing: .zero) {
-                    NavigationLink(destination: AboutView()) {
-                        Row(L10n.Settings.about) {
-                            infoIcon.icon()
-                        }
-                        .rowArrow(isShowArrow)
+                    Row(L10n.Settings.about) {
+                        settingsNavigate(.move(.about))
+                    } leading: {
+                        infoIcon.icon()
                     }
-                    .buttonStyle(.row)
+                    .rowArrow()
                 }
+                .buttonStyle(.row)
             }
         }
 

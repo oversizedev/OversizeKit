@@ -17,9 +17,7 @@ import SwiftUI
     import MessageUI
 
     public struct AboutView: View {
-        @Environment(\.verticalSizeClass) private var verticalSizeClass
-        @Environment(\.isPortrait) var isPortrait
-        @Environment(\.presentationMode) var presentationMode
+        @Environment(\.settingsNavigate) var settingsNavigate
         @Environment(\.screenSize) var screenSize
         @Environment(\.iconStyle) var iconStyle: IconStyle
 
@@ -33,9 +31,6 @@ import SwiftUI
 
         @State var isSharePresented = false
         @State private var isShowMail = false
-
-        @State var isShowPrivacy = false
-        @State var isShowTerms = false
 
         @State private var isPresentStoreProduct: Bool = false
 
@@ -69,22 +64,12 @@ import SwiftUI
 
         public var body: some View {
             #if os(iOS)
-                PageView(L10n.Settings.about, onOffsetChanged: { offset = $0 }) {
+                Page(L10n.Settings.about) {
                     list
                         .surfaceContentRowMargins()
                         .task {
                             await viewModel.fetchApps()
                         }
-                }
-                .leadingBar {
-                    /*
-                     if !isPortrait, verticalSizeClass == .regular {
-                         EmptyView()
-                     } else {
-                         BarButton(.back)
-                     }
-                      */
-                    BarButton(.back)
                 }
                 .backgroundSecondary()
 
@@ -282,27 +267,20 @@ import SwiftUI
 
                 SectionView {
                     VStack(spacing: .zero) {
-                        NavigationLink(destination: OurResorsesView()) {
-                            Row("Our open resources")
-                                .rowArrow()
+                        Row("Our open resources") {
+                            settingsNavigate(.move(.ourResorses))
                         }
-                        .buttonStyle(.row)
+                        .rowArrow()
 
                         if let privacyUrl = Info.url.appPrivacyPolicyUrl {
                             Row(L10n.Store.privacyPolicy) {
-                                isShowPrivacy.toggle()
-                            }
-                            .sheet(isPresented: $isShowPrivacy) {
-                                WebView(url: privacyUrl)
+                                settingsNavigate(.present(.webView(url: privacyUrl)))
                             }
                         }
 
                         if let termsOfUde = Info.url.appTermsOfUseUrl {
                             Row(L10n.Store.termsOfUse) {
-                                isShowTerms.toggle()
-                            }
-                            .sheet(isPresented: $isShowTerms) {
-                                WebView(url: termsOfUde)
+                                settingsNavigate(.present(.webView(url: termsOfUde)))
                             }
                         }
                     }
@@ -491,7 +469,7 @@ import SwiftUI
                                let appName = Info.app.name,
                                let appBuild = Info.app.build
                             {
-                                Text("© 2023 \(developerName). \(appName) \(appVersion) (\(appBuild))")
+                                Text("© 2024 \(developerName). \(appName) \(appVersion) (\(appBuild))")
                                     .footnote()
                                     .foregroundColor(.onBackgroundDisabled)
                             } else {

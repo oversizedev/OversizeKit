@@ -49,30 +49,27 @@ public struct Launcher<Content: View, Onboarding: View>: View {
             }
             .onChange(of: scenePhase, perform: { value in
                 switch value {
-                case .active, .inactive:
-                    break
                 case .background:
                     viewModel.authState = .locked
                     viewModel.pinCodeField = ""
-                @unknown default:
-                    log("unknown")
+                default:
+                    break
                 }
             })
     }
 
+    @ViewBuilder
     var contentView: some View {
-        Group {
-            if viewModel.isShowSplashScreen {
-                SplashScreen()
-            } else if viewModel.isShowLockscreen {
-                lockscreenView
-            } else {
-                content
-                    .onAppear {
-                        viewModel.reviewService.launchEvent()
-                        viewModel.launcherSheetsChek()
-                    }
-            }
+        if viewModel.isShowSplashScreen {
+            SplashScreen()
+        } else if viewModel.isShowLockscreen {
+            lockscreenView
+        } else {
+            content
+                .onAppear {
+                    viewModel.reviewService.launchEvent()
+                    viewModel.launcherSheetsChek()
+                }
         }
     }
 

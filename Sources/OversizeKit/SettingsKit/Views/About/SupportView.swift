@@ -14,12 +14,12 @@ import OversizeUI
 import SwiftUI
 
 public struct SupportView: View {
+    @Environment(\.settingsNavigate) var settingsNavigate
     @Environment(\.iconStyle) var iconStyle: IconStyle
-    @State private var isShowMail = false
     public init() {}
 
     public var body: some View {
-        PageView(L10n.Settings.supportSection) {
+        Page(L10n.Settings.supportSection) {
             VStack(spacing: .large) {
                 help
 
@@ -27,10 +27,16 @@ public struct SupportView: View {
                     .padding(.bottom, .medium)
             }
         }
-        .trailingBar {
-            BarButton(.close)
-        }
         .backgroundSecondary()
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button {
+                    settingsNavigate(.dismissSheet)
+                } label: {
+                    Image.Base.close.icon()
+                }
+            }
+        }
     }
 
     private var hero: some View {
@@ -54,14 +60,9 @@ public struct SupportView: View {
                         let subject = "Support"
 
                         Row("Contact Us") {
-                            isShowMail.toggle()
+                            settingsNavigate(.present(.sendMail(to: mail, subject: subject, content: contentPreText)))
                         } leading: {
                             mailIcon.icon()
-                        }
-
-                        .buttonStyle(.row)
-                        .sheet(isPresented: $isShowMail) {
-                            MailView(to: mail, subject: subject, content: contentPreText)
                         }
                     } else {
                         // Send author
@@ -87,6 +88,7 @@ public struct SupportView: View {
                 }
             }
         }
+        .sectionContentCompactRowMargins()
     }
 
     var heartIcon: Image {
@@ -121,15 +123,4 @@ public struct SupportView: View {
             return Image.Brands.Telegram.twoTone
         }
     }
-
-//    var chatIcon: Image {
-//        switch iconStyle {
-//        case .line:
-//            return Icon.Line.Communication.chatDots
-//        case .solid:
-//            return Icon.Solid.Communication.chatDots
-//        case .duotone:
-//            return Icon.Duotone.Communication.chatDots
-//        }
-//    }
 }

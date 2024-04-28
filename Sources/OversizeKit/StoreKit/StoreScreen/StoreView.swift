@@ -26,7 +26,7 @@ import SwiftUI
         }
 
         public var body: some View {
-            PageView {
+            Page {
                 Group {
                     switch viewModel.state {
                     case .initial, .loading:
@@ -39,22 +39,22 @@ import SwiftUI
                 }
                 .paddingContent(.horizontal)
             }
-            .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
-            .titleLabel {
-                PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: .medium)
-            }
-            .leadingBar {
-                if !isPortrait, verticalSizeClass == .regular, isClosable {
-                    EmptyView()
-                } else {
-                    BarButton(.back)
-                }
-            }
-            .trailingBar {
-                if isClosable {
-                    BarButton(.close)
-                }
-            }
+//            .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
+//            .titleLabel {
+//                PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: .medium)
+//            }
+//            .leadingBar {
+//                if !isPortrait, verticalSizeClass == .regular, isClosable {
+//                    EmptyView()
+//                } else {
+//                    BarButton(.back)
+//                }
+//            }
+//            .trailingBar {
+//                if isClosable {
+//                    BarButton(.close)
+//                }
+//            }
             .bottomToolbar(style: .none) {
                 if !viewModel.isPremium {
                     StorePaymentButtonBar()

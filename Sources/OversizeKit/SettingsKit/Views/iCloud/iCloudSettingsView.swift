@@ -11,19 +11,14 @@ import SwiftUI
 // swiftlint:disable line_length type_name
 #if os(iOS)
     public struct iCloudSettingsView: View { // Synchronization
-        @Environment(\.presentationMode) var presentationMode
-        @Environment(\.verticalSizeClass) private var verticalSizeClass
-        @Environment(\.isPortrait) var isPortrait
         @StateObject var settingsService = SettingsService()
-        @State var offset = CGPoint(x: 0, y: 0)
+
+        public init() {}
 
         public var body: some View {
-            PageView(L10n.Title.synchronization) {
+            Page(L10n.Title.synchronization) {
                 iOSSettings
                     .surfaceContentRowMargins()
-            }
-            .leadingBar {
-                BarButton(.back)
             }
             .backgroundSecondary()
         }

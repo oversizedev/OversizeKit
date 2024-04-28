@@ -11,19 +11,14 @@ import SwiftUI
 // swiftlint:disable line_length
 #if os(iOS)
     public struct NotificationsSettingsView: View {
-        @Environment(\.presentationMode) var presentationMode
-        @Environment(\.verticalSizeClass) private var verticalSizeClass
-        @Environment(\.isPortrait) var isPortrait
         @StateObject var settingsService = SettingsService()
-        @State var offset = CGPoint(x: 0, y: 0)
+
+        public init() {}
 
         public var body: some View {
-            PageView(L10n.Settings.notifications) {
+            Page(L10n.Settings.notifications) {
                 soundsAndVibrations
                     .surfaceContentRowMargins()
-            }
-            .leadingBar {
-                BarButton(.back)
             }
             .backgroundSecondary()
         }

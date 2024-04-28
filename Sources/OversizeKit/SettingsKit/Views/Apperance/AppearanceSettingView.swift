@@ -10,34 +10,9 @@ import OversizeUI
 import SwiftUI
 
 #if os(iOS)
-    public class AppIconSettings: ObservableObject {
-        public var iconNames: [String?] = [nil]
-        @Published public var currentIndex = 0
-
-        public init() {
-            getAlternateIconNames()
-
-            if let currentIcon = UIApplication.shared.alternateIconName {
-                currentIndex = iconNames.firstIndex(of: currentIcon) ?? 0
-            }
-        }
-
-        private func getAlternateIconNames() {
-            if let iconCount = FeatureFlags.app.alternateAppIcons, iconCount != 0 {
-                for index in 1 ... iconCount {
-                    iconNames.append("AlternateAppIcon\(index)")
-                }
-            }
-        }
-    }
-#endif
-
-#if os(iOS)
     public struct AppearanceSettingView: View {
-        @Environment(\.verticalSizeClass) private var verticalSizeClass
-        @Environment(\.presentationMode) var presentationMode
+        @Environment(\.settingsNavigate) var settingsNavigate
         @Environment(\.theme) private var theme: ThemeSettings
-        @Environment(\.isPortrait) var isPortrait
         @Environment(\.iconStyle) var iconStyle: IconStyle
         @Environment(\.isPremium) var isPremium: Bool
 
@@ -45,36 +20,17 @@ import SwiftUI
             @StateObject var iconSettings = AppIconSettings()
         #endif
 
-        // swiftlint:disable trailing_comma
-
-        @State var offset = CGPoint(x: 0, y: 0)
-        @State var pageDestenation: Destenation?
-        @State var isShowPremium: Bool = .init(false)
         private let columns = [
             GridItem(.adaptive(minimum: 78)),
         ]
-        enum Destenation {
-            case font
-            case border
-            case radius
-        }
 
         public init() {}
+
         public var body: some View {
             #if os(iOS)
-                PageView(L10n.Settings.apperance) {
+                Page(L10n.Settings.apperance) {
                     iOSSettings
                         .surfaceContentRowMargins()
-                }
-                .leadingBar {
-                    /*
-                     if !isPortrait, verticalSizeClass == .regular {
-                         EmptyView()
-                     } else {
-                         BarButton(.back)
-                     }
-                      */
-                    BarButton(.back)
                 }
                 .backgroundSecondary()
 
@@ -85,7 +41,7 @@ import SwiftUI
 
         #if os(iOS)
             private var iOSSettings: some View {
-                VStack(alignment: .center, spacing: 0) {
+                LazyVStack(alignment: .leading, spacing: 0) {
                     apperance
 
                     accentColor
@@ -176,7 +132,7 @@ import SwiftUI
                                     )
                                     .onTapGesture {
                                         if index != 0, isPremium == false {
-                                            isShowPremium.toggle()
+                                            settingsNavigate(.present(.premium))
                                         } else {
                                             let defaultIconIndex = iconSettings.iconNames
                                                 .firstIndex(of: UIApplication.shared.alternateIconName) ?? 0
@@ -198,69 +154,45 @@ import SwiftUI
                     }
                     .padding()
                 }
-                .sheet(isPresented: $isShowPremium, content: {
-                    StoreView()
-                        .closable()
-                })
             }
         #endif
 
         private var advanded: some View {
             SectionView("Advanced settings") {
-                ZStack {
-                    NavigationLink(destination: FontSettingView(),
-                                   tag: .font,
-                                   selection: $pageDestenation) { EmptyView() }
-
-                    NavigationLink(destination: BorderSettingView(),
-                                   tag: .border,
-                                   selection: $pageDestenation) { EmptyView() }
-
-                    NavigationLink(destination: RadiusSettingView(),
-                                   tag: .radius,
-                                   selection: $pageDestenation) { EmptyView() }
-
-                    VStack(spacing: .zero) {
-                        Row("Fonts") {
-                            pageDestenation = .font
-                        } leading: {
-                            textIcon.icon()
-                        }
-                        .rowArrow()
-                        .premium()
-                        .onPremiumTap()
-
-                        Switch(isOn: theme.$borderApp) {
-                            Row("Borders") {
-                                pageDestenation = .border
-                            } leading: {
-                                borderIcon.icon()
-                            }
-                            .premium()
-                        }
-                        .onPremiumTap()
-//                        Row("Borders", leadingType: .image(borderIcon), trallingType: .toggleWithArrowButton(isOn: theme.$borderApp, action: {
-//                            pageDestenation = .border
-//                        })) {
-//                            pageDestenation = .border
-//                        }
-
-                        .onChange(of: theme.borderApp) { value in
-                            theme.borderSurface = value
-                            theme.borderButtons = value
-                            theme.borderControls = value
-                            theme.borderTextFields = value
-                        }
-
-                        Row("Radius") {
-                            pageDestenation = .radius
-                        } leading: {
-                            radiusIcon.icon()
-                        }
-                        .rowArrow()
-                        .premium()
-                        .onPremiumTap()
+                VStack(spacing: .zero) {
+                    Row("Fonts") {
+                        settingsNavigate(.move(.font))
+                    } leading: {
+                        textIcon.icon()
                     }
+                    .rowArrow()
+                    .premium()
+                    .onPremiumTap()
+
+                    Switch(isOn: theme.$borderApp) {
+                        Row("Borders") {
+                            settingsNavigate(.move(.border))
+                        } leading: {
+                            borderIcon.icon()
+                        }
+                        .premium()
+                    }
+                    .onPremiumTap()
+                    .onChange(of: theme.borderApp) { value in
+                        theme.borderSurface = value
+                        theme.borderButtons = value
+                        theme.borderControls = value
+                        theme.borderTextFields = value
+                    }
+
+                    Row("Radius") {
+                        settingsNavigate(.move(.radius))
+                    } leading: {
+                        radiusIcon.icon()
+                    }
+                    .rowArrow()
+                    .premium()
+                    .onPremiumTap()
                 }
             }
         }
@@ -298,7 +230,32 @@ import SwiftUI
             }
         }
     }
+#endif
 
+#if os(iOS)
+    public class AppIconSettings: ObservableObject {
+        public var iconNames: [String?] = [nil]
+        @Published public var currentIndex = 0
+
+        public init() {
+            getAlternateIconNames()
+
+            if let currentIcon = UIApplication.shared.alternateIconName {
+                currentIndex = iconNames.firstIndex(of: currentIcon) ?? 0
+            }
+        }
+
+        private func getAlternateIconNames() {
+            if let iconCount = FeatureFlags.app.alternateAppIcons, iconCount != 0 {
+                for index in 1 ... iconCount {
+                    iconNames.append("AlternateAppIcon\(index)")
+                }
+            }
+        }
+    }
+#endif
+
+#if os(iOS)
     struct SettingsThemeView_Previews: PreviewProvider {
         static var previews: some View {
             AppearanceSettingView()

@@ -20,7 +20,6 @@ public struct SystemServicesModifier: ViewModifier {
     @Environment(\.theme) var theme: ThemeSettings
     @AppStorage("AppState.PremiumState") var isPremium: Bool = false
 
-    @StateObject var hudState = HUDDeprecated()
     @State var blurRadius: CGFloat = 0
     @State var oppacity: CGFloat = 1
 
@@ -34,6 +33,8 @@ public struct SystemServicesModifier: ViewModifier {
     }
 
     public init() {}
+    
+    @State private var screnSize: ScreenSize = .init(width: 375, height: 667)
 
     public func body(content: Content) -> some View {
         GeometryReader { geometry in
@@ -62,6 +63,10 @@ public struct SystemServicesModifier: ViewModifier {
                         break
                     }
                 })
+                .onAppear {
+                    let updatedScreenSize = ScreenSize(geometry: geometry)
+                    screnSize = updatedScreenSize
+                }
                 .blur(radius: blurRadius)
                 .preferredColorScheme(theme.appearance.colorScheme)
             #if os(iOS)
@@ -69,11 +74,7 @@ public struct SystemServicesModifier: ViewModifier {
             #endif
                 .premiumStatus(isPremium)
                 .theme(ThemeSettings())
-                .screenSize(geometry)
-                .hudDeprecated(isPresented: $hudState.isPresented, type: $hudState.type) {
-                    HUDContent(title: hudState.title, image: hudState.image, type: hudState.type)
-                }
-                .environmentObject(hudState)
+               .screenSize(screnSize)
         }
     }
 }

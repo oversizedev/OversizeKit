@@ -25,7 +25,7 @@ public struct PhotoOptionsView<A>: View where A: View {
     private let actions: Group<A>?
     private let deleteAction: (() -> Void)?
 
-    @State private var isShowAlert: Bool = false
+    @State private var isShowAlert = false
 
     public init(
         image: Image,

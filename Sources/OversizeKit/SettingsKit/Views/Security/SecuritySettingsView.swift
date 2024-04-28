@@ -13,23 +13,15 @@ import SwiftUI
 #if os(iOS)
     public struct SecuritySettingsView: View {
         @Injected(\.biometricService) var biometricService
-        @Environment(\.verticalSizeClass) private var verticalSizeClass
-        @Environment(\.isPortrait) var isPortrait
-        @Environment(\.presentationMode) var presentationMode
+        @Environment(\.settingsNavigate) var settingsNavigate
         @StateObject var settingsService = SettingsService()
-
-        @State var offset = CGPoint(x: 0, y: 0)
-        @State var isSetPINCodeSheet: PINCodeAction?
 
         public init() {}
 
         public var body: some View {
-            PageView(L10n.Security.title) {
+            Page(L10n.Security.title) {
                 iOSSettings
                     .surfaceContentRowMargins()
-            }
-            .leadingBar {
-                BarButton(.back)
             }
             .backgroundSecondary()
         }
@@ -40,7 +32,7 @@ import SwiftUI
             VStack(alignment: .center, spacing: 0) {
                 faceID
 
-                additionally
+                // additionally
             }
         }
     }
@@ -74,21 +66,18 @@ import SwiftUI
                                 if settingsService.isSetedPinCode() {
                                     settingsService.pinCodeEnabend = $0
                                 } else {
-                                    isSetPINCodeSheet = .set
+                                    settingsNavigate(.present(.setPINCode))
                                 }
                             })
                         ) {
                             Row(L10n.Security.pinCode) {
                                 Image.Security.lock.icon()
                             }
-                        }.sheet(item: $isSetPINCodeSheet) { sheet in
-                            SetPINCodeView(action: sheet)
-                                .systemServices()
                         }
 
                         if settingsService.isSetedPinCode() {
                             Row(L10n.Security.changePINCode) {
-                                isSetPINCodeSheet = .update
+                                settingsNavigate(.present(.updatePINCode))
                             }
                             .rowArrow()
                         }

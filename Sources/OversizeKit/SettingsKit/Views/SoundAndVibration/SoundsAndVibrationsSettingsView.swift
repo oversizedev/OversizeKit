@@ -12,24 +12,15 @@ import SwiftUI
 // swiftlint:disable line_length
 #if os(iOS)
     public struct SoundsAndVibrationsSettingsView: View {
-        @Environment(\.verticalSizeClass) private var verticalSizeClass
         @Environment(\.iconStyle) var iconStyle: IconStyle
-        @Environment(\.isPortrait) var isPortrait
-        @Environment(\.presentationMode) var presentationMode
-        @State var offset = CGPoint(x: 0, y: 0)
         @StateObject var settingsService = SettingsService()
 
+        public init() {}
+
         public var body: some View {
-            PageView(title) {
+            Page(title) {
                 iOSSettings
                     .surfaceContentRowMargins()
-            }
-            .leadingBar {
-                if !isPortrait, verticalSizeClass == .regular {
-                    EmptyView()
-                } else {
-                    BarButton(.back)
-                }
             }
             .backgroundSecondary()
         }

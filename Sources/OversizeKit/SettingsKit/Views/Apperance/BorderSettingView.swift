@@ -1,6 +1,6 @@
 //
 // Copyright © 2022 Alexander Romanov
-// BorderSettongView.swift
+// BorderSettingView.swift
 //
 
 import OversizeUI
