@@ -29,6 +29,51 @@ public enum SettingsScreen: Routable {
     case sendMail(to: String, subject: String, content: String)
 }
 
+public extension SettingsScreen {
+    var id: String {
+        switch self {
+        case .premium:
+            "premium"
+        case .premiumFeature:
+            "premiumFeature"
+        case .soundAndVibration:
+            "soundAndVibration"
+        case .appearance:
+            "appearance"
+        case .sync:
+            "sync"
+        case .about:
+            "about"
+        case .feedback:
+            "feedback"
+        case .webView:
+            "webView"
+        case .ourResorses:
+            "ourResorses"
+        case .support:
+            "support"
+        case .border:
+            "border"
+        case .font:
+            "font"
+        case .radius:
+            "radius"
+        case .setPINCode:
+            "setPINCode"
+        case .updatePINCode:
+            "updatePINCode"
+        case .security:
+            "security"
+        case .offer:
+            "offer"
+        case .sendMail:
+            "sendMail"
+        case .notifications:
+            "notifications"
+        }
+    }
+}
+
 public struct SettingsNavigateAction {
     public typealias Action = (SettingsNavigationType) -> Void
     public let action: Action
@@ -46,7 +91,7 @@ public enum SettingsNavigationType {
     case dismissSheet
     case dismissFullScreenCover
     case dismissDisabled(_ isDismissDisabled: Bool = true)
-    case presentHUD(_ text: String)
+    case presentHUD(_ text: String, type: HUDMessageType)
 }
 
 public struct SettingsNavigateEnvironmentKey: EnvironmentKey {

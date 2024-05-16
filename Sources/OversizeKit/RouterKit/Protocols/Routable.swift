@@ -8,9 +8,15 @@ import SwiftUI
 public protocol Routable: Equatable, Hashable, Identifiable {}
 
 public extension Routable {
-    var id: Self { self }
-
     func hash(into hasher: inout Hasher) {
         hasher.combine(id)
+    }
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        if lhs.id == rhs.id {
+            true
+        } else {
+            false
+        }
     }
 }

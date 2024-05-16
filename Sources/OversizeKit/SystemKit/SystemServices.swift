@@ -33,7 +33,7 @@ public struct SystemServicesModifier: ViewModifier {
     }
 
     public init() {}
-    
+
     @State private var screnSize: ScreenSize = .init(width: 375, height: 667)
 
     public func body(content: Content) -> some View {
@@ -74,7 +74,7 @@ public struct SystemServicesModifier: ViewModifier {
             #endif
                 .premiumStatus(isPremium)
                 .theme(ThemeSettings())
-               .screenSize(screnSize)
+                .screenSize(screnSize)
         }
     }
 }

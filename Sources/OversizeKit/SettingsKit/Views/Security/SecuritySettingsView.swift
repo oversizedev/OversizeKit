@@ -10,91 +10,91 @@ import OversizeUI
 import SwiftUI
 
 // swiftlint:disable line_length
-#if os(iOS)
-    public struct SecuritySettingsView: View {
-        @Injected(\.biometricService) var biometricService
-        @Environment(\.settingsNavigate) var settingsNavigate
-        @StateObject var settingsService = SettingsService()
 
-        public init() {}
+public struct SecuritySettingsView: View {
+    @Injected(\.biometricService) var biometricService
+    @Environment(\.settingsNavigate) var settingsNavigate
+    @StateObject var settingsService = SettingsService()
 
-        public var body: some View {
-            Page(L10n.Security.title) {
-                iOSSettings
-                    .surfaceContentRowMargins()
-            }
-            .backgroundSecondary()
+    public init() {}
+
+    public var body: some View {
+        Page(L10n.Security.title) {
+            iOSSettings
+                .surfaceContentRowMargins()
+        }
+        .backgroundSecondary()
+    }
+}
+
+extension SecuritySettingsView {
+    private var iOSSettings: some View {
+        VStack(alignment: .center, spacing: 0) {
+            faceID
+
+            // additionally
         }
     }
+}
 
-    extension SecuritySettingsView {
-        private var iOSSettings: some View {
-            VStack(alignment: .center, spacing: 0) {
-                faceID
+extension SecuritySettingsView {
+    private var faceID: some View {
+        SectionView(L10n.Settings.entrance) {
+            VStack(spacing: .zero) {
+                if FeatureFlags.secure.faceID.valueOrFalse, biometricService.checkIfBioMetricAvailable() {
+                    Switch(isOn:
+                        Binding(get: {
+                            settingsService.biometricEnabled
+                        }, set: {
+                            biometricChange(state: $0)
+                        })
+                    ) {
+                        Row(biometricService.biometricType.rawValue) {
+                            Image(systemName: biometricImageName)
+                                .foregroundColor(Color.onBackgroundHighEmphasis)
+                                .font(.system(size: 20, weight: .semibold))
+                                .frame(width: 24, height: 24, alignment: .center)
+                        }
+                    }
+                }
 
-                // additionally
-            }
-        }
-    }
-
-    extension SecuritySettingsView {
-        private var faceID: some View {
-            SectionView(L10n.Settings.entrance) {
-                VStack(spacing: .zero) {
-                    if FeatureFlags.secure.faceID.valueOrFalse, biometricService.checkIfBioMetricAvailable() {
-                        Switch(isOn:
-                            Binding(get: {
-                                settingsService.biometricEnabled
-                            }, set: {
-                                biometricChange(state: $0)
-                            })
-                        ) {
-                            Row(biometricService.biometricType.rawValue) {
-                                Image(systemName: biometricImageName)
-                                    .foregroundColor(Color.onBackgroundHighEmphasis)
-                                    .font(.system(size: 20, weight: .semibold))
-                                    .frame(width: 24, height: 24, alignment: .center)
+                if FeatureFlags.secure.lookscreen.valueOrFalse {
+                    Switch(isOn:
+                        Binding(get: {
+                            settingsService.pinCodeEnabend
+                        }, set: {
+                            if settingsService.isSetedPinCode() {
+                                settingsService.pinCodeEnabend = $0
+                            } else {
+                                settingsNavigate(.present(.setPINCode))
                             }
+                        })
+                    ) {
+                        Row(L10n.Security.pinCode) {
+                            Image.Security.lock.icon()
                         }
                     }
 
-                    if FeatureFlags.secure.lookscreen.valueOrFalse {
-                        Switch(isOn:
-                            Binding(get: {
-                                settingsService.pinCodeEnabend
-                            }, set: {
-                                if settingsService.isSetedPinCode() {
-                                    settingsService.pinCodeEnabend = $0
-                                } else {
-                                    settingsNavigate(.present(.setPINCode))
-                                }
-                            })
-                        ) {
-                            Row(L10n.Security.pinCode) {
-                                Image.Security.lock.icon()
-                            }
+                    if settingsService.isSetedPinCode() {
+                        Row(L10n.Security.changePINCode) {
+                            settingsNavigate(.present(.updatePINCode))
                         }
-
-                        if settingsService.isSetedPinCode() {
-                            Row(L10n.Security.changePINCode) {
-                                settingsNavigate(.present(.updatePINCode))
-                            }
-                            .rowArrow()
-                        }
+                        .rowArrow()
                     }
                 }
             }
         }
+    }
 
-        private func biometricChange(state: Bool) {
-            Task {
-                await settingsService.biometricChange(state)
-            }
+    private func biometricChange(state: Bool) {
+        Task {
+            await settingsService.biometricChange(state)
         }
+    }
 
-        private var additionally: some View {
-            SectionView(L10n.Settings.additionally) {
-                VStack(spacing: .zero) {
+    private var additionally: some View {
+        SectionView(L10n.Settings.additionally) {
+            VStack(spacing: .zero) {
 //                if FeatureFlags.secure.lookscreen.valueOrFalse {
 //                    Row(L10n.Security.inactiveAskPassword, trallingType: .toggle(isOn: $settingsStore.askPasswordWhenInactiveEnabend))
 //                }
@@ -125,34 +125,33 @@ import SwiftUI
 //                    Row(L10n.Security.facedownLock, trallingType: .toggle(isOn: $settingsStore.lookScreenDownEnabend))
 //                }
 //
-                    if FeatureFlags.secure.blurMinimize.valueOrFalse {
-                        Switch(isOn: $settingsService.blurMinimizeEnabend) {
-                            Row(L10n.Security.blurMinimize)
-                                .premium()
-                        }
-                        .onPremiumTap()
+                if FeatureFlags.secure.blurMinimize.valueOrFalse {
+                    Switch(isOn: $settingsService.blurMinimizeEnabend) {
+                        Row(L10n.Security.blurMinimize)
+                            .premium()
                     }
+                    .onPremiumTap()
+                }
 
 //                    if FeatureFlags.secure.lookscreen.valueOrFalse {
 //                        Row(L10n.Security.authHistory, trallingType: .toggle(isOn: $settingsService.authHistoryEnabend))
 //                            .premium()
 //                            .onPremiumTap()
 //                    }
-                }
-            }
-        }
-
-        private var biometricImageName: String {
-            switch biometricService.biometricType {
-            case .none:
-                return ""
-            case .touchID:
-                return "touchid"
-            case .faceID:
-                return "faceid"
-            case .opticID:
-                return "opticid"
             }
         }
     }
-#endif
+
+    private var biometricImageName: String {
+        switch biometricService.biometricType {
+        case .none:
+            return ""
+        case .touchID:
+            return "touchid"
+        case .faceID:
+            return "faceid"
+        case .opticID:
+            return "opticid"
+        }
+    }
+}
