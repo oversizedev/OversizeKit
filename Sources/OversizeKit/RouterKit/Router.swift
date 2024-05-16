@@ -15,11 +15,19 @@ public final class Router<Destination: Routable>: ObservableObject {
     // Sheets
     @Published public var sheet: Destination?
     @Published public var fullScreenCover: Destination?
+    @Published public var menu: Destination?
     @Published public var sheetDetents: Set<PresentationDetent> = []
     @Published public var dragIndicator: Visibility = .hidden
     @Published public var dismissDisabled: Bool = false
 
     public init() {}
+}
+
+@available(iOS 16.0, *)
+public extension Router {
+    func changeMenu(_ screen: Destination) {
+        menu = screen
+    }
 }
 
 @available(iOS 16.0, *)
@@ -62,6 +70,15 @@ public extension Router {
         dragIndicator = indicator
         self.dismissDisabled = dismissDisabled
         self.sheet = sheet
+    }
+
+    func backOrDismiss() {
+        if sheet != nil || fullScreenCover != nil {
+            sheet = nil
+            fullScreenCover = nil
+        } else {
+            back()
+        }
     }
 
     func dismiss() {
