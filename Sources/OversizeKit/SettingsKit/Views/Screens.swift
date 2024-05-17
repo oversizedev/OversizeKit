@@ -5,6 +5,7 @@
 
 import OversizeModels
 import OversizeNetwork
+import OversizeRouter
 import SwiftUI
 
 public enum SettingsScreen: Routable {

@@ -13,6 +13,7 @@ let productionDependencies: [PackageDescription.Package.Dependency] = [
     .package(url: "https://github.com/oversizedev/OversizeResources.git", .upToNextMajor(from: "2.0.0")),
     .package(url: "https://github.com/oversizedev/OversizeNetwork.git", .upToNextMajor(from: "0.4.0")),
     .package(url: "https://github.com/oversizedev/OversizeModels.git", .upToNextMajor(from: "0.1.0")),
+    .package(url: "https://github.com/oversizedev/OversizeRouter.git", .upToNextMajor(from: "0.1.0")),
     .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "2.1.3")),
     .package(url: "https://github.com/lorenzofiamingo/swiftui-cached-async-image.git", .upToNextMajor(from: "2.1.1")),
 ]
@@ -26,11 +27,18 @@ let developmentDependencies: [PackageDescription.Package.Dependency] = [
     .package(name: "OversizeResources", path: "../OversizeResources"),
     .package(name: "OversizeNetwork", path: "../OversizeNetwork"),
     .package(name: "OversizeModels", path: "../OversizeModels"),
+    .package(name: "OversizeRouter", path: "../OversizeRouter"),
     .package(url: "https://github.com/lorenzofiamingo/swiftui-cached-async-image.git", .upToNextMajor(from: "2.1.1")),
     .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "2.1.3")),
 ]
 
-let isProductionDependencies = ProcessInfo.processInfo.environment["RELEASE_DEPENDENCIES"] == "TRUE"
+var dependencies: [PackageDescription.Package.Dependency] = []
+
+if ProcessInfo.processInfo.environment["RELEASE_DEPENDENCIES"].flatMap(Bool.init) ?? false {
+    dependencies = productionDependencies
+} else {
+    dependencies = developmentDependencies
+}
 
 let package = Package(
     name: "OversizeKit",
@@ -65,6 +73,7 @@ let package = Package(
                 .product(name: "OversizeNotificationService", package: "OversizeServices"),
                 .product(name: "OversizeModels", package: "OversizeModels"),
                 .product(name: "OversizeNetwork", package: "OversizeNetwork"),
+                .product(name: "OversizeRouter", package: "OversizeRouter"),
                 .product(name: "Factory", package: "Factory"),
                 .product(name: "CachedAsyncImage", package: "swiftui-cached-async-image"),
             ]

@@ -4,12 +4,13 @@
 //
 
 import OversizeLocalizable
+import OversizeRouter
 import OversizeUI
 import SwiftUI
 
 public struct SetPINCodeView: View {
     @Environment(\.settingsNavigate) var settingsNavigate
-    //@EnvironmentObject private var hudRouter: HUDRouter
+    @EnvironmentObject private var hudRouter: HUDRouter
     @ObservedObject var viewModel: SetPINCodeViewModel
     @Environment(\.dismiss) var dismiss
 
