@@ -71,10 +71,10 @@ public struct SystemServicesModifier: ViewModifier {
                 .preferredColorScheme(theme.appearance.colorScheme)
             #if os(iOS)
                 .accentColor(theme.accentColor)
+                .screenSize(screnSize)
             #endif
                 .premiumStatus(isPremium)
                 .theme(ThemeSettings())
-                .screenSize(screnSize)
         }
     }
 }
