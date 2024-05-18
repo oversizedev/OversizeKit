@@ -55,7 +55,9 @@ struct RateAppScreen: View {
                 }
                 .controlBorderShape(.capsule)
                 .elevation(.z3)
-                .controlSize(.large)
+                #if !os(tvOS)
+                    .controlSize(.large)
+                #endif
             }
         }
         .multilineTextAlignment(.center)
@@ -68,9 +70,11 @@ struct RateAppScreen: View {
                 IconDeprecated(.xMini, color: .onSurfaceHighEmphasis)
             }
             .buttonStyle(.tertiary(infinityWidth: false))
-            .controlSize(.mini)
             .controlBorderShape(.capsule)
             .padding(.medium)
+            #if !os(tvOS)
+                .controlSize(.mini)
+            #endif
         }
         // reviewService.rewiewBunnerClosed()
     }

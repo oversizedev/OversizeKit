@@ -100,9 +100,11 @@ public struct AdView: View {
             }
             .buttonStyle(.tertiary)
             .controlBorderShape(.capsule)
-            .controlSize(.small)
             .padding(.trailing, .xxxSmall)
             .loading(isShowProduct)
+            #if !os(tvOS)
+                .controlSize(.small)
+            #endif
         }
     }
 }

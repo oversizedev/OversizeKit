@@ -33,9 +33,11 @@ public struct PaymentButtonStyle: ButtonStyle {
     @Environment(\.isLoading) private var isLoading: Bool
     @Environment(\.isAccent) private var isAccent: Bool
     @Environment(\.elevation) private var elevation: Elevation
-    @Environment(\.controlSize) var controlSize: ControlSize
     @Environment(\.controlBorderShape) var controlBorderShape: ControlBorderShape
     @Environment(\.isBordered) var isBordered: Bool
+    #if !os(tvOS)
+        @Environment(\.controlSize) var controlSize: ControlSize
+    #endif
 
     private let isInfinityWidth: Bool?
 
@@ -81,33 +83,41 @@ public struct PaymentButtonStyle: ButtonStyle {
     }
 
     private var horizontalPadding: Space {
-        switch controlSize {
-        case .mini:
-            return .xxSmall
-        case .small:
-            return .small
-        case .regular:
-            return .small
-        case .large, .extraLarge:
+        #if os(tvOS)
             return .medium
-        @unknown default:
-            return .zero
-        }
+        #else
+            switch controlSize {
+            case .mini:
+                return .xxSmall
+            case .small:
+                return .small
+            case .regular:
+                return .small
+            case .large, .extraLarge:
+                return .medium
+            @unknown default:
+                return .zero
+            }
+        #endif
     }
 
     private var verticalPadding: Space {
-        switch controlSize {
-        case .mini:
-            return .xxSmall
-        case .small:
-            return .xxSmall
-        case .regular:
-            return .small
-        case .large, .extraLarge:
+        #if os(tvOS)
             return .medium
-        @unknown default:
-            return .zero
-        }
+        #else
+            switch controlSize {
+            case .mini:
+                return .xxSmall
+            case .small:
+                return .xxSmall
+            case .regular:
+                return .small
+            case .large, .extraLarge:
+                return .medium
+            @unknown default:
+                return .zero
+            }
+        #endif
     }
 
     private var backgroundOpacity: CGFloat {
@@ -119,13 +129,17 @@ public struct PaymentButtonStyle: ButtonStyle {
     }
 
     private var maxWidth: CGFloat? {
-        if isInfinityWidth == nil, controlSize == .regular {
-            return .infinity
-        } else if let infinity = isInfinityWidth, infinity == true {
-            return .infinity
-        } else {
+        #if os(tvOS)
             return nil
-        }
+        #else
+            if isInfinityWidth == nil, controlSize == .regular {
+                return .infinity
+            } else if let infinity = isInfinityWidth, infinity == true {
+                return .infinity
+            } else {
+                return nil
+            }
+        #endif
     }
 }
 

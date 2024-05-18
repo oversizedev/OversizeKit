@@ -69,12 +69,12 @@ public struct SystemServicesModifier: ViewModifier {
                 }
                 .blur(radius: blurRadius)
                 .preferredColorScheme(theme.appearance.colorScheme)
-            #if os(iOS)
-                .accentColor(theme.accentColor)
-                .screenSize(screnSize)
-            #endif
                 .premiumStatus(isPremium)
                 .theme(ThemeSettings())
+                .screenSize(screnSize)
+            #if os(iOS)
+                .accentColor(theme.accentColor)
+            #endif
         }
     }
 }
