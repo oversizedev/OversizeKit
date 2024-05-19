@@ -34,13 +34,13 @@ jobs:
     strategy:
       matrix:
         destination:
-          - platform=iOS Simulator,name=iPhone 14 Pro,OS=16.4
           - platform=iOS Simulator,name=iPhone 15 Pro,OS=17.0.1
           - platform=iOS Simulator,name=iPhone 15 Pro,OS=17.5
           - platform=iOS Simulator,name=iPad Air (5th generation),OS=17.0.1
           - platform=iOS Simulator,name=iPad Air (5th generation),OS=17.5
           - platform=tvOS Simulator,name=Apple TV 4K (3rd generation) (at 1080p),OS=17.0
           - platform=tvOS Simulator,name=Apple TV 4K (3rd generation) (at 1080p),OS=17.5
+          - platform=macOS,name=My Mac,arch=arm64
     with:
       path: AppExample/Example
       scheme: Example
