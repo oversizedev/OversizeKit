@@ -138,11 +138,13 @@ public struct MapCoordinateView: View {
     }
 
     func onTapAppleMaps() {
-        let placemark = MKPlacemark(coordinate: viewModel.location, addressDictionary: nil)
-        let mapItem = MKMapItem(placemark: placemark)
-        mapItem.name = viewModel.annotation
-        mapItem.openInMaps()
-        viewModel.isShowRoutePickerSheet.toggle()
+        #if !os(tvOS)
+            let placemark = MKPlacemark(coordinate: viewModel.location, addressDictionary: nil)
+            let mapItem = MKMapItem(placemark: placemark)
+            mapItem.name = viewModel.annotation
+            mapItem.openInMaps()
+            viewModel.isShowRoutePickerSheet.toggle()
+        #endif
     }
 
     func onTapGoogleMaps() {
