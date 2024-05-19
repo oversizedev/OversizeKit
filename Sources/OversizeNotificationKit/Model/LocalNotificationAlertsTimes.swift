@@ -3,9 +3,6 @@
 // LocalNotificationAlertsTimes.swift
 //
 
-#if canImport(EventKit)
-    import EventKit
-#endif
 import Foundation
 
 public enum LocalNotificationTime: CaseIterable, Equatable, Identifiable {

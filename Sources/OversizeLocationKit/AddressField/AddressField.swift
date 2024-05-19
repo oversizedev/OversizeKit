@@ -50,7 +50,9 @@ public struct AddressField: View {
 
     public var body: some View {
         Button {
-            isShowPicker.toggle()
+            #if !os(watchOS)
+                isShowPicker.toggle()
+            #endif
         } label: {
             VStack(alignment: .leading, spacing: .xSmall) {
                 if fieldPlaceholderPosition == .adjacent {
@@ -86,9 +88,11 @@ public struct AddressField: View {
         }
         .foregroundColor(.onSurfaceHighEmphasis)
         .buttonStyle(.field)
-        .sheet(isPresented: $isShowPicker) {
-            AddressPicker(address: $seletedAddress, location: $seletedLocation, place: $seletedPlace)
-        }
+        #if !os(watchOS)
+            .sheet(isPresented: $isShowPicker) {
+                AddressPicker(address: $seletedAddress, location: $seletedLocation, place: $seletedPlace)
+            }
+        #endif
     }
 
     private var fieldOffset: CGFloat {

@@ -102,7 +102,9 @@ import SwiftUI
                     .padding(.bottom, .xxxSmall)
                     .padding(.horizontal, .small)
 
-                textEditor
+                #if !os(watchOS)
+                    textEditor
+                #endif
 
                 calendarButtons
 
@@ -142,60 +144,62 @@ import SwiftUI
             .controlRadius(.large)
         }
 
-        var textEditor: some View {
-            VStack(spacing: 2) {
-                TextEditor(text: $viewModel.note)
-                    .onSurfaceHighEmphasisForegroundColor()
-                    .padding(.horizontal, .xSmall)
-                    .padding(.vertical, .xxSmall)
-                    .focused($focusedField, equals: .note)
-                    .body(.medium)
-                    .scrollContentBackground(.hidden)
-                    .background {
-                        #if os(iOS)
-                            RoundedRectangleCorner(radius: 4, corners: [.bottomLeft, .bottomRight])
-                                .fillSurfaceSecondary()
-                                .overlay(alignment: .topLeading) {
-                                    if viewModel.note.isEmpty {
-                                        Text("Note")
-                                            .body(.medium)
-                                            .onSurfaceDisabledForegroundColor()
-                                            .padding(.small)
+        #if !os(watchOS)
+            var textEditor: some View {
+                VStack(spacing: 2) {
+                    TextEditor(text: $viewModel.note)
+                        .onSurfaceHighEmphasisForegroundColor()
+                        .padding(.horizontal, .xSmall)
+                        .padding(.vertical, .xxSmall)
+                        .focused($focusedField, equals: .note)
+                        .body(.medium)
+                        .scrollContentBackground(.hidden)
+                        .background {
+                            #if os(iOS)
+                                RoundedRectangleCorner(radius: 4, corners: [.bottomLeft, .bottomRight])
+                                    .fillSurfaceSecondary()
+                                    .overlay(alignment: .topLeading) {
+                                        if viewModel.note.isEmpty {
+                                            Text("Note")
+                                                .body(.medium)
+                                                .onSurfaceDisabledForegroundColor()
+                                                .padding(.small)
+                                        }
                                     }
-                                }
-                        #else
-                            RoundedRectangle(cornerRadius: .small)
-                                .fillSurfaceSecondary()
-                                .overlay(alignment: .topLeading) {
-                                    if viewModel.note.isEmpty {
-                                        Text("Note")
-                                            .body(.medium)
-                                            .onSurfaceDisabledForegroundColor()
-                                            .padding(.small)
+                            #else
+                                RoundedRectangle(cornerRadius: .small)
+                                    .fillSurfaceSecondary()
+                                    .overlay(alignment: .topLeading) {
+                                        if viewModel.note.isEmpty {
+                                            Text("Note")
+                                                .body(.medium)
+                                                .onSurfaceDisabledForegroundColor()
+                                                .padding(.small)
+                                        }
                                     }
-                                }
-                        #endif
-                    }
-                    .frame(minHeight: 76)
+                            #endif
+                        }
+                        .frame(minHeight: 76)
 
-                TextField("URL", text: $viewModel.url)
-                    .focused($focusedField, equals: .url)
-                    .onSurfaceHighEmphasisForegroundColor()
-                    .body(.medium)
-                    .padding(.horizontal, .small)
-                    .padding(.vertical, 18)
-                    .background {
-                        #if os(iOS)
-                            RoundedRectangleCorner(radius: 4, corners: [.topLeft, .topRight])
-                                .fillSurfaceSecondary()
-                        #else
-                            RoundedRectangle(cornerRadius: .small)
-                                .fillSurfaceSecondary()
-                        #endif
-                    }
+                    TextField("URL", text: $viewModel.url)
+                        .focused($focusedField, equals: .url)
+                        .onSurfaceHighEmphasisForegroundColor()
+                        .body(.medium)
+                        .padding(.horizontal, .small)
+                        .padding(.vertical, 18)
+                        .background {
+                            #if os(iOS)
+                                RoundedRectangleCorner(radius: 4, corners: [.topLeft, .topRight])
+                                    .fillSurfaceSecondary()
+                            #else
+                                RoundedRectangle(cornerRadius: .small)
+                                    .fillSurfaceSecondary()
+                            #endif
+                        }
+                }
+                .clipShape(RoundedRectangle(cornerRadius: .large, style: .continuous))
             }
-            .clipShape(RoundedRectangle(cornerRadius: .large, style: .continuous))
-        }
+        #endif
 
         var repitView: some View {
             Group {
@@ -475,12 +479,14 @@ import SwiftUI
             .padding(.horizontal, .medium)
             .padding(.vertical, 20)
             .onSurfaceMediumEmphasisForegroundColor()
-            .background(.ultraThinMaterial)
-            .overlay(alignment: .top) {
-                Rectangle()
-                    .fill(Color.onSurfaceHighEmphasis.opacity(0.05))
-                    .frame(height: 1)
-            }
+            #if !os(watchOS)
+                .background(.ultraThinMaterial)
+            #endif
+                .overlay(alignment: .top) {
+                    Rectangle()
+                        .fill(Color.onSurfaceHighEmphasis.opacity(0.05))
+                        .frame(height: 1)
+                }
         }
 
         @ViewBuilder

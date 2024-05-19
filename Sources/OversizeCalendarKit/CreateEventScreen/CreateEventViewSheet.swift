@@ -93,9 +93,13 @@ import SwiftUI
                     CalendarPicker(selection: $viewModel.calendar, calendars: viewModel.calendars, sourses: viewModel.sourses)
                         .presentationDetents([.large])
                 case .location:
-                    AddressPicker(address: $viewModel.locationName, location: $viewModel.location)
-                        .interactiveDismissDisabled(true)
-                        .presentationDetents([.large])
+                    #if !os(watchOS)
+                        AddressPicker(address: $viewModel.locationName, location: $viewModel.location)
+                            .interactiveDismissDisabled(true)
+                            .presentationDetents([.large])
+                    #else
+                        EmptyView()
+                    #endif
                 case .repeat:
                     RepeatPicker(selectionRule: $viewModel.repitRule, selectionEndRule: $viewModel.repitEndRule)
 

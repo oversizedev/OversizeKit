@@ -91,7 +91,11 @@ import SwiftUI
 
         @ViewBuilder
         private func placeholder() -> some View {
-            LoaderOverlayView()
+            #if os(watchOS)
+                ProgressView()
+            #else
+                LoaderOverlayView()
+            #endif
         }
     }
 #endif

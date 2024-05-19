@@ -116,16 +116,20 @@ import SwiftUI
                 .textFieldStyle(DefaultPlaceholderTextFieldStyle())
                 .focused($isFocusedRepitCount)
             case .endDate:
-                DatePicker("Date", selection: Binding(get: {
-                    endDate
-                }, set: { newDate in
-                    endDate = newDate
-                    endRule = .endDate(newDate)
-                }))
-                #if os(iOS)
-                .datePickerStyle(.wheel)
+                #if !os(watchOS)
+                    DatePicker("Date", selection: Binding(get: {
+                        endDate
+                    }, set: { newDate in
+                        endDate = newDate
+                        endRule = .endDate(newDate)
+                    }))
+                    #if os(iOS)
+                    .datePickerStyle(.wheel)
+                    #endif
+                    .labelsHidden()
+                #else
+                    ProgressView()
                 #endif
-                .labelsHidden()
             }
         }
     }
