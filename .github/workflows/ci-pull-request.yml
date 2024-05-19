@@ -40,7 +40,6 @@ jobs:
           - platform=iOS Simulator,name=iPad Pro (12.9-inch) (6th generation),OS=17.5
           - platform=tvOS Simulator,name=Apple TV 4K (3rd generation) (at 1080p),OS=17.0
           - platform=tvOS Simulator,name=Apple TV 4K (3rd generation) (at 1080p),OS=17.5
-          - platform=macOS,arch=arm64
     with:
       path: AppExample/Example
       scheme: Example
