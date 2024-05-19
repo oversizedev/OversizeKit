@@ -34,12 +34,8 @@ jobs:
     strategy:
       matrix:
         destination:
-          - platform=iOS Simulator,name=iPhone 14 Pro,OS=16.0
-          - platform=iOS Simulator,name=iPhone 14 Pro,OS=16.5
           - platform=iOS Simulator,name=iPhone 15 Pro,OS=17.0
           - platform=iOS Simulator,name=iPhone 15 Pro,OS=17.5
-          - platform=iOS Simulator,name=iPad Pro (12.9-inch) (6th generation),OS=16.0
-          - platform=iOS Simulator,name=iPad Pro (12.9-inch) (6th generation),OS=16.5
           - platform=iOS Simulator,name=iPad Pro (12.9-inch) (6th generation),OS=17.0
           - platform=iOS Simulator,name=iPad Pro (12.9-inch) (6th generation),OS=17.5
           - platform=tvOS Simulator,name=Apple TV 4K (3rd generation) (at 1080p),OS=17.0
