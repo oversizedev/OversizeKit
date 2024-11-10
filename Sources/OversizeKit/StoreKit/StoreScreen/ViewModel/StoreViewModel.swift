@@ -138,7 +138,6 @@ extension StoreViewModel {
         }
     }
 
-    // Percentage of decrease = |239.88 - 59.99|/239.88 = 179.89/239.88 = 0.74991662497916 = 74.991662497916%
     var saleProcent: String {
         guard let yearSubscriptionProduct else { return "" }
         if let monthSubscriptionProduct {

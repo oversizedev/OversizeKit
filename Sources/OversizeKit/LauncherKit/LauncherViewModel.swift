@@ -49,7 +49,7 @@ public final class LauncherViewModel: ObservableObject {
 }
 
 extension LauncherViewModel {
-    enum FullScreenSheet: Identifiable, Equatable {
+    enum FullScreenSheet: Identifiable, Equatable, Sendable {
         case onboarding
         case payWall
         case rate
@@ -124,7 +124,9 @@ public extension LauncherViewModel {
     func setPayWall() {
         activeFullScreenSheet = nil
         delay(time: 0.2) {
-            self.activeFullScreenSheet = .payWall
+            Task { @MainActor in
+                self.activeFullScreenSheet = .payWall
+            }
         }
     }
 

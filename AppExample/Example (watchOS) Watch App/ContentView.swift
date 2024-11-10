@@ -3,14 +3,14 @@
 // ContentView.swift, created on 19.05.2024
 //
 
-import OversizeKit
-import OversizeContactsKit
-import OversizeLocationKit
-import OversizePhotoKit
 import OversizeCalendarKit
+import OversizeContactsKit
+import OversizeKit
+import OversizeLocationKit
 import OversizeNoticeKit
 import OversizeNotificationKit
 import OversizeOnboardingKit
+import OversizePhotoKit
 import SwiftUI
 
 struct ContentView: View {

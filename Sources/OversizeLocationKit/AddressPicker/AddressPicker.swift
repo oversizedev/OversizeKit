@@ -44,7 +44,7 @@ import SwiftUI
                             Spacer()
                         }
                         .title3()
-                        .onSurfaceMediumEmphasisForegroundColor()
+                        .onSurfaceSecondaryForeground()
                         .padding(.vertical, .xxSmall)
                         .paddingContent(.horizontal)
 
@@ -60,7 +60,7 @@ import SwiftUI
             .topToolbar {
                 TextField("Search places or addresses", text: $viewModel.searchTerm)
                     .submitScope(viewModel.searchTerm.count < 2)
-                    .textFieldStyle(DefaultPlaceholderTextFieldStyle())
+                    .textFieldStyle(.default)
                     .focused($isFocusSearth)
                     .submitLabel(.done)
                     .onSubmit {

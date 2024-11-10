@@ -9,8 +9,8 @@ import OversizeUI
 import SwiftUI
 
 public struct SetPINCodeView: View {
-    @Environment(\.settingsNavigate) var settingsNavigate
-    @EnvironmentObject private var hudRouter: HUDRouter
+    @Environment(Router<SettingsScreen>.self) var router
+    @Environment(HUDRouter.self) private var hudRouter: HUDRouter
     @ObservedObject var viewModel: SetPINCodeViewModel
     @Environment(\.dismiss) var dismiss
 
@@ -23,7 +23,7 @@ public struct SetPINCodeView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button {
-                        settingsNavigate(.dismiss)
+                        router.dismiss()
                     } label: {
                         Image.Base.close.icon()
                     }
@@ -53,6 +53,7 @@ public struct SetPINCodeView: View {
             {
                 viewModel.checkNewPINCode()
             } biometricAction: {}
+
         case .confirmNewPINField:
             LockscreenView(pinCode: $viewModel.confirmNewCodeField,
                            state: $viewModel.authState,

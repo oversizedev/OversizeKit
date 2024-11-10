@@ -9,12 +9,13 @@
 import OversizeComponents
 import OversizeLocalizable
 import OversizeResources
+import OversizeRouter
 import OversizeServices
 import OversizeUI
 import SwiftUI
 
 public struct SupportView: View {
-    @Environment(\.settingsNavigate) var settingsNavigate
+    @Environment(Router<SettingsScreen>.self) var router
     @Environment(\.iconStyle) var iconStyle: IconStyle
     public init() {}
 
@@ -31,7 +32,7 @@ public struct SupportView: View {
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button {
-                    settingsNavigate(.dismissSheet)
+                    router.dismissSheet()
                 } label: {
                     Image.Base.close.icon()
                 }
@@ -60,7 +61,7 @@ public struct SupportView: View {
                         let subject = "Support"
 
                         Row("Contact Us") {
-                            settingsNavigate(.present(.sendMail(to: mail, subject: subject, content: contentPreText)))
+                            router.present(.sendMail(to: mail, subject: subject, content: contentPreText))
                         } leading: {
                             mailIcon.icon()
                         }

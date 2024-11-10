@@ -1,4 +1,4 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.0
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import Foundation
@@ -6,7 +6,7 @@ import PackageDescription
 
 let productionDependencies: [PackageDescription.Package.Dependency] = [
     .package(url: "https://github.com/oversizedev/OversizeUI.git", .upToNextMajor(from: "3.0.2")),
-    .package(url: "https://github.com/oversizedev/OversizeCore.git", .upToNextMajor(from: "1.3.0")),
+    .package(url: "https://github.com/oversizedev/OversizeCore.git", .upToNextMajor(from: "2.0.0")),
     .package(url: "https://github.com/oversizedev/OversizeServices.git", .upToNextMajor(from: "1.4.0")),
     .package(url: "https://github.com/oversizedev/OversizeLocalizable.git", .upToNextMajor(from: "1.4.0")),
     .package(url: "https://github.com/oversizedev/OversizeComponents.git", .upToNextMajor(from: "1.2.0")),
@@ -43,10 +43,10 @@ if ProcessInfo.processInfo.environment["RELEASE_DEPENDENCIES"].flatMap(Bool.init
 let package = Package(
     name: "OversizeKit",
     platforms: [
-        .iOS(.v16),
-        .macOS(.v13),
-        .tvOS(.v16),
-        .watchOS(.v9),
+        .iOS(.v17),
+        .macOS(.v14),
+        .tvOS(.v17),
+        .watchOS(.v10),
     ],
     products: [
         .library(name: "OversizeKit", targets: ["OversizeKit"]),
@@ -58,7 +58,7 @@ let package = Package(
         .library(name: "OversizeNotificationKit", targets: ["OversizeNotificationKit"]),
         .library(name: "OversizePhotoKit", targets: ["OversizePhotoKit"]),
     ],
-    dependencies: productionDependencies,
+    dependencies: developmentDependencies,
     targets: [
         .target(
             name: "OversizeKit",

@@ -28,7 +28,7 @@ import SwiftUI
                         } leading: {
                             Image.Date.calendar
                                 .renderingMode(.template)
-                                .foregroundColor(.onSurfaceHighEmphasis)
+                                .foregroundColor(.onSurfacePrimary)
                         }
 
                         Row("Save for feature events") {
@@ -37,7 +37,7 @@ import SwiftUI
                         } leading: {
                             Image.Base.calendar
                                 .renderingMode(.template)
-                                .foregroundColor(.onSurfaceHighEmphasis)
+                                .foregroundColor(.onSurfacePrimary)
                         }
                     }
                 }

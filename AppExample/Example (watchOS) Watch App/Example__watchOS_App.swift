@@ -11,9 +11,8 @@ import SwiftUI
 
 @main
 struct Example__watchOS__Watch_AppApp: App {
-    
     @Injected(\.appStateService) var appStateService: AppStateService
-    
+
     var body: some Scene {
         WindowGroup {
             ContentView()

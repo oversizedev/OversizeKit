@@ -9,12 +9,13 @@
 import OversizeComponents
 import OversizeLocalizable
 import OversizeResources
+import OversizeRouter
 import OversizeServices
 import OversizeUI
 import SwiftUI
 
 public struct FeedbackView: View {
-    @Environment(\.settingsNavigate) var settingsNavigate
+    @Environment(Router<SettingsScreen>.self) var router
     @Environment(\.iconStyle) var iconStyle: IconStyle
     public init() {}
 
@@ -31,7 +32,7 @@ public struct FeedbackView: View {
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button {
-                    settingsNavigate(.dismiss)
+                    router.dismiss()
                 } label: {
                     Image.Base.close.icon()
                 }
@@ -69,7 +70,7 @@ public struct FeedbackView: View {
                         let subject = "Feedback"
 
                         Row(L10n.Settings.feedbakAuthor) {
-                            settingsNavigate(.present(.sendMail(to: mail, subject: subject, content: contentPreText)))
+                            router.present(.sendMail(to: mail, subject: subject, content: contentPreText))
                         } leading: {
                             mailIcon.icon()
                         }

@@ -45,13 +45,16 @@ public struct StoreFeatureDetailView: View {
                     Button {
                         dismiss()
                     } label: {
-                        IconDeprecated(.xMini, color: selection.screenURL != nil ? .onPrimaryHighEmphasis : .onSurfaceDisabled)
-                            .padding(.xxSmall)
-                            .background {
-                                Circle()
-                                    .fill(.ultraThinMaterial)
-                            }
-                            .padding(.small)
+                        IconDeprecated(
+                            .xMini,
+                            color: selection.screenURL != nil ? .onPrimary : .onSurfaceTertiary
+                        )
+                        .padding(.xxSmall)
+                        .background {
+                            Circle()
+                                .fill(.ultraThinMaterial)
+                        }
+                        .padding(.small)
                     }
                 }
             #endif

@@ -67,14 +67,14 @@ public struct PrmiumBannerRow: View {
 
             Text(Info.store.subscriptionsName)
                 .headline(.semibold)
-                .foregroundColor(.onSurfaceHighEmphasis)
+                .foregroundColor(.onSurfacePrimary)
 
             Spacer()
 
             HStack(spacing: .small) {
                 Text(viewModel.subsribtionStatusText)
                     .headline(.medium)
-                    .foregroundColor(.onSurfaceMediumEmphasis)
+                    .foregroundColor(.onSurfaceSecondary)
 
                 Circle()
                     .foregroundColor(viewModel.subsribtionStatusColor)
@@ -118,13 +118,13 @@ public extension PrmiumBannerRow {
                 }
                 .background(
                     RoundedRectangle(cornerRadius: Radius.small.rawValue, style: .continuous)
-                        .fill(Color.onPrimaryHighEmphasis
+                        .fill(Color.onPrimary
 
                         ))
 
                 Text(Info.store.subscriptionsDescription)
                     .headline(.semibold)
-                    .onPrimaryHighEmphasisForegroundColor()
+                    .onPrimaryForeground()
                     .multilineTextAlignment(.center)
                     .padding(.top, Space.xSmall)
                     .frame(maxWidth: 260)

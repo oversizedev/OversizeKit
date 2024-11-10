@@ -7,11 +7,12 @@ import Foundation
 import OversizeComponents
 import OversizeLocalizable
 import OversizeNetwork
+import OversizeRouter
 import SwiftUI
 
-extension SettingsScreen {
-    @ViewBuilder
-    func view() -> some View {
+extension SettingsScreen: @preconcurrency RoutableView {
+    @MainActor @ViewBuilder
+    public func view() -> some View {
         switch self {
         case .premium:
             StoreView()

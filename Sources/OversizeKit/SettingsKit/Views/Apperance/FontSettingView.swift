@@ -56,11 +56,11 @@ public struct FontSettingView: View {
                            VStack(alignment: .leading, spacing: 8) {
                                Text("Aa")
                                    .font(.system(size: 34, weight: .heavy, design: fontStyle.system))
-                                   .foregroundColor(.onSurfaceHighEmphasis)
+                                   .foregroundColor(.onSurfacePrimary)
 
                                Text(fontStyle.rawValue.capitalizingFirstLetter())
                                    .font(.system(size: 16, weight: .medium, design: fontStyle.system))
-                                   .foregroundColor(.onSurfaceHighEmphasis)
+                                   .foregroundColor(.onSurfacePrimary)
                            }
                            Spacer()
                        }.padding()
@@ -74,11 +74,11 @@ public struct FontSettingView: View {
                            VStack(alignment: .leading, spacing: 8) {
                                Text("Aa")
                                    .font(.system(size: 34, weight: .heavy, design: fontStyle.system))
-                                   .foregroundColor(.onSurfaceHighEmphasis)
+                                   .foregroundColor(.onSurfacePrimary)
 
                                Text(fontStyle.rawValue.capitalizingFirstLetter())
                                    .font(.system(size: 16, weight: .medium, design: fontStyle.system))
-                                   .foregroundColor(.onSurfaceHighEmphasis)
+                                   .foregroundColor(.onSurfacePrimary)
                            }
                            Spacer()
                        }.padding()
@@ -91,16 +91,16 @@ public struct FontSettingView: View {
                 Text("Button".uppercased())
                     .bold()
                     .caption()
-                    .onBackgroundMediumEmphasisForegroundColor()
+                    .onBackgroundSecondaryForeground()
                 SegmentedPickerSelector(FontDesignType.allCases, selection: theme.$fontButton) { fontStyle, _ in
                     VStack(alignment: .center, spacing: 8) {
                         Text("Aa")
                             .font(.system(size: 28, weight: .heavy, design: fontStyle.system))
-                            .foregroundColor(.onSurfaceHighEmphasis)
+                            .foregroundColor(.onSurfacePrimary)
 
                         Text(fontStyle.rawValue.capitalizingFirstLetter())
                             .font(.system(size: 12, weight: .medium, design: fontStyle.system))
-                            .foregroundColor(.onSurfaceHighEmphasis)
+                            .foregroundColor(.onSurfacePrimary)
                     }
                 }
                 .segmentedControlStyle(.island(selected: .graySurface))
@@ -110,16 +110,16 @@ public struct FontSettingView: View {
                 Text("Overline & caption".uppercased())
                     .bold()
                     .caption()
-                    .onBackgroundMediumEmphasisForegroundColor()
+                    .onBackgroundSecondaryForeground()
                 SegmentedPickerSelector(FontDesignType.allCases, selection: theme.$fontOverline) { fontStyle, _ in
                     VStack(alignment: .center, spacing: 8) {
                         Text("Aa")
                             .font(.system(size: 28, weight: .heavy, design: fontStyle.system))
-                            .foregroundColor(.onSurfaceHighEmphasis)
+                            .foregroundColor(.onSurfacePrimary)
 
                         Text(fontStyle.rawValue.capitalizingFirstLetter())
                             .font(.system(size: 12, weight: .medium, design: fontStyle.system))
-                            .foregroundColor(.onSurfaceHighEmphasis)
+                            .foregroundColor(.onSurfacePrimary)
                     }
                 }
                 .segmentedControlStyle(.island(selected: .graySurface))
@@ -138,34 +138,34 @@ extension FontSettingView {
                         Text("Overline".uppercased())
                             .bold()
                             .caption()
-                            .onBackgroundMediumEmphasisForegroundColor()
+                            .onBackgroundSecondaryForeground()
 
                         Text("Large title")
                             .largeTitle()
-                            .onBackgroundHighEmphasisForegroundColor()
+                            .onBackgroundPrimaryForeground()
 
                         Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")
                             .body()
-                            .onBackgroundMediumEmphasisForegroundColor()
+                            .onBackgroundSecondaryForeground()
                     }
 
                     VStack(alignment: .leading, spacing: Space.xxSmall.rawValue) {
                         Text("Title")
                             .title3()
-                            .onBackgroundHighEmphasisForegroundColor()
+                            .onBackgroundPrimaryForeground()
 
                         Text("Subtitle")
                             .headline()
-                            .onBackgroundHighEmphasisForegroundColor()
+                            .onBackgroundPrimaryForeground()
 
                         Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")
                             .bold()
                             .subheadline()
-                            .onBackgroundHighEmphasisForegroundColor()
+                            .onBackgroundPrimaryForeground()
 
                         Text("Button")
                             .body()
-                            .onBackgroundHighEmphasisForegroundColor()
+                            .onBackgroundPrimaryForeground()
                             .padding(.top, .xxxSmall)
                     }
                 }

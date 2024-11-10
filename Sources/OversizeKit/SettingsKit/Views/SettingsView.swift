@@ -5,14 +5,15 @@
 
 import OversizeLocalizable
 import OversizeResources
+import OversizeRouter
 import OversizeServices
 import OversizeUI
 import SwiftUI
 
 // swiftlint:disable line_length
-
 public struct SettingsView<AppSection: View, HeadSection: View>: View {
-    @Environment(\.settingsNavigate) var settingsNavigate
+    
+    @Environment(Router<SettingsScreen>.self) var router
     @Environment(\.iconStyle) var iconStyle: IconStyle
     @Environment(\.theme) var theme: ThemeSettings
     @StateObject var settingsService = SettingsService()
@@ -78,7 +79,7 @@ extension SettingsView {
             VStack(spacing: .zero) {
                 if FeatureFlags.app.apperance.valueOrFalse {
                     Row(L10n.Settings.apperance) {
-                        settingsNavigate(.move(.appearance))
+                        router.move(.appearance)
                     } leading: {
                         apperanceSettingsIcon.icon()
                     }
@@ -87,7 +88,7 @@ extension SettingsView {
 
                 if FeatureFlags.app.сloudKit.valueOrFalse || FeatureFlags.app.healthKit.valueOrFalse {
                     Row(L10n.Title.synchronization) {
-                        settingsNavigate(.move(.sync))
+                        router.move(.sync)
                     } leading: {
                         cloudKitIcon.icon()
                     }
@@ -103,7 +104,7 @@ extension SettingsView {
                     || FeatureFlags.secure.photoBreaker.valueOrFalse
                 {
                     Row(L10n.Security.title) {
-                        settingsNavigate(.move(.security))
+                        router.move(.security)
                     } leading: {
                         securityIcon.icon()
                     }
@@ -112,7 +113,7 @@ extension SettingsView {
 
                 if FeatureFlags.app.sounds.valueOrFalse || FeatureFlags.app.vibration.valueOrFalse {
                     Row(soundsAndVibrationTitle) {
-                        settingsNavigate(.move(.soundAndVibration))
+                        router.move(.soundAndVibration)
                     } leading: {
                         FeatureFlags.app.sounds.valueOrFalse ? soundIcon.icon() : vibrationIcon.icon()
                     }
@@ -121,7 +122,7 @@ extension SettingsView {
 
                 if FeatureFlags.app.notifications.valueOrFalse {
                     Row(L10n.Settings.notifications) {
-                        settingsNavigate(.move(.notifications))
+                        router.move(.notifications)
                     } leading: {
                         notificationsIcon.icon()
                     }
@@ -204,7 +205,9 @@ extension SettingsView {
         SectionView(L10n.Settings.supportSection) {
             VStack(alignment: .leading) {
                 Row("Get help") {
-                    settingsNavigate(.present(.support, detents: [.medium]))
+                    #if os(iOS)
+                        router.present(.support, detents: [.medium])
+                    #endif
                 } leading: {
                     helpIcon.icon()
                 }
@@ -212,7 +215,9 @@ extension SettingsView {
                 .buttonStyle(.row)
 
                 Row("Send feedback") {
-                    settingsNavigate(.present(.feedback, detents: [.medium]))
+                    #if os(iOS)
+                        router.present(.feedback, detents: [.medium])
+                    #endif
                 } leading: {
                     chatIcon.icon()
                 }
@@ -292,7 +297,7 @@ extension SettingsView {
         SectionView {
             VStack(spacing: .zero) {
                 Row(L10n.Settings.about) {
-                    settingsNavigate(.move(.about))
+                    router.move(.about)
                 } leading: {
                     infoIcon.icon()
                 }

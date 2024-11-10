@@ -57,7 +57,7 @@
         }
     }
 
-    extension AppStoreProductViewController: SKStoreProductViewControllerDelegate {
+    extension AppStoreProductViewController: @preconcurrency SKStoreProductViewControllerDelegate {
         public func productViewControllerDidFinish(_ viewController: SKStoreProductViewController) {
             viewController.dismiss(animated: true)
         }

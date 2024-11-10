@@ -32,13 +32,13 @@ public struct RadiusSettingView: View {
                                 HStack {
                                     Text("Size")
                                         .subheadline()
-                                        .foregroundColor(.onSurfaceHighEmphasis)
+                                        .foregroundColor(.onSurfacePrimary)
 
                                     Spacer()
 
                                     Text(String(format: "%.0f", theme.radius) + "  px")
                                         .subheadline()
-                                        .foregroundColor(.onSurfaceHighEmphasis)
+                                        .foregroundColor(.onSurfacePrimary)
                                 }
 
                                 Slider(value: theme.$radius, in: 0 ... 12, step: 4)

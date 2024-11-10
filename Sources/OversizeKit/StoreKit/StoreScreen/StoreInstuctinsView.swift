@@ -59,7 +59,7 @@ public struct StoreInstuctinsView: View {
                         .environmentObject(viewModel)
                     }
                 }
-                .onChange(of: isPremium) { status in
+                .onChange(of: isPremium) { _, status in
                     if status {
                         dismiss()
                     }
@@ -80,12 +80,12 @@ public struct StoreInstuctinsView: View {
                 VStack(spacing: .xSmall) {
                     Text("How your free trial works")
                         .largeTitle()
-                        .foregroundColor(.onSurfaceHighEmphasis)
+                        .foregroundColor(.onSurfacePrimary)
 
                     if viewModel.isHaveSale {
                         Group {
                             Text("Begin your path towards feeling better with a ")
-                                .foregroundColor(.onSurfaceMediumEmphasis)
+                                .foregroundColor(.onSurfaceSecondary)
 
                                 + Text("--% discount")
                                 .foregroundColor(.accent)
@@ -107,7 +107,7 @@ public struct StoreInstuctinsView: View {
             .overlay {
                 ScrollArrow(width: 30, offset: -5 + (offset * 0.05))
                     .stroke(style: StrokeStyle(lineWidth: 5, lineCap: .round))
-                    .foregroundColor(.onSurfaceHighEmphasis.opacity(0.3))
+                    .foregroundColor(.onSurfacePrimary.opacity(0.3))
                     .frame(width: 30)
                     .offset(y: screenSize.safeAreaHeight - 300)
                 // .opacity(1 - (offset * 0.01))
@@ -128,12 +128,12 @@ public struct StoreInstuctinsView: View {
                 VStack(spacing: .xSmall) {
                     Text("How your free trial works")
                         .largeTitle()
-                        .foregroundColor(.onSurfaceHighEmphasis)
+                        .foregroundColor(.onSurfacePrimary)
 
                     if viewModel.isHaveSale {
                         Group {
                             Text("Begin your path towards feeling better with a ")
-                                .foregroundColor(.onSurfaceMediumEmphasis)
+                                .foregroundColor(.onSurfaceSecondary)
 
                                 + Text("\(viewModel.saleProcent)% discount")
                                 .foregroundColor(.accent)
@@ -155,7 +155,7 @@ public struct StoreInstuctinsView: View {
             .overlay {
                 ScrollArrow(width: 30, offset: -5 + (offset * 0.05))
                     .stroke(style: StrokeStyle(lineWidth: 5, lineCap: .round))
-                    .foregroundColor(.onSurfaceHighEmphasis.opacity(0.3))
+                    .foregroundColor(.onSurfacePrimary.opacity(0.3))
                     .frame(width: 30)
                     .offset(y: screenSize.safeAreaHeight - 300)
                 // .opacity(1 - (offset * 0.01))
@@ -179,7 +179,7 @@ public struct StoreInstuctinsView: View {
                 await viewModel.updateSubscriptionStatus(products: data)
             }
         }
-        .onChange(of: data.purchasedAutoRenewable) { _ in
+        .onChange(of: data.purchasedAutoRenewable) { _, _ in
             Task {
                 await viewModel.updateSubscriptionStatus(products: data)
             }
@@ -192,7 +192,7 @@ public struct StoreInstuctinsView: View {
             HStack(alignment: .top, spacing: .small) {
                 Resource.Store.zap
                     .renderingMode(.template)
-                    .foregroundColor(.onPrimaryHighEmphasis)
+                    .foregroundColor(.onPrimary)
                     .padding(.small)
                     .background {
                         Circle()
@@ -226,7 +226,7 @@ public struct StoreInstuctinsView: View {
             HStack(alignment: .top, spacing: .small) {
                 Image.Base.Notification.fill
                     .renderingMode(.template)
-                    .foregroundColor(Color.onSurfaceDisabled)
+                    .foregroundColor(Color.onSurfaceTertiary)
                     .padding(14)
                     .background {
                         Circle()
@@ -252,7 +252,7 @@ public struct StoreInstuctinsView: View {
             HStack(alignment: .top, spacing: .small) {
                 Image.Base.Star.fill
                     .renderingMode(.template)
-                    .foregroundColor(Color.onSurfaceDisabled)
+                    .foregroundColor(Color.onSurfaceTertiary)
                     .padding(14)
                     .background {
                         Circle()

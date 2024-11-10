@@ -43,7 +43,7 @@ public struct StoreSpecialOfferView: View {
                 }
             }
 
-            .onChange(of: isPremium) { status in
+            .onChange(of: isPremium) { _, status in
                 if status {
                     dismiss()
                 }
@@ -223,7 +223,7 @@ public struct StoreSpecialOfferView: View {
                 .overlay {
                     ScrollArrow(width: 30, offset: -5 + (offset * 0.05))
                         .stroke(style: StrokeStyle(lineWidth: 5, lineCap: .round))
-                        .foregroundColor(.onSurfaceHighEmphasis.opacity(0.3))
+                        .foregroundColor(.onSurfacePrimary.opacity(0.3))
                         .frame(width: 30)
                         .offset(y: screenSize.safeAreaHeight - 280)
                         .opacity(1 - (offset * 0.01))
@@ -232,7 +232,7 @@ public struct StoreSpecialOfferView: View {
                 VStack(spacing: .zero) {
                     Text("Additional features in\nthe subscription")
                         .title()
-                        .onBackgroundHighEmphasisForegroundColor()
+                        .onBackgroundPrimaryForeground()
                         .multilineTextAlignment(.center)
                         .fixedSize()
                         .padding(.top, .large)
@@ -252,7 +252,7 @@ public struct StoreSpecialOfferView: View {
             .task {
                 await viewModel.updateSubscriptionStatus(products: data)
             }
-            .onChange(of: data.purchasedAutoRenewable) { _ in
+            .onChange(of: data.purchasedAutoRenewable) { _, _ in
                 Task {
                     await viewModel.updateSubscriptionStatus(products: data)
                 }
@@ -264,12 +264,12 @@ public struct StoreSpecialOfferView: View {
         VStack(spacing: .zero) {
             Text(badgeText.uppercased())
                 .footnote(.semibold)
-                .onBackgroundMediumEmphasisForegroundColor()
+                .onBackgroundSecondaryForeground()
                 .padding(.bottom, .xxxSmall)
 
             Text(headline)
                 .title(.bold)
-                .foregroundColor(.onSurfaceHighEmphasis)
+                .foregroundColor(.onSurfacePrimary)
                 .frame(maxWidth: .infinity, alignment: .center)
 
             Text(event.title)
@@ -277,7 +277,7 @@ public struct StoreSpecialOfferView: View {
                 .foregroundColor(titleColor)
 
             Text(description)
-                .foregroundColor(.onSurfaceMediumEmphasis)
+                .foregroundColor(.onSurfaceSecondary)
                 .headline(.regular)
                 .padding(.top, .xSmall)
         }
@@ -332,7 +332,7 @@ public struct StoreSpecialOfferView: View {
         if let accentColor = event.accentColor {
             return Color(hex: accentColor)
         } else {
-            return Color.onBackgroundHighEmphasis
+            return Color.onBackgroundPrimary
         }
     }
 

@@ -49,7 +49,7 @@ public struct PaymentButtonStyle: ButtonStyle {
         configuration.label
             .body(true)
             .opacity(isLoading ? 0 : 1)
-            .foregroundColor(.onPrimaryHighEmphasis)
+            .foregroundColor(.onPrimary)
             .padding(.horizontal, horizontalPadding)
             .padding(.vertical, verticalPadding)
             .frame(maxWidth: maxWidth)
@@ -67,7 +67,7 @@ public struct PaymentButtonStyle: ButtonStyle {
             )
             .overlay {
                 RoundedRectangle(cornerRadius: 10, style: .continuous)
-                    .strokeBorder(Color.onSurfaceHighEmphasis.opacity(0.15), lineWidth: 2)
+                    .strokeBorder(Color.onSurfacePrimary.opacity(0.15), lineWidth: 2)
                     .opacity(isBordered || theme.borderButtons ? 1 : 0)
             }
     }
@@ -76,7 +76,7 @@ public struct PaymentButtonStyle: ButtonStyle {
     private func loadingView(for _: ButtonRole?) -> some View {
         if isLoading {
             ProgressView()
-                .progressViewStyle(CircularProgressViewStyle(tint: Color.onPrimaryHighEmphasis))
+                .progressViewStyle(CircularProgressViewStyle(tint: Color.onPrimary))
         } else {
             EmptyView()
         }

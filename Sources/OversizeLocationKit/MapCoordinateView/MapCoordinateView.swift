@@ -81,7 +81,7 @@ import SwiftUI
                         viewModel.zoomIn()
                     } label: {
                         IconDeprecated(.plus)
-                            .onSurfaceMediumEmphasisForegroundColor()
+                            .onSurfaceSecondaryForeground()
                             .padding(.xxSmall)
                     }
 
@@ -89,7 +89,7 @@ import SwiftUI
                         viewModel.zoomOut()
                     } label: {
                         IconDeprecated(.minus)
-                            .onSurfaceMediumEmphasisForegroundColor()
+                            .onSurfaceSecondaryForeground()
                             .padding(.xxSmall)
                     }
                 }
@@ -106,7 +106,7 @@ import SwiftUI
 
                 } label: {
                     IconDeprecated(.navigation)
-                        .onSurfaceMediumEmphasisForegroundColor()
+                        .onSurfaceSecondaryForeground()
                         .padding(.xxSmall)
                 }
                 .background {

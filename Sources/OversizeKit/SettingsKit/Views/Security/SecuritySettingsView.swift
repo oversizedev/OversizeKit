@@ -5,6 +5,7 @@
 
 import Factory
 import OversizeLocalizable
+import OversizeRouter
 import OversizeServices
 import OversizeUI
 import SwiftUI
@@ -13,7 +14,7 @@ import SwiftUI
 
 public struct SecuritySettingsView: View {
     @Injected(\.biometricService) var biometricService
-    @Environment(\.settingsNavigate) var settingsNavigate
+    @Environment(Router<SettingsScreen>.self) var router
     @StateObject var settingsService = SettingsService()
 
     public init() {}
@@ -51,7 +52,7 @@ extension SecuritySettingsView {
                     ) {
                         Row(biometricService.biometricType.rawValue) {
                             Image(systemName: biometricImageName)
-                                .foregroundColor(Color.onBackgroundHighEmphasis)
+                                .foregroundColor(Color.onBackgroundPrimary)
                                 .font(.system(size: 20, weight: .semibold))
                                 .frame(width: 24, height: 24, alignment: .center)
                         }
@@ -66,7 +67,7 @@ extension SecuritySettingsView {
                             if settingsService.isSetedPinCode() {
                                 settingsService.pinCodeEnabend = $0
                             } else {
-                                settingsNavigate(.present(.setPINCode))
+                                router.present(.setPINCode)
                             }
                         })
                     ) {
@@ -77,7 +78,7 @@ extension SecuritySettingsView {
 
                     if settingsService.isSetedPinCode() {
                         Row(L10n.Security.changePINCode) {
-                            settingsNavigate(.present(.updatePINCode))
+                            router.present(.updatePINCode)
                         }
                         .rowArrow()
                     }

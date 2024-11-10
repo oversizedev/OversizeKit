@@ -113,7 +113,7 @@ import SwiftUI
                 #if os(iOS)
                 .keyboardType(.numberPad)
                 #endif
-                .textFieldStyle(DefaultPlaceholderTextFieldStyle())
+                .textFieldStyle(.default)
                 .focused($isFocusedRepitCount)
             case .endDate:
                 #if !os(watchOS)

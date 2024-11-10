@@ -71,7 +71,7 @@ import SwiftUI
                 .controlBorderShape(.capsule)
                 .controlSize(.mini)
             }
-            .navigationBarDividerColor(Color.onSurfaceHighEmphasis.opacity(0.1))
+            .navigationBarDividerColor(Color.onSurfacePrimary.opacity(0.1))
             .safeAreaInset(edge: .bottom) {
                 bottomBar
             }
@@ -98,7 +98,7 @@ import SwiftUI
                 TextField("Event name", text: $viewModel.title)
                     .title(.bold)
                     .focused($focusedField, equals: .title)
-                    .onSurfaceHighEmphasisForegroundColor()
+                    .onSurfacePrimaryForeground()
                     .padding(.bottom, .xxxSmall)
                     .padding(.horizontal, .small)
 
@@ -129,7 +129,7 @@ import SwiftUI
                 HStack {
                     Text("All-day event")
                         .headline(.semibold)
-                        .foregroundColor(.onSurfaceHighEmphasis)
+                        .foregroundColor(.onSurfacePrimary)
                         .padding(.leading, .xxxSmall)
 
                     Spacer()
@@ -148,7 +148,7 @@ import SwiftUI
             var textEditor: some View {
                 VStack(spacing: 2) {
                     TextEditor(text: $viewModel.note)
-                        .onSurfaceHighEmphasisForegroundColor()
+                        .onSurfacePrimaryForeground()
                         .padding(.horizontal, .xSmall)
                         .padding(.vertical, .xxSmall)
                         .focused($focusedField, equals: .note)
@@ -162,7 +162,7 @@ import SwiftUI
                                         if viewModel.note.isEmpty {
                                             Text("Note")
                                                 .body(.medium)
-                                                .onSurfaceDisabledForegroundColor()
+                                                .onSurfaceTertiaryForeground()
                                                 .padding(.small)
                                         }
                                     }
@@ -173,7 +173,7 @@ import SwiftUI
                                         if viewModel.note.isEmpty {
                                             Text("Note")
                                                 .body(.medium)
-                                                .onSurfaceDisabledForegroundColor()
+                                                .onSurfaceTertiaryForeground()
                                                 .padding(.small)
                                         }
                                     }
@@ -183,7 +183,7 @@ import SwiftUI
 
                     TextField("URL", text: $viewModel.url)
                         .focused($focusedField, equals: .url)
-                        .onSurfaceHighEmphasisForegroundColor()
+                        .onSurfacePrimaryForeground()
                         .body(.medium)
                         .padding(.horizontal, .small)
                         .padding(.vertical, 18)
@@ -209,7 +209,7 @@ import SwiftUI
                             viewModel.present(.repeat)
                         } leading: {
                             IconDeprecated(.refresh)
-                                .iconColor(.onSurfaceHighEmphasis)
+                                .iconColor(.onSurfacePrimary)
                         }
                         .rowClearButton(style: .onSurface) {
                             viewModel.repitRule = .never
@@ -235,7 +235,7 @@ import SwiftUI
                                     viewModel.present(.invites)
                                 } leading: {
                                     IconDeprecated(.user)
-                                        .iconColor(.onSurfaceHighEmphasis)
+                                        .iconColor(.onSurfacePrimary)
                                 }
                                 .rowClearButton(style: .onSurface) {
                                     viewModel.members.remove(email)
@@ -269,7 +269,7 @@ import SwiftUI
                                     viewModel.present(.alarm)
                                 } leading: {
                                     IconDeprecated(.bell)
-                                        .iconColor(.onSurfaceHighEmphasis)
+                                        .iconColor(.onSurfacePrimary)
                                 }
                                 .rowClearButton(style: .onSurface) {
                                     viewModel.alarms.remove(alarm)
@@ -303,7 +303,7 @@ import SwiftUI
                                     viewModel.present(.location)
                                 } leading: {
                                     IconDeprecated(.mapPin)
-                                        .iconColor(.onSurfaceHighEmphasis)
+                                        .iconColor(.onSurfacePrimary)
                                 }
                                 .rowClearButton(style: .onSurface) {
                                     viewModel.locationName = nil
@@ -356,16 +356,16 @@ import SwiftUI
                 } label: {
                     VStack(alignment: .leading, spacing: .xxxSmall) {
                         Text("Starts")
-                            .onSurfaceMediumEmphasisForegroundColor()
+                            .onSurfaceSecondaryForeground()
                             .subheadline(.semibold)
 
                         Text(startDateText)
-                            .onSurfaceHighEmphasisForegroundColor()
+                            .onSurfacePrimaryForeground()
                             .headline(.semibold)
 
                         if !isCurrentYearEvent {
                             Text(viewModel.dateStart.formatted(.dateTime.year()))
-                                .onSurfaceHighEmphasisForegroundColor()
+                                .onSurfacePrimaryForeground()
                                 .headline(.semibold)
                         }
                     }
@@ -384,16 +384,16 @@ import SwiftUI
                 } label: {
                     VStack(alignment: .leading, spacing: .xxxSmall) {
                         Text("Ended")
-                            .onSurfaceMediumEmphasisForegroundColor()
+                            .onSurfaceSecondaryForeground()
                             .subheadline(.semibold)
 
                         Text(endDateText)
-                            .onSurfaceHighEmphasisForegroundColor()
+                            .onSurfacePrimaryForeground()
                             .headline(.semibold)
 
                         if !isCurrentYearEvent {
                             Text(viewModel.dateEnd.formatted(.dateTime.year()))
-                                .onSurfaceHighEmphasisForegroundColor()
+                                .onSurfacePrimaryForeground()
                                 .headline(.semibold)
                         }
                     }
@@ -478,13 +478,13 @@ import SwiftUI
             .buttonStyle(.scale)
             .padding(.horizontal, .medium)
             .padding(.vertical, 20)
-            .onSurfaceMediumEmphasisForegroundColor()
+            .onSurfaceSecondaryForeground()
             #if !os(watchOS)
                 .background(.ultraThinMaterial)
             #endif
                 .overlay(alignment: .top) {
                     Rectangle()
-                        .fill(Color.onSurfaceHighEmphasis.opacity(0.05))
+                        .fill(Color.onSurfacePrimary.opacity(0.05))
                         .frame(height: 1)
                 }
         }

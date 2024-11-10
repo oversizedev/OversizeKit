@@ -102,7 +102,6 @@ import SwiftUI
                     #endif
                 case .repeat:
                     RepeatPicker(selectionRule: $viewModel.repitRule, selectionEndRule: $viewModel.repitEndRule)
-
                 case .alarm:
                     AlarmPicker(selection: $viewModel.alarms)
                         .presentationDetents([.height(630), .large])

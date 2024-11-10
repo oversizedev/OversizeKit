@@ -5,12 +5,13 @@
 
 import OversizeCore
 import OversizeLocalizable
+import OversizeRouter
 import OversizeServices
 import OversizeUI
 import SwiftUI
 
 public struct AppearanceSettingView: View {
-    @Environment(\.settingsNavigate) var settingsNavigate
+    @Environment(Router<SettingsScreen>.self) var router
     @Environment(\.theme) private var theme: ThemeSettings
     @Environment(\.iconStyle) var iconStyle: IconStyle
     @Environment(\.isPremium) var isPremium: Bool
@@ -62,7 +63,6 @@ public struct AppearanceSettingView: View {
         }
         .frame(width: 400, height: 300)
         // swiftlint:disable multiple_closures_with_trailing_closure superfluous_disable_command
-
         .navigationTitle("Appearance")
         .preferredColorScheme(theme.appearance.colorScheme)
     }
@@ -77,7 +77,7 @@ public struct AppearanceSettingView: View {
 
                         VStack(spacing: .zero) {
                             Text(appearance.name)
-                                .foregroundColor(.onSurfaceHighEmphasis)
+                                .foregroundColor(.onSurfacePrimary)
                                 .font(.subheadline)
                                 .bold()
 
@@ -87,7 +87,7 @@ public struct AppearanceSettingView: View {
                             if appearance == theme.appearance {
                                 IconDeprecated(.checkCircle, color: Color.accent)
                             } else {
-                                IconDeprecated(.circle, color: .onSurfaceMediumEmphasis)
+                                IconDeprecated(.circle, color: .onSurfaceSecondary)
                             }
                         }
                         Spacer()
@@ -129,7 +129,7 @@ public struct AppearanceSettingView: View {
                                 )
                                 .onTapGesture {
                                     if index != 0, isPremium == false {
-                                        settingsNavigate(.present(.premium))
+                                        router.present(.premium)
                                     } else {
                                         let defaultIconIndex = iconSettings.iconNames
                                             .firstIndex(of: UIApplication.shared.alternateIconName) ?? 0
@@ -158,7 +158,7 @@ public struct AppearanceSettingView: View {
         SectionView("Advanced settings") {
             VStack(spacing: .zero) {
                 Row("Fonts") {
-                    settingsNavigate(.move(.font))
+                    router.move(.font)
                 } leading: {
                     textIcon.icon()
                 }
@@ -168,14 +168,14 @@ public struct AppearanceSettingView: View {
 
                 Switch(isOn: theme.$borderApp) {
                     Row("Borders") {
-                        settingsNavigate(.move(.border))
+                        router.move(.border)
                     } leading: {
                         borderIcon.icon()
                     }
                     .premium()
                 }
                 .onPremiumTap()
-                .onChange(of: theme.borderApp) { value in
+                .onChange(of: theme.borderApp) { _, value in
                     theme.borderSurface = value
                     theme.borderButtons = value
                     theme.borderControls = value
@@ -183,7 +183,7 @@ public struct AppearanceSettingView: View {
                 }
 
                 Row("Radius") {
-                    settingsNavigate(.move(.radius))
+                    router.move(.radius)
                 } leading: {
                     radiusIcon.icon()
                 }
@@ -229,6 +229,7 @@ public struct AppearanceSettingView: View {
 }
 
 #if os(iOS)
+    @MainActor
     public class AppIconSettings: ObservableObject {
         public var iconNames: [String?] = [nil]
         @Published public var currentIndex = 0

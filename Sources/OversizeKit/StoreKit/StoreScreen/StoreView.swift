@@ -93,11 +93,11 @@ import SwiftUI
                 VStack(spacing: .xxSmall) {
                     Text(titleText)
                         .title()
-                        .foregroundColor(.onSurfaceHighEmphasis)
+                        .foregroundColor(.onSurfacePrimary)
 
                     Text(subtitleText)
                         .headline()
-                        .foregroundColor(.onSurfaceMediumEmphasis)
+                        .foregroundColor(.onSurfaceSecondary)
                 }
                 .multilineTextAlignment(.center)
 
@@ -120,11 +120,11 @@ import SwiftUI
                 VStack(spacing: .xxSmall) {
                     Text(titleText)
                         .title()
-                        .foregroundColor(.onSurfaceHighEmphasis)
+                        .foregroundColor(.onSurfacePrimary)
 
                     Text(subtitleText)
                         .headline()
-                        .foregroundColor(.onSurfaceMediumEmphasis)
+                        .foregroundColor(.onSurfaceSecondary)
                 }
                 .multilineTextAlignment(.center)
 
@@ -163,14 +163,14 @@ import SwiftUI
                     await viewModel.updateSubscriptionStatus(products: data)
                 }
             }
-            .onChange(of: data.purchasedAutoRenewable) { _ in
+            .onChange(of: data.purchasedAutoRenewable) { _, _ in
                 Task {
                     // When `purchasedSubscriptions` changes, get the latest subscription status.
                     await viewModel.updateSubscriptionStatus(products: data)
                 }
             }
-            .onChange(of: viewModel.isPremium) { newValue in
-                isShowFireworks = newValue
+            .onChange(of: viewModel.isPremium) { _, status in
+                isShowFireworks = status
                 DispatchQueue.main.asyncAfter(deadline: .now() + 30) {
                     isShowFireworks = false
                 }

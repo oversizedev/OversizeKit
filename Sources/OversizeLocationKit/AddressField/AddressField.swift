@@ -59,7 +59,7 @@ public struct AddressField: View {
                     HStack {
                         Text(title)
                             .subheadline(.medium)
-                            .foregroundColor(.onSurfaceHighEmphasis)
+                            .foregroundColor(.onSurfacePrimary)
                         Spacer()
                     }
                 }
@@ -70,7 +70,7 @@ public struct AddressField: View {
                             Text(title)
                                 .font(!isSlectedAddress ? .headline : .subheadline)
                                 .fontWeight(!isSlectedAddress ? .medium : .semibold)
-                                .onSurfaceDisabledForegroundColor()
+                                .onSurfaceTertiaryForeground()
                                 .offset(y: !isSlectedAddress ? 0 : -13)
                                 .opacity(!isSlectedAddress ? 0 : 1)
                         }
@@ -81,12 +81,12 @@ public struct AddressField: View {
                             .lineLimit(1)
                     }
                     Spacer()
-                    IconDeprecated(.chevronDown, color: .onSurfaceHighEmphasis)
+                    IconDeprecated(.chevronDown, color: .onSurfacePrimary)
                 }
             }
             .contentShape(Rectangle())
         }
-        .foregroundColor(.onSurfaceHighEmphasis)
+        .foregroundColor(.onSurfacePrimary)
         .buttonStyle(.field)
         #if !os(watchOS)
             .sheet(isPresented: $isShowPicker) {

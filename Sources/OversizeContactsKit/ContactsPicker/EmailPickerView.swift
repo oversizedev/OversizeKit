@@ -50,7 +50,7 @@ import SwiftUI
             }
             .topToolbar {
                 TextField("Email or name", text: $viewModel.searchText)
-                    .textFieldStyle(DefaultPlaceholderTextFieldStyle())
+                    .textFieldStyle(.default)
                     .focused($isFocusSearth)
                 #if os(iOS)
                     .keyboardType(.emailAddress)
@@ -98,7 +98,7 @@ import SwiftUI
                     Spacer()
                 }
                 .title3()
-                .onSurfaceMediumEmphasisForegroundColor()
+                .onSurfaceSecondaryForeground()
                 .padding(.vertical, .xxSmall)
                 .paddingContent(.horizontal)
 
@@ -136,7 +136,7 @@ import SwiftUI
                     Spacer()
                 }
                 .title3()
-                .onSurfaceMediumEmphasisForegroundColor()
+                .onSurfaceSecondaryForeground()
                 .padding(.vertical, .xxSmall)
                 .paddingContent(.horizontal)
                 .padding(.top, viewModel.lastSelectedEmails.isEmpty ? .zero : .small)

@@ -8,6 +8,7 @@ import OversizeComponents
 import OversizeCore
 import OversizeLocalizable
 import OversizeResources
+import OversizeRouter
 import OversizeServices
 import OversizeUI
 import SwiftUI
@@ -18,7 +19,7 @@ import SwiftUI
 #endif
 
 public struct AboutView: View {
-    @Environment(\.settingsNavigate) var settingsNavigate
+    @Environment(Router<SettingsScreen>.self) var router
     @Environment(\.screenSize) var screenSize
     @Environment(\.iconStyle) var iconStyle: IconStyle
 
@@ -118,7 +119,7 @@ public struct AboutView: View {
                                 Text(app.name)
                                     .caption(.medium)
                                     .multilineTextAlignment(.center)
-                                    .foregroundColor(.onSurfaceMediumEmphasis)
+                                    .foregroundColor(.onSurfaceSecondary)
                                     .frame(width: 74)
                             }
                         }
@@ -146,7 +147,7 @@ public struct AboutView: View {
                         Text("All apps")
                             .caption(.medium)
                             .multilineTextAlignment(.center)
-                            .foregroundColor(.onSurfaceMediumEmphasis)
+                            .foregroundColor(.onSurfaceSecondary)
                             .frame(width: 74)
                     }
                 }
@@ -166,12 +167,12 @@ public struct AboutView: View {
                     Image.Brands.Oversize.fill
                         .resizable()
                         .renderingMode(.template)
-                        .foregroundColor(Color.onSurfaceHighEmphasis)
+                        .foregroundColor(Color.onSurfacePrimary)
                         .frame(width: 32, height: 32)
 
                     Resource.overszieTextLogo
                         .renderingMode(.template)
-                        .foregroundColor(Color.onSurfaceHighEmphasis)
+                        .foregroundColor(Color.onSurfacePrimary)
                 }
                 .padding(.top, -40)
                 .padding(.bottom, .xSmall)
@@ -181,12 +182,12 @@ public struct AboutView: View {
                     Image.Brands.Oversize.fill
                         .resizable()
                         .renderingMode(.template)
-                        .foregroundColor(Color.onSurfaceHighEmphasis)
+                        .foregroundColor(Color.onSurfacePrimary)
                         .frame(width: 48, height: 48)
 
                     Resource.overszieTextLogo
                         .renderingMode(.template)
-                        .foregroundColor(Color.onSurfaceHighEmphasis)
+                        .foregroundColor(Color.onSurfacePrimary)
                 }
                 .padding(.top, 42)
                 .padding(.bottom, .medium)
@@ -194,7 +195,7 @@ public struct AboutView: View {
 
             Text("The Oversize project is made with love and attention to the design of the forces of only one person")
                 .title3(.semibold)
-                .foregroundColor(.onBackgroundHighEmphasis)
+                .foregroundColor(.onBackgroundPrimary)
                 .padding(.horizontal, isLargeScreen ? 72 : 52)
                 .padding(.bottom, .large)
                 .multilineTextAlignment(.center)
@@ -259,7 +260,7 @@ public struct AboutView: View {
                     HStack {
                         Text(L10n.About.otherApplications.uppercased())
                             .caption(true)
-                            .foregroundColor(.onSurfaceMediumEmphasis)
+                            .foregroundColor(.onSurfaceSecondary)
                             .padding(.top, 12)
                             .padding(.leading, 26)
                             .padding(.bottom, 18)
@@ -273,19 +274,19 @@ public struct AboutView: View {
             SectionView {
                 VStack(spacing: .zero) {
                     Row("Our open resources") {
-                        settingsNavigate(.move(.ourResorses))
+                        router.move(.ourResorses)
                     }
                     .rowArrow()
 
                     if let privacyUrl = Info.url.appPrivacyPolicyUrl {
                         Row(L10n.Store.privacyPolicy) {
-                            settingsNavigate(.present(.webView(url: privacyUrl)))
+                            router.present(.webView(url: privacyUrl))
                         }
                     }
 
                     if let termsOfUde = Info.url.appTermsOfUseUrl {
                         Row(L10n.Store.termsOfUse) {
-                            settingsNavigate(.present(.webView(url: termsOfUde)))
+                            router.present(.webView(url: termsOfUde))
                         }
                     }
                 }
@@ -339,7 +340,7 @@ public struct AboutView: View {
                         Spacer()
                         Image.Brands.Facebook.Circle.fill
                             .renderingMode(.template)
-                            .foregroundColor(Color.onSurfaceMediumEmphasis)
+                            .foregroundColor(Color.onSurfaceSecondary)
                         Spacer()
                     }
                     // }
@@ -353,7 +354,7 @@ public struct AboutView: View {
                         Spacer()
                         Image.Brands.Instagram.fill
                             .renderingMode(.template)
-                            .foregroundColor(Color.onSurfaceMediumEmphasis)
+                            .foregroundColor(Color.onSurfaceSecondary)
                         Spacer()
                     }
                     // }
@@ -367,7 +368,7 @@ public struct AboutView: View {
                         Spacer()
                         Image.Brands.xCom
                             .renderingMode(.template)
-                            .foregroundColor(Color.onSurfaceMediumEmphasis)
+                            .foregroundColor(Color.onSurfaceSecondary)
                         Spacer()
                     }
                     // }
@@ -381,7 +382,7 @@ public struct AboutView: View {
                         Spacer()
                         Image.Brands.Telegram.fill
                             .renderingMode(.template)
-                            .foregroundColor(Color.onSurfaceMediumEmphasis)
+                            .foregroundColor(Color.onSurfaceSecondary)
                         Spacer()
                     }
                     // }
@@ -395,7 +396,7 @@ public struct AboutView: View {
                         Spacer()
                         Image.Brands.Dribbble.fill
                             .renderingMode(.template)
-                            .foregroundColor(Color.onSurfaceMediumEmphasis)
+                            .foregroundColor(Color.onSurfaceSecondary)
                         Spacer()
                     }
                     //  }
@@ -476,11 +477,11 @@ public struct AboutView: View {
                         {
                             Text("© 2024 \(developerName). \(appName) \(appVersion) (\(appBuild))")
                                 .footnote()
-                                .foregroundColor(.onBackgroundDisabled)
+                                .foregroundColor(.onBackgroundTertiary)
                         } else {
                             Text("Developer")
                                 .footnote()
-                                .foregroundColor(.onBackgroundDisabled)
+                                .foregroundColor(.onBackgroundTertiary)
                         }
                     }
                 }

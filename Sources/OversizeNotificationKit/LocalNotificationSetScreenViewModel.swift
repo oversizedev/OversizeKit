@@ -38,13 +38,20 @@ import SwiftUI
         func setNotification(timeBefore: LocalNotificationTime) async {
             let notificationTime = date.addingTimeInterval(timeBefore.timeInterval)
             let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: notificationTime)
+
+            let stringUserInfo = userInfo?.reduce(into: [String: String]()) { result, pair in
+                if let key = pair.key as? String, let value = pair.value as? String {
+                    result[key] = value
+                }
+            }
+
             await localNotificationService.schedule(localNotification: .init(
                 id: id,
                 title: title,
                 body: body,
                 dateComponents: dateComponents,
                 repeats: false,
-                userInfo: userInfo
+                userInfo: stringUserInfo
             ))
         }
 

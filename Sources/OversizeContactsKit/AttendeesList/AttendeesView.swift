@@ -83,7 +83,7 @@ import SwiftUI
                                 .fillBackgroundPrimary()
                         }
                     Image(systemName: participant.symbolName)
-                        .onPrimaryHighEmphasisForegroundColor()
+                        .onPrimaryForeground()
                         .font(.system(size: 9, weight: .black))
                 }
             }

@@ -9,17 +9,18 @@ import OversizeServices
 import OversizeUI
 import SwiftUI
 
-public enum PINCodeAction: Identifiable {
+public enum PINCodeAction: Identifiable, Sendable {
     case set, update
     public var id: Int {
         hashValue
     }
 }
 
-public enum SetPINCodeViewState {
+public enum SetPINCodeViewState: Sendable {
     case oldPINField, newPINField, confirmNewPINField
 }
 
+@MainActor
 public final class SetPINCodeViewModel: ObservableObject {
     @Published public var settingsStore: SettingsService
 
