@@ -4,7 +4,7 @@
 import Foundation
 import PackageDescription
 
-let productionDependencies: [PackageDescription.Package.Dependency] = [
+let remoteDependencies: [PackageDescription.Package.Dependency] = [
     .package(url: "https://github.com/oversizedev/OversizeUI.git", .upToNextMajor(from: "3.0.2")),
     .package(url: "https://github.com/oversizedev/OversizeCore.git", .upToNextMajor(from: "2.0.0")),
     .package(url: "https://github.com/oversizedev/OversizeServices.git", .upToNextMajor(from: "1.4.0")),
@@ -34,10 +34,8 @@ let developmentDependencies: [PackageDescription.Package.Dependency] = [
 
 var dependencies: [PackageDescription.Package.Dependency] = []
 
-if ProcessInfo.processInfo.environment["RELEASE_DEPENDENCIES"].flatMap(Bool.init) ?? false {
-    dependencies = productionDependencies
-} else {
-    dependencies = developmentDependencies
+if ProcessInfo.processInfo.environment["BUILD_MODE"] == "PRODUCTION" {
+    dependencies = remoteDependencies
 }
 
 let package = Package(
