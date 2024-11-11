@@ -76,15 +76,15 @@ public extension SettingsScreen {
     }
 }
 
-//public struct SettingsNavigateAction {
+// public struct SettingsNavigateAction {
 //    public typealias Action = (SettingsNavigationType) -> Void
 //    public let action: Action
 //    public func callAsFunction(_ navigationType: SettingsNavigationType) {
 //        action(navigationType)
 //    }
-//}
+// }
 
-//public enum SettingsNavigationType {
+// public enum SettingsNavigationType {
 //    case move(SettingsScreen)
 //    case backToRoot
 //    case back(Int = 1)
@@ -94,7 +94,7 @@ public extension SettingsScreen {
 //    case dismissFullScreenCover
 //    case dismissDisabled(_ isDismissDisabled: Bool = true)
 //    case presentHUD(_ text: String, type: HUDMessageType)
-//}
+// }
 
 //
 // public struct SettingsNavigateEnvironmentKey: EnvironmentKey {

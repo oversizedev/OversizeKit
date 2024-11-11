@@ -12,7 +12,6 @@ import SwiftUI
 
 // swiftlint:disable line_length
 public struct SettingsView<AppSection: View, HeadSection: View>: View {
-    
     @Environment(Router<SettingsScreen>.self) var router
     @Environment(\.iconStyle) var iconStyle: IconStyle
     @Environment(\.theme) var theme: ThemeSettings
