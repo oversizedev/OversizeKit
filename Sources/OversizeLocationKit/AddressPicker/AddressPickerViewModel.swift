@@ -13,7 +13,7 @@ import SwiftUI
 
 #if !os(watchOS)
     @MainActor
-class AddressPickerViewModel: NSObject, ObservableObject {
+    class AddressPickerViewModel: NSObject, ObservableObject {
         @Injected(\.locationService) var locationService: LocationServiceProtocol
 
         @Published var locationResults: [MKLocalSearchCompletion] = .init()
@@ -60,7 +60,7 @@ class AddressPickerViewModel: NSObject, ObservableObject {
         }
     }
 
-extension AddressPickerViewModel: @preconcurrency MKLocalSearchCompleterDelegate {
+    extension AddressPickerViewModel: @preconcurrency MKLocalSearchCompleterDelegate {
         func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
             currentPromise?(.success(completer.results))
         }
