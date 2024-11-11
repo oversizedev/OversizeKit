@@ -6,7 +6,7 @@
 import OversizeUI
 import SwiftUI
 
-struct RadiusSettingView: View {
+public struct RadiusSettingView: View {
     @Environment(\.theme) private var theme: ThemeSettings
 
     public init() {}
@@ -32,13 +32,13 @@ struct RadiusSettingView: View {
                                 HStack {
                                     Text("Size")
                                         .subheadline()
-                                        .foregroundColor(.onSurfaceHighEmphasis)
+                                        .foregroundColor(.onSurfacePrimary)
 
                                     Spacer()
 
                                     Text(String(format: "%.0f", theme.radius) + "  px")
                                         .subheadline()
-                                        .foregroundColor(.onSurfaceHighEmphasis)
+                                        .foregroundColor(.onSurfacePrimary)
                                 }
 
                                 Slider(value: theme.$radius, in: 0 ... 12, step: 4)
@@ -53,12 +53,6 @@ struct RadiusSettingView: View {
 
             Spacer()
         }
-//        .navigationBar("Radius", style: .fixed($offset)) {
-//            BarButton(.back)
-//        } trailingBar: {} bottomBar: {}
-//        .background(Color.backgroundSecondary.ignoresSafeArea(.all))
-//        .preferredColorScheme(theme.appearance.colorScheme)
-//        .animation(.easeIn(duration: 0.2))
     }
 }
 

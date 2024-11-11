@@ -1,18 +1,19 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.0
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import Foundation
 import PackageDescription
 
-let productionDependencies: [PackageDescription.Package.Dependency] = [
+let remoteDependencies: [PackageDescription.Package.Dependency] = [
     .package(url: "https://github.com/oversizedev/OversizeUI.git", .upToNextMajor(from: "3.0.2")),
     .package(url: "https://github.com/oversizedev/OversizeCore.git", .upToNextMajor(from: "1.3.0")),
     .package(url: "https://github.com/oversizedev/OversizeServices.git", .upToNextMajor(from: "1.4.0")),
     .package(url: "https://github.com/oversizedev/OversizeLocalizable.git", .upToNextMajor(from: "1.4.0")),
-    .package(url: "https://github.com/oversizedev/OversizeComponents.git", .upToNextMajor(from: "1.2.0")),
+    .package(url: "https://github.com/oversizedev/OversizeComponents.git", .upToNextMajor(from: "2.0.0")),
     .package(url: "https://github.com/oversizedev/OversizeResources.git", .upToNextMajor(from: "2.0.0")),
     .package(url: "https://github.com/oversizedev/OversizeNetwork.git", .upToNextMajor(from: "0.4.0")),
     .package(url: "https://github.com/oversizedev/OversizeModels.git", .upToNextMajor(from: "0.1.0")),
+    .package(url: "https://github.com/oversizedev/OversizeRouter.git", .upToNextMajor(from: "0.1.0")),
     .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "2.1.3")),
     .package(url: "https://github.com/lorenzofiamingo/swiftui-cached-async-image.git", .upToNextMajor(from: "2.1.1")),
 ]
@@ -26,19 +27,24 @@ let developmentDependencies: [PackageDescription.Package.Dependency] = [
     .package(name: "OversizeResources", path: "../OversizeResources"),
     .package(name: "OversizeNetwork", path: "../OversizeNetwork"),
     .package(name: "OversizeModels", path: "../OversizeModels"),
+    .package(name: "OversizeRouter", path: "../OversizeRouter"),
     .package(url: "https://github.com/lorenzofiamingo/swiftui-cached-async-image.git", .upToNextMajor(from: "2.1.1")),
     .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "2.1.3")),
 ]
 
-let isProductionDependencies = ProcessInfo.processInfo.environment["RELEASE_DEPENDENCIES"] == "TRUE"
+var dependencies: [PackageDescription.Package.Dependency] = remoteDependencies
+
+if ProcessInfo.processInfo.environment["BUILD_MODE"] == "DEV" {
+    dependencies = developmentDependencies
+}
 
 let package = Package(
     name: "OversizeKit",
     platforms: [
-        .iOS(.v15),
-        .macOS(.v13),
-        .tvOS(.v15),
-        .watchOS(.v9),
+        .iOS(.v17),
+        .macOS(.v14),
+        .tvOS(.v17),
+        .watchOS(.v10),
     ],
     products: [
         .library(name: "OversizeKit", targets: ["OversizeKit"]),
@@ -50,7 +56,7 @@ let package = Package(
         .library(name: "OversizeNotificationKit", targets: ["OversizeNotificationKit"]),
         .library(name: "OversizePhotoKit", targets: ["OversizePhotoKit"]),
     ],
-    dependencies: productionDependencies,
+    dependencies: dependencies,
     targets: [
         .target(
             name: "OversizeKit",
@@ -65,8 +71,9 @@ let package = Package(
                 .product(name: "OversizeNotificationService", package: "OversizeServices"),
                 .product(name: "OversizeModels", package: "OversizeModels"),
                 .product(name: "OversizeNetwork", package: "OversizeNetwork"),
+                .product(name: "OversizeRouter", package: "OversizeRouter"),
                 .product(name: "Factory", package: "Factory"),
-                .product(name: "CachedAsyncImage", package: "swiftui-cached-async-image")
+                .product(name: "CachedAsyncImage", package: "swiftui-cached-async-image"),
             ]
         ),
         .target(

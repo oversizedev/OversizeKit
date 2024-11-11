@@ -14,10 +14,8 @@ public struct Launcher<Content: View, Onboarding: View>: View {
 
     private var onboarding: Onboarding?
     private let content: Content
-    private var transaction = Transaction()
 
     @StateObject private var viewModel = LauncherViewModel()
-    @State private var blurRadius: CGFloat = 0
 
     public init(@ViewBuilder content: () -> Content) {
         self.content = content()
@@ -39,40 +37,43 @@ public struct Launcher<Content: View, Onboarding: View>: View {
             .appLaunchCover(item: $viewModel.activeFullScreenSheet) {
                 fullScreenCover(sheet: $0)
                     .systemServices()
+                #if os(macOS)
+                    .frame(width: 840, height: 672)
+                    // .interactiveDismissDisabled(!viewModel.appStateService.isCompletedOnbarding)
+                #endif
             }
-            .onChange(of: viewModel.appStateService.isCompletedOnbarding) { isCompletedOnbarding in
+            .onChange(of: viewModel.appStateService.isCompletedOnbarding) { _, isCompletedOnbarding in
                 if isCompletedOnbarding, !viewModel.isPremium {
                     viewModel.setPayWall()
                 } else {
                     viewModel.activeFullScreenSheet = nil
                 }
             }
-            .onChange(of: scenePhase, perform: { value in
+            .onChange(of: scenePhase) { _, value in
                 switch value {
-                case .active, .inactive:
-                    break
                 case .background:
                     viewModel.authState = .locked
                     viewModel.pinCodeField = ""
-                @unknown default:
-                    log("unknown")
+                default:
+                    break
                 }
-            })
+            }
     }
 
+    @ViewBuilder
     var contentView: some View {
-        Group {
-            if viewModel.isShowSplashScreen {
-                SplashScreen()
-            } else if viewModel.isShowLockscreen {
-                lockscreenView
-            } else {
-                content
-                    .onAppear {
-                        viewModel.reviewService.launchEvent()
-                        viewModel.launcherSheetsChek()
+        if viewModel.isShowSplashScreen {
+            SplashScreen()
+        } else if viewModel.isShowLockscreen {
+            lockscreenView
+        } else {
+            content
+                .onAppear {
+                    Task { @MainActor in
+                        await viewModel.reviewService.launchEvent()
                     }
-            }
+                    viewModel.launcherSheetsChek()
+                }
         }
     }
 
@@ -87,14 +88,15 @@ public struct Launcher<Content: View, Onboarding: View>: View {
     }
 
     private var lockscreenView: some View {
-        LockscreenView(pinCode: $viewModel.pinCodeField,
-                       state: $viewModel.authState,
-                       title: L10n.Security.enterPINCode,
-                       errorText: L10n.Security.invalidPIN,
-                       pinCodeEnabled: viewModel.settingsService.pinCodeEnabend,
-                       biometricEnabled: viewModel.settingsService.biometricEnabled,
-                       biometricType: viewModel.biometricService.biometricType)
-        {
+        LockscreenView(
+            pinCode: $viewModel.pinCodeField,
+            state: $viewModel.authState,
+            title: L10n.Security.enterPINCode,
+            errorText: L10n.Security.invalidPIN,
+            pinCodeEnabled: viewModel.settingsService.pinCodeEnabend,
+            biometricEnabled: viewModel.settingsService.biometricEnabled,
+            biometricType: viewModel.biometricService.biometricType
+        ) {
             viewModel.checkPassword()
         } biometricAction: {
             viewModel.appLockValidation()
@@ -125,7 +127,6 @@ public extension View {
         Launcher {
             self
         }
-        .systemServices()
     }
 
     func appLaunch(@ViewBuilder onboarding: @escaping () -> some View) -> some View {
@@ -133,7 +134,6 @@ public extension View {
             self
         }
         .onboarding(onboarding: onboarding)
-        .systemServices()
     }
 }
 
@@ -142,8 +142,7 @@ private extension View {
         item: Binding<Item?>, onDismiss: (() -> Void)? = nil, @ViewBuilder content: @escaping (Item) -> some View
     ) -> some View where Item: Identifiable {
         #if os(macOS)
-            interactiveDismissDisabled()
-                .sheet(item: item, onDismiss: onDismiss, content: content)
+            sheet(item: item, onDismiss: onDismiss, content: content)
         #else
             fullScreenCover(item: item, onDismiss: onDismiss, content: content)
         #endif

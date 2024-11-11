@@ -148,7 +148,7 @@ public struct StoreProductView: View {
 
             if isSelected {
                 Circle()
-                    .fill(Color.onPrimaryHighEmphasis)
+                    .fill(Color.onPrimary)
                     .frame(width: 20, height: 20)
                     .overlay {
                         IconDeprecated(.checkMini, color: topLabelbackgroundColor)
@@ -174,21 +174,21 @@ public struct StoreProductView: View {
                 VStack(spacing: .zero) {
                     Text(product.displayMonthsCount)
                         .title2()
-                        .foregroundColor(.onSurfaceHighEmphasis)
+                        .foregroundColor(.onSurfacePrimary)
 
                     Text(product.displayMonthsCountDescription)
                         .footnote(.bold)
-                        .foregroundColor(.onSurfaceHighEmphasis)
+                        .foregroundColor(.onSurfacePrimary)
 
                     HStack(spacing: .zero) {
                         Text(product.displayPrice)
                             .subheadline(.semibold)
-                            .foregroundColor(.onSurfaceHighEmphasis)
+                            .foregroundColor(.onSurfacePrimary)
                             .padding(.top, .xxxSmall)
 
                         Text(product.displayPeriod)
                             .caption2()
-                            .foregroundColor(.onSurfaceMediumEmphasis)
+                            .foregroundColor(.onSurfaceSecondary)
                             .padding(.top, .xxxSmall)
                     }
                     .padding(.top, .xxxSmall)
@@ -209,7 +209,7 @@ public struct StoreProductView: View {
                                 .fill(topLabelbackgroundColor)
                                 .frame(width: 20, height: 20)
                                 .overlay {
-                                    IconDeprecated(.checkMini, color: Color.onPrimaryHighEmphasis)
+                                    IconDeprecated(.checkMini, color: Color.onPrimary)
                                 }
                                 .padding(.top, .xxxSmall)
                                 .padding(.trailing, .xxxSmall)
@@ -230,12 +230,12 @@ public struct StoreProductView: View {
                 HStack {
                     Text(product.displayName)
                         .headline()
-                        .foregroundColor(.onSurfaceHighEmphasis)
+                        .foregroundColor(.onSurfacePrimary)
 
                     if isHaveSale, !isPurchased {
                         Text("Save " + saleProcent + "%")
                             .caption2(.bold)
-                            .foregroundColor(.onPrimaryHighEmphasis)
+                            .foregroundColor(.onPrimary)
                             .padding(.horizontal, .xxSmall)
                             .padding(.vertical, .xxxSmall)
                             .background {
@@ -267,14 +267,14 @@ public struct StoreProductView: View {
                     .caption2()
                     .padding(.top, .xxxSmall)
             }
-            .foregroundColor(.onSurfaceDisabled)
+            .foregroundColor(.onSurfaceTertiary)
             .padding(.vertical, .xxSmall)
 
             #if os(iOS)
                 if isHaveSale, !isPurchased {
                     Text("Save " + saleProcent + "%")
                         .caption2(.bold)
-                        .foregroundColor(.onPrimaryHighEmphasis)
+                        .foregroundColor(.onPrimary)
                         .padding(.vertical, .xxxSmall)
                         .frame(maxWidth: .infinity)
                         .background {
@@ -299,7 +299,7 @@ public struct StoreProductView: View {
             VStack(alignment: .trailing, spacing: .xxSmall) {
                 Text(product.displayPriceWithPeriod)
                     .headline(.semibold)
-                    .foregroundColor(.onSurfaceMediumEmphasis)
+                    .foregroundColor(.onSurfaceSecondary)
 
                 if let subscriptionUnit = product.subscription?.subscriptionPeriod.unit, subscriptionUnit == .year {
                     HStack(spacing: 2) {
@@ -307,12 +307,12 @@ public struct StoreProductView: View {
                             Text(monthSubscriptionProduct.displayPrice)
                                 .strikethrough()
                                 .subheadline()
-                                .foregroundColor(.onSurfaceDisabled)
+                                .foregroundColor(.onSurfaceTertiary)
                         }
 
                         Text(product.displayMonthPrice + product.displayMonthPricePeriod)
                             .subheadline()
-                            .foregroundColor(.onSurfaceMediumEmphasis)
+                            .foregroundColor(.onSurfaceSecondary)
                     }
                 }
             }
@@ -379,7 +379,7 @@ public struct StoreProductView: View {
 
     var topLabelForegroundColor: Color {
         if isPurchased || isSelected {
-            return .onPrimaryHighEmphasis
+            return .onPrimary
         } else {
             return Palette.violet.color
         }
@@ -387,7 +387,7 @@ public struct StoreProductView: View {
 
     var descriptionForegroundColor: Color {
         if isPurchased || product.type != .autoRenewable {
-            return .onSurfaceMediumEmphasis
+            return .onSurfaceSecondary
         } else {
             return .warning
         }

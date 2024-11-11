@@ -54,11 +54,11 @@ struct StoreFeaturesLargeView: View {
                 VStack(spacing: .xxSmall) {
                     Text(feature.title.valueOrEmpty)
                         .title2(.bold)
-                        .foregroundColor(.onSurfaceHighEmphasis)
+                        .foregroundColor(.onSurfacePrimary)
 
                     Text(feature.subtitle.valueOrEmpty)
                         .body(.medium)
-                        .foregroundColor(.onSurfaceMediumEmphasis)
+                        .foregroundColor(.onSurfaceSecondary)
                 }
                 .padding(.vertical, .medium)
                 .padding(.horizontal, .xSmall)
@@ -119,11 +119,11 @@ struct StoreFeaturesLargeView: View {
             VStack(spacing: .xSmall) {
                 Text(feature.title.valueOrEmpty)
                     .title2(.bold)
-                    .foregroundColor(.onSurfaceHighEmphasis)
+                    .foregroundColor(.onSurfacePrimary)
 
                 Text(feature.subtitle.valueOrEmpty)
                     .body(.medium)
-                    .foregroundColor(.onSurfaceMediumEmphasis)
+                    .foregroundColor(.onSurfaceSecondary)
             }
         }
         .padding(.vertical, .large)

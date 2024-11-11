@@ -1,111 +1,131 @@
 //
-// Copyright © 2023 Alexander Romanov
-// OnboardingView.swift
+// Copyright © 2024 Alexander Romanov
+// OnboardView.swift, created on 16.09.2024
 //
 
 import OversizeUI
 import SwiftUI
 
-public struct OnboardingView<Content: View>: View {
-    @Environment(\.screenSize) var screenSize
+public struct OnboardView<C, A>: View where A: View, C: View {
+    private let content: C
+    private let actions: Group<A>
+    private let backAction: (() -> Void)?
+    private let skipAction: (() -> Void)?
+    private let helpAction: (() -> Void)?
 
-    @Binding private var selection: Int
-
-    @Namespace private var onboardingItem
-
-    @State private var slides: [OnboardingItem] = []
-
-    private let finishAction: (() -> Void)?
-
-    private var content: Content
-
-    public init(selection: Binding<Int>, finishAction: (() -> Void)? = nil, @ViewBuilder content: () -> Content) {
+    public init(
+        @ViewBuilder content: () -> C,
+        @ViewBuilder actions: () -> A,
+        backAction: (() -> Void)? = nil,
+        skipAction: (() -> Void)? = nil,
+        helpAction: (() -> Void)? = nil
+    ) {
         self.content = content()
-        self.finishAction = finishAction
-        _selection = selection
+        self.actions = Group { actions() }
+        self.backAction = backAction
+        self.skipAction = skipAction
+        self.helpAction = helpAction
     }
 
     public var body: some View {
-        ZStack {
-            VStack {
-                PageIndexView($selection, maxIndex: slides.count)
-                    .padding(.top, .large)
-                Spacer()
-            }
-
-            TabView(selection: $selection) {
-                // ForEach(Array(slides.enumerated()), id: \.offset) { index, element in
-
-                tabItem(tabItem: OnboardingItem(title: "Title", subtitle: "Sub"), index: 0)
-                // .tag(index)
-                // }
-            }
-            #if os(iOS)
-            .tabViewStyle(.page(indexDisplayMode: .never))
-            .indexViewStyle(.page(backgroundDisplayMode: .never))
-            #endif
-        }
-        .background(
-            Color.backgroundSecondary.ignoresSafeArea()
-        )
-        .onPreferenceChange(OnboardingItemPreferenceKey.self) { value in
-            slides = value
-        }
+        content
+            .ignoresSafeArea(.all)
+            .frame(
+                maxWidth: .infinity,
+                maxHeight: .infinity
+            )
+            .safeAreaInset(edge: .top, content: topButtons)
+            .safeAreaInset(edge: .bottom, content: bottomButtons)
     }
 
-    private func tabItem(tabItem: OnboardingItem, index _: Int) -> some View {
-        VStack(spacing: .small) {
-            if let image = tabItem.image {
-                image
-            }
-
-            VStack {
-                if let title = tabItem.title {
-                    Text(title)
-                        .largeTitle()
-                        .foregroundColor(.onSurfaceHighEmphasis)
-                        .padding(.bottom, .small)
+    private func topButtons() -> some View {
+        HStack {
+            #if os(iOS)
+                if helpAction != nil {
+                    Button {
+                        helpAction?()
+                    } label: {
+                        Text("Help")
+                    }
+                    .buttonStyle(.tertiary)
+                    .controlBorderShape(.capsule)
+                    .accent()
+                    .controlSize(.mini)
                 }
+            #endif
 
-                if let subtitle = tabItem.subtitle {
-                    Text(subtitle)
-                        .foregroundColor(.onSurfaceMediumEmphasis)
-                        .fontWeight(.regular)
-                        .font(.system(size: 19))
+            Spacer()
+
+            if skipAction != nil {
+                Button {
+                    skipAction?()
+                } label: {
+                    Text("Skip")
                 }
+                .buttonStyle(.tertiary)
+                .controlBorderShape(.capsule)
+                .accent()
+                #if !os(tvOS)
+                    .controlSize(.mini)
+                #endif
             }
-            .offset(y: screenSize.height < 812 ? -50 : 0)
         }
-        .multilineTextAlignment(.center)
-        .frame(maxWidth: 320)
-        .offset(y: -50)
-        .padding(.bottom, .xLarge)
+        .padding(.medium)
+    }
+
+    private func bottomButtons() -> some View {
+        #if os(iOS)
+            HStack(spacing: .small) {
+                if let backAction {
+                    Button {
+                        backAction()
+                    } label: {
+                        Image.Base.arrowLeft.icon()
+                    }
+                    .buttonStyle(.quaternary)
+                    .accentColor(.secondary)
+                }
+
+                VStack(spacing: .xxxSmall) {
+                    actions
+                }
+            }
+            .padding(.medium)
+        #else
+            HStack(spacing: .xSmall) {
+                if let helpAction {
+                    Button("Help", action: helpAction)
+                        .help("Help")
+                    #if !os(tvOS)
+                        .controlSize(.extraLarge)
+                        .buttonStyle(.bordered)
+                    #endif
+                }
+
+                Spacer()
+
+                if let backAction {
+                    Button(
+                        "Back",
+                        action: backAction
+                    )
+                    #if !os(tvOS)
+                    .controlSize(.extraLarge)
+                    #endif
+                    .buttonStyle(.bordered)
+                }
+
+                actions
+                #if !os(tvOS)
+                .controlSize(.extraLarge)
+                #endif
+                .buttonStyle(.borderedProminent)
+            }
+            .padding(.small)
+            .background(Color.surfacePrimary)
+            .overlay(alignment: .top) {
+                Separator()
+            }
+        #endif
     }
 }
-
-// struct FloatingTabBarExample: View {
-//    @State var selection = 0
-//
-//    var body: some View {
-//        FloatingTabBar(selection: $selection, plusAction: { print("plus") }) {
-//            Color.gray
-//                .floatingTabItem {
-//                    TabItem(icon: Image(systemName: "star"))
-//                }
-//                .opacity(selection == 0 ? 1 : 0)
-//
-//            Color.blue
-//                .floatingTabItem {
-//                    TabItem(icon: Image(systemName: "plus"))
-//                }
-//                .opacity(selection == 1 ? 1 : 0)
-//        }
-//    }
-// }
-
-// struct FloatingTabBar_Previews: PreviewProvider {
-//    static var previews: some View {
-//        FloatingTabBarExample()
-//    }
-// }
-//

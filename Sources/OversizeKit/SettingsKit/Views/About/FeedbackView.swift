@@ -9,17 +9,18 @@
 import OversizeComponents
 import OversizeLocalizable
 import OversizeResources
+import OversizeRouter
 import OversizeServices
 import OversizeUI
 import SwiftUI
 
 public struct FeedbackView: View {
+    @Environment(Router<SettingsScreen>.self) var router
     @Environment(\.iconStyle) var iconStyle: IconStyle
-    @State private var isShowMail = false
     public init() {}
 
     public var body: some View {
-        PageView("Feedback") {
+        Page("Feedback") {
             VStack(spacing: .large) {
                 help
 
@@ -27,10 +28,16 @@ public struct FeedbackView: View {
                     .padding(.bottom, .medium)
             }
         }
-        .trailingBar {
-            BarButton(.close)
-        }
         .backgroundSecondary()
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button {
+                    router.dismiss()
+                } label: {
+                    Image.Base.close.icon()
+                }
+            }
+        }
     }
 
     private var hero: some View {
@@ -63,14 +70,9 @@ public struct FeedbackView: View {
                         let subject = "Feedback"
 
                         Row(L10n.Settings.feedbakAuthor) {
-                            isShowMail.toggle()
+                            router.present(.sendMail(to: mail, subject: subject, content: contentPreText))
                         } leading: {
                             mailIcon.icon()
-                        }
-
-                        .buttonStyle(.row)
-                        .sheet(isPresented: $isShowMail) {
-                            MailView(to: mail, subject: subject, content: contentPreText)
                         }
                     } else {
                         // Send author
@@ -96,6 +98,7 @@ public struct FeedbackView: View {
                 }
             }
         }
+        .sectionContentCompactRowMargins()
     }
 
     var heartIcon: Image {

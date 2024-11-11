@@ -97,6 +97,7 @@ struct ExampleApp: App {
                     .environmentObject(appSettingsViewModel)
                     .systemServices()
             }
+            #if os(iOS)
             .fullScreenCover(item: $router.fullScreenCover) { fullScreenCover in
                 router.resolve(pathItem: fullScreenCover)
                     .hud(router.hudText, isPresented: $router.isShowHud)
@@ -104,6 +105,7 @@ struct ExampleApp: App {
                     .environmentObject(appSettingsViewModel)
                     .systemServices()
             }
+            #endif
             .alert(item: $router.alert) { $0.alert }
             .onOpenURL { router.handle($0) }
             .environmentObject(router)

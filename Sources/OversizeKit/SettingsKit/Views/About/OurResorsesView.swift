@@ -15,17 +15,14 @@ import SwiftUI
 
 public struct OurResorsesView: View {
     @Environment(\.iconStyle) var iconStyle: IconStyle
-    @State private var isShowMail = false
     public init() {}
 
     public var body: some View {
-        PageView("Our open resources") {
+        Page("Our open resources") {
             links
                 .surfaceContentRowMargins()
         }
-        .leadingBar {
-            BarButton(.back)
-        }
+
         .backgroundSecondary()
     }
 

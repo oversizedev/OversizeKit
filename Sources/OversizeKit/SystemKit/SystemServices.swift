@@ -4,27 +4,25 @@
 //
 
 import Factory
-import OversizeCore
-import OversizeLocalizable
 import OversizeServices
 import OversizeStoreService
 import OversizeUI
 import SwiftUI
 
 public struct SystemServicesModifier: ViewModifier {
-    @Injected(\.appStateService) var appState: AppStateService
-    @Injected(\.settingsService) var settingsService: SettingsServiceProtocol
-    @Injected(\.appStoreReviewService) var appStoreReviewService: AppStoreReviewServiceProtocol
+    @Injected(\.appStateService) private var appState: AppStateService
+    @Injected(\.settingsService) private var settingsService: SettingsServiceProtocol
+    @Injected(\.appStoreReviewService) private var appStoreReviewService: AppStoreReviewServiceProtocol
 
-    @Environment(\.scenePhase) var scenePhase: ScenePhase
-    @Environment(\.theme) var theme: ThemeSettings
-    @AppStorage("AppState.PremiumState") var isPremium: Bool = false
+    @Environment(\.scenePhase) private var scenePhase: ScenePhase
+    @Environment(\.theme) private var theme: ThemeSettings
+    @AppStorage("AppState.PremiumState") private var isPremium: Bool = false
 
-    @StateObject var hudState = HUDDeprecated()
-    @State var blurRadius: CGFloat = 0
-    @State var oppacity: CGFloat = 1
+    @State private var blurRadius: CGFloat = 0
+    @State private var oppacity: CGFloat = 1
+    @State private var screnSize: ScreenSize = .init(width: 375, height: 667)
 
-    enum FullScreenSheet: Identifiable, Equatable {
+    private enum FullScreenSheet: Identifiable, Equatable, Sendable {
         case onboarding
         case payWall
         case lockscreen
@@ -33,53 +31,59 @@ public struct SystemServicesModifier: ViewModifier {
         }
     }
 
-    public init() {}
+    public nonisolated init() {}
 
     public func body(content: Content) -> some View {
         GeometryReader { geometry in
             content
-                .onChange(of: scenePhase, perform: { value in
-                    switch value {
-                    case .active:
-                        if settingsService.blurMinimizeEnabend {
-                            withAnimation {
-                                blurRadius = 0
-                            }
-                        }
-                    case .background:
-                        if settingsService.blurMinimizeEnabend {
-                            withAnimation {
-                                blurRadius = 10
-                            }
-                        }
-                    case .inactive:
-                        if settingsService.blurMinimizeEnabend {
-                            withAnimation {
-                                blurRadius = 10
-                            }
-                        }
-                    @unknown default:
-                        break
-                    }
-                })
                 .blur(radius: blurRadius)
                 .preferredColorScheme(theme.appearance.colorScheme)
+                .premiumStatus(isPremium)
+                .theme(ThemeSettings())
+                .screenSize(screnSize)
             #if os(iOS)
                 .accentColor(theme.accentColor)
             #endif
-                .premiumStatus(isPremium)
-                .theme(ThemeSettings())
-                .screenSize(geometry)
-                .hudDeprecated(isPresented: $hudState.isPresented, type: $hudState.type) {
-                    HUDContent(title: hudState.title, image: hudState.image, type: hudState.type)
+                .onAppear(perform: { onAppear(geometry: geometry) })
+                .onChange(of: scenePhase) { _, phase in
+                    onChangeScenePhase(phase)
                 }
-                .environmentObject(hudState)
         }
+    }
+
+    private func onChangeScenePhase(_ phase: ScenePhase) {
+        switch phase {
+        case .active:
+            if settingsService.blurMinimizeEnabend {
+                withAnimation {
+                    blurRadius = 0
+                }
+            }
+        case .background:
+            if settingsService.blurMinimizeEnabend {
+                withAnimation {
+                    blurRadius = 10
+                }
+            }
+        case .inactive:
+            if settingsService.blurMinimizeEnabend {
+                withAnimation {
+                    blurRadius = 10
+                }
+            }
+        @unknown default:
+            break
+        }
+    }
+
+    private func onAppear(geometry: GeometryProxy) {
+        let updatedScreenSize = ScreenSize(geometry: geometry)
+        screnSize = updatedScreenSize
     }
 }
 
 public extension View {
-    func systemServices() -> some View {
+    nonisolated func systemServices() -> some View {
         modifier(SystemServicesModifier())
     }
 }

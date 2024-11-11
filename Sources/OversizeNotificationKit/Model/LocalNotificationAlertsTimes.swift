@@ -3,10 +3,9 @@
 // LocalNotificationAlertsTimes.swift
 //
 
-import EventKit
 import Foundation
 
-public enum LocalNotificationTime: CaseIterable, Equatable, Identifiable {
+public enum LocalNotificationTime: CaseIterable, Equatable, Identifiable, @unchecked Sendable {
     case oneMinuteBefore, fiveMinutesBefore, tenMinutesBefore, thirtyMinutesBefore, oneHourBefore, twoHoursBefore, oneDayBefore, twoDaysBefore, oneWeekBefore
 
     public var title: String {
@@ -59,5 +58,5 @@ public enum LocalNotificationTime: CaseIterable, Equatable, Identifiable {
         title
     }
 
-    public static var allCases: [LocalNotificationTime] = [.oneMinuteBefore, .fiveMinutesBefore, .tenMinutesBefore, .thirtyMinutesBefore, .oneHourBefore, .twoHoursBefore, .oneDayBefore, .twoDaysBefore, .oneWeekBefore]
+    public static let allCases: [LocalNotificationTime] = [.oneMinuteBefore, .fiveMinutesBefore, .tenMinutesBefore, .thirtyMinutesBefore, .oneHourBefore, .twoHoursBefore, .oneDayBefore, .twoDaysBefore, .oneWeekBefore]
 }

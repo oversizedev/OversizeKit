@@ -1,6 +1,6 @@
 //
 // Copyright © 2022 Alexander Romanov
-// BorderSettongView.swift
+// BorderSettingView.swift
 //
 
 import OversizeUI
@@ -31,14 +31,14 @@ public struct BorderSettingView: View {
             SectionView {
                 VStack(spacing: .zero) {
                     Toggle("Borders in app", isOn: theme.$borderApp)
-                        .onChange(of: theme.borderApp) { value in
+                        .onChange(of: theme.borderApp) { _, value in
                             theme.borderSurface = value
                             theme.borderButtons = value
                             theme.borderControls = value
                             theme.borderTextFields = value
                         }
                         .headline()
-                        .foregroundColor(.onSurfaceHighEmphasis)
+                        .foregroundColor(.onSurfacePrimary)
                         .padding(.horizontal, .medium)
                         .padding(.vertical, .small)
 
@@ -50,13 +50,13 @@ public struct BorderSettingView: View {
                                         HStack {
                                             Text("Size")
                                                 .subheadline()
-                                                .foregroundColor(.onSurfaceHighEmphasis)
+                                                .foregroundColor(.onSurfacePrimary)
 
                                             Spacer()
 
                                             Text(String(format: "%.1f", theme.borderSize) + " px")
                                                 .subheadline()
-                                                .foregroundColor(.onSurfaceHighEmphasis)
+                                                .foregroundColor(.onSurfacePrimary)
                                         }
 
                                         Slider(value: theme.$borderSize, in: 0.5 ... 2, step: 0.5)

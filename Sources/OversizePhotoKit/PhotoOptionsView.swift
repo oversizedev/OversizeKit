@@ -25,7 +25,7 @@ public struct PhotoOptionsView<A>: View where A: View {
     private let actions: Group<A>?
     private let deleteAction: (() -> Void)?
 
-    @State private var isShowAlert: Bool = false
+    @State private var isShowAlert = false
 
     public init(
         image: Image,
@@ -63,20 +63,21 @@ public struct PhotoOptionsView<A>: View where A: View {
         VStack(spacing: .medium) {
             SectionView {
                 VStack {
-                    if #available(iOS 16.0, *) {
-                        ShareLink(
-                            item: photo,
-                            preview: SharePreview(
-                                "Photo",
-                                image: photo.image
-                            )
-                        ) {
-                            Row("Share") {
-                                Image.Base.upload
+                    #if !os(tvOS)
+                        if #available(iOS 16.0, *) {
+                            ShareLink(
+                                item: photo,
+                                preview: SharePreview(
+                                    "Photo",
+                                    image: photo.image
+                                )
+                            ) {
+                                Row("Share") {
+                                    Image.Base.upload
+                                }
                             }
                         }
-                    }
-
+                    #endif
                     actions
                 }
                 .buttonStyle(.row)

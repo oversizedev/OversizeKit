@@ -4,12 +4,14 @@
 //
 
 import OversizeLocalizable
+import OversizeRouter
 import OversizeUI
 import SwiftUI
 
 public struct SetPINCodeView: View {
+    @Environment(Router<SettingsScreen>.self) var router
+    @Environment(HUDRouter.self) private var hudRouter: HUDRouter
     @ObservedObject var viewModel: SetPINCodeViewModel
-    @EnvironmentObject private var hud: HUDDeprecated
     @Environment(\.dismiss) var dismiss
 
     public init(action: PINCodeAction) {
@@ -17,20 +19,16 @@ public struct SetPINCodeView: View {
     }
 
     public var body: some View {
-        ZStack(alignment: .leading) {
-            stateView(state: viewModel.state)
-
-            VStack(alignment: .leading) {
-                Button {
-                    dismiss()
-                } label: {
-                    IconDeprecated(.xMini, color: .onSurfaceHighEmphasis)
+        stateView(state: viewModel.state)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button {
+                        router.dismiss()
+                    } label: {
+                        Image.Base.close.icon()
+                    }
                 }
-                .buttonStyle(.secondary)
-
-                Spacer()
-            }.padding(20)
-        }
+            }
     }
 
     @ViewBuilder
@@ -55,6 +53,7 @@ public struct SetPINCodeView: View {
             {
                 viewModel.checkNewPINCode()
             } biometricAction: {}
+
         case .confirmNewPINField:
             LockscreenView(pinCode: $viewModel.confirmNewCodeField,
                            state: $viewModel.authState,
@@ -69,9 +68,9 @@ public struct SetPINCodeView: View {
                         dismiss()
                         switch viewModel.action {
                         case .set:
-                            hud.show(title: L10n.Security.createPINCode, icon: .check)
+                            hudRouter.present(L10n.Security.createPINCode)
                         case .update:
-                            hud.show(title: L10n.Security.pinChanged, icon: .check)
+                            hudRouter.present(L10n.Security.pinChanged)
                         }
 
                     case false:

@@ -30,6 +30,7 @@ public struct AdView: View {
                         await viewModel.fetchAd()
                     }
                 }
+
         case let .result(appAd):
             #if os(iOS)
                 Surface {
@@ -79,7 +80,7 @@ public struct AdView: View {
                 HStack {
                     Text(appAd.title)
                         .subheadline(.bold)
-                        .onSurfaceHighEmphasisForegroundColor()
+                        .onSurfacePrimaryForeground()
 
                     Bage(color: .warning) {
                         Text("Our app")
@@ -89,7 +90,7 @@ public struct AdView: View {
 
                 Text(appAd.description)
                     .subheadline()
-                    .onSurfaceMediumEmphasisForegroundColor()
+                    .onSurfaceSecondaryForeground()
             }
             .padding(.leading, .xSmall)
 
@@ -100,9 +101,11 @@ public struct AdView: View {
             }
             .buttonStyle(.tertiary)
             .controlBorderShape(.capsule)
-            .controlSize(.small)
             .padding(.trailing, .xxxSmall)
             .loading(isShowProduct)
+            #if !os(tvOS)
+                .controlSize(.small)
+            #endif
         }
     }
 }

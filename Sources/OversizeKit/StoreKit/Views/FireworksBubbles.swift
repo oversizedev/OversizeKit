@@ -54,7 +54,7 @@ struct FireworksBubbles: View {
         ZStack {
             ForEach(0 ..< Int.random(in: 2 ... 5), id: \.self) { _ in
                 Circle()
-                    .fill(Color.onPrimaryDisabled)
+                    .fill(Color.onPrimaryTertiary)
                     .frame(width: 30, height: 30)
                     .modifier(ParticlesBubblesModifier())
                     .offset(x: CGFloat.random(in: -200 ... 200), y: CGFloat.random(in: -200 ... 200))

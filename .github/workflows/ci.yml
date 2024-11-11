@@ -1,0 +1,100 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '**'
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+  
+jobs:
+  build-oversize-kit:
+    name: Build OversizeKit
+    uses: oversizedev/GithubWorkflows/.github/workflows/build-swiftpm-all-platforms.yml@main
+    with:
+      package: OversizeKit
+    secrets: inherit
+    
+  build-calendar-kit:
+    name: Build CalendarKit
+    uses: oversizedev/GithubWorkflows/.github/workflows/build-swiftpm-all-platforms.yml@main
+    with:
+      package: OversizeCalendarKit
+    secrets: inherit
+    
+  build-contacts-kit:
+    name: Build OversizeContactsKit
+    uses: oversizedev/GithubWorkflows/.github/workflows/build-swiftpm-all-platforms.yml@main
+    with:
+      package: OversizeContactsKit
+    secrets: inherit
+    
+  build-location-kit:
+    name: Build LocationKit
+    uses: oversizedev/GithubWorkflows/.github/workflows/build-swiftpm-all-platforms.yml@main
+    with:
+      package: OversizeLocationKit
+    secrets: inherit
+    
+  build-notice-kit:
+    name: Build NoticeKit
+    uses: oversizedev/GithubWorkflows/.github/workflows/build-swiftpm-all-platforms.yml@main
+    with:
+      package: OversizeNoticeKit
+    secrets: inherit
+    
+  build-notification-kit:
+    name: Build NotificationKit
+    uses: oversizedev/GithubWorkflows/.github/workflows/build-swiftpm-all-platforms.yml@main
+    with:
+      package: OversizeNotificationKit
+    secrets: inherit
+    
+  build-onboarding-kit:
+    name: Build OnboardingKit
+    uses: oversizedev/GithubWorkflows/.github/workflows/build-swiftpm-all-platforms.yml@main
+    with:
+      package: OversizeOnboardingKit
+    secrets: inherit
+    
+  build-photo-kit:
+    name: Build PhotoKit
+    uses: oversizedev/GithubWorkflows/.github/workflows/build-swiftpm-all-platforms.yml@main
+    with:
+      package: OversizePhotoKit
+    secrets: inherit
+    
+  build-example:
+    name: Build Example
+    needs:
+      - build-oversize-kit
+      - build-calendar-kit
+      - build-contacts-kit
+      - build-location-kit
+      - build-notice-kit
+      - build-notification-kit
+      - build-onboarding-kit
+      - build-photo-kit
+    uses: oversizedev/GithubWorkflows/.github/workflows/build-app.yml@main
+    with:
+      path: AppExample/Example
+      scheme: Example
+      destination: platform=iOS Simulator,name=iPhone 16,OS=18.1
+    secrets: inherit
+
+#  tests:
+#    name: Test
+#    needs: build-swiftpm
+#    uses: oversizedev/GithubWorkflows/.github/workflows/test.yml@main
+#    secrets: inherit
+
+  bump:
+    name: Bump version
+    needs:
+      - build-example
+    if: github.ref == 'refs/heads/main'
+    uses: oversizedev/GithubWorkflows/.github/workflows/bump.yml@main
+    secrets: inherit

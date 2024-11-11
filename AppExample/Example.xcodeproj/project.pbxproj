@@ -22,18 +22,56 @@
 		840CD68E2AC0E39D00C6AAD0 /* ExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840CD68D2AC0E39D00C6AAD0 /* ExampleApp.swift */; };
 		840CD6902AC0E3A600C6AAD0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 840CD68F2AC0E3A600C6AAD0 /* Assets.xcassets */; };
 		840CD6932AC0E3A600C6AAD0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 840CD6922AC0E3A600C6AAD0 /* Preview Assets.xcassets */; };
-		840CD69E2AC0E43000C6AAD0 /* OversizeCalendarKit in Frameworks */ = {isa = PBXBuildFile; productRef = 840CD69D2AC0E43000C6AAD0 /* OversizeCalendarKit */; };
-		840CD6A02AC0E43000C6AAD0 /* OversizeContactsKit in Frameworks */ = {isa = PBXBuildFile; productRef = 840CD69F2AC0E43000C6AAD0 /* OversizeContactsKit */; };
-		840CD6A22AC0E43000C6AAD0 /* OversizeKit in Frameworks */ = {isa = PBXBuildFile; productRef = 840CD6A12AC0E43000C6AAD0 /* OversizeKit */; };
-		840CD6A42AC0E43000C6AAD0 /* OversizeLocationKit in Frameworks */ = {isa = PBXBuildFile; productRef = 840CD6A32AC0E43000C6AAD0 /* OversizeLocationKit */; };
-		840CD6A62AC0E43000C6AAD0 /* OversizeNoticeKit in Frameworks */ = {isa = PBXBuildFile; productRef = 840CD6A52AC0E43000C6AAD0 /* OversizeNoticeKit */; };
-		840CD6A82AC0E43000C6AAD0 /* OversizeNotificationKit in Frameworks */ = {isa = PBXBuildFile; productRef = 840CD6A72AC0E43000C6AAD0 /* OversizeNotificationKit */; };
-		840CD6AA2AC0E43000C6AAD0 /* OversizeOnboardingKit in Frameworks */ = {isa = PBXBuildFile; productRef = 840CD6A92AC0E43000C6AAD0 /* OversizeOnboardingKit */; };
-		840CD6AC2AC0E43000C6AAD0 /* OversizePhotoKit in Frameworks */ = {isa = PBXBuildFile; productRef = 840CD6AB2AC0E43000C6AAD0 /* OversizePhotoKit */; };
 		840CD6AF2AC0E44E00C6AAD0 /* Factory in Frameworks */ = {isa = PBXBuildFile; productRef = 840CD6AE2AC0E44E00C6AAD0 /* Factory */; };
 		840CD6B12AC0E6E200C6AAD0 /* Products.storekit in Resources */ = {isa = PBXBuildFile; fileRef = 840CD6B02AC0E6E200C6AAD0 /* Products.storekit */; };
-		845A59332BA4FD2B00988D52 /* OversizeModels in Frameworks */ = {isa = PBXBuildFile; productRef = 845A59322BA4FD2B00988D52 /* OversizeModels */; };
+		84664C312BF9FD6400A24148 /* Example (watchOS) Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 84664C302BF9FD6400A24148 /* Example (watchOS) Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		84664C362BF9FD6400A24148 /* Example__watchOS_App.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84664C352BF9FD6400A24148 /* Example__watchOS_App.swift */; };
+		84664C382BF9FD6400A24148 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84664C372BF9FD6400A24148 /* ContentView.swift */; };
+		84664C3A2BF9FD6500A24148 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84664C392BF9FD6500A24148 /* Assets.xcassets */; };
+		84664C3D2BF9FD6500A24148 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84664C3C2BF9FD6500A24148 /* Preview Assets.xcassets */; };
+		84664C472BF9FDC200A24148 /* Factory in Frameworks */ = {isa = PBXBuildFile; productRef = 84664C462BF9FDC200A24148 /* Factory */; };
+		848479442BF9FF94003FC3FC /* OversizeCalendarKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479432BF9FF94003FC3FC /* OversizeCalendarKit */; };
+		848479462BF9FF94003FC3FC /* OversizeContactsKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479452BF9FF94003FC3FC /* OversizeContactsKit */; };
+		848479482BF9FF94003FC3FC /* OversizeKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479472BF9FF94003FC3FC /* OversizeKit */; };
+		8484794A2BF9FF94003FC3FC /* OversizeLocationKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479492BF9FF94003FC3FC /* OversizeLocationKit */; };
+		8484794C2BF9FF94003FC3FC /* OversizeNoticeKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8484794B2BF9FF94003FC3FC /* OversizeNoticeKit */; };
+		8484794E2BF9FF94003FC3FC /* OversizeNotificationKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8484794D2BF9FF94003FC3FC /* OversizeNotificationKit */; };
+		848479502BF9FF94003FC3FC /* OversizeOnboardingKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8484794F2BF9FF94003FC3FC /* OversizeOnboardingKit */; };
+		848479522BF9FF94003FC3FC /* OversizePhotoKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479512BF9FF94003FC3FC /* OversizePhotoKit */; };
+		848479542BF9FFA4003FC3FC /* OversizeCalendarKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479532BF9FFA4003FC3FC /* OversizeCalendarKit */; };
+		848479562BF9FFA4003FC3FC /* OversizeContactsKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479552BF9FFA4003FC3FC /* OversizeContactsKit */; };
+		848479582BF9FFA4003FC3FC /* OversizeKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479572BF9FFA4003FC3FC /* OversizeKit */; };
+		8484795A2BF9FFA4003FC3FC /* OversizeLocationKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479592BF9FFA4003FC3FC /* OversizeLocationKit */; };
+		8484795C2BF9FFA4003FC3FC /* OversizeNoticeKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8484795B2BF9FFA4003FC3FC /* OversizeNoticeKit */; };
+		8484795E2BF9FFA4003FC3FC /* OversizeNotificationKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8484795D2BF9FFA4003FC3FC /* OversizeNotificationKit */; };
+		848479602BF9FFA4003FC3FC /* OversizeOnboardingKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8484795F2BF9FFA4003FC3FC /* OversizeOnboardingKit */; };
+		848479622BF9FFA4003FC3FC /* OversizePhotoKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479612BF9FFA4003FC3FC /* OversizePhotoKit */; };
+		848479652BFA0E64003FC3FC /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848479642BFA0E64003FC3FC /* TestView.swift */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		84664C322BF9FD6400A24148 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 840CD6592AC0E39D00C6AAD0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 84664C2F2BF9FD6400A24148;
+			remoteInfo = "Example (watchOS) Watch App";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		84664C412BF9FD6500A24148 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				84664C312BF9FD6400A24148 /* Example (watchOS) Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		840CD6632AC0E39D00C6AAD0 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -58,6 +96,15 @@
 		840CD6922AC0E3A600C6AAD0 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		840CD6942AC0E3A600C6AAD0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		840CD6B02AC0E6E200C6AAD0 /* Products.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Products.storekit; sourceTree = "<group>"; };
+		84664C2B2BF9FD6400A24148 /* Example (watchOS).app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example (watchOS).app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		84664C302BF9FD6400A24148 /* Example (watchOS) Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Example (watchOS) Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		84664C352BF9FD6400A24148 /* Example__watchOS_App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Example__watchOS_App.swift; sourceTree = "<group>"; };
+		84664C372BF9FD6400A24148 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		84664C392BF9FD6500A24148 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		84664C3C2BF9FD6500A24148 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		848479642BFA0E64003FC3FC /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
+		84DE88812BF9FEED00CCF37A /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Package.swift; path = ../Package.swift; sourceTree = "<group>"; };
+		84DE88822BF9FF5100CCF37A /* OversizeKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = OversizeKit; path = ..; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,16 +112,31 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				840CD6AC2AC0E43000C6AAD0 /* OversizePhotoKit in Frameworks */,
+				848479622BF9FFA4003FC3FC /* OversizePhotoKit in Frameworks */,
+				848479542BF9FFA4003FC3FC /* OversizeCalendarKit in Frameworks */,
+				8484795E2BF9FFA4003FC3FC /* OversizeNotificationKit in Frameworks */,
 				840CD6AF2AC0E44E00C6AAD0 /* Factory in Frameworks */,
-				840CD69E2AC0E43000C6AAD0 /* OversizeCalendarKit in Frameworks */,
-				840CD6A82AC0E43000C6AAD0 /* OversizeNotificationKit in Frameworks */,
-				840CD6A22AC0E43000C6AAD0 /* OversizeKit in Frameworks */,
-				840CD6A42AC0E43000C6AAD0 /* OversizeLocationKit in Frameworks */,
-				840CD6A62AC0E43000C6AAD0 /* OversizeNoticeKit in Frameworks */,
-				845A59332BA4FD2B00988D52 /* OversizeModels in Frameworks */,
-				840CD6A02AC0E43000C6AAD0 /* OversizeContactsKit in Frameworks */,
-				840CD6AA2AC0E43000C6AAD0 /* OversizeOnboardingKit in Frameworks */,
+				848479582BF9FFA4003FC3FC /* OversizeKit in Frameworks */,
+				8484795A2BF9FFA4003FC3FC /* OversizeLocationKit in Frameworks */,
+				8484795C2BF9FFA4003FC3FC /* OversizeNoticeKit in Frameworks */,
+				848479562BF9FFA4003FC3FC /* OversizeContactsKit in Frameworks */,
+				848479602BF9FFA4003FC3FC /* OversizeOnboardingKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		84664C2D2BF9FD6400A24148 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				848479522BF9FF94003FC3FC /* OversizePhotoKit in Frameworks */,
+				848479442BF9FF94003FC3FC /* OversizeCalendarKit in Frameworks */,
+				8484794E2BF9FF94003FC3FC /* OversizeNotificationKit in Frameworks */,
+				84664C472BF9FDC200A24148 /* Factory in Frameworks */,
+				848479482BF9FF94003FC3FC /* OversizeKit in Frameworks */,
+				8484794A2BF9FF94003FC3FC /* OversizeLocationKit in Frameworks */,
+				8484794C2BF9FF94003FC3FC /* OversizeNoticeKit in Frameworks */,
+				848479462BF9FF94003FC3FC /* OversizeContactsKit in Frameworks */,
+				848479502BF9FF94003FC3FC /* OversizeOnboardingKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,8 +146,11 @@
 		840CD6582AC0E39D00C6AAD0 = {
 			isa = PBXGroup;
 			children = (
+				84DE88822BF9FF5100CCF37A /* OversizeKit */,
 				840CD6652AC0E39D00C6AAD0 /* Example */,
+				84664C342BF9FD6400A24148 /* Example (watchOS) Watch App */,
 				840CD6642AC0E39D00C6AAD0 /* Products */,
+				84664C452BF9FDC200A24148 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -93,6 +158,8 @@
 			isa = PBXGroup;
 			children = (
 				840CD6632AC0E39D00C6AAD0 /* Example.app */,
+				84664C2B2BF9FD6400A24148 /* Example (watchOS).app */,
+				84664C302BF9FD6400A24148 /* Example (watchOS) Watch App.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -101,6 +168,7 @@
 			isa = PBXGroup;
 			children = (
 				840CD68D2AC0E39D00C6AAD0 /* ExampleApp.swift */,
+				848479632BFA0E55003FC3FC /* Test */,
 				840CD6662AC0E39D00C6AAD0 /* Screens */,
 				840CD6782AC0E39D00C6AAD0 /* Router */,
 				840CD67D2AC0E39D00C6AAD0 /* Resources */,
@@ -189,6 +257,41 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		84664C342BF9FD6400A24148 /* Example (watchOS) Watch App */ = {
+			isa = PBXGroup;
+			children = (
+				84664C352BF9FD6400A24148 /* Example__watchOS_App.swift */,
+				84664C372BF9FD6400A24148 /* ContentView.swift */,
+				84664C392BF9FD6500A24148 /* Assets.xcassets */,
+				84664C3B2BF9FD6500A24148 /* Preview Content */,
+			);
+			path = "Example (watchOS) Watch App";
+			sourceTree = "<group>";
+		};
+		84664C3B2BF9FD6500A24148 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				84664C3C2BF9FD6500A24148 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		84664C452BF9FDC200A24148 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				84DE88812BF9FEED00CCF37A /* Package.swift */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		848479632BFA0E55003FC3FC /* Test */ = {
+			isa = PBXGroup;
+			children = (
+				848479642BFA0E64003FC3FC /* TestView.swift */,
+			);
+			path = Test;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -206,19 +309,63 @@
 			);
 			name = Example;
 			packageProductDependencies = (
-				840CD69D2AC0E43000C6AAD0 /* OversizeCalendarKit */,
-				840CD69F2AC0E43000C6AAD0 /* OversizeContactsKit */,
-				840CD6A12AC0E43000C6AAD0 /* OversizeKit */,
-				840CD6A32AC0E43000C6AAD0 /* OversizeLocationKit */,
-				840CD6A52AC0E43000C6AAD0 /* OversizeNoticeKit */,
-				840CD6A72AC0E43000C6AAD0 /* OversizeNotificationKit */,
-				840CD6A92AC0E43000C6AAD0 /* OversizeOnboardingKit */,
-				840CD6AB2AC0E43000C6AAD0 /* OversizePhotoKit */,
 				840CD6AE2AC0E44E00C6AAD0 /* Factory */,
-				845A59322BA4FD2B00988D52 /* OversizeModels */,
+				848479532BF9FFA4003FC3FC /* OversizeCalendarKit */,
+				848479552BF9FFA4003FC3FC /* OversizeContactsKit */,
+				848479572BF9FFA4003FC3FC /* OversizeKit */,
+				848479592BF9FFA4003FC3FC /* OversizeLocationKit */,
+				8484795B2BF9FFA4003FC3FC /* OversizeNoticeKit */,
+				8484795D2BF9FFA4003FC3FC /* OversizeNotificationKit */,
+				8484795F2BF9FFA4003FC3FC /* OversizeOnboardingKit */,
+				848479612BF9FFA4003FC3FC /* OversizePhotoKit */,
 			);
 			productName = Example;
 			productReference = 840CD6632AC0E39D00C6AAD0 /* Example.app */;
+			productType = "com.apple.product-type.application";
+		};
+		84664C2A2BF9FD6400A24148 /* Example (watchOS) */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 84664C422BF9FD6500A24148 /* Build configuration list for PBXNativeTarget "Example (watchOS)" */;
+			buildPhases = (
+				84664C292BF9FD6400A24148 /* Resources */,
+				84664C412BF9FD6500A24148 /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				84664C332BF9FD6400A24148 /* PBXTargetDependency */,
+			);
+			name = "Example (watchOS)";
+			productName = "Example (watchOS)";
+			productReference = 84664C2B2BF9FD6400A24148 /* Example (watchOS).app */;
+			productType = "com.apple.product-type.application.watchapp2-container";
+		};
+		84664C2F2BF9FD6400A24148 /* Example (watchOS) Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 84664C3E2BF9FD6500A24148 /* Build configuration list for PBXNativeTarget "Example (watchOS) Watch App" */;
+			buildPhases = (
+				84664C2C2BF9FD6400A24148 /* Sources */,
+				84664C2D2BF9FD6400A24148 /* Frameworks */,
+				84664C2E2BF9FD6400A24148 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Example (watchOS) Watch App";
+			packageProductDependencies = (
+				84664C462BF9FDC200A24148 /* Factory */,
+				848479432BF9FF94003FC3FC /* OversizeCalendarKit */,
+				848479452BF9FF94003FC3FC /* OversizeContactsKit */,
+				848479472BF9FF94003FC3FC /* OversizeKit */,
+				848479492BF9FF94003FC3FC /* OversizeLocationKit */,
+				8484794B2BF9FF94003FC3FC /* OversizeNoticeKit */,
+				8484794D2BF9FF94003FC3FC /* OversizeNotificationKit */,
+				8484794F2BF9FF94003FC3FC /* OversizeOnboardingKit */,
+				848479512BF9FF94003FC3FC /* OversizePhotoKit */,
+			);
+			productName = "Example (watchOS) Watch App";
+			productReference = 84664C302BF9FD6400A24148 /* Example (watchOS) Watch App.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -228,11 +375,17 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1500;
+				LastSwiftUpdateCheck = 1540;
 				LastUpgradeCheck = 1500;
 				TargetAttributes = {
 					840CD6622AC0E39D00C6AAD0 = {
 						CreatedOnToolsVersion = 15.0;
+					};
+					84664C2A2BF9FD6400A24148 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+					84664C2F2BF9FD6400A24148 = {
+						CreatedOnToolsVersion = 15.4;
 					};
 				};
 			};
@@ -255,6 +408,8 @@
 			projectRoot = "";
 			targets = (
 				840CD6622AC0E39D00C6AAD0 /* Example */,
+				84664C2A2BF9FD6400A24148 /* Example (watchOS) */,
+				84664C2F2BF9FD6400A24148 /* Example (watchOS) Watch App */,
 			);
 		};
 /* End PBXProject section */
@@ -268,6 +423,22 @@
 				840CD6932AC0E3A600C6AAD0 /* Preview Assets.xcassets in Resources */,
 				840CD67F2AC0E39D00C6AAD0 /* AppConfig.plist in Resources */,
 				840CD6902AC0E3A600C6AAD0 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		84664C292BF9FD6400A24148 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		84664C2E2BF9FD6400A24148 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84664C3D2BF9FD6500A24148 /* Preview Assets.xcassets in Resources */,
+				84664C3A2BF9FD6500A24148 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,11 +460,29 @@
 				840CD66D2AC0E39D00C6AAD0 /* AppSettingsPageView.swift in Sources */,
 				840CD67C2AC0E39D00C6AAD0 /* Screens.swift in Sources */,
 				840CD6722AC0E39D00C6AAD0 /* OnboardingView.swift in Sources */,
+				848479652BFA0E64003FC3FC /* TestView.swift in Sources */,
 				840CD66B2AC0E39D00C6AAD0 /* AppSettingsViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		84664C2C2BF9FD6400A24148 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				84664C382BF9FD6400A24148 /* ContentView.swift in Sources */,
+				84664C362BF9FD6400A24148 /* Example__watchOS_App.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		84664C332BF9FD6400A24148 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 84664C2F2BF9FD6400A24148 /* Example (watchOS) Watch App */;
+			targetProxy = 84664C322BF9FD6400A24148 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		840CD6952AC0E3A600C6AAD0 /* Debug */ = {
@@ -432,17 +621,22 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = app.oversize.Example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = "1,2,3";
+				TVOS_DEPLOYMENT_TARGET = 18.0;
 			};
 			name = Debug;
 		};
@@ -463,17 +657,112 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = app.oversize.Example;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,3";
+				TVOS_DEPLOYMENT_TARGET = 18.0;
+			};
+			name = Release;
+		};
+		84664C3F2BF9FD6500A24148 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Example (watchOS) Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = ER582ZK85C;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Example (watchOS)";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKWatchOnly = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = app.oversize.Example;
+				PRODUCT_BUNDLE_IDENTIFIER = "app.oversize.Example--watchOS-.watchkitapp";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Debug;
+		};
+		84664C402BF9FD6500A24148 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Example (watchOS) Watch App/Preview Content\"";
+				DEVELOPMENT_TEAM = ER582ZK85C;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "Example (watchOS)";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKWatchOnly = YES;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "app.oversize.Example--watchOS-.watchkitapp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
+			};
+			name = Release;
+		};
+		84664C432BF9FD6500A24148 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ER582ZK85C;
+				INFOPLIST_KEY_CFBundleDisplayName = "Example (watchOS)";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "app.oversize.Example--watchOS-";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		84664C442BF9FD6500A24148 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ER582ZK85C;
+				INFOPLIST_KEY_CFBundleDisplayName = "Example (watchOS)";
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "app.oversize.Example--watchOS-";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};
@@ -498,6 +787,24 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		84664C3E2BF9FD6500A24148 /* Build configuration list for PBXNativeTarget "Example (watchOS) Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				84664C3F2BF9FD6500A24148 /* Debug */,
+				84664C402BF9FD6500A24148 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		84664C422BF9FD6500A24148 /* Build configuration list for PBXNativeTarget "Example (watchOS)" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				84664C432BF9FD6500A24148 /* Debug */,
+				84664C442BF9FD6500A24148 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
@@ -513,7 +820,7 @@
 			repositoryURL = "https://github.com/hmlongco/Factory";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.2.0;
+				minimumVersion = 2.1.3;
 			};
 		};
 		845A59312BA4FD2B00988D52 /* XCRemoteSwiftPackageReference "OversizeModels" */ = {
@@ -527,47 +834,79 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		840CD69D2AC0E43000C6AAD0 /* OversizeCalendarKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = OversizeCalendarKit;
-		};
-		840CD69F2AC0E43000C6AAD0 /* OversizeContactsKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = OversizeContactsKit;
-		};
-		840CD6A12AC0E43000C6AAD0 /* OversizeKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = OversizeKit;
-		};
-		840CD6A32AC0E43000C6AAD0 /* OversizeLocationKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = OversizeLocationKit;
-		};
-		840CD6A52AC0E43000C6AAD0 /* OversizeNoticeKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = OversizeNoticeKit;
-		};
-		840CD6A72AC0E43000C6AAD0 /* OversizeNotificationKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = OversizeNotificationKit;
-		};
-		840CD6A92AC0E43000C6AAD0 /* OversizeOnboardingKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = OversizeOnboardingKit;
-		};
-		840CD6AB2AC0E43000C6AAD0 /* OversizePhotoKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = OversizePhotoKit;
-		};
 		840CD6AE2AC0E44E00C6AAD0 /* Factory */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 840CD6AD2AC0E44E00C6AAD0 /* XCRemoteSwiftPackageReference "Factory" */;
 			productName = Factory;
 		};
-		845A59322BA4FD2B00988D52 /* OversizeModels */ = {
+		84664C462BF9FDC200A24148 /* Factory */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 845A59312BA4FD2B00988D52 /* XCRemoteSwiftPackageReference "OversizeModels" */;
-			productName = OversizeModels;
+			package = 840CD6AD2AC0E44E00C6AAD0 /* XCRemoteSwiftPackageReference "Factory" */;
+			productName = Factory;
+		};
+		848479432BF9FF94003FC3FC /* OversizeCalendarKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OversizeCalendarKit;
+		};
+		848479452BF9FF94003FC3FC /* OversizeContactsKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OversizeContactsKit;
+		};
+		848479472BF9FF94003FC3FC /* OversizeKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OversizeKit;
+		};
+		848479492BF9FF94003FC3FC /* OversizeLocationKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OversizeLocationKit;
+		};
+		8484794B2BF9FF94003FC3FC /* OversizeNoticeKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OversizeNoticeKit;
+		};
+		8484794D2BF9FF94003FC3FC /* OversizeNotificationKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OversizeNotificationKit;
+		};
+		8484794F2BF9FF94003FC3FC /* OversizeOnboardingKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OversizeOnboardingKit;
+		};
+		848479512BF9FF94003FC3FC /* OversizePhotoKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OversizePhotoKit;
+		};
+		848479532BF9FFA4003FC3FC /* OversizeCalendarKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OversizeCalendarKit;
+		};
+		848479552BF9FFA4003FC3FC /* OversizeContactsKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OversizeContactsKit;
+		};
+		848479572BF9FFA4003FC3FC /* OversizeKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OversizeKit;
+		};
+		848479592BF9FFA4003FC3FC /* OversizeLocationKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OversizeLocationKit;
+		};
+		8484795B2BF9FFA4003FC3FC /* OversizeNoticeKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OversizeNoticeKit;
+		};
+		8484795D2BF9FFA4003FC3FC /* OversizeNotificationKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OversizeNotificationKit;
+		};
+		8484795F2BF9FFA4003FC3FC /* OversizeOnboardingKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OversizeOnboardingKit;
+		};
+		848479612BF9FFA4003FC3FC /* OversizePhotoKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OversizePhotoKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

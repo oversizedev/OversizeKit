@@ -45,12 +45,12 @@ public struct PremiumBlockOverlay: ViewModifier {
                         VStack(spacing: .small) {
                             Text(title)
                                 .title()
-                                .foregroundColor(.onSurfaceHighEmphasis)
+                                .foregroundColor(.onSurfacePrimary)
 
                             if let subtitle {
                                 Text(subtitle)
                                     .headline(.medium)
-                                    .foregroundColor(.onSurfaceMediumEmphasis)
+                                    .foregroundColor(.onSurfaceSecondary)
                             }
                         }
                         .multilineTextAlignment(.center)

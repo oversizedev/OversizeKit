@@ -23,7 +23,7 @@ struct StorePaymentButtonBar: View {
             if showDescription {
                 Text(viewModel.selectedProductButtonDescription)
                     .subheadline(.semibold)
-                    .foregroundColor(.onSurfaceMediumEmphasis)
+                    .foregroundColor(.onSurfaceSecondary)
                     .padding(.vertical, 20)
             }
 

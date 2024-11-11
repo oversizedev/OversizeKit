@@ -26,7 +26,7 @@ import SwiftUI
         }
 
         public var body: some View {
-            PageView {
+            Page {
                 Group {
                     switch viewModel.state {
                     case .initial, .loading:
@@ -39,22 +39,22 @@ import SwiftUI
                 }
                 .paddingContent(.horizontal)
             }
-            .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
-            .titleLabel {
-                PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: .medium)
-            }
-            .leadingBar {
-                if !isPortrait, verticalSizeClass == .regular, isClosable {
-                    EmptyView()
-                } else {
-                    BarButton(.back)
-                }
-            }
-            .trailingBar {
-                if isClosable {
-                    BarButton(.close)
-                }
-            }
+//            .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
+//            .titleLabel {
+//                PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: .medium)
+//            }
+//            .leadingBar {
+//                if !isPortrait, verticalSizeClass == .regular, isClosable {
+//                    EmptyView()
+//                } else {
+//                    BarButton(.back)
+//                }
+//            }
+//            .trailingBar {
+//                if isClosable {
+//                    BarButton(.close)
+//                }
+//            }
             .bottomToolbar(style: .none) {
                 if !viewModel.isPremium {
                     StorePaymentButtonBar()
@@ -93,11 +93,11 @@ import SwiftUI
                 VStack(spacing: .xxSmall) {
                     Text(titleText)
                         .title()
-                        .foregroundColor(.onSurfaceHighEmphasis)
+                        .foregroundColor(.onSurfacePrimary)
 
                     Text(subtitleText)
                         .headline()
-                        .foregroundColor(.onSurfaceMediumEmphasis)
+                        .foregroundColor(.onSurfaceSecondary)
                 }
                 .multilineTextAlignment(.center)
 
@@ -120,11 +120,11 @@ import SwiftUI
                 VStack(spacing: .xxSmall) {
                     Text(titleText)
                         .title()
-                        .foregroundColor(.onSurfaceHighEmphasis)
+                        .foregroundColor(.onSurfacePrimary)
 
                     Text(subtitleText)
                         .headline()
-                        .foregroundColor(.onSurfaceMediumEmphasis)
+                        .foregroundColor(.onSurfaceSecondary)
                 }
                 .multilineTextAlignment(.center)
 
@@ -163,14 +163,14 @@ import SwiftUI
                     await viewModel.updateSubscriptionStatus(products: data)
                 }
             }
-            .onChange(of: data.purchasedAutoRenewable) { _ in
+            .onChange(of: data.purchasedAutoRenewable) { _, _ in
                 Task {
                     // When `purchasedSubscriptions` changes, get the latest subscription status.
                     await viewModel.updateSubscriptionStatus(products: data)
                 }
             }
-            .onChange(of: viewModel.isPremium) { newValue in
-                isShowFireworks = newValue
+            .onChange(of: viewModel.isPremium) { _, status in
+                isShowFireworks = status
                 DispatchQueue.main.asyncAfter(deadline: .now() + 30) {
                     isShowFireworks = false
                 }

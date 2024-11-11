@@ -35,11 +35,11 @@ struct OnboardingView: View {
                 VStack(spacing: .medium) {
                     Text("Welcome to\nExample")
                         .largeTitle()
-                        .onBackgroundHighEmphasisForegroundColor()
+                        .onBackgroundPrimaryForeground()
 
                     Text("Welcome text")
                         .title2(.semibold)
-                        .onBackgroundMediumEmphasisForegroundColor()
+                        .onBackgroundSecondaryForeground()
                 }
                 .paddingContent(.horizontal)
                 .multilineTextAlignment(.center)
@@ -81,11 +81,11 @@ struct OnboardingView: View {
                 VStack(spacing: .medium) {
                     Text("Welcome to\nExample")
                         .largeTitle()
-                        .onBackgroundHighEmphasisForegroundColor()
+                        .onBackgroundPrimaryForeground()
 
                     Text("Welcome text")
                         .title2(.semibold)
-                        .onBackgroundMediumEmphasisForegroundColor()
+                        .onBackgroundSecondaryForeground()
                 }
                 .paddingContent(.horizontal)
                 .multilineTextAlignment(.center)
@@ -123,11 +123,11 @@ struct OnboardingView: View {
                 VStack(spacing: .medium) {
                     Text("Example")
                         .largeTitle()
-                        .onBackgroundHighEmphasisForegroundColor()
+                        .onBackgroundPrimaryForeground()
 
                     Text("Welcome text")
                         .title2(.semibold)
-                        .onBackgroundMediumEmphasisForegroundColor()
+                        .onBackgroundSecondaryForeground()
                 }
                 .paddingContent(.horizontal)
                 .multilineTextAlignment(.center)

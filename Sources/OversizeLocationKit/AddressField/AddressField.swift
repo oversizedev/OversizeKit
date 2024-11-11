@@ -50,14 +50,16 @@ public struct AddressField: View {
 
     public var body: some View {
         Button {
-            isShowPicker.toggle()
+            #if !os(watchOS)
+                isShowPicker.toggle()
+            #endif
         } label: {
             VStack(alignment: .leading, spacing: .xSmall) {
                 if fieldPlaceholderPosition == .adjacent {
                     HStack {
                         Text(title)
                             .subheadline(.medium)
-                            .foregroundColor(.onSurfaceHighEmphasis)
+                            .foregroundColor(.onSurfacePrimary)
                         Spacer()
                     }
                 }
@@ -68,7 +70,7 @@ public struct AddressField: View {
                             Text(title)
                                 .font(!isSlectedAddress ? .headline : .subheadline)
                                 .fontWeight(!isSlectedAddress ? .medium : .semibold)
-                                .onSurfaceDisabledForegroundColor()
+                                .onSurfaceTertiaryForeground()
                                 .offset(y: !isSlectedAddress ? 0 : -13)
                                 .opacity(!isSlectedAddress ? 0 : 1)
                         }
@@ -79,16 +81,18 @@ public struct AddressField: View {
                             .lineLimit(1)
                     }
                     Spacer()
-                    IconDeprecated(.chevronDown, color: .onSurfaceHighEmphasis)
+                    IconDeprecated(.chevronDown, color: .onSurfacePrimary)
                 }
             }
             .contentShape(Rectangle())
         }
-        .foregroundColor(.onSurfaceHighEmphasis)
+        .foregroundColor(.onSurfacePrimary)
         .buttonStyle(.field)
-        .sheet(isPresented: $isShowPicker) {
-            AddressPicker(address: $seletedAddress, location: $seletedLocation, place: $seletedPlace)
-        }
+        #if !os(watchOS)
+            .sheet(isPresented: $isShowPicker) {
+                AddressPicker(address: $seletedAddress, location: $seletedLocation, place: $seletedPlace)
+            }
+        #endif
     }
 
     private var fieldOffset: CGFloat {

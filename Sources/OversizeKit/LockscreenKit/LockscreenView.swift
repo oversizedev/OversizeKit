@@ -87,7 +87,7 @@ public struct LockscreenView: View {
     public var body: some View {
         content()
             .background(Color.surfacePrimary.ignoresSafeArea(.all))
-            .onChange(of: scenePhase) { phase in
+            .onChange(of: scenePhase) { _, phase in
                 switch phase {
                 case .active:
                     if state == .locked, biometricEnabled {
@@ -125,14 +125,14 @@ public struct LockscreenView: View {
                 #else
                     Text(biometricType.rawValue)
                         .title2(.bold)
-                        .foregroundColor(.onSurfaceHighEmphasis)
+                        .foregroundColor(.onSurfacePrimary)
 
                 #endif
 
             } else {
                 Text(biometricType.rawValue)
                     .title2(.semibold)
-                    .foregroundColor(.onSurfaceHighEmphasis)
+                    .foregroundColor(.onSurfacePrimary)
             }
 
             Spacer()
@@ -165,7 +165,7 @@ public struct LockscreenView: View {
 
                 Text(title ?? "")
                     .title2(.bold)
-                    .foregroundColor(.onSurfaceHighEmphasis)
+                    .foregroundColor(.onSurfacePrimary)
                     .opacity(title != nil ? 1 : 0)
 
                 Spacer()
@@ -180,7 +180,7 @@ public struct LockscreenView: View {
 
             Text(errorText ?? "")
                 .subheadline()
-                .errorForegroundColor()
+                .errorForeground()
                 .opacity(state == .error ? 1 : 0)
 
             if isShowTitle {
@@ -247,18 +247,18 @@ public struct LockscreenView: View {
             EmptyView()
         case .touchID:
             Image(systemName: "touchid")
-                .foregroundColor(Color.onBackgroundHighEmphasis)
+                .foregroundColor(Color.onBackgroundPrimary)
                 .font(.system(size: 26))
                 .frame(width: 24, height: 24, alignment: .center)
         case .faceID:
             Image(systemName: "faceid")
                 .font(.system(size: 26))
-                .foregroundColor(Color.onBackgroundHighEmphasis)
+                .foregroundColor(Color.onBackgroundPrimary)
                 .frame(width: 24, height: 24, alignment: .center)
         case .opticID:
             Image(systemName: "opticid")
                 .font(.system(size: 26))
-                .foregroundColor(Color.onBackgroundHighEmphasis)
+                .foregroundColor(Color.onBackgroundPrimary)
                 .frame(width: 24, height: 24, alignment: .center)
         }
     }
@@ -284,7 +284,6 @@ public struct LockscreenView: View {
                         .frame(width: 12, height: 12)
                         .offset(x: leftOffset)
                         // .animation(Animation.easeInOut(duration: 1).delay(0.2 * Double(number)))
-
                         .scaleEffect(shouldAnimate ? 0.5 : 1)
                         .animation(Animation.easeInOut(duration: 0.5)
                             .repeatForever()
@@ -332,7 +331,7 @@ public struct NumpadButtonStyle: ButtonStyle {
     public func makeBody(configuration: Self.Configuration) -> some View {
         configuration.label
             .title2()
-            .foregroundColor(.onSurfaceHighEmphasis)
+            .foregroundColor(.onSurfacePrimary)
             .frame(width: 72, height: 72, alignment: .center)
             .background(
                 Circle()
