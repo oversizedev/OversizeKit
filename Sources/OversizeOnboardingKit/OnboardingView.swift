@@ -96,8 +96,10 @@ public struct OnboardView<C, A>: View where A: View, C: View {
                 if let helpAction {
                     Button("Help", action: helpAction)
                         .help("Help")
+                    #if !os(tvOS)
                         .controlSize(.extraLarge)
                         .buttonStyle(.bordered)
+                    #endif
                 }
 
                 Spacer()
@@ -107,13 +109,17 @@ public struct OnboardView<C, A>: View where A: View, C: View {
                         "Back",
                         action: backAction
                     )
+                    #if !os(tvOS)
                     .controlSize(.extraLarge)
+                    #endif
                     .buttonStyle(.bordered)
                 }
 
                 actions
-                    .controlSize(.extraLarge)
-                    .buttonStyle(.borderedProminent)
+                #if !os(tvOS)
+                .controlSize(.extraLarge)
+                #endif
+                .buttonStyle(.borderedProminent)
             }
             .padding(.small)
             .background(Color.surfacePrimary)
