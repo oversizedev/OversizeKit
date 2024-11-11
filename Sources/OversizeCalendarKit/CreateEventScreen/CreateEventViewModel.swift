@@ -4,7 +4,7 @@
 //
 
 #if canImport(EventKit)
-    import EventKit
+@preconcurrency import EventKit
 #endif
 import Factory
 import OversizeCalendarService
@@ -14,13 +14,13 @@ import OversizeModels
 import SwiftUI
 
 #if !os(tvOS)
-    public enum CreateEventType: Equatable {
+public enum CreateEventType: Equatable, @unchecked Sendable {
         case new(Date?, calendar: EKCalendar?)
         case update(EKEvent)
     }
 
-    @MainActor
-    public class CreateEventViewModel: ObservableObject {
+
+public class CreateEventViewModel: ObservableObject, @unchecked Sendable {
         @Injected(\.calendarService) private var calendarService: CalendarService
         @Injected(\.locationService) private var locationService: LocationServiceProtocol
 

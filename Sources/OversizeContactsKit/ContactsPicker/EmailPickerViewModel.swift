@@ -4,7 +4,7 @@
 //
 
 #if canImport(Contacts)
-    import Contacts
+@preconcurrency import Contacts
 #endif
 import Factory
 import OversizeContactsService
@@ -26,9 +26,9 @@ import SwiftUI
             let status = await contactsService.requestAccess()
             switch status {
             case .success:
-                do {
+
                     let keys = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactEmailAddressesKey, CNContactThumbnailImageDataKey]
-                    let result = try await contactsService.fetchContacts(keysToFetch: keys as [CNKeyDescriptor])
+                    let result = await contactsService.fetchContacts(keysToFetch: keys as [CNKeyDescriptor])
                     switch result {
                     case let .success(data):
                         log("✅ CNContact fetched")
@@ -37,9 +37,7 @@ import SwiftUI
                         log("❌ CNContact not fetched (\(error.title))")
                         state = .error(error)
                     }
-                } catch {
-                    state = .error(.contacts(type: .unknown))
-                }
+            
             case let .failure(error):
                 state = .error(error)
             }
