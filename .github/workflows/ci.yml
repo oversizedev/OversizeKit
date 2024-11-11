@@ -41,7 +41,6 @@ jobs:
       matrix:
         destination:
           - platform=iOS Simulator,name=iPhone 16,OS=18.1
-          - platform=macOS,arch=arm64
     with:
       path: AppExample/Example
       scheme: Example
