@@ -32,7 +32,7 @@ let developmentDependencies: [PackageDescription.Package.Dependency] = [
     .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "2.1.3")),
 ]
 
-var dependencies: [PackageDescription.Package.Dependency] = remoteDependencies
+var dependencies: [PackageDescription.Package.Dependency] = developmentDependencies
 
 if ProcessInfo.processInfo.environment["BUILD_MODE"] == "DEV" {
     dependencies = developmentDependencies

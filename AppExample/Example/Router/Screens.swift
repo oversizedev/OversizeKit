@@ -16,9 +16,9 @@ extension Screen: Identifiable {
     var id: String {
         switch self {
         case .settings:
-            return "settings"
+            "settings"
         case .premium:
-            return "premium"
+            "premium"
         }
     }
 }

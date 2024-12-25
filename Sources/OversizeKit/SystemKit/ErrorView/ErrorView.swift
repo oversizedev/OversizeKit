@@ -26,11 +26,13 @@ public struct ErrorView: View {
     public var body: some View {
         VStack {
             Spacer()
-            ContentView(image: error.image,
-                        title: error.title,
-                        subtitle: error.subtitle,
-                        primaryButton: contenButtonType)
-                .multilineTextAlignment(.center)
+            ContentView(
+                image: error.image,
+                title: error.title,
+                subtitle: error.subtitle,
+                primaryButton: contenButtonType
+            )
+            .multilineTextAlignment(.center)
             Spacer()
         }
         .paddingContent()
@@ -42,7 +44,7 @@ public struct ErrorView: View {
             case .appSettings:
                 return .accent(L10n.Button.goToSettings, action: {
                     #if os(iOS)
-                        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+                    UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
                     #endif
                 })
             case let .tryAgain(action: action):
@@ -58,7 +60,7 @@ public struct ErrorView: View {
                 if type == .notAccess || type == .noAccount {
                     return .accent(L10n.Button.goToSettings, action: {
                         #if os(iOS)
-                            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+                        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
                         #endif
                     })
                 } else {
@@ -68,7 +70,7 @@ public struct ErrorView: View {
                 if type == .notAccess {
                     return .accent(L10n.Button.goToSettings, action: {
                         #if os(iOS)
-                            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+                        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
                         #endif
                     })
                 } else {
@@ -82,7 +84,7 @@ public struct ErrorView: View {
                 if type == .notAccess {
                     return .accent(L10n.Button.goToSettings, action: {
                         #if os(iOS)
-                            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+                        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
                         #endif
                     })
                 } else {
@@ -92,7 +94,7 @@ public struct ErrorView: View {
                 if type == .notAccess {
                     return .accent(L10n.Button.goToSettings, action: {
                         #if os(iOS)
-                            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+                        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
                         #endif
                     })
                 } else {
@@ -102,7 +104,7 @@ public struct ErrorView: View {
                 if type == .notAccess {
                     return .accent(L10n.Button.goToSettings, action: {
                         #if os(iOS)
-                            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+                        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
                         #endif
                     })
                 } else {
@@ -112,7 +114,7 @@ public struct ErrorView: View {
                 if type == .notAccess {
                     return .accent(L10n.Button.goToSettings, action: {
                         #if os(iOS)
-                            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+                        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
                         #endif
                     })
                 } else {
@@ -122,7 +124,7 @@ public struct ErrorView: View {
                 if type == .notAccess {
                     return .accent(L10n.Button.goToSettings, action: {
                         #if os(iOS)
-                            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+                        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
                         #endif
                     })
                 } else {
@@ -132,7 +134,7 @@ public struct ErrorView: View {
                 if type == .notAccess {
                     return .accent(L10n.Button.goToSettings, action: {
                         #if os(iOS)
-                            UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+                        UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
                         #endif
                     })
                 } else {

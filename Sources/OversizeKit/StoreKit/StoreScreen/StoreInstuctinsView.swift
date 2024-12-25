@@ -26,49 +26,49 @@ public struct StoreInstuctinsView: View {
     public var body: some View {
         ScrollViewReader { value in
             #if os(iOS)
-                PageView { offset = $0 } content: {
-                    Group {
-                        switch viewModel.state {
-                        case .initial, .loading:
-                            contentPlaceholder()
-                        case let .result(data):
-                            content(data: data)
-                        case let .error(error):
-                            ErrorView(error)
-                        }
+            PageView { offset = $0 } content: {
+                Group {
+                    switch viewModel.state {
+                    case .initial, .loading:
+                        contentPlaceholder()
+                    case let .result(data):
+                        content(data: data)
+                    case let .error(error):
+                        ErrorView(error)
                     }
-                    .paddingContent(.horizontal)
                 }
-                .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
-                .titleLabel {
-                    PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: .medium)
-                }
-                .trailingBar {
-                    BarButton(.close)
-                }
-                .bottomToolbar(style: .none) {
-                    VStack(spacing: .zero) {
-                        StorePaymentButtonBar(trialNotification: true) {
-                            isShowAllPlans = true
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                withAnimation {
-                                    value.scrollTo(10, anchor: .top)
-                                }
+                .paddingContent(.horizontal)
+            }
+            .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
+            .titleLabel {
+                PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: .medium)
+            }
+            .trailingBar {
+                BarButton(.close)
+            }
+            .bottomToolbar(style: .none) {
+                VStack(spacing: .zero) {
+                    StorePaymentButtonBar(trialNotification: true) {
+                        isShowAllPlans = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                            withAnimation {
+                                value.scrollTo(10, anchor: .top)
                             }
                         }
-                        .environmentObject(viewModel)
                     }
+                    .environmentObject(viewModel)
                 }
-                .onChange(of: isPremium) { _, status in
-                    if status {
-                        dismiss()
-                    }
+            }
+            .onChange(of: isPremium) { _, status in
+                if status {
+                    dismiss()
                 }
-                .task {
-                    await viewModel.fetchData()
-                }
+            }
+            .task {
+                await viewModel.fetchData()
+            }
             #else
-                EmptyView()
+            EmptyView()
             #endif
         }
     }
@@ -196,28 +196,36 @@ public struct StoreInstuctinsView: View {
                     .padding(.small)
                     .background {
                         Circle()
-                            .fill(LinearGradient(gradient: Gradient(
+                            .fill(LinearGradient(
+                                gradient: Gradient(
                                     colors: [Color(hex: "EAAB44"),
                                              Color(hex: "D24A44"),
                                              Color(hex: "9C5BA2"),
                                              Color(hex: "4B5B94")]),
-                                startPoint: .topLeading, endPoint: .bottomTrailing))
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ))
                     }
 
-                TextBox(title: "Today: Get welcome offer",
-                        subtitle: "Unlock all access to functions",
-                        spacing: .xxxSmall)
-                    .textBoxSize(.small)
-                    .padding(.top, 6)
+                TextBox(
+                    title: "Today: Get welcome offer",
+                    subtitle: "Unlock all access to functions",
+                    spacing: .xxxSmall
+                )
+                .textBoxSize(.small)
+                .padding(.top, 6)
             }
 
             HStack {
                 Capsule()
-                    .fill(LinearGradient(gradient: Gradient(
+                    .fill(LinearGradient(
+                        gradient: Gradient(
                             colors: [Color(hex: "EAAB44"),
                                      Color(hex: "D24A44"),
                                      Color(hex: "9C5BA2")]),
-                        startPoint: .topLeading, endPoint: .trailing))
+                        startPoint: .topLeading,
+                        endPoint: .trailing
+                    ))
                     .frame(width: 4, height: 15)
                     .padding(.vertical, .xxxSmall)
                     .padding(.leading, .medium)
@@ -234,11 +242,13 @@ public struct StoreInstuctinsView: View {
                             .shadowElevaton(.z2)
                     }
 
-                TextBox(title: "Day 5",
-                        subtitle: "Get a reminder about when your trial",
-                        spacing: .xxxSmall)
-                    .textBoxSize(.small)
-                    .padding(.top, 6)
+                TextBox(
+                    title: "Day 5",
+                    subtitle: "Get a reminder about when your trial",
+                    spacing: .xxxSmall
+                )
+                .textBoxSize(.small)
+                .padding(.top, 6)
             }
 
             HStack {
@@ -260,11 +270,13 @@ public struct StoreInstuctinsView: View {
                             .shadowElevaton(.z2)
                     }
 
-                TextBox(title: "Day 7",
-                        subtitle: "Tou will be charged on this day, cancel anytime beforel",
-                        spacing: .xxxSmall)
-                    .textBoxSize(.small)
-                    .padding(.top, 6)
+                TextBox(
+                    title: "Day 7",
+                    subtitle: "Tou will be charged on this day, cancel anytime beforel",
+                    spacing: .xxxSmall
+                )
+                .textBoxSize(.small)
+                .padding(.top, 6)
             }
         }
         .frame(maxWidth: .infinity)

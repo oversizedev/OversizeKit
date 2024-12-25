@@ -92,9 +92,9 @@ public final class NoticeListViewModel: ObservableObject {
 
     private func checkDateInSelectedPeriod(startDate: Date, endDate: Date) -> Bool {
         if startDate < endDate {
-            return (startDate ... endDate).contains(Date())
+            (startDate ... endDate).contains(Date())
         } else {
-            return false
+            false
         }
     }
 

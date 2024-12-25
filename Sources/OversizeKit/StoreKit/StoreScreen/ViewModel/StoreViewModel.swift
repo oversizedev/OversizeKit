@@ -24,7 +24,7 @@ public class StoreViewModel: ObservableObject {
 
     @Injected(\.storeKitService) var storeKitService: StoreKitService
     #if !os(tvOS)
-        @Injected(\.localNotificationService) var localNotificationService: LocalNotificationServiceProtocol
+    @Injected(\.localNotificationService) var localNotificationService: LocalNotificationServiceProtocol
     #endif
 
     @Published var state = State.initial
@@ -44,9 +44,9 @@ public class StoreViewModel: ObservableObject {
 
     var availableSubscriptions: [Product] {
         if case let .result(products) = state {
-            return products.autoRenewable.filter { $0.id != currentSubscription?.id }
+            products.autoRenewable.filter { $0.id != currentSubscription?.id }
         } else {
-            return []
+            []
         }
     }
 
@@ -132,9 +132,9 @@ extension StoreViewModel {
 
     var isHaveSale: Bool {
         if monthSubscriptionProduct != nil, yearSubscriptionProduct != nil {
-            return true
+            true
         } else {
-            return false
+            false
         }
     }
 
@@ -305,23 +305,23 @@ extension StoreViewModel {
 
     func addTrialNotification(product: Product) async {
         #if !os(tvOS)
-            if product.type == .autoRenewable, product.subscription?.introductoryOffer != nil {
-                do {
-                    try await localNotificationService.requestAuthorization()
-                    if let trialDaysCount = product.trialDaysCount {
-                        let timeInterval = TimeInterval((trialDaysCount - 2) * 24 * 60 * 60)
-                        let notificationTime = Date().addingTimeInterval(timeInterval)
-                        let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: notificationTime)
-                        await localNotificationService.schedule(localNotification: .init(
-                            id: UUID(),
-                            title: "Trial ends soon",
-                            body: "Subscription ends in 2 days",
-                            dateComponents: dateComponents,
-                            repeats: false
-                        ))
-                    }
-                } catch {}
-            }
+        if product.type == .autoRenewable, product.subscription?.introductoryOffer != nil {
+            do {
+                try await localNotificationService.requestAuthorization()
+                if let trialDaysCount = product.trialDaysCount {
+                    let timeInterval = TimeInterval((trialDaysCount - 2) * 24 * 60 * 60)
+                    let notificationTime = Date().addingTimeInterval(timeInterval)
+                    let dateComponents = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: notificationTime)
+                    await localNotificationService.schedule(localNotification: .init(
+                        id: UUID(),
+                        title: "Trial ends soon",
+                        body: "Subscription ends in 2 days",
+                        dateComponents: dateComponents,
+                        repeats: false
+                    ))
+                }
+            } catch {}
+        }
         #endif
     }
 }

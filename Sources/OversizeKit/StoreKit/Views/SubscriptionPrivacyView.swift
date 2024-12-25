@@ -28,42 +28,42 @@ struct SubscriptionPrivacyView: View {
                     .foregroundColor(Color.onSurfaceSecondary)
 
                 #if os(iOS)
-                    HStack(spacing: .xxSmall) {
-                        Button("Restore") {
-                            Task {
-                                try? await AppStore.sync()
-                            }
-                        }
-
-                        Text("•")
-
-                        if let privacyUrl = Info.url.appPrivacyPolicyUrl {
-                            Button {
-                                isShowPrivacy.toggle()
-                            } label: {
-                                Text("Privacy")
-                            }
-                            .sheet(isPresented: $isShowPrivacy) {
-                                WebView(url: privacyUrl)
-                            }
-                        }
-
-                        Text("•")
-
-                        if let termsOfUde = Info.url.appTermsOfUseUrl {
-                            Button {
-                                isShowTerms.toggle()
-                            } label: {
-                                Text("Terms")
-                            }
-                            .sheet(isPresented: $isShowTerms) {
-                                WebView(url: termsOfUde)
-                            }
+                HStack(spacing: .xxSmall) {
+                    Button("Restore") {
+                        Task {
+                            try? await AppStore.sync()
                         }
                     }
-                    .subheadline(.bold)
-                    .foregroundColor(Color.onSurfaceTertiary)
-                    .padding(.top, .xxxSmall)
+
+                    Text("•")
+
+                    if let privacyUrl = Info.url.appPrivacyPolicyUrl {
+                        Button {
+                            isShowPrivacy.toggle()
+                        } label: {
+                            Text("Privacy")
+                        }
+                        .sheet(isPresented: $isShowPrivacy) {
+                            WebView(url: privacyUrl)
+                        }
+                    }
+
+                    Text("•")
+
+                    if let termsOfUde = Info.url.appTermsOfUseUrl {
+                        Button {
+                            isShowTerms.toggle()
+                        } label: {
+                            Text("Terms")
+                        }
+                        .sheet(isPresented: $isShowTerms) {
+                            WebView(url: termsOfUde)
+                        }
+                    }
+                }
+                .subheadline(.bold)
+                .foregroundColor(Color.onSurfaceTertiary)
+                .padding(.top, .xxxSmall)
                 #endif
             }
             .multilineTextAlignment(.center)

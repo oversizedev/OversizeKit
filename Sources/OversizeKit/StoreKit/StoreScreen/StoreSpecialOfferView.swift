@@ -35,24 +35,24 @@ public struct StoreSpecialOfferView: View {
 
     public var body: some View {
         #if os(iOS)
-            Group {
-                if #available(iOS 16.0, *) {
-                    newPage
-                } else {
-                    oldPage
-                }
+        Group {
+            if #available(iOS 16.0, *) {
+                newPage
+            } else {
+                oldPage
             }
+        }
 
-            .onChange(of: isPremium) { _, status in
-                if status {
-                    dismiss()
-                }
+        .onChange(of: isPremium) { _, status in
+            if status {
+                dismiss()
             }
-            .task {
-                await viewModel.fetchData()
-            }
+        }
+        .task {
+            await viewModel.fetchData()
+        }
         #else
-            EmptyView()
+        EmptyView()
         #endif
     }
 
@@ -169,11 +169,11 @@ public struct StoreSpecialOfferView: View {
 
     var imageSize: CGFloat {
         if screenSize.height > 830 {
-            return 200
+            200
         } else if screenSize.height > 700 {
-            return 160
+            160
         } else {
-            return 64
+            64
         }
     }
 
@@ -314,33 +314,33 @@ public struct StoreSpecialOfferView: View {
 
     var badgeText: String {
         if let badge = event.badge {
-            return textPrepere(badge)
+            textPrepere(badge)
         } else {
-            return ""
+            ""
         }
     }
 
     var headline: String {
         if let headline = event.headline {
-            return textPrepere(headline)
+            textPrepere(headline)
         } else {
-            return ""
+            ""
         }
     }
 
     var titleColor: Color {
         if let accentColor = event.accentColor {
-            return Color(hex: accentColor)
+            Color(hex: accentColor)
         } else {
-            return Color.onBackgroundPrimary
+            Color.onBackgroundPrimary
         }
     }
 
     var description: String {
         if let description = event.description {
-            return textPrepere(description)
+            textPrepere(description)
         } else {
-            return ""
+            ""
         }
     }
 

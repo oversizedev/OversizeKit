@@ -64,19 +64,19 @@ public struct PhotoOptionsView<A>: View where A: View {
             SectionView {
                 VStack {
                     #if !os(tvOS)
-                        if #available(iOS 16.0, *) {
-                            ShareLink(
-                                item: photo,
-                                preview: SharePreview(
-                                    "Photo",
-                                    image: photo.image
-                                )
-                            ) {
-                                Row("Share") {
-                                    Image.Base.upload
-                                }
+                    if #available(iOS 16.0, *) {
+                        ShareLink(
+                            item: photo,
+                            preview: SharePreview(
+                                "Photo",
+                                image: photo.image
+                            )
+                        ) {
+                            Row("Share") {
+                                Image.Base.upload
                             }
                         }
+                    }
                     #endif
                     actions
                 }

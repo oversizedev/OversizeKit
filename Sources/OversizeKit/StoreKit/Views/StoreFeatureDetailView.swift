@@ -25,38 +25,38 @@ public struct StoreFeatureDetailView: View {
     public var body: some View {
         GeometryReader { geometry in
             #if os(iOS)
-                VStack(spacing: .zero) {
-                    TabView(selection: $selection) {
-                        ForEach(Info.store.features) { feature in
-                            fetureItem(feature, geometry: geometry)
-                                .padding(.bottom, isPremium ? .large : .zero)
-                                .tag(feature)
-                        }
+            VStack(spacing: .zero) {
+                TabView(selection: $selection) {
+                    ForEach(Info.store.features) { feature in
+                        fetureItem(feature, geometry: geometry)
+                            .padding(.bottom, isPremium ? .large : .zero)
+                            .tag(feature)
                     }
-                    .tabViewStyle(.page(indexDisplayMode: isPremium ? .always : .never))
-                    .indexViewStyle(.page(backgroundDisplayMode: isPremium ? .always : .never))
+                }
+                .tabViewStyle(.page(indexDisplayMode: isPremium ? .always : .never))
+                .indexViewStyle(.page(backgroundDisplayMode: isPremium ? .always : .never))
 
-                    if !isPremium {
-                        StorePaymentButtonBar()
-                            .environmentObject(viewModel)
-                    }
+                if !isPremium {
+                    StorePaymentButtonBar()
+                        .environmentObject(viewModel)
                 }
-                .overlay(alignment: .topTrailing) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        IconDeprecated(
-                            .xMini,
-                            color: selection.screenURL != nil ? .onPrimary : .onSurfaceTertiary
-                        )
-                        .padding(.xxSmall)
-                        .background {
-                            Circle()
-                                .fill(.ultraThinMaterial)
-                        }
-                        .padding(.small)
+            }
+            .overlay(alignment: .topTrailing) {
+                Button {
+                    dismiss()
+                } label: {
+                    IconDeprecated(
+                        .xMini,
+                        color: selection.screenURL != nil ? .onPrimary : .onSurfaceTertiary
+                    )
+                    .padding(.xxSmall)
+                    .background {
+                        Circle()
+                            .fill(.ultraThinMaterial)
                     }
+                    .padding(.small)
                 }
+            }
             #endif
         }
     }
@@ -85,10 +85,12 @@ public struct StoreFeatureDetailView: View {
                         if let urlString = feature.screenURL, let url = URL(string: urlString) {
                             ScreenMockup(url: url)
                                 .frame(maxWidth: 60 + (geometry.size.height * 0.2))
-                                .padding(feature.topScreenAlignment ?? true ? .top : .bottom,
-                                         feature.topScreenAlignment ?? true
-                                             ? (geometry.size.height * 0.1) - 24
-                                             : (geometry.size.height * 0.1) + 12)
+                                .padding(
+                                    feature.topScreenAlignment ?? true ? .top : .bottom,
+                                    feature.topScreenAlignment ?? true
+                                        ? (geometry.size.height * 0.1) - 24
+                                        : (geometry.size.height * 0.1) + 12
+                                )
                         }
                     }
                 }
@@ -159,9 +161,9 @@ public struct StoreFeatureDetailView: View {
 
     func backgroundColor(feature: PlistConfiguration.Store.StoreFeature) -> Color {
         if let color = feature.backgroundColor {
-            return Color(hex: color)
+            Color(hex: color)
         } else {
-            return Color.accent
+            Color.accent
         }
     }
 }

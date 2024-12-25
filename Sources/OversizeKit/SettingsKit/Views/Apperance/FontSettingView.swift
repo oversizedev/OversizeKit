@@ -50,39 +50,45 @@ public struct FontSettingView: View {
     }
 
     private var titleSelector: some View {
-        GridSelect(FontDesignType.allCases, selection: theme.$fontTitle,
-                   content: { fontStyle, _ in
-                       HStack {
-                           VStack(alignment: .leading, spacing: 8) {
-                               Text("Aa")
-                                   .font(.system(size: 34, weight: .heavy, design: fontStyle.system))
-                                   .foregroundColor(.onSurfacePrimary)
+        GridSelect(
+            FontDesignType.allCases,
+            selection: theme.$fontTitle,
+            content: { fontStyle, _ in
+                HStack {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Aa")
+                            .font(.system(size: 34, weight: .heavy, design: fontStyle.system))
+                            .foregroundColor(.onSurfacePrimary)
 
-                               Text(fontStyle.rawValue.capitalizingFirstLetter())
-                                   .font(.system(size: 16, weight: .medium, design: fontStyle.system))
-                                   .foregroundColor(.onSurfacePrimary)
-                           }
-                           Spacer()
-                       }.padding()
-                   }).gridSelectStyle(.default(selected: .graySurface))
+                        Text(fontStyle.rawValue.capitalizingFirstLetter())
+                            .font(.system(size: 16, weight: .medium, design: fontStyle.system))
+                            .foregroundColor(.onSurfacePrimary)
+                    }
+                    Spacer()
+                }.padding()
+            }
+        ).gridSelectStyle(.default(selected: .graySurface))
     }
 
     private var paragraphSelector: some View {
-        GridSelect(FontDesignType.allCases, selection: theme.$fontParagraph,
-                   content: { fontStyle, _ in
-                       HStack {
-                           VStack(alignment: .leading, spacing: 8) {
-                               Text("Aa")
-                                   .font(.system(size: 34, weight: .heavy, design: fontStyle.system))
-                                   .foregroundColor(.onSurfacePrimary)
+        GridSelect(
+            FontDesignType.allCases,
+            selection: theme.$fontParagraph,
+            content: { fontStyle, _ in
+                HStack {
+                    VStack(alignment: .leading, spacing: 8) {
+                        Text("Aa")
+                            .font(.system(size: 34, weight: .heavy, design: fontStyle.system))
+                            .foregroundColor(.onSurfacePrimary)
 
-                               Text(fontStyle.rawValue.capitalizingFirstLetter())
-                                   .font(.system(size: 16, weight: .medium, design: fontStyle.system))
-                                   .foregroundColor(.onSurfacePrimary)
-                           }
-                           Spacer()
-                       }.padding()
-                   }).gridSelectStyle(.default(selected: .graySurface))
+                        Text(fontStyle.rawValue.capitalizingFirstLetter())
+                            .font(.system(size: 16, weight: .medium, design: fontStyle.system))
+                            .foregroundColor(.onSurfacePrimary)
+                    }
+                    Spacer()
+                }.padding()
+            }
+        ).gridSelectStyle(.default(selected: .graySurface))
     }
 
     private var otherSelector: some View {

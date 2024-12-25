@@ -41,17 +41,17 @@ public struct OnboardView<C, A>: View where A: View, C: View {
     private func topButtons() -> some View {
         HStack {
             #if os(iOS)
-                if helpAction != nil {
-                    Button {
-                        helpAction?()
-                    } label: {
-                        Text("Help")
-                    }
-                    .buttonStyle(.tertiary)
-                    .controlBorderShape(.capsule)
-                    .accent()
-                    .controlSize(.mini)
+            if helpAction != nil {
+                Button {
+                    helpAction?()
+                } label: {
+                    Text("Help")
                 }
+                .buttonStyle(.tertiary)
+                .controlBorderShape(.capsule)
+                .accent()
+                .controlSize(.mini)
+            }
             #endif
 
             Spacer()
@@ -75,57 +75,57 @@ public struct OnboardView<C, A>: View where A: View, C: View {
 
     private func bottomButtons() -> some View {
         #if os(iOS)
-            HStack(spacing: .small) {
-                if let backAction {
-                    Button {
-                        backAction()
-                    } label: {
-                        Image.Base.arrowLeft.icon()
-                    }
-                    .buttonStyle(.quaternary)
-                    .accentColor(.secondary)
+        HStack(spacing: .small) {
+            if let backAction {
+                Button {
+                    backAction()
+                } label: {
+                    Image.Base.arrowLeft.icon()
                 }
-
-                VStack(spacing: .xxxSmall) {
-                    actions
-                }
+                .buttonStyle(.quaternary)
+                .accentColor(.secondary)
             }
-            .padding(.medium)
-        #else
-            HStack(spacing: .xSmall) {
-                if let helpAction {
-                    Button("Help", action: helpAction)
-                        .help("Help")
-                    #if !os(tvOS)
-                        .controlSize(.extraLarge)
-                        .buttonStyle(.bordered)
-                    #endif
-                }
 
-                Spacer()
-
-                if let backAction {
-                    Button(
-                        "Back",
-                        action: backAction
-                    )
-                    #if !os(tvOS)
-                    .controlSize(.extraLarge)
-                    #endif
-                    .buttonStyle(.bordered)
-                }
-
+            VStack(spacing: .xxxSmall) {
                 actions
+            }
+        }
+        .padding(.medium)
+        #else
+        HStack(spacing: .xSmall) {
+            if let helpAction {
+                Button("Help", action: helpAction)
+                    .help("Help")
+                #if !os(tvOS)
+                    .controlSize(.extraLarge)
+                    .buttonStyle(.bordered)
+                #endif
+            }
+
+            Spacer()
+
+            if let backAction {
+                Button(
+                    "Back",
+                    action: backAction
+                )
                 #if !os(tvOS)
                 .controlSize(.extraLarge)
                 #endif
-                .buttonStyle(.borderedProminent)
+                .buttonStyle(.bordered)
             }
-            .padding(.small)
-            .background(Color.surfacePrimary)
-            .overlay(alignment: .top) {
-                Separator()
-            }
+
+            actions
+            #if !os(tvOS)
+            .controlSize(.extraLarge)
+            #endif
+            .buttonStyle(.borderedProminent)
+        }
+        .padding(.small)
+        .background(Color.surfacePrimary)
+        .overlay(alignment: .top) {
+            Separator()
+        }
         #endif
     }
 }

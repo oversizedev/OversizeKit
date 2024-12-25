@@ -44,25 +44,28 @@ public struct PrmiumBannerRow: View {
         HStack(spacing: Space.small) {
             HStack {
                 #if os(iOS)
-                    Resource.Store.zap
-                        .padding(.horizontal, Space.xxSmall)
-                        .padding(.vertical, Space.xxSmall)
+                Resource.Store.zap
+                    .padding(.horizontal, Space.xxSmall)
+                    .padding(.vertical, Space.xxSmall)
                 #endif
 
                 #if os(macOS)
-                    Resource.Store.zap
-                        .padding(.horizontal, Space.xxSmall)
-                        .padding(.vertical, Space.xxSmall)
+                Resource.Store.zap
+                    .padding(.horizontal, Space.xxSmall)
+                    .padding(.vertical, Space.xxSmall)
                 #endif
             }
             .background(
                 RoundedRectangle(cornerRadius: Radius.medium.rawValue, style: .continuous)
-                    .fill(LinearGradient(gradient: Gradient(
+                    .fill(LinearGradient(
+                        gradient: Gradient(
                             colors: [Color(hex: "EAAB44"),
                                      Color(hex: "D24A44"),
                                      Color(hex: "9C5BA2"),
                                      Color(hex: "4B5B94")]),
-                        startPoint: .topLeading, endPoint: .bottomTrailing))
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ))
             )
 
             Text(Info.store.subscriptionsName)
@@ -99,12 +102,12 @@ public extension PrmiumBannerRow {
                 HStack {
                     HStack(alignment: .center, spacing: Space.xxSmall) {
                         #if os(iOS)
-                            Resource.Store.zap
-                                .colorMultiply(Color(hex: "B75375"))
+                        Resource.Store.zap
+                            .colorMultiply(Color(hex: "B75375"))
                         #endif
 
                         #if os(macOS)
-                            Resource.Store.zap
+                        Resource.Store.zap
                         #endif
 
                         Text(Info.store.subscriptionsName)
@@ -136,12 +139,15 @@ public extension PrmiumBannerRow {
         .padding(.vertical, Space.large)
         .background(
             RoundedRectangle(cornerRadius: Radius.medium.rawValue, style: .continuous)
-                .fill(LinearGradient(gradient: Gradient(
+                .fill(LinearGradient(
+                    gradient: Gradient(
                         colors: [Color(hex: "EAAB44"),
                                  Color(hex: "D24A44"),
                                  Color(hex: "9C5BA2"),
                                  Color(hex: "4B5B94")]),
-                    startPoint: .topLeading, endPoint: .bottomTrailing)))
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )))
     }
 }
 

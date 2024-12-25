@@ -15,45 +15,45 @@ public enum RootTab: String {
     var id: String {
         switch self {
         case .main:
-            return "home"
+            "home"
         case .secondary:
-            return "secondary"
+            "secondary"
         case .tertiary:
-            return "tertiary"
+            "tertiary"
         case .quaternary:
-            return "quaternary"
+            "quaternary"
         case .settings:
-            return "settings"
+            "settings"
         }
     }
 
     var title: String {
         switch self {
         case .main:
-            return "Home"
+            "Home"
         case .secondary:
-            return "Secondary"
+            "Secondary"
         case .tertiary:
-            return "Tertiary"
+            "Tertiary"
         case .quaternary:
-            return "Quaternary"
+            "Quaternary"
         case .settings:
-            return "Settings"
+            "Settings"
         }
     }
 
     var image: Image {
         switch self {
         case .main:
-            return Image(systemName: "")
+            Image(systemName: "")
         case .secondary:
-            return Image(systemName: "")
+            Image(systemName: "")
         case .tertiary:
-            return Image(systemName: "")
+            Image(systemName: "")
         case .quaternary:
-            return Image(systemName: "")
+            Image(systemName: "")
         case .settings:
-            return Image(systemName: "")
+            Image(systemName: "")
         }
     }
 }
