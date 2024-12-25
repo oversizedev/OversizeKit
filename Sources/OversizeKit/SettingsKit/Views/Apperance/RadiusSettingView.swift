@@ -28,23 +28,23 @@ public struct RadiusSettingView: View {
                 VStack(spacing: .zero) {
                     VStack(spacing: Space.small.rawValue) {
                         #if os(iOS) || os(macOS)
-                            VStack(spacing: Space.xxSmall.rawValue) {
-                                HStack {
-                                    Text("Size")
-                                        .subheadline()
-                                        .foregroundColor(.onSurfacePrimary)
+                        VStack(spacing: Space.xxSmall.rawValue) {
+                            HStack {
+                                Text("Size")
+                                    .subheadline()
+                                    .foregroundColor(.onSurfacePrimary)
 
-                                    Spacer()
+                                Spacer()
 
-                                    Text(String(format: "%.0f", theme.radius) + "  px")
-                                        .subheadline()
-                                        .foregroundColor(.onSurfacePrimary)
-                                }
-
-                                Slider(value: theme.$radius, in: 0 ... 12, step: 4)
+                                Text(String(format: "%.0f", theme.radius) + "  px")
+                                    .subheadline()
+                                    .foregroundColor(.onSurfacePrimary)
                             }
-                            .padding(.horizontal, Space.medium)
-                            .padding(.bottom, Space.xxSmall)
+
+                            Slider(value: theme.$radius, in: 0 ... 12, step: 4)
+                        }
+                        .padding(.horizontal, Space.medium)
+                        .padding(.bottom, Space.xxSmall)
 
                         #endif
                     }

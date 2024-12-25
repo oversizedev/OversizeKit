@@ -39,7 +39,7 @@ public struct Launcher<Content: View, Onboarding: View>: View {
                     .systemServices()
                 #if os(macOS)
                     .frame(width: 840, height: 672)
-                    // .interactiveDismissDisabled(!viewModel.appStateService.isCompletedOnbarding)
+                // .interactiveDismissDisabled(!viewModel.appStateService.isCompletedOnbarding)
                 #endif
             }
             .onChange(of: viewModel.appStateService.isCompletedOnbarding) { _, isCompletedOnbarding in
@@ -142,9 +142,9 @@ private extension View {
         item: Binding<Item?>, onDismiss: (() -> Void)? = nil, @ViewBuilder content: @escaping (Item) -> some View
     ) -> some View where Item: Identifiable {
         #if os(macOS)
-            sheet(item: item, onDismiss: onDismiss, content: content)
+        sheet(item: item, onDismiss: onDismiss, content: content)
         #else
-            fullScreenCover(item: item, onDismiss: onDismiss, content: content)
+        fullScreenCover(item: item, onDismiss: onDismiss, content: content)
         #endif
     }
 }

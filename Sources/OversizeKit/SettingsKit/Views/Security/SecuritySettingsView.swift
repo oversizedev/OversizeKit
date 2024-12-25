@@ -146,13 +146,13 @@ extension SecuritySettingsView {
     private var biometricImageName: String {
         switch biometricService.biometricType {
         case .none:
-            return ""
+            ""
         case .touchID:
-            return "touchid"
+            "touchid"
         case .faceID:
-            return "faceid"
+            "faceid"
         case .opticID:
-            return "opticid"
+            "opticid"
         }
     }
 }

@@ -16,30 +16,30 @@ enum RootAlert: Identifiable {
     var id: String {
         switch self {
         case .dismiss:
-            return "dismiss"
+            "dismiss"
         case .delete:
-            return "delete"
+            "delete"
         case .appError:
-            return "appError"
+            "appError"
         }
     }
 
     var alert: Alert {
         switch self {
         case let .dismiss(action):
-            return Alert(
+            Alert(
                 title: Text("Are you sure you want to dismiss?"),
                 primaryButton: .destructive(Text("Dismiss"), action: action),
                 secondaryButton: .cancel()
             )
         case let .delete(action):
-            return Alert(
+            Alert(
                 title: Text("Are you sure you want to delete?"),
                 primaryButton: .destructive(Text("\(L10n.Button.delete)"), action: action),
                 secondaryButton: .cancel()
             )
         case let .appError(error: error):
-            return Alert(
+            Alert(
                 title: Text(error.title),
                 message: Text(error.subtitle.valueOrEmpty),
                 dismissButton: .cancel()

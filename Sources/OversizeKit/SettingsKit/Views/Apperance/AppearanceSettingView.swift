@@ -17,7 +17,7 @@ public struct AppearanceSettingView: View {
     @Environment(\.isPremium) var isPremium: Bool
 
     #if os(iOS)
-        @StateObject var iconSettings = AppIconSettings()
+    @StateObject var iconSettings = AppIconSettings()
     #endif
 
     private let columns = [
@@ -28,33 +28,33 @@ public struct AppearanceSettingView: View {
 
     public var body: some View {
         #if os(iOS)
-            Page(L10n.Settings.apperance) {
-                iOSSettings
-                    .surfaceContentRowMargins()
-            }
-            .backgroundSecondary()
+        Page(L10n.Settings.apperance) {
+            iOSSettings
+                .surfaceContentRowMargins()
+        }
+        .backgroundSecondary()
 
         #else
-            macSettings
+        macSettings
         #endif
     }
 
     #if os(iOS)
-        private var iOSSettings: some View {
-            LazyVStack(alignment: .leading, spacing: 0) {
-                apperance
+    private var iOSSettings: some View {
+        LazyVStack(alignment: .leading, spacing: 0) {
+            apperance
 
-                accentColor
+            accentColor
 
-                advanded
+            advanded
 
-                if iconSettings.iconNames.count > 1 {
-                    appIcon
-                }
+            if iconSettings.iconNames.count > 1 {
+                appIcon
             }
-            .preferredColorScheme(theme.appearance.colorScheme)
-            .accentColor(theme.accentColor)
         }
+        .preferredColorScheme(theme.appearance.colorScheme)
+        .accentColor(theme.accentColor)
+    }
     #endif
 
     private var macSettings: some View {
@@ -101,57 +101,59 @@ public struct AppearanceSettingView: View {
     }
 
     #if os(iOS)
-        private var accentColor: some View {
-            SectionView("Accent color") {
-                ColorSelector(selection: theme.$accentColor)
-            }
+    private var accentColor: some View {
+        SectionView("Accent color") {
+            ColorSelector(selection: theme.$accentColor)
         }
+    }
 
     #endif
 
     #if os(iOS)
-        private var appIcon: some View {
-            SectionView("App icon") {
-                LazyVGrid(columns: columns, spacing: 24) {
-                    ForEach(0 ..< iconSettings.iconNames.count, id: \.self) { index in
-                        HStack {
-                            Image(uiImage: UIImage(named: iconSettings.iconNames[index]
-                                    ?? "AppIcon") ?? UIImage())
-                                .renderingMode(.original)
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 78, height: 78)
-                                .cornerRadius(18)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .stroke(index == iconSettings.currentIndex ? Color.accent : Color.border,
-                                                lineWidth: index == iconSettings.currentIndex ? 3 : 1)
-                                )
-                                .onTapGesture {
-                                    if index != 0, isPremium == false {
-                                        router.present(.premium)
-                                    } else {
-                                        let defaultIconIndex = iconSettings.iconNames
-                                            .firstIndex(of: UIApplication.shared.alternateIconName) ?? 0
-                                        if defaultIconIndex != index {
-                                            // swiftlint:disable line_length
-                                            UIApplication.shared.setAlternateIconName(iconSettings.iconNames[index]) { error in
-                                                if let error {
-                                                    log(error.localizedDescription)
-                                                } else {
-                                                    log("Success! You have changed the app icon.")
-                                                }
+    private var appIcon: some View {
+        SectionView("App icon") {
+            LazyVGrid(columns: columns, spacing: 24) {
+                ForEach(0 ..< iconSettings.iconNames.count, id: \.self) { index in
+                    HStack {
+                        Image(uiImage: UIImage(named: iconSettings.iconNames[index]
+                                ?? "AppIcon") ?? UIImage())
+                            .renderingMode(.original)
+                            .resizable()
+                            .scaledToFit()
+                            .frame(width: 78, height: 78)
+                            .cornerRadius(18)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 20)
+                                    .stroke(
+                                        index == iconSettings.currentIndex ? Color.accent : Color.border,
+                                        lineWidth: index == iconSettings.currentIndex ? 3 : 1
+                                    )
+                            )
+                            .onTapGesture {
+                                if index != 0, isPremium == false {
+                                    router.present(.premium)
+                                } else {
+                                    let defaultIconIndex = iconSettings.iconNames
+                                        .firstIndex(of: UIApplication.shared.alternateIconName) ?? 0
+                                    if defaultIconIndex != index {
+                                        // swiftlint:disable line_length
+                                        UIApplication.shared.setAlternateIconName(iconSettings.iconNames[index]) { error in
+                                            if let error {
+                                                log(error.localizedDescription)
+                                            } else {
+                                                log("Success! You have changed the app icon.")
                                             }
                                         }
                                     }
                                 }
-                        }
-                        .padding(3)
+                            }
                     }
+                    .padding(3)
                 }
-                .padding()
             }
+            .padding()
         }
+    }
     #endif
 
     private var advanded: some View {
@@ -197,59 +199,59 @@ public struct AppearanceSettingView: View {
     var textIcon: Image {
         switch iconStyle {
         case .line:
-            return Image.Editor.Font.square
+            Image.Editor.Font.square
         case .fill:
-            return Image.Editor.Font.Square.fill
+            Image.Editor.Font.Square.fill
         case .twoTone:
-            return Image.Editor.Font.Square.TwoTone.fill
+            Image.Editor.Font.Square.TwoTone.fill
         }
     }
 
     var borderIcon: Image {
         switch iconStyle {
         case .line:
-            return Image.Design.verticalMirror
+            Image.Design.verticalMirror
         case .fill:
-            return Image.Editor.Font.Square.fill
+            Image.Editor.Font.Square.fill
         case .twoTone:
-            return Image.Editor.Font.Square.TwoTone.fill
+            Image.Editor.Font.Square.TwoTone.fill
         }
     }
 
     var radiusIcon: Image {
         switch iconStyle {
         case .line:
-            return Image.Design.path
+            Image.Design.path
         case .fill:
-            return Image.Design.Path.fill
+            Image.Design.Path.fill
         case .twoTone:
-            return Image.Design.Path.twoTone
+            Image.Design.Path.twoTone
         }
     }
 }
 
 #if os(iOS)
-    @MainActor
-    public class AppIconSettings: ObservableObject {
-        public var iconNames: [String?] = [nil]
-        @Published public var currentIndex = 0
+@MainActor
+public class AppIconSettings: ObservableObject {
+    public var iconNames: [String?] = [nil]
+    @Published public var currentIndex = 0
 
-        public init() {
-            getAlternateIconNames()
+    public init() {
+        getAlternateIconNames()
 
-            if let currentIcon = UIApplication.shared.alternateIconName {
-                currentIndex = iconNames.firstIndex(of: currentIcon) ?? 0
-            }
+        if let currentIcon = UIApplication.shared.alternateIconName {
+            currentIndex = iconNames.firstIndex(of: currentIcon) ?? 0
         }
+    }
 
-        private func getAlternateIconNames() {
-            if let iconCount = FeatureFlags.app.alternateAppIcons, iconCount != 0 {
-                for index in 1 ... iconCount {
-                    iconNames.append("AlternateAppIcon\(index)")
-                }
+    private func getAlternateIconNames() {
+        if let iconCount = FeatureFlags.app.alternateAppIcons, iconCount != 0 {
+            for index in 1 ... iconCount {
+                iconNames.append("AlternateAppIcon\(index)")
             }
         }
     }
+}
 #endif
 
 struct SettingsThemeView_Previews: PreviewProvider {

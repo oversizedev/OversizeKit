@@ -14,8 +14,8 @@ public enum LockscreenViewState {
 
 public struct LockscreenView: View {
     #if os(iOS)
-        @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
-        @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
+    @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
     #endif
     @Environment(\.scenePhase) var scenePhase: ScenePhase
 
@@ -47,31 +47,32 @@ public struct LockscreenView: View {
 
     private var isShowTitle: Bool {
         #if os(iOS)
-            if horizontalSizeClass == .compact, verticalSizeClass == .regular {
-                return true
-            } else if horizontalSizeClass == .regular, verticalSizeClass == .compact {
-                return false
-            } else if horizontalSizeClass == .regular, verticalSizeClass == .regular {
-                return true
-            } else {
-                return true
-            }
-        #else
+        if horizontalSizeClass == .compact, verticalSizeClass == .regular {
             return true
+        } else if horizontalSizeClass == .regular, verticalSizeClass == .compact {
+            return false
+        } else if horizontalSizeClass == .regular, verticalSizeClass == .regular {
+            return true
+        } else {
+            return true
+        }
+        #else
+        return true
         #endif
     }
 
-    public init(pinCode: Binding<String>,
-                state: Binding<LockscreenViewState> = .constant(.locked),
-                maxCount: Int = 4,
-                title: String? = nil,
-                errorText: String? = nil,
-                pinCodeEnabled: Bool = true,
-                biometricEnabled: Bool = false,
-                biometricType: BiometricType = .faceID,
-                action: (() -> Void)? = nil,
-                biometricAction: (() -> Void)? = nil)
-    {
+    public init(
+        pinCode: Binding<String>,
+        state: Binding<LockscreenViewState> = .constant(.locked),
+        maxCount: Int = 4,
+        title: String? = nil,
+        errorText: String? = nil,
+        pinCodeEnabled: Bool = true,
+        biometricEnabled: Bool = false,
+        biometricType: BiometricType = .faceID,
+        action: (() -> Void)? = nil,
+        biometricAction: (() -> Void)? = nil
+    ) {
         _pinCode = pinCode
         _state = state
         self.maxCount = maxCount
@@ -116,16 +117,18 @@ public struct LockscreenView: View {
             if let appImage = Info.app.iconName {
                 #if os(iOS)
 
-                    Image(uiImage: UIImage(named: appImage) ?? UIImage())
-                        .resizable()
-                        .frame(width: 96, height: 96)
-                        .mask(RoundedRectangle(cornerRadius: 26,
-                                               style: .continuous))
+                Image(uiImage: UIImage(named: appImage) ?? UIImage())
+                    .resizable()
+                    .frame(width: 96, height: 96)
+                    .mask(RoundedRectangle(
+                        cornerRadius: 26,
+                        style: .continuous
+                    ))
 
                 #else
-                    Text(biometricType.rawValue)
-                        .title2(.bold)
-                        .foregroundColor(.onSurfacePrimary)
+                Text(biometricType.rawValue)
+                    .title2(.bold)
+                    .foregroundColor(.onSurfacePrimary)
 
                 #endif
 
@@ -139,18 +142,18 @@ public struct LockscreenView: View {
 
             #if os(iOS)
 
-                Button { biometricAction?() } label: {
-                    HStack(spacing: .xSmall) {
-                        biometricImage()
-                            .padding(.leading, 2)
+            Button { biometricAction?() } label: {
+                HStack(spacing: .xSmall) {
+                    biometricImage()
+                        .padding(.leading, 2)
 
-                        Text("Open with \(biometricType.rawValue)")
-                    }
-                    .padding(.horizontal, .xxxSmall)
+                    Text("Open with \(biometricType.rawValue)")
                 }
-                .buttonStyle(.tertiary(infinityWidth: false))
-                .controlBorderShape(.capsule)
-                .controlSize(.small)
+                .padding(.horizontal, .xxxSmall)
+            }
+            .buttonStyle(.tertiary(infinityWidth: false))
+            .controlBorderShape(.capsule)
+            .controlSize(.small)
             #endif
 
             Spacer()
@@ -285,9 +288,12 @@ public struct LockscreenView: View {
                         .offset(x: leftOffset)
                         // .animation(Animation.easeInOut(duration: 1).delay(0.2 * Double(number)))
                         .scaleEffect(shouldAnimate ? 0.5 : 1)
-                        .animation(Animation.easeInOut(duration: 0.5)
-                            .repeatForever()
-                            .delay(number == 0 ? 0 : 0.5 * Double(number)), value: shouldAnimate)
+                        .animation(
+                            Animation.easeInOut(duration: 0.5)
+                                .repeatForever()
+                                .delay(number == 0 ? 0 : 0.5 * Double(number)),
+                            value: shouldAnimate
+                        )
                 }
             }
             .onReceive(timer) { _ in

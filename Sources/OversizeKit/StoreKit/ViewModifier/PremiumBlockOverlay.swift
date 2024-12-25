@@ -30,10 +30,12 @@ public struct PremiumBlockOverlay: ViewModifier {
             ZStack {
                 content
 
-                LinearGradient(colors: [.surfacePrimary.opacity(0), .surfacePrimary, .surfacePrimary],
-                               startPoint: .top,
-                               endPoint: .bottom)
-                    .ignoresSafeArea()
+                LinearGradient(
+                    colors: [.surfacePrimary.opacity(0), .surfacePrimary, .surfacePrimary],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .ignoresSafeArea()
 
                 VStack(spacing: .xxSmall) {
                     VStack(spacing: .xxSmall) {

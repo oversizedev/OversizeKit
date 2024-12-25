@@ -17,33 +17,42 @@ public extension LoadingViewState {
     var isLoading: Bool {
         switch self {
         case .loading, .idle:
-            return true
+            true
         default:
-            return false
+            false
         }
     }
 
     var result: Result? {
         switch self {
         case let .result(result):
-            return result
+            result
         default:
-            return nil
+            nil
+        }
+    }
+
+    var error: AppError? {
+        switch self {
+        case let .error(error):
+            error
+        default:
+            nil
         }
     }
 
     static func == (lhs: LoadingViewState<Result>, rhs: LoadingViewState<Result>) -> Bool {
         switch (lhs, rhs) {
         case (.idle, .idle):
-            return true
+            true
         case (.loading, .loading):
-            return true
+            true
         case (.result, .result):
-            return true
+            true
         case (.error, .error):
-            return true
+            true
         default:
-            return false
+            false
         }
     }
 }
