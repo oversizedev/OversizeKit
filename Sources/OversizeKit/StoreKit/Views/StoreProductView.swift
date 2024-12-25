@@ -29,9 +29,9 @@ public struct StoreProductView: View {
 
     var isHaveIntroductoryOffer: Bool {
         if product.type == .autoRenewable, product.subscription?.introductoryOffer != nil {
-            return true
+            true
         } else {
-            return false
+            false
         }
     }
 
@@ -41,9 +41,9 @@ public struct StoreProductView: View {
 
     var isHaveSale: Bool {
         if monthSubscriptionProduct != nil, product.subscription?.subscriptionPeriod.unit == .year {
-            return true
+            true
         } else {
-            return false
+            false
         }
     }
 
@@ -271,22 +271,22 @@ public struct StoreProductView: View {
             .padding(.vertical, .xxSmall)
 
             #if os(iOS)
-                if isHaveSale, !isPurchased {
-                    Text("Save " + saleProcent + "%")
-                        .caption2(.bold)
-                        .foregroundColor(.onPrimary)
-                        .padding(.vertical, .xxxSmall)
-                        .frame(maxWidth: .infinity)
-                        .background {
-                            RoundedRectangle(cornerRadius: 2, style: .continuous)
-                                .fill(Color.success)
-                                .cornerRadius(8, corners: [.bottomLeft, .bottomRight])
-                        }
-                        .padding(.horizontal, 2)
-                        .padding(.bottom, 2)
-                }
+            if isHaveSale, !isPurchased {
+                Text("Save " + saleProcent + "%")
+                    .caption2(.bold)
+                    .foregroundColor(.onPrimary)
+                    .padding(.vertical, .xxxSmall)
+                    .frame(maxWidth: .infinity)
+                    .background {
+                        RoundedRectangle(cornerRadius: 2, style: .continuous)
+                            .fill(Color.success)
+                            .cornerRadius(8, corners: [.bottomLeft, .bottomRight])
+                    }
+                    .padding(.horizontal, 2)
+                    .padding(.bottom, 2)
+            }
             #else
-                EmptyView()
+            EmptyView()
             #endif
         }
         .frame(maxHeight: .infinity)
@@ -322,23 +322,23 @@ public struct StoreProductView: View {
     var labelBackground: some View {
         Group {
             #if os(iOS)
-                if isHaveIntroductoryOffer, type == .row {
-                    RoundedRectangle(cornerRadius: 4, style: .continuous)
-                        .fill(Color.surfacePrimary)
-                        .cornerRadius(10, corners: [.bottomLeft, .bottomRight])
-                } else {
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
-                        .fill(Color.surfacePrimary)
-                        .overlay {
-                            if type == .collumn, !isSelected {
-                                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                    .strokeBorder(Color.backgroundTertiary, lineWidth: 2)
-                                    .padding(-2)
-                            }
+            if isHaveIntroductoryOffer, type == .row {
+                RoundedRectangle(cornerRadius: 4, style: .continuous)
+                    .fill(Color.surfacePrimary)
+                    .cornerRadius(10, corners: [.bottomLeft, .bottomRight])
+            } else {
+                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                    .fill(Color.surfacePrimary)
+                    .overlay {
+                        if type == .collumn, !isSelected {
+                            RoundedRectangle(cornerRadius: 12, style: .continuous)
+                                .strokeBorder(Color.backgroundTertiary, lineWidth: 2)
+                                .padding(-2)
                         }
-                }
+                    }
+            }
             #else
-                EmptyView()
+            EmptyView()
             #endif
         }
     }
@@ -354,50 +354,50 @@ public struct StoreProductView: View {
 
     var backgroundStrokeBorderColor: Color {
         if isPurchased {
-            return .success
+            .success
         } else if isSelected {
-            return Palette.blue.color
+            Palette.blue.color
         } else {
             switch type {
             case .row:
-                return .backgroundTertiary
+                .backgroundTertiary
             case .collumn:
-                return .surfaceSecondary
+                .surfaceSecondary
             }
         }
     }
 
     var topLabelbackgroundColor: Color {
         if isPurchased {
-            return .success
+            .success
         } else if isSelected {
-            return Palette.blue.color
+            Palette.blue.color
         } else {
-            return .surfaceSecondary
+            .surfaceSecondary
         }
     }
 
     var topLabelForegroundColor: Color {
         if isPurchased || isSelected {
-            return .onPrimary
+            .onPrimary
         } else {
-            return Palette.violet.color
+            Palette.violet.color
         }
     }
 
     var descriptionForegroundColor: Color {
         if isPurchased || product.type != .autoRenewable {
-            return .onSurfaceSecondary
+            .onSurfaceSecondary
         } else {
-            return .warning
+            .warning
         }
     }
 
     var descriptionFontWeight: Font.Weight {
         if isPurchased || product.type != .autoRenewable {
-            return .regular
+            .regular
         } else {
-            return .semibold
+            .semibold
         }
     }
 

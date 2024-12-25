@@ -201,9 +201,9 @@ extension Router {
 extension Screen: Hashable, Equatable {
     static func == (lhs: Screen, rhs: Screen) -> Bool {
         if lhs.id == rhs.id {
-            return true
+            true
         } else {
-            return false
+            false
         }
     }
 

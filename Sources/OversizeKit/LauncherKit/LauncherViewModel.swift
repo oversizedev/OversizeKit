@@ -10,7 +10,7 @@ import OversizeStoreService
 import OversizeUI
 import SwiftUI
 #if canImport(LocalAuthentication)
-    import LocalAuthentication
+import LocalAuthentication
 #endif
 import Factory
 
@@ -36,12 +36,12 @@ public final class LauncherViewModel: ObservableObject {
     var isShowLockscreen: Bool {
         if FeatureFlags.secure.lookscreen ?? false {
             if settingsService.pinCodeEnabend || settingsService.biometricEnabled, authState != .unlocked {
-                return true
+                true
             } else {
-                return false
+                false
             }
         } else {
-            return false
+            false
         }
     }
 
@@ -56,10 +56,10 @@ extension LauncherViewModel {
         case specialOffer(event: Components.Schemas.SpecialOffer)
         public var id: Int {
             switch self {
-            case .onboarding: return 0
-            case .payWall: return 1
-            case .rate: return 2
-            case .specialOffer: return 3
+            case .onboarding: 0
+            case .payWall: 1
+            case .rate: 2
+            case .specialOffer: 3
             }
         }
     }
@@ -152,9 +152,9 @@ public extension LauncherViewModel {
 
     func checkDateInSelectedPeriod(startDate: Date, endDate: Date) -> Bool {
         if startDate < endDate {
-            return (startDate ... endDate).contains(Date())
+            (startDate ... endDate).contains(Date())
         } else {
-            return false
+            false
         }
     }
 

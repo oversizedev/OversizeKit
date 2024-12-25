@@ -35,32 +35,35 @@ public struct SetPINCodeView: View {
     private func stateView(state: SetPINCodeViewState) -> some View {
         switch state {
         case .oldPINField:
-            LockscreenView(pinCode: $viewModel.oldCodeField,
-                           state: $viewModel.authState,
-                           maxCount: viewModel.maxCount,
-                           title: L10n.Security.oldPINCode,
-                           errorText: viewModel.errorText)
-            {
+            LockscreenView(
+                pinCode: $viewModel.oldCodeField,
+                state: $viewModel.authState,
+                maxCount: viewModel.maxCount,
+                title: L10n.Security.oldPINCode,
+                errorText: viewModel.errorText
+            ) {
                 viewModel.chekOldPINCode()
             } biometricAction: {}
 
         case .newPINField:
-            LockscreenView(pinCode: $viewModel.newPinCodeField,
-                           state: $viewModel.authState,
-                           maxCount: viewModel.maxCount,
-                           title: L10n.Security.newPINCode,
-                           errorText: viewModel.errorText)
-            {
+            LockscreenView(
+                pinCode: $viewModel.newPinCodeField,
+                state: $viewModel.authState,
+                maxCount: viewModel.maxCount,
+                title: L10n.Security.newPINCode,
+                errorText: viewModel.errorText
+            ) {
                 viewModel.checkNewPINCode()
             } biometricAction: {}
 
         case .confirmNewPINField:
-            LockscreenView(pinCode: $viewModel.confirmNewCodeField,
-                           state: $viewModel.authState,
-                           maxCount: viewModel.maxCount,
-                           title: L10n.Security.confirmPINCode,
-                           errorText: viewModel.errorText)
-            {
+            LockscreenView(
+                pinCode: $viewModel.confirmNewCodeField,
+                state: $viewModel.authState,
+                maxCount: viewModel.maxCount,
+                title: L10n.Security.confirmPINCode,
+                errorText: viewModel.errorText
+            ) {
                 Task {
                     let result = await viewModel.checkConfirmNewPINCode()
                     switch result {

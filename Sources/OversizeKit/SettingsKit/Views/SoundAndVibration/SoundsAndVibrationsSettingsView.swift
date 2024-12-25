@@ -25,13 +25,13 @@ public struct SoundsAndVibrationsSettingsView: View {
 
     private var title: String {
         if FeatureFlags.app.sounds.valueOrFalse, FeatureFlags.app.vibration.valueOrFalse {
-            return L10n.Settings.soundsAndVibration
+            L10n.Settings.soundsAndVibration
         } else if FeatureFlags.app.sounds.valueOrFalse, !FeatureFlags.app.vibration.valueOrFalse {
-            return L10n.Settings.sounds
+            L10n.Settings.sounds
         } else if !FeatureFlags.app.sounds.valueOrFalse, FeatureFlags.app.vibration.valueOrFalse {
-            return L10n.Settings.vibration
+            L10n.Settings.vibration
         } else {
-            return ""
+            ""
         }
     }
 }
@@ -70,11 +70,11 @@ extension SoundsAndVibrationsSettingsView {
     var vibrationIcon: Image {
         switch iconStyle {
         case .line:
-            return Image.Mobile.vibration
+            Image.Mobile.vibration
         case .fill:
-            return Image.Mobile.Vibration.fill
+            Image.Mobile.Vibration.fill
         case .twoTone:
-            return Image.Mobile.Vibration.twoTone
+            Image.Mobile.Vibration.twoTone
         }
     }
 }

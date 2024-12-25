@@ -32,26 +32,26 @@ public struct AddressField: View {
 
     var isSlectedAddress: Bool {
         if let seletedAddress, !seletedAddress.isEmpty {
-            return true
+            true
         } else {
-            return false
+            false
         }
     }
 
     var addressText: String {
         if isSlectedAddress {
-            return seletedAddress ?? "Address selected"
+            seletedAddress ?? "Address selected"
         } else if let seletedLocation {
-            return "Сoordinates: \(seletedLocation.latitude), \(seletedLocation.longitude)"
+            "Сoordinates: \(seletedLocation.latitude), \(seletedLocation.longitude)"
         } else {
-            return "Address"
+            "Address"
         }
     }
 
     public var body: some View {
         Button {
             #if !os(watchOS)
-                isShowPicker.toggle()
+            isShowPicker.toggle()
             #endif
         } label: {
             VStack(alignment: .leading, spacing: .xSmall) {
@@ -98,11 +98,11 @@ public struct AddressField: View {
     private var fieldOffset: CGFloat {
         switch fieldPlaceholderPosition {
         case .default:
-            return 0
+            0
         case .adjacent:
-            return 0
+            0
         case .overInput:
-            return !isSlectedAddress ? 0 : 10
+            !isSlectedAddress ? 0 : 10
         }
     }
 }

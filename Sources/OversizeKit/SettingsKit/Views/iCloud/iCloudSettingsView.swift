@@ -48,9 +48,10 @@ extension iCloudSettingsView {
 
                 if FeatureFlags.secure.CVVCodes.valueOrFalse {
                     Switch(isOn: $settingsService.cloudKitCVVEnabled) {
-                        Row(L10n.Security.iCloudSyncCVVDescriptionCloudKit,
-                            subtitle: settingsService.cloudKitCVVEnabled ? L10n.Security.iCloudSyncCVVDescriptionCloudKit : L10n.Security.iCloudSyncCVVDescriptionLocal)
-                        {
+                        Row(
+                            L10n.Security.iCloudSyncCVVDescriptionCloudKit,
+                            subtitle: settingsService.cloudKitCVVEnabled ? L10n.Security.iCloudSyncCVVDescriptionCloudKit : L10n.Security.iCloudSyncCVVDescriptionLocal
+                        ) {
                             Image.Security.cloudLock
                                 .icon()
                                 .frame(width: 24, height: 24)

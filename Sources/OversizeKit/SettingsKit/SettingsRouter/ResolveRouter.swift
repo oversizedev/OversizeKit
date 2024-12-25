@@ -52,13 +52,13 @@ extension SettingsScreen: @preconcurrency RoutableView {
             WebView(url: url)
         case let .sendMail(to: to, subject: subject, content: content):
             #if os(iOS)
-                MailView(
-                    to: to,
-                    subject: subject,
-                    content: content
-                )
+            MailView(
+                to: to,
+                subject: subject,
+                content: content
+            )
             #else
-                EmptyView()
+            EmptyView()
             #endif
         }
     }

@@ -54,9 +54,9 @@ struct StoreFeaturesView: View {
 
     func backgroundColor(feature: PlistConfiguration.Store.StoreFeature) -> Color {
         if let color = feature.backgroundColor {
-            return Color(hex: color)
+            Color(hex: color)
         } else {
-            return Color.accent
+            Color.accent
         }
     }
 }

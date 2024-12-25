@@ -33,16 +33,16 @@ public struct AdView: View {
 
         case let .result(appAd):
             #if os(iOS)
-                Surface {
-                    isShowProduct.toggle()
-                } label: {
-                    premiumBanner(appAd: appAd)
-                }
-                .surfaceContentMargins(.xSmall)
-                .appStoreOverlay(isPresent: $isShowProduct, appId: appAd.appStoreId)
+            Surface {
+                isShowProduct.toggle()
+            } label: {
+                premiumBanner(appAd: appAd)
+            }
+            .surfaceContentMargins(.xSmall)
+            .appStoreOverlay(isPresent: $isShowProduct, appId: appAd.appStoreId)
 
             #else
-                EmptyView()
+            EmptyView()
             #endif
 
         case .loading, .error:
@@ -57,13 +57,17 @@ public struct AdView: View {
                     $0
                         .resizable()
                         .frame(width: 64, height: 64)
-                        .mask(RoundedRectangle(cornerRadius: .large,
-                                               style: .continuous))
+                        .mask(RoundedRectangle(
+                            cornerRadius: .large,
+                            style: .continuous
+                        ))
                         .overlay(
-                            RoundedRectangle(cornerRadius: 16,
-                                             style: .continuous)
-                                .stroke(lineWidth: 1)
-                                .opacity(0.15)
+                            RoundedRectangle(
+                                cornerRadius: 16,
+                                style: .continuous
+                            )
+                            .stroke(lineWidth: 1)
+                            .opacity(0.15)
                         )
                         .onTapGesture {
                             isShowProduct.toggle()

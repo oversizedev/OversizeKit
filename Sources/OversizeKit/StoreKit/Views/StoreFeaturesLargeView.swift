@@ -31,10 +31,12 @@ struct StoreFeaturesLargeView: View {
             VStack(spacing: .zero) {
                 RoundedRectangle(cornerRadius: .medium, style: .continuous)
                     .fill(
-                        LinearGradient(gradient: Gradient(colors: [Color(hex: feature.backgroundColor != nil ? feature.backgroundColor : "637DFA"),
-                                                                   Color(hex: feature.backgroundColor != nil ? feature.backgroundColor : "872BFF")]),
-                                       startPoint: .topLeading,
-                                       endPoint: .bottomTrailing)
+                        LinearGradient(
+                            gradient: Gradient(colors: [Color(hex: feature.backgroundColor != nil ? feature.backgroundColor : "637DFA"),
+                                                        Color(hex: feature.backgroundColor != nil ? feature.backgroundColor : "872BFF")]),
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
                     )
                     .frame(height: 310)
                     .overlay(alignment: feature.topScreenAlignment ?? true ? .top : .bottom) {
@@ -44,8 +46,10 @@ struct StoreFeaturesLargeView: View {
                             if let urlString = feature.screenURL, let url = URL(string: urlString) {
                                 ScreenMockup(url: url)
                                     .frame(maxWidth: 204)
-                                    .padding(feature.topScreenAlignment ?? true ? .top : .bottom,
-                                             feature.topScreenAlignment ?? true ? 40 : 70)
+                                    .padding(
+                                        feature.topScreenAlignment ?? true ? .top : .bottom,
+                                        feature.topScreenAlignment ?? true ? 40 : 70
+                                    )
                             }
                         }
                     }
@@ -131,9 +135,9 @@ struct StoreFeaturesLargeView: View {
 
     func backgroundColor(feature: PlistConfiguration.Store.StoreFeature) -> Color {
         if let color = feature.backgroundColor {
-            return Color(hex: color)
+            Color(hex: color)
         } else {
-            return Color.accent
+            Color.accent
         }
     }
 }

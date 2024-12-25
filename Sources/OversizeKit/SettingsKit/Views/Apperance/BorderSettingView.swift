@@ -45,27 +45,27 @@ public struct BorderSettingView: View {
                     if theme.borderApp {
                         VStack(spacing: Space.small.rawValue) {
                             #if os(iOS) || os(macOS)
-                                Surface {
-                                    VStack(spacing: Space.xxSmall.rawValue) {
-                                        HStack {
-                                            Text("Size")
-                                                .subheadline()
-                                                .foregroundColor(.onSurfacePrimary)
+                            Surface {
+                                VStack(spacing: Space.xxSmall.rawValue) {
+                                    HStack {
+                                        Text("Size")
+                                            .subheadline()
+                                            .foregroundColor(.onSurfacePrimary)
 
-                                            Spacer()
+                                        Spacer()
 
-                                            Text(String(format: "%.1f", theme.borderSize) + " px")
-                                                .subheadline()
-                                                .foregroundColor(.onSurfacePrimary)
-                                        }
-
-                                        Slider(value: theme.$borderSize, in: 0.5 ... 2, step: 0.5)
+                                        Text(String(format: "%.1f", theme.borderSize) + " px")
+                                            .subheadline()
+                                            .foregroundColor(.onSurfacePrimary)
                                     }
+
+                                    Slider(value: theme.$borderSize, in: 0.5 ... 2, step: 0.5)
                                 }
-                                .surfaceStyle(.secondary)
-                                .surfaceContentMargins(.small)
-                                .padding(.horizontal, Space.medium)
-                                .padding(.bottom, Space.xxSmall)
+                            }
+                            .surfaceStyle(.secondary)
+                            .surfaceContentMargins(.small)
+                            .padding(.horizontal, Space.medium)
+                            .padding(.bottom, Space.xxSmall)
 
                             #endif
 

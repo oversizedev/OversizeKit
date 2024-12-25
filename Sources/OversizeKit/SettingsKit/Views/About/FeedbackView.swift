@@ -4,7 +4,7 @@
 //
 
 #if canImport(MessageUI)
-    import MessageUI
+import MessageUI
 #endif
 import OversizeComponents
 import OversizeLocalizable
@@ -58,33 +58,33 @@ public struct FeedbackView: View {
 
             VStack(alignment: .leading) {
                 #if os(iOS)
-                    if MFMailComposeViewController.canSendMail(),
-                       let mail = Info.links?.company.email,
-                       let appVersion = Info.app.verstion,
-                       let appName = Info.app.name,
-                       let device = Info.app.device,
-                       let appBuild = Info.app.build,
-                       let systemVersion = Info.app.system
-                    {
-                        let contentPreText = "\n\n\n\n\n\n————————————————\nApp: \(appName) \(appVersion) (\(appBuild))\nDevice: \(device), \(systemVersion)\nLocale: \(Info.app.language ?? "Not init")"
-                        let subject = "Feedback"
+                if MFMailComposeViewController.canSendMail(),
+                   let mail = Info.links?.company.email,
+                   let appVersion = Info.app.verstion,
+                   let appName = Info.app.name,
+                   let device = Info.app.device,
+                   let appBuild = Info.app.build,
+                   let systemVersion = Info.app.system
+                {
+                    let contentPreText = "\n\n\n\n\n\n————————————————\nApp: \(appName) \(appVersion) (\(appBuild))\nDevice: \(device), \(systemVersion)\nLocale: \(Info.app.language ?? "Not init")"
+                    let subject = "Feedback"
 
-                        Row(L10n.Settings.feedbakAuthor) {
-                            router.present(.sendMail(to: mail, subject: subject, content: contentPreText))
-                        } leading: {
-                            mailIcon.icon()
-                        }
-                    } else {
-                        // Send author
-                        if let sendMailUrl = Info.url.developerSendMail {
-                            Link(destination: sendMailUrl) {
-                                Row(L10n.Settings.feedbakAuthor) {
-                                    mailIcon.icon()
-                                }
-                            }
-                            .buttonStyle(.row)
-                        }
+                    Row(L10n.Settings.feedbakAuthor) {
+                        router.present(.sendMail(to: mail, subject: subject, content: contentPreText))
+                    } leading: {
+                        mailIcon.icon()
                     }
+                } else {
+                    // Send author
+                    if let sendMailUrl = Info.url.developerSendMail {
+                        Link(destination: sendMailUrl) {
+                            Row(L10n.Settings.feedbakAuthor) {
+                                mailIcon.icon()
+                            }
+                        }
+                        .buttonStyle(.row)
+                    }
+                }
                 #endif
 
                 // Telegramm chat
@@ -104,33 +104,33 @@ public struct FeedbackView: View {
     var heartIcon: Image {
         switch iconStyle {
         case .line:
-            return Image.Brands.appStore
+            Image.Brands.appStore
         case .fill:
-            return Image.Brands.AppStore.fill
+            Image.Brands.AppStore.fill
         case .twoTone:
-            return Image.Brands.AppStore.twoTone
+            Image.Brands.AppStore.twoTone
         }
     }
 
     var mailIcon: Image {
         switch iconStyle {
         case .line:
-            return Image.Email.email
+            Image.Email.email
         case .fill:
-            return Image.Email.Email.fill
+            Image.Email.Email.fill
         case .twoTone:
-            return Image.Email.Email.twoTone
+            Image.Email.Email.twoTone
         }
     }
 
     var chatIcon: Image {
         switch iconStyle {
         case .line:
-            return Image.Brands.telegram
+            Image.Brands.telegram
         case .fill:
-            return Image.Brands.Telegram.fill
+            Image.Brands.Telegram.fill
         case .twoTone:
-            return Image.Brands.Telegram.twoTone
+            Image.Brands.Telegram.twoTone
         }
     }
 }

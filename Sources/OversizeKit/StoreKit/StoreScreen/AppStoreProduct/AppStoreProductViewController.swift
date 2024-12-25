@@ -4,62 +4,62 @@
 //
 
 #if os(iOS)
-    import StoreKit
-    import SwiftUI
-    import UIKit
+import StoreKit
+import SwiftUI
+import UIKit
 
-    public class AppStoreProductViewController: UIViewController {
-        private var isPresentStoreProduct: Binding<Bool>
-        private let appId: String
+public class AppStoreProductViewController: UIViewController {
+    private var isPresentStoreProduct: Binding<Bool>
+    private let appId: String
 
-        public init(isPresentStoreProduct: Binding<Bool>, appId: String) {
-            self.isPresentStoreProduct = isPresentStoreProduct
-            self.appId = appId
+    public init(isPresentStoreProduct: Binding<Bool>, appId: String) {
+        self.isPresentStoreProduct = isPresentStoreProduct
+        self.appId = appId
 
-            super.init(nibName: nil, bundle: nil)
-        }
+        super.init(nibName: nil, bundle: nil)
+    }
 
-        @available(*, unavailable)
-        required init?(coder _: NSCoder) {
-            fatalError("init(coder:) has not been implemented")
-        }
+    @available(*, unavailable)
+    required init?(coder _: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
-        override public func viewDidLoad() {
-            super.viewDidLoad()
-        }
+    override public func viewDidLoad() {
+        super.viewDidLoad()
+    }
 
-        override public func viewWillAppear(_ animated: Bool) {
-            super.viewWillAppear(animated)
-        }
+    override public func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
 
-        override public func viewWillDisappear(_ animated: Bool) {
-            super.viewWillDisappear(animated)
-        }
+    override public func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+    }
 
-        func presentStoreProduct() {
-            let storeProductViewController = SKStoreProductViewController()
-            storeProductViewController.delegate = self
+    func presentStoreProduct() {
+        let storeProductViewController = SKStoreProductViewController()
+        storeProductViewController.delegate = self
 
-            let parameters = [SKStoreProductParameterITunesItemIdentifier: appId]
-            storeProductViewController.loadProduct(withParameters: parameters) { status, error in
-                if status {
-                    self.present(storeProductViewController, animated: true, completion: nil)
-                } else {
-                    if let error {
-                        print("Error: \(error.localizedDescription)")
-                    }
+        let parameters = [SKStoreProductParameterITunesItemIdentifier: appId]
+        storeProductViewController.loadProduct(withParameters: parameters) { status, error in
+            if status {
+                self.present(storeProductViewController, animated: true, completion: nil)
+            } else {
+                if let error {
+                    print("Error: \(error.localizedDescription)")
                 }
             }
+        }
 
-            DispatchQueue.main.async {
-                self.isPresentStoreProduct.wrappedValue = false
-            }
+        DispatchQueue.main.async {
+            self.isPresentStoreProduct.wrappedValue = false
         }
     }
+}
 
-    extension AppStoreProductViewController: @preconcurrency SKStoreProductViewControllerDelegate {
-        public func productViewControllerDidFinish(_ viewController: SKStoreProductViewController) {
-            viewController.dismiss(animated: true)
-        }
+extension AppStoreProductViewController: @preconcurrency SKStoreProductViewControllerDelegate {
+    public func productViewControllerDidFinish(_ viewController: SKStoreProductViewController) {
+        viewController.dismiss(animated: true)
     }
+}
 #endif

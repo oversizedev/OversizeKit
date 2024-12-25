@@ -13,14 +13,16 @@ struct SplashScreen: View {
             Color.accent
 
             #if os(iOS)
-                if let appImage = Info.app.iconName {
-                    Image(uiImage: UIImage(named: appImage) ?? UIImage())
-                        .resizable()
-                        .frame(width: 128, height: 128)
-                        .mask(RoundedRectangle(cornerRadius: 28,
-                                               style: .continuous))
-                        .padding(.top, Space.xxLarge)
-                }
+            if let appImage = Info.app.iconName {
+                Image(uiImage: UIImage(named: appImage) ?? UIImage())
+                    .resizable()
+                    .frame(width: 128, height: 128)
+                    .mask(RoundedRectangle(
+                        cornerRadius: 28,
+                        style: .continuous
+                    ))
+                    .padding(.top, Space.xxLarge)
+            }
 
             #endif
         }

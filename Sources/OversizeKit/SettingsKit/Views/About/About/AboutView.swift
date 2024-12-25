@@ -15,7 +15,7 @@ import SwiftUI
 
 // swiftlint:disable all
 #if canImport(MessageUI)
-    import MessageUI
+import MessageUI
 #endif
 
 public struct AboutView: View {
@@ -42,42 +42,42 @@ public struct AboutView: View {
 
     var oppacity: CGFloat {
         if offset < 0 {
-            return 1
+            1
         } else if offset > 500 {
-            return 0
+            0
         } else {
-            return Double(1 / (offset * 0.01))
+            Double(1 / (offset * 0.01))
         }
     }
 
     var blur: CGFloat {
         if offset < 0 {
-            return 0
+            0
         } else {
-            return Double(offset * 0.05)
+            Double(offset * 0.05)
         }
     }
 
     #if os(iOS)
-        let scale = UIScreen.main.scale
+    let scale = UIScreen.main.scale
     #else
-        let scale: CGFloat = 2
+    let scale: CGFloat = 2
     #endif
 
     public var body: some View {
         #if os(iOS)
-            Page(L10n.Settings.about) {
-                list
-                    .surfaceContentRowMargins()
-                    .task {
-                        await viewModel.fetchApps()
-                    }
-            }
-            .backgroundSecondary()
+        Page(L10n.Settings.about) {
+            list
+                .surfaceContentRowMargins()
+                .task {
+                    await viewModel.fetchApps()
+                }
+        }
+        .backgroundSecondary()
 
         #else
-            list
-                .navigationTitle(L10n.Settings.about)
+        list
+            .navigationTitle(L10n.Settings.about)
         #endif
     }
 
@@ -101,13 +101,17 @@ public struct AboutView: View {
                                     $0
                                         .resizable()
                                         .frame(width: 74, height: 74)
-                                        .mask(RoundedRectangle(cornerRadius: .large,
-                                                               style: .continuous))
+                                        .mask(RoundedRectangle(
+                                            cornerRadius: .large,
+                                            style: .continuous
+                                        ))
                                         .overlay(
-                                            RoundedRectangle(cornerRadius: 16,
-                                                             style: .continuous)
-                                                .stroke(lineWidth: 1)
-                                                .opacity(0.15)
+                                            RoundedRectangle(
+                                                cornerRadius: 16,
+                                                style: .continuous
+                                            )
+                                            .stroke(lineWidth: 1)
+                                            .opacity(0.15)
                                         )
 
                                 }, placeholder: {
@@ -215,42 +219,42 @@ public struct AboutView: View {
                     }
 
                     #if os(iOS)
-                        if MFMailComposeViewController.canSendMail(),
-                           let mail = Info.links?.company.email,
-                           let appVersion = Info.app.verstion,
-                           let appName = Info.app.name,
-                           let device = Info.app.device,
-                           let appBuild = Info.app.build,
-                           let systemVersion = Info.app.system
-                        {
-                            let contentPreText = "\n\n\n\n\n\n————————————————\nApp: \(appName) \(appVersion) (\(appBuild))\nDevice: \(device), \(systemVersion)\nLocale: \(Info.app.language ?? "Not init")"
-                            let subject = "Feedback"
+                    if MFMailComposeViewController.canSendMail(),
+                       let mail = Info.links?.company.email,
+                       let appVersion = Info.app.verstion,
+                       let appName = Info.app.name,
+                       let device = Info.app.device,
+                       let appBuild = Info.app.build,
+                       let systemVersion = Info.app.system
+                    {
+                        let contentPreText = "\n\n\n\n\n\n————————————————\nApp: \(appName) \(appVersion) (\(appBuild))\nDevice: \(device), \(systemVersion)\nLocale: \(Info.app.language ?? "Not init")"
+                        let subject = "Feedback"
 
-                            Row(L10n.About.suggestIdea) {
-                                isShowMail.toggle()
-                            } leading: {
-                                ideaSettingsIcon.icon()
-                            }
-
-                            .buttonStyle(.row)
-                            .sheet(isPresented: $isShowMail) {
-                                MailView(to: mail, subject: subject, content: contentPreText)
-                            }
+                        Row(L10n.About.suggestIdea) {
+                            isShowMail.toggle()
+                        } leading: {
+                            ideaSettingsIcon.icon()
                         }
+
+                        .buttonStyle(.row)
+                        .sheet(isPresented: $isShowMail) {
+                            MailView(to: mail, subject: subject, content: contentPreText)
+                        }
+                    }
                     #endif
 
                     #if os(iOS)
-                        if let shareUrl = Info.url.appInstallShare, let id = Info.app.appStoreID, !id.isEmpty {
-                            Row(L10n.Settings.shareApplication) {
-                                isSharePresented.toggle()
-                            } leading: {
-                                shareSettingsIcon.icon()
-                            }
-                            .sheet(isPresented: $isSharePresented) {
-                                ActivityViewController(activityItems: [shareUrl])
-                                    .presentationDetents([.medium, .large])
-                            }
+                    if let shareUrl = Info.url.appInstallShare, let id = Info.app.appStoreID, !id.isEmpty {
+                        Row(L10n.Settings.shareApplication) {
+                            isSharePresented.toggle()
+                        } leading: {
+                            shareSettingsIcon.icon()
                         }
+                        .sheet(isPresented: $isSharePresented) {
+                            ActivityViewController(activityItems: [shareUrl])
+                                .presentationDetents([.medium, .large])
+                        }
+                    }
                     #endif
                 }
             }
@@ -496,33 +500,33 @@ public struct AboutView: View {
     var rateSettingsIcon: Image {
         switch iconStyle {
         case .line:
-            return Image.Base.heart
+            Image.Base.heart
         case .fill:
-            return Image.Base.Heart.fill
+            Image.Base.Heart.fill
         case .twoTone:
-            return Image.Base.Heart.TwoTone.fill
+            Image.Base.Heart.TwoTone.fill
         }
     }
 
     var ideaSettingsIcon: Image {
         switch iconStyle {
         case .line:
-            return Image.Electricity.lamp
+            Image.Electricity.lamp
         case .fill:
-            return Image.Electricity.Lamp.fill
+            Image.Electricity.Lamp.fill
         case .twoTone:
-            return Image.Electricity.Lamp.TwoTone.fill
+            Image.Electricity.Lamp.TwoTone.fill
         }
     }
 
     var shareSettingsIcon: Image {
         switch iconStyle {
         case .line:
-            return Image.Base.send
+            Image.Base.send
         case .fill:
-            return Image.Base.Send.fill
+            Image.Base.Send.fill
         case .twoTone:
-            return Image.Base.Send.TwoTone.fill
+            Image.Base.Send.TwoTone.fill
         }
     }
 }

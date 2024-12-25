@@ -4,7 +4,7 @@
 //
 
 #if canImport(MessageUI)
-    import MessageUI
+import MessageUI
 #endif
 import OversizeComponents
 import OversizeLocalizable
@@ -53,22 +53,22 @@ public struct OurResorsesView: View {
     var figmaIcon: Image {
         switch iconStyle {
         case .line:
-            return Image.Brands.figma
+            Image.Brands.figma
         case .fill:
-            return Image.Brands.figma
+            Image.Brands.figma
         case .twoTone:
-            return Image.Brands.figma
+            Image.Brands.figma
         }
     }
 
     var githubIcon: Image {
         switch iconStyle {
         case .line:
-            return Image.Brands.github
+            Image.Brands.github
         case .fill:
-            return Image.Brands.github
+            Image.Brands.github
         case .twoTone:
-            return Image.Brands.github
+            Image.Brands.github
         }
     }
 }
