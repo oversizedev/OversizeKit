@@ -18,13 +18,13 @@ public class AdViewModel: ObservableObject {
     public init() {}
 
     public func fetchAd() async {
-        let result = await networkService.fetchAds()
+        guard let id = Info.app.appStoreIDInt else {
+            state = .error(.network(type: .unknown))
+            return
+        }
+        let result = await networkService.fetchAd(appId: id)
         switch result {
-        case let .success(ads):
-            guard let ad = ads.filter({ $0.appStoreId != Info.app.appStoreID }).randomElement() else {
-                state = .error(.custom(title: "Not ad"))
-                return
-            }
+        case let .success(ad):
             state = .result(ad)
         case let .failure(error):
             state = .error(error)

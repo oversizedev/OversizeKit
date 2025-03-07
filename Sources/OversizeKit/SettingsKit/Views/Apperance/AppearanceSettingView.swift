@@ -27,35 +27,36 @@ public struct AppearanceSettingView: View {
     public init() {}
 
     public var body: some View {
-        #if os(iOS)
         Page(L10n.Settings.apperance) {
-            iOSSettings
+            settings
                 .surfaceContentRowMargins()
         }
         .backgroundSecondary()
-
-        #else
-        macSettings
-        #endif
     }
 
-    #if os(iOS)
-    private var iOSSettings: some View {
+    private var settings: some View {
         LazyVStack(alignment: .leading, spacing: 0) {
             apperance
+                .padding(.top, .xxxSmall)
 
+            #if os(iOS)
             accentColor
+            #endif
 
             advanded
 
+            #if os(iOS)
             if iconSettings.iconNames.count > 1 {
                 appIcon
             }
+            #endif
         }
         .preferredColorScheme(theme.appearance.colorScheme)
-        .accentColor(theme.accentColor)
+        #if os(iOS)
+            .accentColor(theme.accentColor)
+        #elseif os(macOS)
+        #endif
     }
-    #endif
 
     private var macSettings: some View {
         VStack(alignment: .center, spacing: 0) {
@@ -96,7 +97,9 @@ public struct AppearanceSettingView: View {
                         theme.appearance = appearance
                     }
                 }
-            }.padding(.vertical, .xSmall)
+            }
+            .padding(.vertical, .xSmall)
+            .padding(.horizontal, .small)
         }
     }
 

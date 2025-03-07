@@ -25,7 +25,7 @@ public struct StoreInstuctinsView: View {
 
     public var body: some View {
         ScrollViewReader { value in
-            #if os(iOS)
+            #if os(iOS) || os(macOS)
             PageView { offset = $0 } content: {
                 Group {
                     switch viewModel.state {

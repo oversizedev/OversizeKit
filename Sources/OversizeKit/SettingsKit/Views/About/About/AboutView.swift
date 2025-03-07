@@ -92,7 +92,7 @@ public struct AboutView: View {
                             .frame(width: 74, height: 74)
                     }
                 case let .result(apps, _):
-                    ForEach(apps, id: \.appStoreId) { app in
+                    ForEach(apps, id: \.id) { app in
                         Button {
                             isPresentStoreProduct = true
                         } label: {

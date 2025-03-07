@@ -11,14 +11,14 @@ let remoteDependencies: [PackageDescription.Package.Dependency] = [
     .package(url: "https://github.com/oversizedev/OversizeLocalizable.git", .upToNextMajor(from: "1.4.0")),
     .package(url: "https://github.com/oversizedev/OversizeComponents.git", .upToNextMajor(from: "2.0.0")),
     .package(url: "https://github.com/oversizedev/OversizeResources.git", .upToNextMajor(from: "2.0.0")),
-    .package(url: "https://github.com/oversizedev/OversizeNetwork.git", .upToNextMajor(from: "0.4.0")),
+    .package(url: "https://github.com/oversizedev/OversizeNetwork.git", .upToNextMajor(from: "1.0.0")),
     .package(url: "https://github.com/oversizedev/OversizeModels.git", .upToNextMajor(from: "0.1.0")),
     .package(url: "https://github.com/oversizedev/OversizeRouter.git", .upToNextMajor(from: "0.1.0")),
     .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "2.1.3")),
     .package(url: "https://github.com/lorenzofiamingo/swiftui-cached-async-image.git", .upToNextMajor(from: "2.1.1")),
 ]
 
-let developmentDependencies: [PackageDescription.Package.Dependency] = [
+let localDependencies: [PackageDescription.Package.Dependency] = [
     .package(name: "OversizeUI", path: "../OversizeUI"),
     .package(name: "OversizeServices", path: "../OversizeServices"),
     .package(name: "OversizeLocalizable", path: "../OversizeLocalizable"),
@@ -32,11 +32,7 @@ let developmentDependencies: [PackageDescription.Package.Dependency] = [
     .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "2.1.3")),
 ]
 
-var dependencies: [PackageDescription.Package.Dependency] = remoteDependencies
-
-if ProcessInfo.processInfo.environment["BUILD_MODE"] == "DEV" {
-    dependencies = developmentDependencies
-}
+let dependencies: [PackageDescription.Package.Dependency] = remoteDependencies
 
 let package = Package(
     name: "OversizeKit",

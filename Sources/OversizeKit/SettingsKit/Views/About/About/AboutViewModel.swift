@@ -21,7 +21,7 @@ public class AboutViewModel: ObservableObject {
         async let resultApps = networkService.fetchApps()
         async let resultInfo = networkService.fetchInfo()
         if case let .success(apps) = await resultApps, case let .success(info) = await resultInfo {
-            state = .result(apps.filter { $0.appStoreId != Info.app.appStoreID }, info)
+            state = .result(apps, info)
         } else {
             state = .error(.network(type: .noResponse))
         }
@@ -32,7 +32,7 @@ extension AboutViewModel {
     enum State {
         case initial
         case loading
-        case result([Components.Schemas.AppShort], Components.Schemas.Info)
+        case result([Components.Schemas.App], Components.Schemas.Info)
         case error(AppError)
     }
 }

@@ -8,15 +8,15 @@ import OversizeLocalizable
 import OversizeResources
 import OversizeServices
 import OversizeStoreService
-
 import OversizeUI
 import SwiftUI
 
-#if os(iOS)
+#if os(iOS) || os(macOS)
 public struct StoreView: View {
     @StateObject private var viewModel: StoreViewModel
     @Environment(\.presentationMode) private var presentationMode
     @Environment(\.verticalSizeClass) private var verticalSizeClass
+    @Environment(\.platform) private var platform
     @Environment(\.isPortrait) private var isPortrait
     private var isClosable = true
     @State var isShowFireworks = false
@@ -33,12 +33,18 @@ public struct StoreView: View {
                     contentPlaceholder()
                 case let .result(data):
                     content(data: data)
+                        .if(platform == .macOS) { view in
+                            view.padding(.top, 24)
+                        }
                 case let .error(error):
                     ErrorView(error)
                 }
             }
             .paddingContent(.horizontal)
         }
+        #if os(macOS)
+        .backgroundSecondary()
+        #endif
 //            .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
 //            .titleLabel {
 //                PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: .medium)

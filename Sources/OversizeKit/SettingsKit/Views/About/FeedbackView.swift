@@ -16,13 +16,15 @@ import SwiftUI
 
 public struct FeedbackView: View {
     @Environment(Router<SettingsScreen>.self) var router
-    @Environment(\.iconStyle) var iconStyle: IconStyle
     public init() {}
 
     public var body: some View {
         Page("Feedback") {
             VStack(spacing: .large) {
-                help
+                SectionView {
+                    FeedbackViewRows()
+                }
+                .sectionContentCompactRowMargins()
 
                 hero
                     .padding(.bottom, .medium)
@@ -44,9 +46,13 @@ public struct FeedbackView: View {
         AsyncIllustrationView("heros/dog.png")
             .frame(width: 156, height: 156)
     }
+}
 
-    private var help: some View {
-        SectionView {
+struct FeedbackViewRows: View {
+    @Environment(\.iconStyle) var iconStyle: IconStyle
+
+    var body: some View {
+        Group {
             if let reviewUrl = Info.url.appStoreReview, let id = Info.app.appStoreID, !id.isEmpty {
                 Link(destination: reviewUrl) {
                     Row(L10n.Settings.feedbakAppStore) {
@@ -98,7 +104,6 @@ public struct FeedbackView: View {
                 }
             }
         }
-        .sectionContentCompactRowMargins()
     }
 
     var heartIcon: Image {

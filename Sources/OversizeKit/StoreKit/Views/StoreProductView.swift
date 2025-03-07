@@ -16,6 +16,7 @@ public struct StoreProductView: View {
     }
 
     @Injected(\.storeKitService) private var store: StoreKitService
+    @Environment(\.platform) private var platform
     @State var isPurchased: Bool = false
 
     @Binding var isSelected: Bool
@@ -170,7 +171,6 @@ public struct StoreProductView: View {
                 .padding(.vertical, .small)
                 .padding(.horizontal, 18)
             case .collumn:
-
                 VStack(spacing: .zero) {
                     Text(product.displayMonthsCount)
                         .title2()
@@ -191,7 +191,8 @@ public struct StoreProductView: View {
                             .foregroundColor(.onSurfaceSecondary)
                             .padding(.top, .xxxSmall)
                     }
-                    .padding(.top, .xxxSmall)
+
+                    .padding(.top, platform == .macOS ? .zero : .xxxSmall)
 
                     RoundedRectangle(cornerRadius: 1)
                         .fill(Color.backgroundTertiary)
@@ -261,16 +262,17 @@ public struct StoreProductView: View {
 
                 Text(currency + product.displayMonthPrice)
                     .subheadline(.semibold)
-                    .padding(.top, .xxxSmall)
+                    .padding(.top, platform == .macOS ? .zero : .xxxSmall)
 
                 Text(product.displayMonthPricePeriod)
                     .caption2()
-                    .padding(.top, .xxxSmall)
+                    .padding(.top, platform == .macOS ? .zero : .xxxSmall)
             }
             .foregroundColor(.onSurfaceTertiary)
-            .padding(.vertical, .xxSmall)
+            .padding(.vertical, platform == .macOS ? .zero : .xxSmall)
+            .frame(maxHeight: .infinity)
 
-            #if os(iOS)
+            #if os(iOS) || os(macOS)
             if isHaveSale, !isPurchased {
                 Text("Save " + saleProcent + "%")
                     .caption2(.bold)
@@ -280,16 +282,13 @@ public struct StoreProductView: View {
                     .background {
                         RoundedRectangle(cornerRadius: 2, style: .continuous)
                             .fill(Color.success)
-                            .cornerRadius(8, corners: [.bottomLeft, .bottomRight])
+                            .cornerRadius(platform == .macOS ? 4 : 8, corners: [.bottomLeft, .bottomRight])
                     }
                     .padding(.horizontal, 2)
                     .padding(.bottom, 2)
             }
-            #else
-            EmptyView()
             #endif
         }
-        .frame(maxHeight: .infinity)
     }
 
     var trailingLabel: some View {
@@ -321,18 +320,18 @@ public struct StoreProductView: View {
 
     var labelBackground: some View {
         Group {
-            #if os(iOS)
+            #if os(iOS) || os(macOS)
             if isHaveIntroductoryOffer, type == .row {
-                RoundedRectangle(cornerRadius: 4, style: .continuous)
+                RoundedRectangle(cornerRadius: platform == .macOS ? 2 : 4, style: .continuous)
                     .fill(Color.surfacePrimary)
-                    .cornerRadius(10, corners: [.bottomLeft, .bottomRight])
+                    .cornerRadius(platform == .macOS ? 5 : 10, corners: [.bottomLeft, .bottomRight])
             } else {
-                RoundedRectangle(cornerRadius: 10, style: .continuous)
+                RoundedRectangle(cornerRadius: platform == .macOS ? 5 : 10, style: .continuous)
                     .fill(Color.surfacePrimary)
                     .overlay {
                         if type == .collumn, !isSelected {
-                            RoundedRectangle(cornerRadius: 12, style: .continuous)
-                                .strokeBorder(Color.backgroundTertiary, lineWidth: 2)
+                            RoundedRectangle(cornerRadius: platform == .macOS ? 6 : 12, style: .continuous)
+                                .strokeBorder(Color.backgroundTertiary, lineWidth: platform == .macOS ? 1 : 2)
                                 .padding(-2)
                         }
                     }
@@ -344,11 +343,14 @@ public struct StoreProductView: View {
     }
 
     var background: some View {
-        RoundedRectangle(cornerRadius: 12, style: .continuous)
+        RoundedRectangle(cornerRadius: platform == .macOS ? 6 : 12, style: .continuous)
             .fill(topLabelbackgroundColor)
             .overlay {
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .strokeBorder(backgroundStrokeBorderColor, lineWidth: 2)
+                RoundedRectangle(cornerRadius: platform == .macOS ? 6 : 12, style: .continuous)
+                    .strokeBorder(
+                        backgroundStrokeBorderColor,
+                        lineWidth: platform == .macOS ? 1 : 2
+                    )
             }
     }
 

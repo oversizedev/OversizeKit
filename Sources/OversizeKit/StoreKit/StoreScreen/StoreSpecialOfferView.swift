@@ -19,24 +19,24 @@ public struct StoreSpecialOfferView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.isPremium) private var isPremium
     @StateObject private var viewModel: StoreViewModel
-    @AppStorage("AppState.LastClosedSpecialOfferSheet") private var lastClosedSpecialOffer: String = "0"
+    @AppStorage("AppState.LastClosedSpecialOfferSheet") private var lastClosedSpecialOffer: Int = .init()
 
     @State private var isShowAllPlans = false
     @State private var offset: CGFloat = 0
-    private let event: Components.Schemas.SpecialOffer
+    private let event: Components.Schemas.SaleOffer
 
     @State var trialDaysPeriodText: String = ""
     @State var salePercent: Decimal = 0
 
-    public init(event: Components.Schemas.SpecialOffer) {
+    public init(event: Components.Schemas.SaleOffer) {
         self.event = event
         _viewModel = StateObject(wrappedValue: StoreViewModel(specialOfferMode: true))
     }
 
     public var body: some View {
-        #if os(iOS)
+        #if os(iOS) || os(macOS)
         Group {
-            if #available(iOS 16.0, *) {
+            if #available(iOS 16.0, macOS 13.0, *) {
                 newPage
             } else {
                 oldPage
@@ -56,7 +56,7 @@ public struct StoreSpecialOfferView: View {
         #endif
     }
 
-    @available(iOS 16.0, *)
+    @available(iOS 16.0, macOS 13.0, *)
     var newPage: some View {
         NavigationStack {
             Page(badgeText, onScroll: handleOffset) {

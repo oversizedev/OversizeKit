@@ -14,6 +14,9 @@ import SwiftUI
 public struct PrmiumBannerRow: View {
     @Environment(\.colorScheme) var colorScheme
     @StateObject private var viewModel: StoreViewModel
+    #if os(macOS)
+    @Environment(\.openWindow) var openWindow
+    #endif
 
     @State var showModal = false
 
@@ -23,6 +26,7 @@ public struct PrmiumBannerRow: View {
 
     public var body: some View {
         VStack {
+            #if os(iOS)
             NavigationLink {
                 StoreView()
                     .closable(false)
@@ -34,6 +38,18 @@ public struct PrmiumBannerRow: View {
                 }
             }
             .buttonStyle(.row)
+            #elseif os(macOS)
+            Button {
+                openWindow(id: "Window.StoreView")
+            } label: {
+                if viewModel.isPremium || viewModel.isPremiumActivated {
+                    subscriptionRow
+                } else {
+                    banner
+                }
+            }
+            .buttonStyle(.row)
+            #endif
         }
         .task {
             await viewModel.fetchData()
@@ -43,13 +59,7 @@ public struct PrmiumBannerRow: View {
     var subscriptionRow: some View {
         HStack(spacing: Space.small) {
             HStack {
-                #if os(iOS)
-                Resource.Store.zap
-                    .padding(.horizontal, Space.xxSmall)
-                    .padding(.vertical, Space.xxSmall)
-                #endif
-
-                #if os(macOS)
+                #if os(iOS) || os(macOS)
                 Resource.Store.zap
                     .padding(.horizontal, Space.xxSmall)
                     .padding(.vertical, Space.xxSmall)

@@ -84,7 +84,7 @@ public struct CreateEventView: View {
         .sheet(item: $viewModel.sheet) { sheet in
             resolveSheet(sheet: sheet)
         }
-        .onChange(of: viewModel.span) { _ in
+        .onChange(of: viewModel.span) { _, _ in
             Task {
                 _ = await viewModel.save()
                 dismiss()
@@ -314,10 +314,17 @@ public struct CreateEventView: View {
                     }
 
                     if let location = viewModel.location {
-                        let region = MKCoordinateRegion(center: location, latitudinalMeters: 10000, longitudinalMeters: 10000)
-                        let annotations = [MapPreviewPoint(name: "\(viewModel.locationName ?? "")", coordinate: location)]
-                        Map(coordinateRegion: .constant(region), annotationItems: annotations) {
-                            MapMarker(coordinate: $0.coordinate)
+                        let region = MKCoordinateRegion(
+                            center: location,
+                            latitudinalMeters: 10000,
+                            longitudinalMeters: 10000
+                        )
+
+                        Map(initialPosition: .region(region)) {
+                            Marker(
+                                viewModel.locationName ?? "",
+                                coordinate: location
+                            )
                         }
                         .frame(height: 130)
                         .cornerRadius(.small)

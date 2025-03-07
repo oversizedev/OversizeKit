@@ -29,16 +29,13 @@ public struct SettingsView<AppSection: View, HeadSection: View>: View {
     }
 
     public var body: some View {
-        #if os(iOS)
-
         Page(L10n.Settings.title) {
+            #if os(iOS)
             iOSSettings
+            #else
+            macSettings
+            #endif
         }.backgroundSecondary()
-
-        #else
-        macSettings
-
-        #endif
     }
 }
 
@@ -320,14 +317,24 @@ extension SettingsView {
 }
 
 extension SettingsView {
+    #if os(macOS)
     private var macSettings: some View {
         VStack(alignment: .center, spacing: 0) {
-            Text("Mac")
+            if let stoteKit = FeatureFlags.app.storeKit {
+                if stoteKit {
+                    SectionView {
+                        PrmiumBannerRow()
+                    }
+                    .surfaceContentMargins(.zero)
+                }
+            }
+            SectionView("Feedback") {
+                FeedbackViewRows()
+            }
+            .surfaceContentRowMargins()
         }
-        .frame(width: 400, height: 300)
-        .navigationTitle(L10n.Settings.apperance)
-        .preferredColorScheme(theme.appearance.colorScheme)
     }
+    #endif
 }
 
 public extension SettingsView where HeadSection == EmptyView {

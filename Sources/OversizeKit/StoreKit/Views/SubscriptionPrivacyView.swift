@@ -12,6 +12,7 @@ import SwiftUI
 
 struct SubscriptionPrivacyView: View {
     let products: StoreKitProducts
+    @Environment(\.platform) private var platform
 
     @State var isShowPrivacy = false
     @State var isShowTerms = false
@@ -27,13 +28,16 @@ struct SubscriptionPrivacyView: View {
                     .caption()
                     .foregroundColor(Color.onSurfaceSecondary)
 
-                #if os(iOS)
+                #if os(iOS) || os(macOS)
                 HStack(spacing: .xxSmall) {
                     Button("Restore") {
                         Task {
                             try? await AppStore.sync()
                         }
                     }
+                    #if os(macOS)
+                    .buttonStyle(.plain)
+                    #endif
 
                     Text("•")
 
@@ -44,8 +48,20 @@ struct SubscriptionPrivacyView: View {
                             Text("Privacy")
                         }
                         .sheet(isPresented: $isShowPrivacy) {
+                            #if os(macOS)
+                            VStack {
+                                WebView(url: privacyUrl)
+                                    .frame(width: 500, height: 600)
+                            }
+                            .frame(width: 500, height: 600, alignment: .center)
+                            #else
                             WebView(url: privacyUrl)
+
+                            #endif
                         }
+                        #if os(macOS)
+                        .buttonStyle(.plain)
+                        #endif
                     }
 
                     Text("•")
@@ -57,8 +73,20 @@ struct SubscriptionPrivacyView: View {
                             Text("Terms")
                         }
                         .sheet(isPresented: $isShowTerms) {
+                            #if os(macOS)
+                            VStack {
+                                WebView(url: termsOfUde)
+                                    .frame(width: 500, height: 600)
+                            }
+                            .frame(width: 500, height: 600, alignment: .center)
+                            #else
                             WebView(url: termsOfUde)
+
+                            #endif
                         }
+                        #if os(macOS)
+                        .buttonStyle(.plain)
+                        #endif
                     }
                 }
                 .subheadline(.bold)
@@ -69,7 +97,7 @@ struct SubscriptionPrivacyView: View {
             .multilineTextAlignment(.center)
         }
         .surfaceBorderColor(Color.surfaceSecondary)
-        .surfaceBorderWidth(2)
+        .surfaceBorderWidth(platform == .macOS ? 1 : 2)
     }
 }
 
