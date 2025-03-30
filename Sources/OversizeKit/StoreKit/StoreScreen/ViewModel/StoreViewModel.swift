@@ -30,10 +30,7 @@ public class StoreViewModel: ObservableObject {
     #endif
 
     @Published var state = State.initial
-    // @Published var state: LoadingViewState<StoreKitProducts> = .idle
     @Published var featuresState: LoadingViewState<[Components.Schemas.Feature]> = .idle
-
-    public var updateListenerTask: Task<Void, Error>?
 
     @Published var currentSubscription: Product?
     @Published var status: Product.SubscriptionInfo.Status?
@@ -53,6 +50,8 @@ public class StoreViewModel: ObservableObject {
             []
         }
     }
+
+    public var updateListenerTask: Task<Void, Error>?
 
     public init(specialOfferMode: Bool = false) {
         // Start a transaction listener as close to app launch as possible so you don't miss any transactions.

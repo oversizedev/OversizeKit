@@ -103,25 +103,6 @@ public struct StoreProductView: View {
         }
     }
 
-    var collumnProduct: some View {
-        Group {
-            HStack {
-                Spacer()
-                Text(product.description)
-                    .caption2(.heavy)
-                    .foregroundColor(topLabelForegroundColor)
-                    .padding(.leading, 20)
-                    .padding(.top, .xSmall)
-                    .padding(.bottom, 10)
-                Spacer()
-            }
-
-            label
-                .padding(.horizontal, 2)
-                .padding(.vertical, 2)
-        }
-    }
-
     var topLabelCollumn: some View {
         HStack {
             Spacer()
@@ -141,9 +122,9 @@ public struct StoreProductView: View {
             Text(trialLabel.uppercased())
                 .caption2(.heavy)
                 .foregroundColor(topLabelForegroundColor)
-                .padding(.leading, 20)
-                .padding(.top, .xSmall)
-                .padding(.bottom, 10)
+                .padding(.leading, platform == .macOS ? 14 : 20)
+                .padding(.top, platform == .macOS ? .xxSmall : .xSmall)
+                .padding(.bottom, platform == .macOS ? 6 : 10)
 
             Spacer()
 
@@ -168,8 +149,8 @@ public struct StoreProductView: View {
                     leadingLabel
                     trailingLabel
                 }
-                .padding(.vertical, .small)
-                .padding(.horizontal, 18)
+                .padding(.vertical, platform == .macOS ? .xxSmall : .small)
+                .padding(.horizontal, platform == .macOS ? 12 : 18)
             case .collumn:
                 VStack(spacing: .zero) {
                     Text(product.displayMonthsCount)
@@ -227,7 +208,7 @@ public struct StoreProductView: View {
 
     var leadingLabel: some View {
         HStack {
-            VStack(alignment: .leading, spacing: .xxSmall) {
+            VStack(alignment: .leading, spacing: platform == .macOS ? .xxxSmall : .xxSmall) {
                 HStack {
                     Text(product.displayName)
                         .headline()
@@ -238,7 +219,7 @@ public struct StoreProductView: View {
                             .caption2(.bold)
                             .foregroundColor(.onPrimary)
                             .padding(.horizontal, .xxSmall)
-                            .padding(.vertical, .xxxSmall)
+                            .padding(.vertical, platform == .macOS ? 1 : 4)
                             .background {
                                 Capsule()
                                     .fill(Color.success)

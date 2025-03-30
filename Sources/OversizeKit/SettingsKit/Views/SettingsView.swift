@@ -70,6 +70,7 @@ extension SettingsView {
         }
     }
 
+    @available(iOS 15.0, *)
     private var app: some View {
         SectionView("General") {
             VStack(spacing: .zero) {
@@ -128,6 +129,11 @@ extension SettingsView {
                 appSection
             }
         }
+    }
+
+    @available(macOS 13.0, *)
+    private var macGeneral: some View {
+        appSection
     }
 
     var apperanceSettingsIcon: Image {
@@ -317,7 +323,7 @@ extension SettingsView {
 }
 
 extension SettingsView {
-    #if os(macOS)
+    @available(macOS 13.0, *)
     private var macSettings: some View {
         VStack(alignment: .center, spacing: 0) {
             if let stoteKit = FeatureFlags.app.storeKit {
@@ -328,13 +334,15 @@ extension SettingsView {
                     .surfaceContentMargins(.zero)
                 }
             }
+
+            macGeneral
+
             SectionView("Feedback") {
                 FeedbackViewRows()
             }
             .surfaceContentRowMargins()
         }
     }
-    #endif
 }
 
 public extension SettingsView where HeadSection == EmptyView {

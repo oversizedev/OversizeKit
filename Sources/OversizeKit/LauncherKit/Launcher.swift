@@ -38,7 +38,7 @@ public struct Launcher<Content: View, Onboarding: View>: View {
                 fullScreenCover(sheet: $0)
                     .systemServices()
                 #if os(macOS)
-                    .frame(width: 840, height: 672)
+                    .frame(width: viewModel.activeFullScreenSheet == .onboarding ? 840 : 500, height: 672)
                 // .interactiveDismissDisabled(!viewModel.appStateService.isCompletedOnbarding)
                 #endif
             }

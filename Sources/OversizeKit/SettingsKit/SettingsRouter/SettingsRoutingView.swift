@@ -1,12 +1,13 @@
 //
 // Copyright © 2025 Alexander Romanov
-// SettingsRoutingView.swift, created on 05.03.2025
+// SettingsTabRoutingView.swift, created on 07.03.2025
 //
 
 import OversizeRouter
+import OversizeUI
 import SwiftUI
 
-public struct SettingsTabRoutingView: View {
+public struct SettingsTabRoutingView<AppSettingsViewType: View>: View {
     @State private var router: TabRouter<SettingsTab> = .init(
         selection: .general,
         tabs: [
@@ -22,9 +23,9 @@ public struct SettingsTabRoutingView: View {
     private var height: CGFloat {
         switch router.selection {
         case .general:
-            500
+            450
         case .apperance:
-            460
+            450
         case .syncrhonization:
             100
         case .security:
@@ -36,11 +37,39 @@ public struct SettingsTabRoutingView: View {
         }
     }
 
-    public init() {}
+    private let appSettingsViewBuilder: () -> AppSettingsViewType
+
+    public init(@ViewBuilder appSettingsViewBuilder: @escaping () -> AppSettingsViewType) {
+        self.appSettingsViewBuilder = appSettingsViewBuilder
+    }
 
     public var body: some View {
         RoutingTabView(router: router)
             .frame(width: 550, height: height)
+            .environment(\.appSettingsViewBuilder, makeViewBuilderBox())
+    }
+
+    private func makeViewBuilderBox() -> ViewBuilderBox {
+        ViewBuilderBox(appSettingsViewBuilder: { AnyView(appSettingsViewBuilder()) })
+    }
+}
+
+public class ViewBuilderBox {
+    public let appSettingsViewBuilder: () -> AnyView
+
+    public init(appSettingsViewBuilder: @escaping () -> AnyView) {
+        self.appSettingsViewBuilder = appSettingsViewBuilder
+    }
+}
+
+private struct AppSettingsViewBuilderKey: @preconcurrency EnvironmentKey {
+    @MainActor static let defaultValue = ViewBuilderBox(appSettingsViewBuilder: { AnyView(EmptyView()) })
+}
+
+public extension EnvironmentValues {
+    var appSettingsViewBuilder: ViewBuilderBox {
+        get { self[AppSettingsViewBuilderKey.self] }
+        set { self[AppSettingsViewBuilderKey.self] = newValue }
     }
 }
 
@@ -48,10 +77,8 @@ extension SettingsTab: TabableView {
     public func view() -> some View {
         switch self {
         case .general:
-            RoutingView<SettingsView, SettingsScreen> {
-                SettingsView {
-                    // Нужно сюда передать View, например AppSettingsView
-                }
+            RoutingView<SettingsGenericWrapper, SettingsScreen> {
+                SettingsGenericWrapper()
             }
             .systemServices()
         case .security:
@@ -79,6 +106,19 @@ extension SettingsTab: TabableView {
                 AboutView()
             }
             .systemServices()
+        }
+    }
+}
+
+// Generic wrapper to handle passing the AppSettingsView to SettingsView
+public struct SettingsGenericWrapper: View {
+    @Environment(\.appSettingsViewBuilder) private var appSettingsViewBuilder
+
+    public init() {}
+
+    public var body: some View {
+        SettingsView {
+            appSettingsViewBuilder.appSettingsViewBuilder()
         }
     }
 }
