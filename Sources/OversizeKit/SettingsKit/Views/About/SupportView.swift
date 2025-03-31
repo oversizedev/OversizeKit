@@ -29,15 +29,17 @@ public struct SupportView: View {
             }
         }
         .backgroundSecondary()
-        .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                Button {
-                    router.dismissSheet()
-                } label: {
-                    Image.Base.close.icon()
+        #if !os(macOS)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button {
+                        router.dismissSheet()
+                    } label: {
+                        Image.Base.close.icon()
+                    }
                 }
             }
-        }
+        #endif
     }
 
     private var hero: some View {

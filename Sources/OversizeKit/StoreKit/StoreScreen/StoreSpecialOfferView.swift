@@ -17,26 +17,27 @@ import SwiftUI
 public struct StoreSpecialOfferView: View {
     @Environment(\.screenSize) private var screenSize
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.platform) private var platform
     @Environment(\.isPremium) private var isPremium
     @StateObject private var viewModel: StoreViewModel
-    @AppStorage("AppState.LastClosedSpecialOfferSheet") private var lastClosedSpecialOffer: String = "0"
+    @AppStorage("AppState.LastClosedSpecialOfferSheet") private var lastClosedSpecialOffer: Int = .init()
 
     @State private var isShowAllPlans = false
     @State private var offset: CGFloat = 0
-    private let event: Components.Schemas.SpecialOffer
+    private let event: Components.Schemas.SaleOffer
 
     @State var trialDaysPeriodText: String = ""
     @State var salePercent: Decimal = 0
 
-    public init(event: Components.Schemas.SpecialOffer) {
+    public init(event: Components.Schemas.SaleOffer) {
         self.event = event
         _viewModel = StateObject(wrappedValue: StoreViewModel(specialOfferMode: true))
     }
 
     public var body: some View {
-        #if os(iOS)
+        #if os(iOS) || os(macOS)
         Group {
-            if #available(iOS 16.0, *) {
+            if #available(iOS 16.0, macOS 13.0, *) {
                 newPage
             } else {
                 oldPage
@@ -56,13 +57,13 @@ public struct StoreSpecialOfferView: View {
         #endif
     }
 
-    @available(iOS 16.0, *)
+    @available(iOS 16.0, macOS 13.0, *)
     var newPage: some View {
         NavigationStack {
             Page(badgeText, onScroll: handleOffset) {
                 Group {
                     switch viewModel.state {
-                    case .initial:
+                    case .idle:
                         VStack {
                             Spacer()
                             HStack {
@@ -89,23 +90,51 @@ public struct StoreSpecialOfferView: View {
                 VStack(spacing: .small) {
                     productsLust
                         .padding(.horizontal, .medium)
+                    #if os(macOS)
+                        .padding(.bottom, .medium)
+                    #endif
 
+                    #if os(iOS)
                     StorePaymentButtonBar(showDescription: false)
                         .environmentObject(viewModel)
                         .padding(.horizontal, .small)
+
+                    #endif
                 }
             }
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button {
-                        lastClosedSpecialOffer = event.id
-                        dismiss()
-                    } label: {
-                        Image.Base.close.icon()
-                    }
-                }
+            .toolbar(content: toolbarContent)
+        }
+    }
+
+    @ToolbarContentBuilder private func toolbarContent() -> some ToolbarContent {
+        #if !os(macOS)
+        ToolbarItemGroup(placement: .cancellationAction) {
+            Button {
+                lastClosedSpecialOffer = event.id
+                dismiss()
+            } label: {
+                Image.Base.close.icon()
             }
         }
+
+        #else
+        ToolbarItem(placement: .cancellationAction) {
+            Button("Close") {
+                lastClosedSpecialOffer = event.id
+                dismiss()
+            }
+            .keyboardShortcut(.cancelAction)
+            .controlSize(.large)
+        }
+
+        ToolbarItem(placement: .primaryAction) {
+            StorePaymentToolbarButton()
+                .keyboardShortcut(.defaultAction)
+                .controlSize(.large)
+                .environmentObject(viewModel)
+        }
+
+        #endif
     }
 
     @ViewBuilder
@@ -122,7 +151,7 @@ public struct StoreSpecialOfferView: View {
         PageView { offset = $0 } content: {
             Group {
                 switch viewModel.state {
-                case .initial:
+                case .idle:
                     VStack {
                         Spacer()
                         HStack {
@@ -168,6 +197,9 @@ public struct StoreSpecialOfferView: View {
     }
 
     var imageSize: CGFloat {
+        #if os(macOS)
+        return 160
+        #else
         if screenSize.height > 830 {
             200
         } else if screenSize.height > 700 {
@@ -175,6 +207,7 @@ public struct StoreSpecialOfferView: View {
         } else {
             64
         }
+        #endif
     }
 
     @ViewBuilder
@@ -182,10 +215,14 @@ public struct StoreSpecialOfferView: View {
         ScrollViewReader { value in
             VStack(spacing: .medium) {
                 VStack(spacing: .zero) {
-                    PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: .medium)
+                    PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: platform == .macOS ? .small : .medium)
+                    #if os(macOS)
+                        .padding(.vertical, .medium)
+                    #else
                         .offset(y: -32)
+                    #endif
 
-                    if screenSize.height > 850 {
+                    if platform == .macOS || screenSize.height > 850 {
                         Spacer()
                     }
 
@@ -219,13 +256,15 @@ public struct StoreSpecialOfferView: View {
 
                     Spacer()
                 }
+                #if os(iOS)
                 .frame(height: screenSize.safeAreaHeight - 235)
+                #endif
                 .overlay {
                     ScrollArrow(width: 30, offset: -5 + (offset * 0.05))
                         .stroke(style: StrokeStyle(lineWidth: 5, lineCap: .round))
                         .foregroundColor(.onSurfacePrimary.opacity(0.3))
                         .frame(width: 30)
-                        .offset(y: screenSize.safeAreaHeight - 280)
+                        .offset(y: screenSize.safeAreaHeight - (platform == .macOS ? 200 : 280))
                         .opacity(1 - (offset * 0.01))
                 }
 

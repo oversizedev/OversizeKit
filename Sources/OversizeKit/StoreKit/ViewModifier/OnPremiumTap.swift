@@ -9,6 +9,7 @@ public struct OnPremiumTap: ViewModifier {
     @State var isShowPremium = false
     @Environment(\.isPremium) var isPremium
     @Environment(\.colorScheme) var colorScheme
+    @Environment(\.openWindow) var openWindow
     public func body(content: Content) -> some View {
         if isPremium {
             content
@@ -18,7 +19,11 @@ public struct OnPremiumTap: ViewModifier {
                 .highPriorityGesture(
                     TapGesture()
                         .onEnded { _ in
+                            #if os(macOS)
+                            openWindow(id: "Window.StoreView")
+                            #else
                             isShowPremium.toggle()
+                            #endif
                         }
                 )
                 .sheet(isPresented: $isShowPremium) {

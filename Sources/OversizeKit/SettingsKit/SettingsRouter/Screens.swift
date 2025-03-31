@@ -11,7 +11,7 @@ import SwiftUI
 
 public enum SettingsScreen: Routable {
     case premium
-    case premiumFeature(feature: PlistConfiguration.Store.StoreFeature)
+    case premiumFeature(feature: Components.Schemas.Feature)
     case soundAndVibration
     case appearance
     case sync
@@ -26,7 +26,7 @@ public enum SettingsScreen: Routable {
     case setPINCode
     case updatePINCode
     case security
-    case offer(event: Components.Schemas.SpecialOffer)
+    case offer(event: Components.Schemas.SaleOffer)
     case webView(url: URL)
     case sendMail(to: String, subject: String, content: String)
 }

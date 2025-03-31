@@ -106,7 +106,7 @@ public struct SuccessView<C, A>: View where C: View, A: View {
                 VStack(spacing: .small) {
                     actions
                     #if !os(tvOS)
-                        .controlSize(.large)
+                    .controlSize(.large)
                     #endif
                 }
                 .padding(.top, .xxSmall)

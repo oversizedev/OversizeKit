@@ -25,7 +25,7 @@ public final class LauncherViewModel: ObservableObject {
 
     @AppStorage("AppState.PremiumState") var isPremium: Bool = false
     @AppStorage("AppState.SubscriptionsState") var subscriptionsState: RenewalState = .expired
-    @AppStorage("AppState.LastClosedSpecialOfferSheet") var lastClosedSpecialOffer: String = ""
+    @AppStorage("AppState.LastClosedSpecialOfferSheet") var lastClosedSpecialOffer: Int = .init()
     @Published public var pinCodeField: String = ""
     @Published public var authState: LockscreenViewState = .locked
     @Published var activeFullScreenSheet: FullScreenSheet?
@@ -53,7 +53,7 @@ extension LauncherViewModel {
         case onboarding
         case payWall
         case rate
-        case specialOffer(event: Components.Schemas.SpecialOffer)
+        case specialOffer(event: Components.Schemas.SaleOffer)
         public var id: Int {
             switch self {
             case .onboarding: 0
@@ -74,7 +74,12 @@ public extension LauncherViewModel {
     }
 
     func checkPremium() async {
-        let status = await storeKitService.fetchPremiumAndSubscriptionsStatus()
+        guard let appStoreID = Info.app.appStoreID else {
+            return
+        }
+        let productIds = await networkService.fetchAppStoreProductIds(appId: appStoreID).successResult ?? []
+
+        let status = await storeKitService.fetchPremiumAndSubscriptionsStatus(productIds: productIds)
         if let premiumStatus = status.0 {
             isPremium = premiumStatus
             log("\(premiumStatus ? "👑 Premium status" : "🆓 Free status")")

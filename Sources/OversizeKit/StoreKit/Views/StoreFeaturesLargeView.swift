@@ -6,49 +6,62 @@
 import CachedAsyncImage
 import OversizeComponents
 import OversizeModels
+import OversizeNetwork
 import OversizeServices
 import OversizeUI
 import SwiftUI
 
 struct StoreFeaturesLargeView: View {
     @EnvironmentObject var viewModel: StoreViewModel
-    let features = Info.store.features
 
     var body: some View {
-        VStack {
-            ForEach(features) { feature in
-                if feature.screenURL != nil {
-                    fetureScreenItem(feature)
-                } else {
-                    fetureItem(feature)
+        switch viewModel.featuresState {
+        case .idle, .loading:
+            ProgressView()
+
+        case let .result(features):
+            VStack {
+                ForEach(features) { feature in
+                    if feature.screenshotUrl != nil {
+                        fetureScreenItem(feature)
+                    } else {
+                        fetureItem(feature)
+                    }
                 }
             }
+
+        case let .error(appError):
+            ErrorView(appError)
         }
     }
 
-    func fetureScreenItem(_ feature: PlistConfiguration.Store.StoreFeature) -> some View {
+    func fetureScreenItem(_ feature: Components.Schemas.Feature) -> some View {
         Surface {
             VStack(spacing: .zero) {
                 RoundedRectangle(cornerRadius: .medium, style: .continuous)
                     .fill(
                         LinearGradient(
-                            gradient: Gradient(colors: [Color(hex: feature.backgroundColor != nil ? feature.backgroundColor : "637DFA"),
-                                                        Color(hex: feature.backgroundColor != nil ? feature.backgroundColor : "872BFF")]),
+                            gradient: Gradient(
+                                colors: [
+                                    Color(hex: feature.backgroundColor != nil ? feature.backgroundColor : "637DFA"),
+                                    Color(hex: feature.backgroundColor != nil ? feature.backgroundColor : "872BFF"),
+                                ]
+                            ),
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
                     )
                     .frame(height: 310)
-                    .overlay(alignment: feature.topScreenAlignment ?? true ? .top : .bottom) {
+                    .overlay(alignment: feature.screenshotAlignment == .top ? .top : .bottom) {
                         ZStack {
                             FireworksBubbles()
 
-                            if let urlString = feature.screenURL, let url = URL(string: urlString) {
+                            if let urlString = feature.screenshotUrl, let url = URL(string: urlString) {
                                 ScreenMockup(url: url)
                                     .frame(maxWidth: 204)
                                     .padding(
-                                        feature.topScreenAlignment ?? true ? .top : .bottom,
-                                        feature.topScreenAlignment ?? true ? 40 : 70
+                                        feature.screenshotAlignment == .top ? .top : .bottom,
+                                        feature.screenshotAlignment == .top ? 40 : 70
                                     )
                             }
                         }
@@ -56,7 +69,7 @@ struct StoreFeaturesLargeView: View {
                     .clipped()
 
                 VStack(spacing: .xxSmall) {
-                    Text(feature.title.valueOrEmpty)
+                    Text(feature.title)
                         .title2(.bold)
                         .foregroundColor(.onSurfacePrimary)
 
@@ -75,9 +88,9 @@ struct StoreFeaturesLargeView: View {
         .elevation(.z3)
     }
 
-    func fetureItem(_ feature: PlistConfiguration.Store.StoreFeature) -> some View {
+    func fetureItem(_ feature: Components.Schemas.Feature) -> some View {
         VStack(spacing: .zero) {
-            if let IllustrationURLPath = feature.illustrationURL {
+            if let IllustrationURLPath = feature.illustrationUrl {
                 CachedAsyncImage(url: URL(string: IllustrationURLPath), urlCache: .imageCache) { image in
                     image
                         .resizable()
@@ -90,21 +103,6 @@ struct StoreFeaturesLargeView: View {
                         .frame(width: 100, height: 100)
                 }
                 .padding(.bottom, .large)
-
-            } else if let image = feature.image {
-                Image(resourceImage: image)
-                    .resizable()
-                    .renderingMode(.template)
-                    .foregroundColor(Color.accent)
-                    .frame(width: 54, height: 54)
-                    .padding(20)
-                    .background {
-                        Circle()
-                            .fill(
-                                backgroundColor(feature: feature).opacity(0.2)
-                            )
-                    }
-                    .padding(.bottom, .large)
 
             } else {
                 Image.Base.Check.square
@@ -121,7 +119,7 @@ struct StoreFeaturesLargeView: View {
             }
 
             VStack(spacing: .xSmall) {
-                Text(feature.title.valueOrEmpty)
+                Text(feature.title)
                     .title2(.bold)
                     .foregroundColor(.onSurfacePrimary)
 
@@ -133,7 +131,7 @@ struct StoreFeaturesLargeView: View {
         .padding(.vertical, .large)
     }
 
-    func backgroundColor(feature: PlistConfiguration.Store.StoreFeature) -> Color {
+    func backgroundColor(feature: Components.Schemas.Feature) -> Color {
         if let color = feature.backgroundColor {
             Color(hex: color)
         } else {

@@ -10,8 +10,7 @@ import OversizeNetwork
 import OversizeRouter
 import SwiftUI
 
-extension SettingsScreen: @preconcurrency RoutableView {
-    @MainActor @ViewBuilder
+extension SettingsScreen: RoutableView {
     public func view() -> some View {
         switch self {
         case .premium:

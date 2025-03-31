@@ -29,16 +29,13 @@ public struct SettingsView<AppSection: View, HeadSection: View>: View {
     }
 
     public var body: some View {
-        #if os(iOS)
-
         Page(L10n.Settings.title) {
+            #if os(iOS)
             iOSSettings
+            #else
+            macSettings
+            #endif
         }.backgroundSecondary()
-
-        #else
-        macSettings
-
-        #endif
     }
 }
 
@@ -73,6 +70,7 @@ extension SettingsView {
         }
     }
 
+    @available(iOS 15.0, *)
     private var app: some View {
         SectionView("General") {
             VStack(spacing: .zero) {
@@ -131,6 +129,11 @@ extension SettingsView {
                 appSection
             }
         }
+    }
+
+    @available(macOS 13.0, *)
+    private var macGeneral: some View {
+        appSection
     }
 
     var apperanceSettingsIcon: Image {
@@ -320,13 +323,25 @@ extension SettingsView {
 }
 
 extension SettingsView {
+    @available(macOS 13.0, *)
     private var macSettings: some View {
         VStack(alignment: .center, spacing: 0) {
-            Text("Mac")
+            if let stoteKit = FeatureFlags.app.storeKit {
+                if stoteKit {
+                    SectionView {
+                        PrmiumBannerRow()
+                    }
+                    .surfaceContentMargins(.zero)
+                }
+            }
+
+            macGeneral
+
+            SectionView("Feedback") {
+                FeedbackViewRows()
+            }
+            .surfaceContentRowMargins()
         }
-        .frame(width: 400, height: 300)
-        .navigationTitle(L10n.Settings.apperance)
-        .preferredColorScheme(theme.appearance.colorScheme)
     }
 }
 

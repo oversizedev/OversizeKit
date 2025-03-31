@@ -7,6 +7,7 @@ import Factory
 import OversizeCore
 import OversizeLocalizable
 import OversizeModels
+import OversizeNetwork
 import OversizeNotificationService
 import OversizeServices
 import OversizeStoreService
@@ -15,21 +16,15 @@ import SwiftUI
 
 @MainActor
 public class StoreViewModel: ObservableObject {
-    enum State {
-        case initial
-        case loading
-        case result(StoreKitProducts)
-        case error(AppError)
-    }
-
     @Injected(\.storeKitService) var storeKitService: StoreKitService
+    @Injected(\.networkService) var networkService: NetworkService
     #if !os(tvOS)
     @Injected(\.localNotificationService) var localNotificationService: LocalNotificationServiceProtocol
     #endif
 
-    @Published var state = State.initial
-
-    public var updateListenerTask: Task<Void, Error>?
+    @Published var state: LoadingViewState<StoreKitProducts> = .idle
+    @Published var featuresState: LoadingViewState<[Components.Schemas.Feature]> = .idle
+    @Published var productsState: LoadingViewState<Components.Schemas.AppStoreProducts> = .idle
 
     @Published var currentSubscription: Product?
     @Published var status: Product.SubscriptionInfo.Status?
@@ -49,6 +44,8 @@ public class StoreViewModel: ObservableObject {
             []
         }
     }
+
+    public var updateListenerTask: Task<Void, Error>?
 
     public init(specialOfferMode: Bool = false) {
         // Start a transaction listener as close to app launch as possible so you don't miss any transactions.
@@ -186,6 +183,27 @@ extension StoreViewModel {
 // MARK: - StoreKit service
 
 extension StoreViewModel {
+    public func fetchFeatures() async {
+        guard let appStoreID = Info.app.appStoreID else {
+            featuresState = .error(.network(type: .unknown))
+            return
+        }
+        async let resultFeatures = networkService.fetchPremiumFeatures(appId: appStoreID)
+        async let resultProducts = networkService.fetchAppStoreProducts(appId: appStoreID)
+        if let features = await resultFeatures.successResult, let products = await resultProducts.successResult {
+            featuresState = .result(features)
+            productsState = .result(products)
+        } else {
+            featuresState = .error(.network(type: .unknown))
+        }
+//        switch result {
+//        case let .success(features):
+//            featuresState = .result(features)
+//        case let .failure(error):
+//            featuresState = .error(error)
+//        }
+    }
+
     public func listenForTransactions() -> Task<Void, Error> {
         Task.detached {
             // Iterate through any transactions that don't come from a direct call to `purchase()`.
@@ -194,7 +212,7 @@ extension StoreViewModel {
                     let transaction = try await self.storeKitService.checkVerified(result)
 
                     // Deliver products to the user.
-                    if case let .result(products) = await self.state {
+                    if let products = await self.state.result {
                         let result = await self.storeKitService.updateCustomerProductStatus(products: products)
                         switch result {
                         case let .success(newProducts):
@@ -328,9 +346,20 @@ extension StoreViewModel {
 
 extension StoreViewModel {
     func fetchData() async {
+        Task {
+            await fetchFeatures()
+        }
+
         state = .loading
-        // During store initialization, request products from the App Store.
-        let products = await storeKitService.requestProducts()
+
+        guard let appStoreID = Info.app.appStoreID else {
+            state = .error(.network(type: .unknown))
+            return
+        }
+
+        let productIds = await networkService.fetchAppStoreProductIds(appId: appStoreID).successResult ?? []
+
+        let products = await storeKitService.requestProducts(productIds: productIds)
 
         switch products {
         case let .success(preProducts):
@@ -340,7 +369,10 @@ extension StoreViewModel {
 
                 if let yarlyProduct = finalProducts.autoRenewable.first(where: { $0.subscription?.subscriptionPeriod.unit == .year && $0.isOffer == specialOfferMode }) {
                     selectedProduct = yarlyProduct
+                } else {
+                    selectedProduct = finalProducts.autoRenewable.first(where: { $0.subscription?.subscriptionPeriod.unit == .year }) ?? finalProducts.autoRenewable.first
                 }
+
                 if let status = finalProducts.subscriptionGroupStatus {
                     currentSubscriptionStatus = status
                 }

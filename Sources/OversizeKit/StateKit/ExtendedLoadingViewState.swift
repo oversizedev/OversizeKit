@@ -1,19 +1,20 @@
 //
-// Copyright © 2024 Alexander Romanov
-// LoadingViewState.swift, created on 25.04.2024
+// Copyright © 2025 Alexander Romanov
+// ExtendedLoadingViewState.swift, created on 01.02.2025
 //
 
 import Foundation
 import OversizeModels
 
-public enum LoadingViewState<Result: Sendable>: Equatable, Sendable {
+public enum ExtendedLoadingViewState<Result>: Equatable {
     case idle
     case loading
+    case empty
     case result(Result)
     case error(AppError)
 }
 
-public extension LoadingViewState {
+public extension ExtendedLoadingViewState {
     var isLoading: Bool {
         switch self {
         case .loading, .idle:
@@ -25,6 +26,8 @@ public extension LoadingViewState {
 
     var result: Result? {
         switch self {
+        case .empty:
+            nil
         case let .result(result):
             result
         default:
@@ -41,7 +44,7 @@ public extension LoadingViewState {
         }
     }
 
-    static func == (lhs: LoadingViewState<Result>, rhs: LoadingViewState<Result>) -> Bool {
+    static func == (lhs: ExtendedLoadingViewState<Result>, rhs: ExtendedLoadingViewState<Result>) -> Bool {
         switch (lhs, rhs) {
         case (.idle, .idle):
             true
@@ -50,6 +53,8 @@ public extension LoadingViewState {
         case (.result, .result):
             true
         case (.error, .error):
+            true
+        case (.empty, .empty):
             true
         default:
             false

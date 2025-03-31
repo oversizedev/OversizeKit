@@ -14,6 +14,11 @@ import SwiftUI
 public struct PrmiumBannerRow: View {
     @Environment(\.colorScheme) var colorScheme
     @StateObject private var viewModel: StoreViewModel
+    #if os(macOS)
+    @Environment(\.openWindow) var openWindow
+    #endif
+
+    @Environment(\.platform) var platform
 
     @State var showModal = false
 
@@ -23,6 +28,7 @@ public struct PrmiumBannerRow: View {
 
     public var body: some View {
         VStack {
+            #if os(iOS)
             NavigationLink {
                 StoreView()
                     .closable(false)
@@ -34,6 +40,18 @@ public struct PrmiumBannerRow: View {
                 }
             }
             .buttonStyle(.row)
+            #elseif os(macOS)
+            Button {
+                openWindow(id: "Window.StoreView")
+            } label: {
+                if viewModel.isPremium || viewModel.isPremiumActivated {
+                    subscriptionRow
+                } else {
+                    banner
+                }
+            }
+            .buttonStyle(.row)
+            #endif
         }
         .task {
             await viewModel.fetchData()
@@ -43,13 +61,7 @@ public struct PrmiumBannerRow: View {
     var subscriptionRow: some View {
         HStack(spacing: Space.small) {
             HStack {
-                #if os(iOS)
-                Resource.Store.zap
-                    .padding(.horizontal, Space.xxSmall)
-                    .padding(.vertical, Space.xxSmall)
-                #endif
-
-                #if os(macOS)
+                #if os(iOS) || os(macOS)
                 Resource.Store.zap
                     .padding(.horizontal, Space.xxSmall)
                     .padding(.vertical, Space.xxSmall)
@@ -59,10 +71,12 @@ public struct PrmiumBannerRow: View {
                 RoundedRectangle(cornerRadius: Radius.medium.rawValue, style: .continuous)
                     .fill(LinearGradient(
                         gradient: Gradient(
-                            colors: [Color(hex: "EAAB44"),
-                                     Color(hex: "D24A44"),
-                                     Color(hex: "9C5BA2"),
-                                     Color(hex: "4B5B94")]),
+                            colors: [
+                                Color(hex: "EAAB44"),
+                                Color(hex: "D24A44"),
+                                Color(hex: "9C5BA2"),
+                                Color(hex: "4B5B94"),
+                            ]),
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     ))
@@ -101,36 +115,31 @@ public extension PrmiumBannerRow {
                  .monochrom() */
                 HStack {
                     HStack(alignment: .center, spacing: Space.xxSmall) {
-                        #if os(iOS)
+                        #if os(iOS) || os(macOS)
                         Resource.Store.zap
                             .colorMultiply(Color(hex: "B75375"))
                         #endif
 
-                        #if os(macOS)
-                        Resource.Store.zap
-                        #endif
-
-                        Text(Info.store.subscriptionsName)
-                            .font(.system(size: 20, weight: .heavy))
-                            .title3()
+                        Text(viewModel.productsState.result?.banner.title ?? "Pro")
+                            .font(.system(size: platform == .macOS ? 16 : 20, weight: platform == .macOS ? .bold : .heavy))
                             .foregroundColor(Color(hex: "B75375"))
+                            .redacted(reason: viewModel.productsState.isLoading ? .placeholder : .init())
                     }
-                    .padding(.leading, Space.xSmall)
-                    .padding(.vertical, Space.xxSmall)
-                    .padding(.trailing, Space.small)
+                    .padding(.leading, platform == .macOS ? Space.xxSmall : Space.xSmall)
+                    .padding(.vertical, platform == .macOS ? Space.xxxSmall : Space.xxSmall)
+                    .padding(.trailing, platform == .macOS ? Space.xSmall : Space.small)
                 }
                 .background(
                     RoundedRectangle(cornerRadius: Radius.small.rawValue, style: .continuous)
-                        .fill(Color.onPrimary
+                        .fill(Color.onPrimary))
 
-                        ))
-
-                Text(Info.store.subscriptionsDescription)
+                Text(viewModel.productsState.result?.banner.description ?? "Long text")
                     .headline(.semibold)
                     .onPrimaryForeground()
                     .multilineTextAlignment(.center)
                     .padding(.top, Space.xSmall)
                     .frame(maxWidth: 260)
+                    .redacted(reason: viewModel.productsState.isLoading ? .placeholder : .init())
             }
 
             Spacer()

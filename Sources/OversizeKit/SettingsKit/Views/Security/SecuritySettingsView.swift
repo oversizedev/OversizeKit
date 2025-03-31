@@ -53,8 +53,13 @@ extension SecuritySettingsView {
                         Row(biometricService.biometricType.rawValue) {
                             Image(systemName: biometricImageName)
                                 .foregroundColor(Color.onBackgroundPrimary)
+                            #if os(macOS)
+                                .font(.system(size: 16, weight: .semibold))
+                                .frame(width: 24, height: 24, alignment: .center)
+                            #else
                                 .font(.system(size: 20, weight: .semibold))
                                 .frame(width: 24, height: 24, alignment: .center)
+                            #endif
                         }
                     }
                 }

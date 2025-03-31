@@ -16,7 +16,7 @@ public final class NoticeListViewModel: ObservableObject {
     enum State {
         case initial
         case loading
-        case result(offer: Components.Schemas.SpecialOffer?, isShowRate: Bool)
+        case result(offer: Components.Schemas.SaleOffer?, isShowRate: Bool)
         case empty
         case error(AppError)
     }
@@ -29,7 +29,7 @@ public final class NoticeListViewModel: ObservableObject {
         reviewService.isShowReviewBanner
     }
 
-    @AppStorage("AppState.LastClosedSpecialOfferBanner") var lastClosedSpecialOffer: String = ""
+    @AppStorage("AppState.LastClosedSpecialOfferBanner") var lastClosedSpecialOffer: Int = .init()
 
     private let expectedFormat = Date.ISO8601FormatStyle()
 
@@ -50,7 +50,12 @@ public final class NoticeListViewModel: ObservableObject {
     }
 
     public func fetchStoreKitProudcts() async {
-        let result = await storeKitService.requestProducts()
+        guard let appStoreID = Info.app.appStoreID else {
+            return
+        }
+        let productIds = await networkService.fetchAppStoreProductIds(appId: appStoreID).successResult ?? []
+
+        let result = await storeKitService.requestProducts(productIds: productIds)
         switch result {
         case let .success(products):
             if let product = products.autoRenewable.first(where: { $0.isOffer }), let offer = product.subscription?.introductoryOffer {
