@@ -91,7 +91,7 @@ struct FeedbackViewRows: View {
                 }
             }
             #elseif os(macOS)
-            
+
             if let mail = Info.links?.company.email,
                let appVersion = Info.app.verstion,
                let appName = Info.app.name,

@@ -17,7 +17,7 @@ public struct PrmiumBannerRow: View {
     #if os(macOS)
     @Environment(\.openWindow) var openWindow
     #endif
-    
+
     @Environment(\.platform) var platform
 
     @State var showModal = false
@@ -75,7 +75,7 @@ public struct PrmiumBannerRow: View {
                                 Color(hex: "EAAB44"),
                                 Color(hex: "D24A44"),
                                 Color(hex: "9C5BA2"),
-                                Color(hex: "4B5B94")
+                                Color(hex: "4B5B94"),
                             ]),
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
@@ -120,9 +120,10 @@ public extension PrmiumBannerRow {
                             .colorMultiply(Color(hex: "B75375"))
                         #endif
 
-                        Text(Info.store.subscriptionsName)
+                        Text(viewModel.productsState.result?.banner.title ?? "Pro")
                             .font(.system(size: platform == .macOS ? 16 : 20, weight: platform == .macOS ? .bold : .heavy))
                             .foregroundColor(Color(hex: "B75375"))
+                            .redacted(reason: viewModel.productsState.isLoading ? .placeholder : .init())
                     }
                     .padding(.leading, platform == .macOS ? Space.xxSmall : Space.xSmall)
                     .padding(.vertical, platform == .macOS ? Space.xxxSmall : Space.xxSmall)
@@ -132,12 +133,13 @@ public extension PrmiumBannerRow {
                     RoundedRectangle(cornerRadius: Radius.small.rawValue, style: .continuous)
                         .fill(Color.onPrimary))
 
-                Text(Info.store.subscriptionsDescription)
+                Text(viewModel.productsState.result?.banner.description ?? "Long text")
                     .headline(.semibold)
                     .onPrimaryForeground()
                     .multilineTextAlignment(.center)
                     .padding(.top, Space.xSmall)
                     .frame(maxWidth: 260)
+                    .redacted(reason: viewModel.productsState.isLoading ? .placeholder : .init())
             }
 
             Spacer()

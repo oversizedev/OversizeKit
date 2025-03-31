@@ -16,21 +16,15 @@ import SwiftUI
 
 @MainActor
 public class StoreViewModel: ObservableObject {
-    enum State {
-        case initial
-        case loading
-        case result(StoreKitProducts)
-        case error(AppError)
-    }
-
     @Injected(\.storeKitService) var storeKitService: StoreKitService
     @Injected(\.networkService) var networkService: NetworkService
     #if !os(tvOS)
     @Injected(\.localNotificationService) var localNotificationService: LocalNotificationServiceProtocol
     #endif
 
-    @Published var state = State.initial
+    @Published var state: LoadingViewState<StoreKitProducts> = .idle
     @Published var featuresState: LoadingViewState<[Components.Schemas.Feature]> = .idle
+    @Published var productsState: LoadingViewState<Components.Schemas.AppStoreProducts> = .idle
 
     @Published var currentSubscription: Product?
     @Published var status: Product.SubscriptionInfo.Status?
@@ -190,17 +184,24 @@ extension StoreViewModel {
 
 extension StoreViewModel {
     public func fetchFeatures() async {
-        guard let appStoreID = Info.app.appStoreIDInt else {
+        guard let appStoreID = Info.app.appStoreID else {
             featuresState = .error(.network(type: .unknown))
             return
         }
-        let result = await networkService.fetchPremiumFeatures(appId: appStoreID)
-        switch result {
-        case let .success(features):
+        async let resultFeatures = networkService.fetchPremiumFeatures(appId: appStoreID)
+        async let resultProducts = networkService.fetchAppStoreProducts(appId: appStoreID)
+        if let features = await resultFeatures.successResult, let products = await resultProducts.successResult {
             featuresState = .result(features)
-        case let .failure(error):
-            featuresState = .error(error)
+            productsState = .result(products)
+        } else {
+            featuresState = .error(.network(type: .unknown))
         }
+//        switch result {
+//        case let .success(features):
+//            featuresState = .result(features)
+//        case let .failure(error):
+//            featuresState = .error(error)
+//        }
     }
 
     public func listenForTransactions() -> Task<Void, Error> {
@@ -211,7 +212,7 @@ extension StoreViewModel {
                     let transaction = try await self.storeKitService.checkVerified(result)
 
                     // Deliver products to the user.
-                    if case let .result(products) = await self.state {
+                    if let products = await self.state.result {
                         let result = await self.storeKitService.updateCustomerProductStatus(products: products)
                         switch result {
                         case let .success(newProducts):
@@ -351,7 +352,7 @@ extension StoreViewModel {
 
         state = .loading
 
-        guard let appStoreID = Info.app.appStoreIDInt else {
+        guard let appStoreID = Info.app.appStoreID else {
             state = .error(.network(type: .unknown))
             return
         }

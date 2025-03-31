@@ -63,7 +63,7 @@ public struct StoreSpecialOfferView: View {
             Page(badgeText, onScroll: handleOffset) {
                 Group {
                     switch viewModel.state {
-                    case .initial:
+                    case .idle:
                         VStack {
                             Spacer()
                             HStack {
@@ -151,7 +151,7 @@ public struct StoreSpecialOfferView: View {
         PageView { offset = $0 } content: {
             Group {
                 switch viewModel.state {
-                case .initial:
+                case .idle:
                     VStack {
                         Spacer()
                         HStack {

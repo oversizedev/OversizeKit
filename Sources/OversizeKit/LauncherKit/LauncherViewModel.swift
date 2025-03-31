@@ -74,7 +74,7 @@ public extension LauncherViewModel {
     }
 
     func checkPremium() async {
-        guard let appStoreID = Info.app.appStoreIDInt else {
+        guard let appStoreID = Info.app.appStoreID else {
             return
         }
         let productIds = await networkService.fetchAppStoreProductIds(appId: appStoreID).successResult ?? []

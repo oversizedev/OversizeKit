@@ -3,7 +3,9 @@
 // SettingsTab.swift, created on 05.03.2025
 //
 
+import OversizeResources
 import OversizeRouter
+import OversizeUI
 import SwiftUI
 
 public enum SettingsTab: Tabable {
@@ -21,17 +23,36 @@ public extension SettingsTab {
         case .general:
             .init(systemName: "gearshape")
         case .security:
-            .init(systemName: "lock")
+            .init(systemName: "shield")
         case .help:
             .init(systemName: "questionmark.circle")
         case .about:
             .init(systemName: "person.circle")
         case .apperance:
-            .init(systemName: "paintbrush")
+            .init(systemName: "swatchpalette")
         case .syncrhonization:
-            .init(systemName: "arrow.clockwise")
+            .init(systemName: "icloud")
         }
     }
+
+    /*
+     var icon: Image {
+         switch self {
+         case .general:
+             Image.Base.Setting.mini
+         case .security:
+             Image.Base.lock
+         case .help:
+             Image.Alert.Help.circle
+         case .about:
+             Image.Base.Info.circle
+         case .apperance:
+             Image.Design.paintingPalette
+         case .syncrhonization:
+             Image.Weather.cloud2
+         }
+     }
+     */
 
     var title: String {
         switch self {
@@ -63,7 +84,7 @@ public extension SettingsTab {
         case .apperance:
             "apperance"
         case .syncrhonization:
-            "syncrhonization"
+            "icloud"
         }
     }
 }

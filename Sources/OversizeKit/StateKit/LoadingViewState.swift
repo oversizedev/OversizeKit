@@ -6,7 +6,7 @@
 import Foundation
 import OversizeModels
 
-public enum LoadingViewState<Result>: Equatable {
+public enum LoadingViewState<Result: Sendable>: Equatable, Sendable {
     case idle
     case loading
     case result(Result)

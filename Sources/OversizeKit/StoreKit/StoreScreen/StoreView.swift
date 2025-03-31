@@ -29,7 +29,7 @@ public struct StoreView: View {
         Page {
             Group {
                 switch viewModel.state {
-                case .initial, .loading:
+                case .idle, .loading:
                     contentPlaceholder()
                 case let .result(data):
                     content(data: data)

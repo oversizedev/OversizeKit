@@ -18,7 +18,7 @@ public class AdViewModel: ObservableObject {
     public init() {}
 
     public func fetchAd() async {
-        guard let id = Info.app.appStoreIDInt else {
+        guard let id = Info.app.appStoreID else {
             state = .error(.network(type: .unknown))
             return
         }

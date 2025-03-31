@@ -13,10 +13,9 @@ public struct SettingsTabRoutingView<AppSettingsViewType: View>: View {
         tabs: [
             SettingsTab.general,
             SettingsTab.apperance,
-            SettingsTab.syncrhonization,
+            // SettingsTab.syncrhonization,
             SettingsTab.security,
-            SettingsTab.help,
-            SettingsTab.about,
+            // SettingsTab.about
         ]
     )
 
@@ -27,9 +26,9 @@ public struct SettingsTabRoutingView<AppSettingsViewType: View>: View {
         case .apperance:
             450
         case .syncrhonization:
-            100
+            90
         case .security:
-            400
+            220
         case .help:
             300
         case .about:
