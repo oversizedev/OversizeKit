@@ -9,7 +9,10 @@ public struct OnPremiumTap: ViewModifier {
     @State var isShowPremium = false
     @Environment(\.isPremium) var isPremium
     @Environment(\.colorScheme) var colorScheme
+    #if os(macOS)
     @Environment(\.openWindow) var openWindow
+    #endif
+
     public func body(content: Content) -> some View {
         if isPremium {
             content

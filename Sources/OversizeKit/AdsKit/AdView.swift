@@ -39,7 +39,7 @@ public struct AdView: View {
                 premiumBanner(appAd: appAd)
             }
             .surfaceContentMargins(.xSmall)
-            .appStoreOverlay(isPresent: $isShowProduct, appId: appAd.appStoreId)
+            .appStoreOverlay(isPresent: $isShowProduct, appId: String(appAd.id))
 
             #else
             EmptyView()

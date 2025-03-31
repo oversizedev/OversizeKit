@@ -50,6 +50,7 @@ public struct FeedbackView: View {
 
 struct FeedbackViewRows: View {
     @Environment(\.iconStyle) var iconStyle: IconStyle
+    @Environment(Router<SettingsScreen>.self) var router
 
     var body: some View {
         LeadingVStack {
