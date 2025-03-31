@@ -92,7 +92,7 @@ public struct AboutView: View {
                             .frame(width: 74, height: 74)
                     }
                 case let .result(apps, _):
-                    ForEach(apps, id: \.id) { app in
+                    ForEach(apps) { app in
                         Button {
                             isPresentStoreProduct = true
                         } label: {
@@ -129,7 +129,7 @@ public struct AboutView: View {
                         }
                         .buttonStyle(.scale)
                         #if os(iOS)
-                            .appStoreOverlay(isPresent: $isPresentStoreProduct, appId: app.appStoreId)
+                            .appStoreOverlay(isPresent: $isPresentStoreProduct, appId: app.id)
                         #endif
                     }
                 case .error:
