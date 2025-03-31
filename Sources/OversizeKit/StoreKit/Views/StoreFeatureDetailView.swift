@@ -76,7 +76,7 @@ public struct StoreFeatureDetailView: View {
                     .tag(feature)
             }
         }
-        #if !os(macOS)
+        #if os(iOS)
         .tabViewStyle(.page(indexDisplayMode: isPremium ? .always : .never))
         .indexViewStyle(.page(backgroundDisplayMode: isPremium ? .always : .never))
         #endif
