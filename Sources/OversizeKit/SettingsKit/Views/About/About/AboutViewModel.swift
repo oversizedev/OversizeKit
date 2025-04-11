@@ -19,7 +19,7 @@ public class AboutViewModel: ObservableObject {
     public func fetchApps() async {
         state = .loading
         async let resultApps = networkService.fetchApps()
-        async let resultInfo = networkService.fetchInfo()
+        async let resultInfo = networkService.fetchCompany()
         if case let .success(apps) = await resultApps, case let .success(info) = await resultInfo {
             state = .result(apps, info)
         } else {
@@ -32,7 +32,7 @@ extension AboutViewModel {
     enum State {
         case initial
         case loading
-        case result([Components.Schemas.App], Components.Schemas.Info)
+        case result([Components.Schemas.App], Components.Schemas.Company)
         case error(AppError)
     }
 }

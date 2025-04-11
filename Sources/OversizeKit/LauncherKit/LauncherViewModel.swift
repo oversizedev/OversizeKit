@@ -53,7 +53,7 @@ extension LauncherViewModel {
         case onboarding
         case payWall
         case rate
-        case specialOffer(event: Components.Schemas.SaleOffer)
+        case specialOffer(event: Components.Schemas.InAppPurchaseOffer)
         public var id: Int {
             switch self {
             case .onboarding: 0

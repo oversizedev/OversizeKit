@@ -16,7 +16,7 @@ public final class NoticeListViewModel: ObservableObject {
     enum State {
         case initial
         case loading
-        case result(offer: Components.Schemas.SaleOffer?, isShowRate: Bool)
+        case result(offer: Components.Schemas.InAppPurchaseOffer?, isShowRate: Bool)
         case empty
         case error(AppError)
     }

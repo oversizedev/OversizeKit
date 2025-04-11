@@ -26,7 +26,7 @@ public enum SettingsScreen: Routable {
     case setPINCode
     case updatePINCode
     case security
-    case offer(event: Components.Schemas.SaleOffer)
+    case offer(event: Components.Schemas.InAppPurchaseOffer)
     case webView(url: URL)
     case sendMail(to: String, subject: String, content: String)
 }
