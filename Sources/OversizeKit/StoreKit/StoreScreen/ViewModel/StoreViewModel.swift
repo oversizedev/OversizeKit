@@ -24,7 +24,7 @@ public class StoreViewModel: ObservableObject {
 
     @Published var state: LoadingViewState<StoreKitProducts> = .idle
     @Published var featuresState: LoadingViewState<[Components.Schemas.Feature]> = .idle
-    @Published var productsState: LoadingViewState<Components.Schemas.AppStoreProducts> = .idle
+    @Published var productsState: LoadingViewState<InAppPurchaseResponse> = .idle
 
     @Published var currentSubscription: Product?
     @Published var status: Product.SubscriptionInfo.Status?
@@ -188,14 +188,37 @@ extension StoreViewModel {
             featuresState = .error(.network(type: .unknown))
             return
         }
-        async let resultFeatures = networkService.fetchPremiumFeatures(appId: appStoreID)
-        async let resultProducts = networkService.fetchAppStoreProducts(appId: appStoreID)
-        if let features = await resultFeatures.successResult, let products = await resultProducts.successResult {
+//        async let resultFeatures = networkService.fetchPremiumFeatures(appId: appStoreID)
+//        async let resultProducts = networkService.fetchInAppPurchases(appId: appStoreID)
+//        if let features = await resultFeatures.successResult, let products = await resultProducts.successResult {
+//            featuresState = .result(features)
+//            productsState = .result(products)
+//        } else {
+//            featuresState = .error(.network(type: .unknown))
+//        }
+
+        let resultFeatures = await networkService.fetchPremiumFeatures(appId: appStoreID)
+        let resultProducts = await networkService.fetchInAppPurchases(appId: appStoreID)
+        switch resultFeatures {
+        case let .success(features):
             featuresState = .result(features)
-            productsState = .result(products)
-        } else {
-            featuresState = .error(.network(type: .unknown))
+        case let .failure(error):
+            logError("Error fetching features", error: error)
         }
+        switch resultProducts {
+        case let .success(products):
+            productsState = .result(products)
+        case let .failure(error):
+            logError("Error fetching resultProducts", error: error)
+        }
+
+//        if let features = await resultFeatures.successResult, let products = await resultProducts.successResult {
+//
+//            productsState = .result(products)
+//        } else {
+//            featuresState = .error(.network(type: .unknown))
+//        }
+
 //        switch result {
 //        case let .success(features):
 //            featuresState = .result(features)

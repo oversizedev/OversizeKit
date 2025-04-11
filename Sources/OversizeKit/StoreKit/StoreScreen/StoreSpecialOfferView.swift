@@ -24,12 +24,12 @@ public struct StoreSpecialOfferView: View {
 
     @State private var isShowAllPlans = false
     @State private var offset: CGFloat = 0
-    private let event: Components.Schemas.SaleOffer
+    private let event: Components.Schemas.InAppPurchaseOffer
 
     @State var trialDaysPeriodText: String = ""
     @State var salePercent: Decimal = 0
 
-    public init(event: Components.Schemas.SaleOffer) {
+    public init(event: Components.Schemas.InAppPurchaseOffer) {
         self.event = event
         _viewModel = StateObject(wrappedValue: StoreViewModel(specialOfferMode: true))
     }

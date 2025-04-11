@@ -23,7 +23,7 @@ public extension SettingsTab {
         case .general:
             .init(systemName: "gearshape")
         case .security:
-            .init(systemName: "shield")
+            .init(systemName: "checkmark.shield")
         case .help:
             .init(systemName: "questionmark.circle")
         case .about:
