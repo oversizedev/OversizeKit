@@ -80,7 +80,7 @@ struct StoreFeaturesView: View {
     }
 
     func backgroundColor(feature: Components.Schemas.Feature) -> Color {
-        if let color = feature.backgroundColor {
+        if let color = feature.screenshots.first?.backgroundColor {
             Color(hex: color)
         } else {
             Color.accent

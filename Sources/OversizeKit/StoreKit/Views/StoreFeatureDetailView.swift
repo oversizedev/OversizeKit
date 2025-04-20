@@ -47,7 +47,7 @@ public struct StoreFeatureDetailView: View {
                 } label: {
                     IconDeprecated(
                         .xMini,
-                        color: selection.screenshotUrl != nil ? .onPrimary : .onSurfaceTertiary
+                        color: selection.screenshots.first?.url != nil ? .onPrimary : .onSurfaceTertiary
                     )
                     .padding(.xxSmall)
                     .background {
@@ -84,7 +84,7 @@ public struct StoreFeatureDetailView: View {
 
     func fetureItem(_ feature: Components.Schemas.Feature, geometry: GeometryProxy) -> some View {
         Group {
-            if let _ = feature.screenshotUrl {
+            if let _ = feature.screenshots.first {
                 screenFetureItem(feature, geometry: geometry)
             } else {
                 iconFetureItem(feature, geometry: geometry)
@@ -98,23 +98,23 @@ public struct StoreFeatureDetailView: View {
                 .fill(
                     LinearGradient(
                         gradient: Gradient(colors: [
-                            Color(hex: feature.backgroundColor != nil ? feature.backgroundColor : "637DFA"),
-                            Color(hex: feature.backgroundColor != nil ? feature.backgroundColor : "872BFF"),
+                            Color(hex: feature.screenshots.first?.backgroundColor ?? "637DFA"),
+                            Color(hex: feature.screenshots.first?.backgroundColor ?? "872BFF"),
                         ]),
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     )
                 )
-                .overlay(alignment: feature.screenshotAlignment == .top ? .top : .bottom) {
+                .overlay(alignment: feature.screenshots.first?.alignment == .top ? .top : .bottom) {
                     ZStack {
                         FireworksBubbles()
 
-                        if let urlString = feature.screenshotUrl, let url = URL(string: urlString) {
+                        if let urlString = feature.screenshots.first?.url, let url = URL(string: urlString) {
                             ScreenMockup(url: url)
                                 .frame(maxWidth: 60 + (geometry.size.height * 0.2))
                                 .padding(
-                                    feature.screenshotAlignment == .top ? .top : .bottom,
-                                    feature.screenshotAlignment == .top
+                                    feature.screenshots.first?.alignment == .top ? .top : .bottom,
+                                    feature.screenshots.first?.alignment == .top
                                         ? (geometry.size.height * 0.1) - 24
                                         : (geometry.size.height * 0.1) + 12
                                 )
@@ -195,7 +195,7 @@ public struct StoreFeatureDetailView: View {
     }
 
     func backgroundColor(feature: Components.Schemas.Feature) -> Color {
-        if let color = feature.backgroundColor {
+        if let color = feature.screenshots.first?.backgroundColor {
             Color(hex: color)
         } else {
             Color.accent

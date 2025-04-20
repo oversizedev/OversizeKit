@@ -22,7 +22,7 @@ struct StoreFeaturesLargeView: View {
         case let .result(features):
             VStack {
                 ForEach(features) { feature in
-                    if feature.screenshotUrl != nil {
+                    if !feature.screenshots.isEmpty {
                         fetureScreenItem(feature)
                     } else {
                         fetureItem(feature)
@@ -43,8 +43,8 @@ struct StoreFeaturesLargeView: View {
                         LinearGradient(
                             gradient: Gradient(
                                 colors: [
-                                    Color(hex: feature.backgroundColor != nil ? feature.backgroundColor : "637DFA"),
-                                    Color(hex: feature.backgroundColor != nil ? feature.backgroundColor : "872BFF"),
+                                    Color(hex: feature.screenshots.first?.backgroundColor ?? "637DFA"),
+                                    Color(hex: feature.screenshots.first?.backgroundColor ?? "872BFF"),
                                 ]
                             ),
                             startPoint: .topLeading,
@@ -52,16 +52,16 @@ struct StoreFeaturesLargeView: View {
                         )
                     )
                     .frame(height: 310)
-                    .overlay(alignment: feature.screenshotAlignment == .top ? .top : .bottom) {
+                    .overlay(alignment: feature.screenshots.first?.alignment == .top ? .top : .bottom) {
                         ZStack {
                             FireworksBubbles()
 
-                            if let urlString = feature.screenshotUrl, let url = URL(string: urlString) {
+                            if let urlString = feature.screenshots.first?.url, let url = URL(string: urlString) {
                                 ScreenMockup(url: url)
                                     .frame(maxWidth: 204)
                                     .padding(
-                                        feature.screenshotAlignment == .top ? .top : .bottom,
-                                        feature.screenshotAlignment == .top ? 40 : 70
+                                        feature.screenshots.first?.alignment == .top ? .top : .bottom,
+                                        feature.screenshots.first?.alignment == .top ? 40 : 70
                                     )
                             }
                         }
@@ -73,9 +73,11 @@ struct StoreFeaturesLargeView: View {
                         .title2(.bold)
                         .foregroundColor(.onSurfacePrimary)
 
-                    Text(feature.subtitle.valueOrEmpty)
-                        .body(.medium)
-                        .foregroundColor(.onSurfaceSecondary)
+                    if let subtitle = feature.subtitle {
+                        Text(subtitle)
+                            .body(.medium)
+                            .foregroundColor(.onSurfaceSecondary)
+                    }
                 }
                 .padding(.vertical, .medium)
                 .padding(.horizontal, .xSmall)
@@ -90,8 +92,8 @@ struct StoreFeaturesLargeView: View {
 
     func fetureItem(_ feature: Components.Schemas.Feature) -> some View {
         VStack(spacing: .zero) {
-            if let IllustrationURLPath = feature.illustrationUrl {
-                CachedAsyncImage(url: URL(string: IllustrationURLPath), urlCache: .imageCache) { image in
+            if let iconUrlString = feature.iconUrl, let iconUrl = URL(string: iconUrlString) {
+                CachedAsyncImage(url: iconUrl, urlCache: .imageCache) { image in
                     image
                         .resizable()
                         .scaledToFill()
@@ -103,7 +105,25 @@ struct StoreFeaturesLargeView: View {
                         .frame(width: 100, height: 100)
                 }
                 .padding(.bottom, .large)
-
+            } else if let illustrationUrlString = feature.illustrationUrl, let illustrationUrl = URL(string: illustrationUrlString) {
+                CachedAsyncImage(url: illustrationUrl, urlCache: .imageCache) { image in
+                    image
+                        .resizable()
+                        .renderingMode(.template)
+                        .foregroundColor(Color.accent)
+                        .frame(width: 54, height: 54)
+                        .padding(20)
+                        .background {
+                            Circle()
+                                .fill(backgroundColor(feature: feature).opacity(0.2))
+                        }
+                        .padding(.bottom, .large)
+                } placeholder: {
+                    Circle()
+                        .fillSurfaceSecondary()
+                        .frame(width: 100, height: 100)
+                }
+                .padding(.bottom, .large)
             } else {
                 Image.Base.Check.square
                     .resizable()
@@ -123,16 +143,18 @@ struct StoreFeaturesLargeView: View {
                     .title2(.bold)
                     .foregroundColor(.onSurfacePrimary)
 
-                Text(feature.subtitle.valueOrEmpty)
-                    .body(.medium)
-                    .foregroundColor(.onSurfaceSecondary)
+                if let subtitle = feature.subtitle {
+                    Text(subtitle)
+                        .body(.medium)
+                        .foregroundColor(.onSurfaceSecondary)
+                }
             }
         }
         .padding(.vertical, .large)
     }
 
     func backgroundColor(feature: Components.Schemas.Feature) -> Color {
-        if let color = feature.backgroundColor {
+        if let color = feature.screenshots.first?.backgroundColor {
             Color(hex: color)
         } else {
             Color.accent
