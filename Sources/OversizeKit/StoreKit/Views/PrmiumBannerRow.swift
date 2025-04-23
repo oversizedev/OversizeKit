@@ -120,7 +120,7 @@ public extension PrmiumBannerRow {
                             .colorMultiply(Color(hex: "B75375"))
                         #endif
 
-                        Text(viewModel.productsState.result?.banner.title ?? "Pro")
+                        Text(viewModel.productsState.result?.banner.badge ?? "Pro")
                             .font(.system(size: platform == .macOS ? 16 : 20, weight: platform == .macOS ? .bold : .heavy))
                             .foregroundColor(Color(hex: "B75375"))
                             .redacted(reason: viewModel.productsState.isLoading ? .placeholder : .init())
