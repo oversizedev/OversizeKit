@@ -7,7 +7,7 @@
 @preconcurrency import Contacts
 import EventKit
 #endif
-import Factory
+import FactoryKit
 import OversizeContactsService
 import OversizeCore
 import OversizeModels

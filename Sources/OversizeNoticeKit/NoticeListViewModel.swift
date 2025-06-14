@@ -3,7 +3,7 @@
 // NoticeListViewModel.swift, created on 25.12.2023
 //
 
-import Factory
+import FactoryKit
 import OversizeModels
 import OversizeNetwork
 import OversizeServices

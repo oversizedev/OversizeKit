@@ -3,7 +3,7 @@
 // SystemServices.swift
 //
 
-import Factory
+import FactoryKit
 import OversizeServices
 import OversizeStoreService
 import OversizeUI

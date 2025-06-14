@@ -68,7 +68,7 @@ let package = Package(
                 .product(name: "OversizeModels", package: "OversizeModels"),
                 .product(name: "OversizeNetwork", package: "OversizeNetwork"),
                 .product(name: "OversizeRouter", package: "OversizeRouter"),
-                .product(name: "Factory", package: "Factory"),
+                .product(name: "FactoryKit", package: "Factory"),
                 .product(name: "CachedAsyncImage", package: "swiftui-cached-async-image"),
             ]
         ),
@@ -81,7 +81,7 @@ let package = Package(
                 .product(name: "OversizeServices", package: "OversizeServices"),
                 .product(name: "OversizeCalendarService", package: "OversizeServices"),
                 .product(name: "OversizeLocationService", package: "OversizeServices"),
-                .product(name: "Factory", package: "Factory"),
+                .product(name: "FactoryKit", package: "Factory"),
                 .product(name: "OversizeModels", package: "OversizeModels"),
             ]
         ),
@@ -102,7 +102,7 @@ let package = Package(
             dependencies: [
                 .product(name: "OversizeUI", package: "OversizeUI"),
                 .product(name: "OversizeLocationService", package: "OversizeServices"),
-                .product(name: "Factory", package: "Factory"),
+                .product(name: "FactoryKit", package: "Factory"),
                 .product(name: "OversizeModels", package: "OversizeModels"),
             ]
         ),
@@ -114,7 +114,7 @@ let package = Package(
                 .product(name: "OversizeUI", package: "OversizeUI"),
                 .product(name: "OversizeServices", package: "OversizeServices"),
                 .product(name: "OversizeStoreService", package: "OversizeServices"),
-                .product(name: "Factory", package: "Factory"),
+                .product(name: "FactoryKit", package: "Factory"),
             ]
         ),
         .target(
@@ -130,7 +130,7 @@ let package = Package(
                 .product(name: "OversizeUI", package: "OversizeUI"),
                 .product(name: "OversizeModels", package: "OversizeModels"),
                 .product(name: "OversizeNotificationService", package: "OversizeServices"),
-                .product(name: "Factory", package: "Factory"),
+                .product(name: "FactoryKit", package: "Factory"),
             ]
         ),
         .target(

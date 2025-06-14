@@ -3,7 +3,7 @@
 // SecuritySettingsView.swift
 //
 
-import Factory
+import FactoryKit
 import OversizeLocalizable
 import OversizeRouter
 import OversizeServices

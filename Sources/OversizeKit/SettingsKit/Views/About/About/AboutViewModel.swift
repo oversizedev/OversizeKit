@@ -3,7 +3,7 @@
 // AboutViewModel.swift, created on 30.09.2023
 //
 
-import Factory
+import FactoryKit
 import OversizeModels
 import OversizeNetwork
 import OversizeServices

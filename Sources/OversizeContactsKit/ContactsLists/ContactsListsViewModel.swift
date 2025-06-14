@@ -6,7 +6,7 @@
 #if canImport(Contacts)
 @preconcurrency import Contacts
 #endif
-import Factory
+import FactoryKit
 import OversizeContactsService
 import OversizeCore
 import OversizeModels

@@ -3,7 +3,7 @@
 // StoreViewModel.swift
 //
 
-import Factory
+import FactoryKit
 import OversizeCore
 import OversizeLocalizable
 import OversizeModels

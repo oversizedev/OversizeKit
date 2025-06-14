@@ -5,7 +5,7 @@
 
 import Combine
 import CoreLocation
-import Factory
+import FactoryKit
 import MapKit
 import OversizeLocationService
 import OversizeModels

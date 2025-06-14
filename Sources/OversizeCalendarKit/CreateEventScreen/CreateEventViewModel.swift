@@ -6,7 +6,7 @@
 #if canImport(EventKit)
 @preconcurrency import EventKit
 #endif
-import Factory
+import FactoryKit
 import OversizeCalendarService
 import OversizeCore
 import OversizeLocationService
