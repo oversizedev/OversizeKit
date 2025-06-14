@@ -121,7 +121,6 @@ public struct AddressPicker: View {
 
     private var recentResults: some View {
         ForEach(viewModel.lastSearchAddresses.reversed()) { address in
-
             Row(address.address ?? address.place?.address ?? "Latitude: \(address.location?.latitude ?? 0), longitude:longitude \(address.location?.longitude ?? 0)") {
                 if let latitude = address.location?.latitude, let longitude = address.location?.longitude {
                     onCompleteSearth(seletedAddress: address.address, seletedLocation: CLLocationCoordinate2D(latitude: latitude, longitude: longitude), seletedPlace: address.place, saveToHistory: false)
@@ -142,7 +141,6 @@ public struct AddressPicker: View {
 
     private var results: some View {
         ForEach(viewModel.locationResults, id: \.self) { location in
-
             Row(location.title, subtitle: location.subtitle) {
                 reverseGeo(location: location)
             } leading: {
@@ -164,7 +162,6 @@ public struct AddressPicker: View {
             if let c = coordinateK {
                 let location = CLLocation(latitude: c.latitude, longitude: c.longitude)
                 CLGeocoder().reverseGeocodeLocation(location) { placemarks, error in
-
                     guard let placemark = placemarks?.first else {
                         let errorString = error?.localizedDescription ?? "Unexpected Error"
                         print("Unable to reverse geocode, \(errorString)")

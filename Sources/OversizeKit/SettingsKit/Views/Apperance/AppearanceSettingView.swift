@@ -72,7 +72,6 @@ public struct AppearanceSettingView: View {
         SectionView {
             HStack {
                 ForEach(Appearance.allCases, id: \.self) { appearance in
-
                     HStack {
                         Spacer()
 

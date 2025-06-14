@@ -14,7 +14,6 @@ import SwiftUI
 
 public struct SecuritySettingsView: View {
     @Injected(\.biometricService) var biometricService
-    @Environment(\.navigator) var navigator
     @StateObject var settingsService = SettingsService()
 
     public init() {}
