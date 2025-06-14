@@ -3,7 +3,7 @@
 // SecuritySettingsView.swift
 //
 
-import Factory
+import FactoryKit
 import OversizeLocalizable
 import OversizeRouter
 import OversizeServices
@@ -14,7 +14,7 @@ import SwiftUI
 
 public struct SecuritySettingsView: View {
     @Injected(\.biometricService) var biometricService
-    @Environment(Router<SettingsScreen>.self) var router
+    @Environment(\.navigator) var navigator
     @StateObject var settingsService = SettingsService()
 
     public init() {}
@@ -72,7 +72,7 @@ extension SecuritySettingsView {
                             if settingsService.isSetedPinCode() {
                                 settingsService.pinCodeEnabend = $0
                             } else {
-                                router.present(.setPINCode)
+                                navigator.navigate(to: SettingsDestinations.setPINCode)
                             }
                         })
                     ) {
@@ -83,7 +83,7 @@ extension SecuritySettingsView {
 
                     if settingsService.isSetedPinCode() {
                         Row(L10n.Security.changePINCode) {
-                            router.present(.updatePINCode)
+                            navigator.navigate(to: SettingsDestinations.updatePINCode)
                         }
                         .rowArrow()
                     }

@@ -3,7 +3,7 @@
 // AdViewModel.swift, created on 30.06.2023
 //
 
-import Factory
+import FactoryKit
 import OversizeModels
 import OversizeNetwork
 import OversizeServices

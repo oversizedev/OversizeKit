@@ -12,7 +12,7 @@ import SwiftUI
 #if canImport(LocalAuthentication)
 import LocalAuthentication
 #endif
-import Factory
+import FactoryKit
 
 @MainActor
 public final class LauncherViewModel: ObservableObject {

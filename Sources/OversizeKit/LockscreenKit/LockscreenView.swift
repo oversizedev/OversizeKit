@@ -32,7 +32,7 @@ public struct LockscreenView: View {
 
     private var maxCount: Int
 
-    private var gridItemLayout = Array(repeating: GridItem(.flexible(), spacing: 0), count: 3)
+    private let gridItemLayout = Array(repeating: GridItem(.flexible(), spacing: 0), count: 3)
 
     private let action: (() -> Void)?
     private let biometricAction: (() -> Void)?
@@ -197,7 +197,6 @@ public struct LockscreenView: View {
     var numpad: some View {
         LazyVGrid(columns: gridItemLayout, spacing: isShowTitle ? 20 : 4) {
             ForEach(1 ... 9, id: \.self) { number in
-
                 let stringNumber: String = .init(number)
 
                 Button {

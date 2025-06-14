@@ -6,7 +6,7 @@
 #if canImport(Contacts)
 @preconcurrency import Contacts
 #endif
-import Factory
+import FactoryKit
 import OversizeContactsService
 import OversizeCore
 import OversizeModels
@@ -26,7 +26,6 @@ class EmailPickerViewModel: ObservableObject {
         let status = await contactsService.requestAccess()
         switch status {
         case .success:
-
             let keys = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactEmailAddressesKey, CNContactThumbnailImageDataKey]
             let result = await contactsService.fetchContacts(keysToFetch: keys as [CNKeyDescriptor])
             switch result {

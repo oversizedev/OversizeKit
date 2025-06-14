@@ -3,7 +3,7 @@
 // LocalNotificationSetScreenViewModel.swift
 //
 
-import Factory
+import FactoryKit
 import OversizeCore
 import OversizeModels
 import OversizeNotificationService

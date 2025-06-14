@@ -3,7 +3,7 @@
 // RateAppScreen.swift
 //
 
-import Factory
+import FactoryKit
 import OversizeResources
 import OversizeServices
 import OversizeUI
