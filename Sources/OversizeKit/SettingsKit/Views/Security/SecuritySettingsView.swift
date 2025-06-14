@@ -14,6 +14,7 @@ import SwiftUI
 
 public struct SecuritySettingsView: View {
     @Injected(\.biometricService) var biometricService
+    @Environment(Router<SettingsScreen>.self) var router
     @StateObject var settingsService = SettingsService()
 
     public init() {}
@@ -71,7 +72,8 @@ extension SecuritySettingsView {
                             if settingsService.isSetedPinCode() {
                                 settingsService.pinCodeEnabend = $0
                             } else {
-                                navigator.navigate(to: SettingsDestinations.setPINCode)
+                                router.present(.setPINCode)
+
                             }
                         })
                     ) {
@@ -82,7 +84,7 @@ extension SecuritySettingsView {
 
                     if settingsService.isSetedPinCode() {
                         Row(L10n.Security.changePINCode) {
-                            navigator.navigate(to: SettingsDestinations.updatePINCode)
+                            router.present(.updatePINCode)
                         }
                         .rowArrow()
                     }
