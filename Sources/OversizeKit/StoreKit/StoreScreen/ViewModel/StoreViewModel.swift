@@ -389,7 +389,6 @@ extension StoreViewModel {
             let result = await storeKitService.updateCustomerProductStatus(products: preProducts)
             switch result {
             case let .success(finalProducts):
-
                 if let yarlyProduct = finalProducts.autoRenewable.first(where: { $0.subscription?.subscriptionPeriod.unit == .year && $0.isOffer == specialOfferMode }) {
                     selectedProduct = yarlyProduct
                 } else {

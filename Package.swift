@@ -16,6 +16,7 @@ let remoteDependencies: [PackageDescription.Package.Dependency] = [
     .package(url: "https://github.com/oversizedev/OversizeRouter.git", .upToNextMajor(from: "0.1.0")),
     .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "2.1.3")),
     .package(url: "https://github.com/lorenzofiamingo/swiftui-cached-async-image.git", .upToNextMajor(from: "2.1.1")),
+    .package(url: "https://github.com/hmlongco/Navigator.git", .upToNextMajor(from: "1.0.0")),
 ]
 
 let localDependencies: [PackageDescription.Package.Dependency] = [
@@ -30,6 +31,7 @@ let localDependencies: [PackageDescription.Package.Dependency] = [
     .package(name: "OversizeRouter", path: "../OversizeRouter"),
     .package(url: "https://github.com/lorenzofiamingo/swiftui-cached-async-image.git", .upToNextMajor(from: "2.1.1")),
     .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "2.1.3")),
+    .package(url: "https://github.com/hmlongco/Navigator.git", .upToNextMajor(from: "1.0.0")),
 ]
 
 let dependencies: [PackageDescription.Package.Dependency] = remoteDependencies
@@ -70,6 +72,7 @@ let package = Package(
                 .product(name: "OversizeRouter", package: "OversizeRouter"),
                 .product(name: "FactoryKit", package: "Factory"),
                 .product(name: "CachedAsyncImage", package: "swiftui-cached-async-image"),
+                .product(name: "NavigatorUI", package: "Navigator"),
             ]
         ),
         .target(
@@ -93,7 +96,7 @@ let package = Package(
                 .product(name: "OversizeServices", package: "OversizeServices"),
                 .product(name: "OversizeContactsService", package: "OversizeServices"),
                 .product(name: "OversizeCalendarService", package: "OversizeServices"),
-                .product(name: "Factory", package: "Factory"),
+                .product(name: "FactoryKit", package: "Factory"),
                 .product(name: "OversizeModels", package: "OversizeModels"),
             ]
         ),
