@@ -172,9 +172,9 @@ public struct StoreSpecialOfferView: View {
             .paddingContent(.horizontal)
         }
         .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
-        .titleLabel {
-            PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: .medium)
-        }
+//        .titleLabel {
+//            PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: .medium)
+//        }
         .trailingBar {
             BarButton(.closeAction {
                 lastClosedSpecialOffer = event.id
@@ -215,7 +215,8 @@ public struct StoreSpecialOfferView: View {
         ScrollViewReader { value in
             VStack(spacing: .medium) {
                 VStack(spacing: .zero) {
-                    PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: platform == .macOS ? .small : .medium)
+                    // PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: platform == .macOS ? .small : .medium)
+                    Text("")
                     #if os(macOS)
                         .padding(.vertical, .medium)
                     #else
@@ -387,7 +388,7 @@ public struct StoreSpecialOfferView: View {
         text
             .replacingOccurrences(of: "<salePercent>", with: salePercent.toString)
             .replacingOccurrences(of: "<freeDays>", with: trialDaysPeriodText)
-            .replacingOccurrences(of: "<subscriptionName>", with: Info.store.subscriptionsName)
+        // .replacingOccurrences(of: "<subscriptionName>", with: Info.store.subscriptionsName)
     }
 
     @ViewBuilder

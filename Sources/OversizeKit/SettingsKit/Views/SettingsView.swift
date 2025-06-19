@@ -4,6 +4,7 @@
 //
 
 import OversizeLocalizable
+import OversizeNavigation
 import OversizeResources
 import OversizeRouter
 import OversizeServices
@@ -12,7 +13,7 @@ import SwiftUI
 
 // swiftlint:disable line_length
 public struct SettingsView<AppSection: View, HeadSection: View>: View {
-    @Environment(Router<SettingsScreen>.self) var router
+    @Environment(\.navigator) var navigator
     @Environment(\.iconStyle) var iconStyle: IconStyle
     @Environment(\.theme) var theme: ThemeSettings
     @StateObject var settingsService = SettingsService()
@@ -29,13 +30,16 @@ public struct SettingsView<AppSection: View, HeadSection: View>: View {
     }
 
     public var body: some View {
-        Page(L10n.Settings.title) {
+        NavigationPageView(L10n.Settings.title) {
             #if os(iOS)
             iOSSettings
             #else
             macSettings
             #endif
-        }.backgroundSecondary()
+        } background: {
+            Color.backgroundSecondary
+        }
+        .toolbarTitleDisplayMode(.inline)
     }
 }
 
@@ -76,7 +80,7 @@ extension SettingsView {
             VStack(spacing: .zero) {
                 if FeatureFlags.app.apperance.valueOrFalse {
                     Row(L10n.Settings.apperance) {
-                        router.move(.appearance)
+                        navigator.navigate(to: SettingsDestinations.appearance)
                     } leading: {
                         apperanceSettingsIcon.icon()
                     }
@@ -85,7 +89,7 @@ extension SettingsView {
 
                 if FeatureFlags.app.сloudKit.valueOrFalse || FeatureFlags.app.healthKit.valueOrFalse {
                     Row(L10n.Title.synchronization) {
-                        router.move(.sync)
+                        navigator.navigate(to: SettingsDestinations.sync)
                     } leading: {
                         cloudKitIcon.icon()
                     }
@@ -101,7 +105,8 @@ extension SettingsView {
                     || FeatureFlags.secure.photoBreaker.valueOrFalse
                 {
                     Row(L10n.Security.title) {
-                        router.move(.security)
+                        navigator.navigate(to: SettingsDestinations.security)
+
                     } leading: {
                         securityIcon.icon()
                     }
@@ -110,7 +115,8 @@ extension SettingsView {
 
                 if FeatureFlags.app.sounds.valueOrFalse || FeatureFlags.app.vibration.valueOrFalse {
                     Row(soundsAndVibrationTitle) {
-                        router.move(.soundAndVibration)
+                        navigator.navigate(to: SettingsDestinations.soundAndVibration)
+
                     } leading: {
                         FeatureFlags.app.sounds.valueOrFalse ? soundIcon.icon() : vibrationIcon.icon()
                     }
@@ -119,7 +125,8 @@ extension SettingsView {
 
                 if FeatureFlags.app.notifications.valueOrFalse {
                     Row(L10n.Settings.notifications) {
-                        router.move(.notifications)
+                        navigator.navigate(to: SettingsDestinations.notifications)
+
                     } leading: {
                         notificationsIcon.icon()
                     }
@@ -208,7 +215,8 @@ extension SettingsView {
             VStack(alignment: .leading) {
                 Row("Get help") {
                     #if os(iOS)
-                    router.present(.support, detents: [.medium])
+                    navigator.navigate(to: SettingsDestinations.support)
+
                     #endif
                 } leading: {
                     helpIcon.icon()
@@ -218,7 +226,8 @@ extension SettingsView {
 
                 Row("Send feedback") {
                     #if os(iOS)
-                    router.present(.feedback, detents: [.medium])
+                    navigator.navigate(to: SettingsDestinations.feedback)
+
                     #endif
                 } leading: {
                     chatIcon.icon()
@@ -299,7 +308,7 @@ extension SettingsView {
         SectionView {
             VStack(spacing: .zero) {
                 Row(L10n.Settings.about) {
-                    router.move(.about)
+                    navigator.navigate(to: SettingsDestinations.about)
                 } leading: {
                     infoIcon.icon()
                 }

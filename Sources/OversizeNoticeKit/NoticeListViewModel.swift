@@ -107,6 +107,6 @@ public final class NoticeListViewModel: ObservableObject {
         text
             .replacingOccurrences(of: "<salePercent>", with: salePercent.toString)
             .replacingOccurrences(of: "<freeDays>", with: trialDaysPeriodText)
-            .replacingOccurrences(of: "<subscriptionName>", with: Info.store.subscriptionsName)
+        // .replacingOccurrences(of: "<subscriptionName>", with: Info.store.subscriptionsName)
     }
 }

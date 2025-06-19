@@ -40,9 +40,9 @@ public struct StoreInstuctinsView: View {
                 .paddingContent(.horizontal)
             }
             .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
-            .titleLabel {
-                PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: .medium)
-            }
+//            .titleLabel {
+//                PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: .medium)
+//            }
             .trailingBar {
                 BarButton(.close)
             }

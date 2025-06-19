@@ -5,6 +5,7 @@
 
 import FactoryKit
 import OversizeLocalizable
+import OversizeNavigation
 import OversizeRouter
 import OversizeServices
 import OversizeUI
@@ -20,11 +21,12 @@ public struct SecuritySettingsView: View {
     public init() {}
 
     public var body: some View {
-        Page(L10n.Security.title) {
+        NavigationPageView(L10n.Security.title) {
             iOSSettings
                 .surfaceContentRowMargins()
+        } background: {
+            Color.backgroundSecondary
         }
-        .backgroundSecondary()
     }
 }
 

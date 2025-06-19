@@ -6,12 +6,12 @@
 import SwiftUI
 
 public struct OnPremiumTap: ViewModifier {
-    @State var isShowPremium = false
     @Environment(\.isPremium) var isPremium
     @Environment(\.colorScheme) var colorScheme
     #if os(macOS)
     @Environment(\.openWindow) var openWindow
     #endif
+    @Environment(\.navigator) var navigator
 
     public func body(content: Content) -> some View {
         if isPremium {
@@ -25,14 +25,10 @@ public struct OnPremiumTap: ViewModifier {
                             #if os(macOS)
                             openWindow(id: "Window.StoreView")
                             #else
-                            isShowPremium.toggle()
+                            navigator.navigate(to: SettingsDestinations.premium)
                             #endif
                         }
                 )
-                .sheet(isPresented: $isShowPremium) {
-                    StoreView()
-                        .systemServices()
-                }
         }
     }
 }

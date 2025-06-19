@@ -3,6 +3,7 @@
 // RadiusSettingView.swift
 //
 
+import OversizeNavigation
 import OversizeUI
 import SwiftUI
 
@@ -12,14 +13,12 @@ public struct RadiusSettingView: View {
     public init() {}
 
     public var body: some View {
-        PageView("Radius") {
+        NavigationPageView("Radius") {
             settings
                 .surfaceContentRowMargins()
+        } background: {
+            Color.backgroundSecondary
         }
-        .leadingBar {
-            BarButton(.back)
-        }
-        .backgroundSecondary()
     }
 
     private var settings: some View {

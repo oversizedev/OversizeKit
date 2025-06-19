@@ -5,6 +5,7 @@
 
 import OversizeComponents
 import OversizeLocalizable
+import OversizeNavigation
 import OversizeResources
 import OversizeServices
 import OversizeStoreService
@@ -26,7 +27,7 @@ public struct StoreView: View {
     }
 
     public var body: some View {
-        Page {
+        NavigationPageView("") {
             Group {
                 switch viewModel.state {
                 case .idle, .loading:
@@ -41,6 +42,15 @@ public struct StoreView: View {
                 }
             }
             .paddingContent(.horizontal)
+        }
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                PremiumLabel(
+                    image: Resource.Store.zap,
+                    text: Info.store.subscriptionsName,
+                    size: .medium
+                )
+            }
         }
         #if os(macOS)
         .backgroundSecondary()
@@ -61,7 +71,7 @@ public struct StoreView: View {
 //                    BarButton(.close)
 //                }
 //            }
-        .bottomToolbar(style: .none) {
+        .safeAreaInset(edge: .bottom) {
             if !viewModel.isPremium {
                 StorePaymentButtonBar()
                     .environmentObject(viewModel)
@@ -81,13 +91,15 @@ public struct StoreView: View {
         if viewModel.isPremium {
             "You are all set!"
         } else {
-            "Upgrade to \(Info.store.subscriptionsName)"
+            ""
+            // "Upgrade to \(Info.store.subscriptionsName)"
         }
     }
 
     var subtitleText: String {
         if viewModel.isPremium {
-            "Thank you for use to \(Info.store.subscriptionsName).\nHere's what is now unlocked."
+            ""
+            // "Thank you for use to \(Info.store.subscriptionsName).\nHere's what is now unlocked."
         } else {
             "Remove ads and unlock all features"
         }

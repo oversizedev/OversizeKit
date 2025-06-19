@@ -42,7 +42,7 @@ public struct SystemServicesModifier: ViewModifier {
                 .theme(ThemeSettings())
                 .screenSize(screnSize)
             #if os(iOS)
-                .accentColor(theme.accentColor)
+                .tint(theme.accentColor)
             #endif
                 .onAppear(perform: { onAppear(geometry: geometry) })
                 .onChange(of: scenePhase) { _, phase in

@@ -4,9 +4,11 @@
 //
 
 import CachedAsyncImage
+import NavigatorUI
 import OversizeComponents
 import OversizeCore
 import OversizeLocalizable
+import OversizeNavigation
 import OversizeResources
 import OversizeRouter
 import OversizeServices
@@ -19,7 +21,7 @@ import MessageUI
 #endif
 
 public struct AboutView: View {
-    @Environment(Router<SettingsScreen>.self) var router
+    @Environment(\.navigator) var navigator
     @Environment(\.screenSize) var screenSize
     @Environment(\.iconStyle) var iconStyle: IconStyle
 
@@ -66,14 +68,15 @@ public struct AboutView: View {
 
     public var body: some View {
         #if os(iOS)
-        Page(L10n.Settings.about) {
+        NavigationPageView(L10n.Settings.about) {
             list
                 .surfaceContentRowMargins()
                 .task {
                     await viewModel.fetchApps()
                 }
+        } background: {
+            Color.backgroundSecondary
         }
-        .backgroundSecondary()
 
         #else
         list
@@ -278,19 +281,19 @@ public struct AboutView: View {
             SectionView {
                 VStack(spacing: .zero) {
                     Row("Our open resources") {
-                        router.move(.ourResorses)
+                        navigator.navigate(to: SettingsDestinations.ourResorses)
                     }
                     .rowArrow()
 
                     if let privacyUrl = Info.url.appPrivacyPolicyUrl {
                         Row(L10n.Store.privacyPolicy) {
-                            router.present(.webView(url: privacyUrl))
+                            navigator.navigate(to: SettingsDestinations.webView(url: privacyUrl))
                         }
                     }
 
                     if let termsOfUde = Info.url.appTermsOfUseUrl {
                         Row(L10n.Store.termsOfUse) {
-                            router.present(.webView(url: termsOfUde))
+                            navigator.navigate(to: SettingsDestinations.webView(url: termsOfUde))
                         }
                     }
                 }

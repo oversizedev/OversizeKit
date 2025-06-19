@@ -3,15 +3,13 @@
 // ResolveRouter.swift, created on 16.05.2024
 //
 
-import Foundation
+import NavigatorUI
 import OversizeComponents
-import OversizeLocalizable
 import OversizeNetwork
-import OversizeRouter
 import SwiftUI
 
-extension SettingsScreen: RoutableView {
-    public func view() -> some View {
+extension SettingsDestinations: NavigationDestination {
+    public var body: some View {
         switch self {
         case .premium:
             StoreView()
@@ -27,10 +25,12 @@ extension SettingsScreen: RoutableView {
             AboutView()
         case .feedback:
             FeedbackView()
+                .presentationDetents([.height(485)])
         case .ourResorses:
             OurResorsesView()
         case .support:
             SupportView()
+                .presentationDetents([.height(460)])
         case .border:
             BorderSettingView()
         case .font:
@@ -59,6 +59,15 @@ extension SettingsScreen: RoutableView {
             #else
             EmptyView()
             #endif
+        }
+    }
+
+    public var method: NavigationMethod {
+        switch self {
+        case .webView, .sendMail, .updatePINCode, .setPINCode, .support, .feedback, .premium, .offer, .premiumFeature:
+            .managedSheet
+        default:
+            .push
         }
     }
 }

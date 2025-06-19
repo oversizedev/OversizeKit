@@ -3,6 +3,7 @@
 // BorderSettingView.swift
 //
 
+import OversizeNavigation
 import OversizeUI
 import SwiftUI
 
@@ -12,18 +13,12 @@ public struct BorderSettingView: View {
     public init() {}
 
     public var body: some View {
-        PageView("Borders in app") {
+        NavigationPageView("Borders in app") {
             settings
                 .surfaceContentRowMargins()
+        } background: {
+            Color.backgroundSecondary
         }
-        .leadingBar {
-            // if !isPortrait, verticalSizeClass == .regular {
-            //    EmptyView()
-            // } else {
-            BarButton(.back)
-            // }
-        }
-        .backgroundSecondary()
     }
 
     private var settings: some View {
