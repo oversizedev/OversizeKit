@@ -27,4 +27,6 @@ public enum SettingsDestinations: Hashable {
     case offer(event: Components.Schemas.InAppPurchaseOffer)
     case webView(url: URL)
     case sendMail(to: String, subject: String, content: String)
+    case debugMenu
+    case debugInfo
 }

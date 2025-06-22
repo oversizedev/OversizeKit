@@ -16,9 +16,9 @@ import FactoryKit
 
 @MainActor
 public final class LauncherViewModel: ObservableObject {
-    @Injected(\.biometricService) var biometricService
+    @Injected(\.biometricService) var biometricService: BiometricServiceProtocol
     @Injected(\.appStateService) var appStateService: AppStateService
-    @Injected(\.settingsService) var settingsService
+    @Injected(\.settingsService) var settingsService: SettingsServiceProtocol
     @Injected(\.appStoreReviewService) var reviewService: AppStoreReviewServiceProtocol
     @Injected(\.storeKitService) private var storeKitService: StoreKitService
     @Injected(\.networkService) var networkService
@@ -26,12 +26,16 @@ public final class LauncherViewModel: ObservableObject {
     @AppStorage("AppState.PremiumState") var isPremium: Bool = false
     @AppStorage("AppState.SubscriptionsState") var subscriptionsState: RenewalState = .expired
     @AppStorage("AppState.LastClosedSpecialOfferSheet") var lastClosedSpecialOffer: Int = .init()
+    @AppStorage("AppState.AppBackgroundDate") var appBackgroundDate: Date = .init()
     @Published public var pinCodeField: String = ""
     @Published public var authState: LockscreenViewState = .locked
     @Published var activeFullScreenSheet: FullScreenSheet?
     @Published var isShowSplashScreen: Bool = true
+    @Published var isNeedAuthCheking = false
 
-    let expectedFormat = Date.ISO8601FormatStyle()
+    let firstRunAction: (() -> Void)?
+
+    let appUpdateAction: (() -> Void)?
 
     var isShowLockscreen: Bool {
         if FeatureFlags.secure.lookscreen ?? false {
@@ -45,7 +49,13 @@ public final class LauncherViewModel: ObservableObject {
         }
     }
 
-    public init() {}
+    public init(
+        firstRunAction: (() -> Void)? = nil,
+        appUpdateAction: (() -> Void)? = nil
+    ) {
+        self.firstRunAction = firstRunAction
+        self.appUpdateAction = appUpdateAction
+    }
 }
 
 extension LauncherViewModel {
@@ -82,12 +92,12 @@ public extension LauncherViewModel {
         let status = await storeKitService.fetchPremiumAndSubscriptionsStatus(productIds: productIds)
         if let premiumStatus = status.0 {
             isPremium = premiumStatus
-            log("\(premiumStatus ? "👑 Premium status" : "🆓 Free status")")
+            log("\(premiumStatus ? "👑 [INFO] Premium status" : "🆓 [INFO] Free status")")
         }
 
         if let subscriptionStatus = status.1 {
             if #available(iOS 15.4, macOS 12.3, *) {
-                log("📝 Subscription: \(subscriptionStatus.localizedDescription)")
+                log("📝 [INFO] Subscription: \(subscriptionStatus.localizedDescription)")
             }
             subscriptionsState = subscriptionStatus
         }
@@ -121,7 +131,7 @@ public extension LauncherViewModel {
     }
 
     func checkOnboarding() {
-        if !appStateService.isCompletedOnbarding {
+        if !appStateService.isCompletedOnboarding {
             activeFullScreenSheet = .onboarding
         }
     }
@@ -168,6 +178,45 @@ public extension LauncherViewModel {
             Task {
                 await fetchAndSetSpecialOffer()
             }
+        }
+    }
+
+    @Sendable func onAppear() async {
+        isShowSplashScreen = false
+        if appStateService.appRunCount == 0 {
+            firstRunAction?()
+        } else if appStateService.lastRunVersion != Info.app.version {
+            appUpdateAction?()
+        }
+
+        appStateService.appRun()
+
+        await checkPremium()
+    }
+
+    func onScenePhaseChange(_ scenePhase: ScenePhase) {
+        switch scenePhase {
+        case .background:
+            log("↩️ [STATE] App background")
+            appBackgroundDate = Date()
+            pinCodeField = ""
+            isNeedAuthCheking = true
+        case .active:
+            log("❇️ [STATE] App active")
+            if isNeedAuthCheking, appBackgroundDate.addingTimeInterval(settingsService.appLockTimeout) < Date() {
+                authState = .locked
+                isNeedAuthCheking = false
+            }
+        default:
+            break
+        }
+    }
+
+    func onCompeteOnboarding(_ isCompletedOnbarding: Bool) {
+        if isCompletedOnbarding, !isPremium {
+            setPayWall()
+        } else {
+            activeFullScreenSheet = nil
         }
     }
 }

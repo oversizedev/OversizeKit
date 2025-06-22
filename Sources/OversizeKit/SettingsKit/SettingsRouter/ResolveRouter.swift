@@ -59,12 +59,16 @@ extension SettingsDestinations: NavigationDestination {
             #else
             EmptyView()
             #endif
+        case .debugMenu:
+            DebugMenuView()
+        case .debugInfo:
+            DebugInfoView()
         }
     }
 
     public var method: NavigationMethod {
         switch self {
-        case .webView, .sendMail, .updatePINCode, .setPINCode, .support, .feedback, .premium, .offer, .premiumFeature:
+        case .webView, .sendMail, .updatePINCode, .setPINCode, .support, .feedback, .premium, .offer, .premiumFeature, .debugMenu, .debugInfo:
             .managedSheet
         default:
             .push

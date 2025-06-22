@@ -284,9 +284,12 @@ public struct StoreSpecialOfferView: View {
                 .opacity(0 + (offset * 0.01))
                 .id(10)
 
-                SubscriptionPrivacyView(products: data)
-                    .padding(.horizontal, .medium)
-                    .padding(.bottom, .large)
+                SubscriptionPrivacyView(
+                    subscriptionsName: viewModel.productsState.result?.banner.badge ?? "",
+                    products: data
+                )
+                .padding(.horizontal, .medium)
+                .padding(.bottom, .large)
             }
             .padding(.bottom, 180)
             .task {

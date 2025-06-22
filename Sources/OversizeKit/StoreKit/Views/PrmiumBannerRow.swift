@@ -76,9 +76,9 @@ public struct PrmiumBannerRow: View {
                     ))
             )
 
-//            Text(Info.store.subscriptionsName)
-//                .headline(.semibold)
-//                .foregroundColor(.onSurfacePrimary)
+            Text(viewModel.productsState.result?.banner.badge ?? "")
+                .headline(.semibold)
+                .foregroundColor(.onSurfacePrimary)
 
             Spacer()
 
@@ -114,7 +114,7 @@ public extension PrmiumBannerRow {
                             .colorMultiply(Color(hex: "B75375"))
                         #endif
 
-                        Text(viewModel.productsState.result?.banner.badge ?? "Pro")
+                        Text(viewModel.productsState.result?.banner.badge ?? "")
                             .font(.system(size: platform == .macOS ? 16 : 20, weight: platform == .macOS ? .bold : .heavy))
                             .foregroundColor(Color(hex: "B75375"))
                             .redacted(reason: viewModel.productsState.isLoading ? .placeholder : .init())

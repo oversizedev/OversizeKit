@@ -15,25 +15,23 @@ public struct Launcher<Content: View, Onboarding: View>: View {
     private var onboarding: Onboarding?
     private let content: Content
 
-    @StateObject private var viewModel = LauncherViewModel()
+    @StateObject private var viewModel: LauncherViewModel
 
-    public init(@ViewBuilder content: () -> Content) {
+    public init(
+        @ViewBuilder content: () -> Content,
+        firstRunAction: (() -> Void)? = nil,
+        appUpdateAction: (() -> Void)? = nil
+    ) {
         self.content = content()
+        _viewModel = StateObject(wrappedValue: LauncherViewModel(
+            firstRunAction: firstRunAction,
+            appUpdateAction: appUpdateAction
+        ))
     }
 
     public var body: some View {
         contentView
-            .onAppear {
-                viewModel.isShowSplashScreen = false
-//                #if DEBUG
-//                    viewModel.appStateService.restOnbarding()
-//                    viewModel.appStateService.restAppRunCount()
-//                #endif
-                viewModel.appStateService.appRun()
-            }
-            .task {
-                await viewModel.checkPremium()
-            }
+            .task(viewModel.onAppear)
             .appLaunchCover(item: $viewModel.activeFullScreenSheet) {
                 fullScreenCover(sheet: $0)
                     .systemServices()
@@ -42,29 +40,17 @@ public struct Launcher<Content: View, Onboarding: View>: View {
                 // .interactiveDismissDisabled(!viewModel.appStateService.isCompletedOnbarding)
                 #endif
             }
-            .onChange(of: viewModel.appStateService.isCompletedOnbarding) { _, isCompletedOnbarding in
-                if isCompletedOnbarding, !viewModel.isPremium {
-                    viewModel.setPayWall()
-                } else {
-                    viewModel.activeFullScreenSheet = nil
-                }
+            .onChange(of: viewModel.appStateService.isCompletedOnboarding) { _, isCompletedOnbarding in
+                viewModel.onCompeteOnboarding(isCompletedOnbarding)
             }
             .onChange(of: scenePhase) { _, value in
-                switch value {
-                case .background:
-                    viewModel.authState = .locked
-                    viewModel.pinCodeField = ""
-                default:
-                    break
-                }
+                viewModel.onScenePhaseChange(value)
             }
     }
 
     @ViewBuilder
     var contentView: some View {
-        if viewModel.isShowSplashScreen {
-            SplashScreen()
-        } else if viewModel.isShowLockscreen {
+        if viewModel.isShowLockscreen {
             lockscreenView
         } else {
             content
@@ -116,8 +102,16 @@ public struct Launcher<Content: View, Onboarding: View>: View {
 }
 
 public extension Launcher where Onboarding == EmptyView {
-    init(@ViewBuilder content: () -> Content) {
+    init(
+        @ViewBuilder content: () -> Content,
+        firstRunAction: (() -> Void)? = nil,
+        appUpdateAction: (() -> Void)? = nil
+    ) {
         self.content = content()
+        _viewModel = StateObject(wrappedValue: LauncherViewModel(
+            firstRunAction: firstRunAction,
+            appUpdateAction: appUpdateAction
+        ))
         onboarding = nil
     }
 }
@@ -133,6 +127,19 @@ public extension View {
         Launcher {
             self
         }
+        .onboarding(onboarding: onboarding)
+    }
+
+    func appLaunch(
+        @ViewBuilder onboarding: @escaping () -> some View,
+        firstRun: (() -> Void)? = nil,
+        appUpdate: (() -> Void)? = nil
+    ) -> some View {
+        Launcher(
+            content: { self },
+            firstRunAction: firstRun,
+            appUpdateAction: appUpdate
+        )
         .onboarding(onboarding: onboarding)
     }
 }

@@ -59,7 +59,7 @@ struct FeedbackViewRows: View {
             #if os(iOS)
             if MFMailComposeViewController.canSendMail(),
                let mail = Info.links?.company.email,
-               let appVersion = Info.app.verstion,
+               let appVersion = Info.app.version,
                let appName = Info.app.name,
                let device = Info.app.device,
                let appBuild = Info.app.build,

@@ -18,6 +18,7 @@ public struct SecuritySettingsView: View {
     @Environment(\.navigator) var navigator
     @StateObject var settingsService = SettingsService()
 
+    let min: [Double] = [60, 120, 300, 600]
     public init() {}
 
     public var body: some View {
@@ -35,7 +36,7 @@ extension SecuritySettingsView {
         VStack(alignment: .center, spacing: 0) {
             faceID
 
-            // additionally
+            additionally
         }
     }
 }
@@ -139,6 +140,28 @@ extension SecuritySettingsView {
                             .premium()
                     }
                     .onPremiumTap()
+                }
+
+                if FeatureFlags.secure.lookscreen.valueOrFalse {
+                    Switch(isOn: $settingsService.fastEnter) {
+                        Row("Fast enter")
+                    }
+                }
+                if settingsService.fastEnter {
+                    Row("Time to enter", trailing: {
+                        Picker("", selection: $settingsService.appLockTimeout) {
+                            ForEach(0 ..< min.count) {
+                                let min = Int(self.min[$0] / 60)
+
+                                Text("\(min) \(OversizeLocalizable.L10n.Time.mins)")
+                                    .tag(self.min[$0])
+                            }
+                        }
+                        .pickerStyle(.navigationLink)
+                        .labelsHidden()
+                        .clipped()
+                    })
+                    .rowArrow()
                 }
 
 //                    if FeatureFlags.secure.lookscreen.valueOrFalse {

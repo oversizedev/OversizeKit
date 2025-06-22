@@ -58,6 +58,9 @@ extension SettingsView {
             }
             Group {
                 app
+                #if DEBUG
+                debug
+                #endif
                 help
                 about
             }
@@ -282,6 +285,32 @@ extension SettingsView {
         }
     }
 
+    #if DEBUG
+    var debugIcon: Image {
+        switch iconStyle {
+        case .line:
+            Image.Base.game
+        case .fill:
+            Image.Base.Game.fill
+        case .twoTone:
+            Image.Base.Game.twoTone
+        }
+    }
+    #endif
+
+    #if DEBUG
+    var debugInfoIcon: Image {
+        switch iconStyle {
+        case .line:
+            Image.Base.document
+        case .fill:
+            Image.Base.Document.fill
+        case .twoTone:
+            Image.Base.Document.twoTone
+        }
+    }
+    #endif
+
     var oversizeIcon: Image {
         switch iconStyle {
         case .line:
@@ -303,6 +332,29 @@ extension SettingsView {
             Image.Alert.Help.Circle.twoTone
         }
     }
+
+    #if DEBUG
+    private var debug: some View {
+        SectionView {
+            VStack(spacing: .zero) {
+                Row("Debug") {
+                    navigator.navigate(to: SettingsDestinations.debugMenu)
+                } leading: {
+                    debugIcon.icon()
+                }
+                .rowArrow()
+
+                Row("Inofrmation") {
+                    navigator.navigate(to: SettingsDestinations.debugInfo)
+                } leading: {
+                    debugInfoIcon.icon()
+                }
+                .rowArrow()
+            }
+            .buttonStyle(.row)
+        }
+    }
+    #endif
 
     private var about: some View {
         SectionView {
@@ -345,6 +397,10 @@ extension SettingsView {
             }
 
             macGeneral
+
+            #if DEBUG
+            debug
+            #endif
 
             SectionView("Feedback") {
                 FeedbackViewRows()
