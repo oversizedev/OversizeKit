@@ -19,7 +19,7 @@ public final class LauncherViewModel: ObservableObject {
     @Injected(\.biometricService) var biometricService: BiometricServiceProtocol
     @Injected(\.appStateService) var appStateService: AppStateService
     @Injected(\.settingsService) var settingsService: SettingsServiceProtocol
-    @Injected(\.appStoreReviewService) var reviewService: AppStoreReviewServiceProtocol
+    @Injected(\.appStoreReviewService) var reviewService: AppStoreReviewService
     @Injected(\.storeKitService) private var storeKitService: StoreKitService
     @Injected(\.networkService) var networkService
 
@@ -77,9 +77,9 @@ extension LauncherViewModel {
 
 // Lockscreen
 public extension LauncherViewModel {
-    func launcherSheetsChek() {
+    func launcherSheetsChek() async {
         checkOnboarding()
-        checkAppRate()
+        await checkAppRate()
         checkSpecialOffer()
     }
 
@@ -145,8 +145,8 @@ public extension LauncherViewModel {
         }
     }
 
-    func checkAppRate() {
-        if reviewService.isShowReviewSheet, activeFullScreenSheet == nil {
+    func checkAppRate() async {
+        if await reviewService.isShowReviewSheet, activeFullScreenSheet == nil {
             activeFullScreenSheet = .rate
         }
     }

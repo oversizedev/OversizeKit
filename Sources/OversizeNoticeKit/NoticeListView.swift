@@ -45,24 +45,30 @@ public struct NoticeListView: View {
                 .buttonStyle(.primary(infinityWidth: true))
                 .accent()
                 .simultaneousGesture(TapGesture().onEnded {
-                    viewModel.reviewService.estimate(goodRating: true)
-                    withAnimation {
-                        isBannerClosed = true
+                    Task {
+                        await viewModel.reviewService.estimate(goodRating: true)
+                        withAnimation {
+                            isBannerClosed = true
+                        }
                     }
                 })
 
                 Button("Bad") {
-                    viewModel.reviewService.estimate(goodRating: false)
-                    withAnimation {
-                        isBannerClosed = true
+                    Task {
+                        await viewModel.reviewService.estimate(goodRating: false)
+                        withAnimation {
+                            isBannerClosed = true
+                        }
                     }
                 }
                 .buttonStyle(.tertiary(infinityWidth: true))
 
             } closeAction: {
-                viewModel.reviewService.rewiewBunnerClosed()
-                withAnimation {
-                    isBannerClosed = true
+                Task {
+                    await viewModel.reviewService.rewiewBunnerClosed()
+                    withAnimation {
+                        isBannerClosed = true
+                    }
                 }
             }
             .animation(.default, value: isBannerClosed)

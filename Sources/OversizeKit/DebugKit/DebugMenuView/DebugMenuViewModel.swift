@@ -16,7 +16,6 @@ import FactoryKit
 
 @MainActor
 public final class DebugMenuViewModel: ObservableObject {
-    
     @Injected(\.appStateService) var appStateService: AppStateService
 
     public init() {}

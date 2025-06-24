@@ -12,7 +12,7 @@ import SwiftUI
 public struct SystemServicesModifier: ViewModifier {
     @Injected(\.appStateService) private var appState: AppStateService
     @Injected(\.settingsService) private var settingsService: SettingsServiceProtocol
-    @Injected(\.appStoreReviewService) private var appStoreReviewService: AppStoreReviewServiceProtocol
+    @Injected(\.appStoreReviewService) private var appStoreReviewService: AppStoreReviewService
 
     @Environment(\.scenePhase) private var scenePhase: ScenePhase
     @Environment(\.theme) private var theme: ThemeSettings

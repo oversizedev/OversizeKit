@@ -57,8 +57,8 @@ public struct Launcher<Content: View, Onboarding: View>: View {
                 .onAppear {
                     Task { @MainActor in
                         await viewModel.reviewService.launchEvent()
+                        await viewModel.launcherSheetsChek()
                     }
-                    viewModel.launcherSheetsChek()
                 }
         }
     }

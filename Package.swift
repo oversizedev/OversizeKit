@@ -4,7 +4,13 @@
 import Foundation
 import PackageDescription
 
-let remoteDependencies: [PackageDescription.Package.Dependency] = [
+let commonDependencies: [PackageDescription.Package.Dependency] = [
+    .package(url: "https://github.com/lorenzofiamingo/swiftui-cached-async-image.git", .upToNextMajor(from: "2.1.1")),
+    .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "2.1.3")),
+    .package(url: "https://github.com/hmlongco/Navigator.git", .upToNextMajor(from: "1.0.0")),
+]
+
+let remoteDependencies: [PackageDescription.Package.Dependency] = commonDependencies + [
     .package(url: "https://github.com/oversizedev/OversizeUI.git", .upToNextMajor(from: "3.0.2")),
     .package(url: "https://github.com/oversizedev/OversizeCore.git", .upToNextMajor(from: "1.3.0")),
     .package(url: "https://github.com/oversizedev/OversizeServices.git", .upToNextMajor(from: "1.4.0")),
@@ -14,12 +20,10 @@ let remoteDependencies: [PackageDescription.Package.Dependency] = [
     .package(url: "https://github.com/oversizedev/OversizeNetwork.git", .upToNextMajor(from: "1.0.0")),
     .package(url: "https://github.com/oversizedev/OversizeModels.git", .upToNextMajor(from: "0.1.0")),
     .package(url: "https://github.com/oversizedev/OversizeRouter.git", .upToNextMajor(from: "0.1.0")),
-    .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "2.1.3")),
-    .package(url: "https://github.com/lorenzofiamingo/swiftui-cached-async-image.git", .upToNextMajor(from: "2.1.1")),
-    .package(url: "https://github.com/hmlongco/Navigator.git", .upToNextMajor(from: "1.0.0")),
+    .package(url: "https://github.com/oversizedev/OversizeNavigation.git", .upToNextMajor(from: "0.1.0")),
 ]
 
-let localDependencies: [PackageDescription.Package.Dependency] = [
+let localDependencies: [PackageDescription.Package.Dependency] = commonDependencies + [
     .package(name: "OversizeUI", path: "../OversizeUI"),
     .package(name: "OversizeServices", path: "../OversizeServices"),
     .package(name: "OversizeLocalizable", path: "../OversizeLocalizable"),
@@ -29,9 +33,7 @@ let localDependencies: [PackageDescription.Package.Dependency] = [
     .package(name: "OversizeNetwork", path: "../OversizeNetwork"),
     .package(name: "OversizeModels", path: "../OversizeModels"),
     .package(name: "OversizeRouter", path: "../OversizeRouter"),
-    .package(url: "https://github.com/lorenzofiamingo/swiftui-cached-async-image.git", .upToNextMajor(from: "2.1.1")),
-    .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "2.1.3")),
-    .package(url: "https://github.com/hmlongco/Navigator.git", .upToNextMajor(from: "1.0.0")),
+    .package(name: "OversizeNavigation", path: "../OversizeNavigation"),
 ]
 
 let dependencies: [PackageDescription.Package.Dependency] = remoteDependencies
@@ -73,6 +75,7 @@ let package = Package(
                 .product(name: "FactoryKit", package: "Factory"),
                 .product(name: "CachedAsyncImage", package: "swiftui-cached-async-image"),
                 .product(name: "NavigatorUI", package: "Navigator"),
+                .product(name: "OversizeNavigation", package: "OversizeNavigation"),
             ]
         ),
         .target(

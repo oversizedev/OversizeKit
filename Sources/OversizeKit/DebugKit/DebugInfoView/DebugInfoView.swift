@@ -47,21 +47,27 @@ public struct DebugInfoView: View {
             }
             .sectionContentCompactRowMargins()
             .rowContentMargins(.init(horizontal: .medium, vertical: .xxxSmall))
-            
+
             SectionView("Review") {
                 Row(
-                    "App Store review request count",
-                    subtitle: "\(viewModel.reviewService.appStoreReviewRequestCount)"
+                    "App launches for review",
+                    subtitle: "Current: \(viewModel.appStateService.appRunCount), next request after \(viewModel.nextLaunchReviewCount) launches"
+                )
+                Separator()
+                Row(
+                    "Events to show review request count",
+                    subtitle: "Current: \(viewModel.eventCount), next request after \(viewModel.nextEventReviewCount) events",
+                    action: viewModel.onTapAddEvent
                 )
                 Separator()
                 Row(
                     "App Review banner closed date",
-                    subtitle: viewModel.reviewService.appReviewBannerClosedDate.formatted(date: .abbreviated, time: .standard)
+                    subtitle: viewModel.reviewBannerClosedDate.formatted(date: .abbreviated, time: .standard)
                 )
                 Separator()
                 Row(
                     "App Review estimate date",
-                    subtitle: viewModel.reviewService.appReviewEstimateDate.formatted(date: .abbreviated, time: .standard)
+                    subtitle: viewModel.reviewEstimateDate.formatted(date: .abbreviated, time: .standard)
                 )
             }
             .sectionContentCompactRowMargins()
