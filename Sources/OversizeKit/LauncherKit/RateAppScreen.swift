@@ -69,7 +69,7 @@ struct RateAppScreen: View {
         .overlay(alignment: .topTrailing) {
             Button {
                 Task {
-                    await reviewService.rewiewBunnerClosed()
+                    await reviewService.reviewBannerClosed()
                     dismiss()
                 }
             } label: {
