@@ -65,7 +65,7 @@ public struct NoticeListView: View {
 
             } closeAction: {
                 Task {
-                    await viewModel.reviewService.rewiewBunnerClosed()
+                    await viewModel.reviewService.reviewBannerClosed()
                     withAnimation {
                         isBannerClosed = true
                     }
