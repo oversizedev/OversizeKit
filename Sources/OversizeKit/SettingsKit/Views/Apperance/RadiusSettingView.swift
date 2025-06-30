@@ -13,7 +13,7 @@ public struct RadiusSettingView: View {
     public init() {}
 
     public var body: some View {
-        NavigationPageView("Radius") {
+        NavigationLayoutView("Radius") {
             settings
                 .surfaceContentRowMargins()
         } background: {

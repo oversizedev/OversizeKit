@@ -19,7 +19,7 @@ public struct OurResorsesView: View {
     public init() {}
 
     public var body: some View {
-        NavigationPageView("Our open resources") {
+        NavigationLayoutView("Our open resources") {
             links
                 .surfaceContentRowMargins()
         } background: {

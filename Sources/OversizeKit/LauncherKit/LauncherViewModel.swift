@@ -83,26 +83,6 @@ public extension LauncherViewModel {
         checkSpecialOffer()
     }
 
-    func checkPremium() async {
-        guard let appStoreID = Info.app.appStoreID else {
-            return
-        }
-        let productIds = await networkService.fetchAppStoreProductIds(appId: appStoreID).successResult ?? []
-
-        let status = await storeKitService.fetchPremiumAndSubscriptionsStatus(productIds: productIds)
-        if let premiumStatus = status.0 {
-            isPremium = premiumStatus
-            log("\(premiumStatus ? "👑 [INFO] Premium status" : "🆓 [INFO] Free status")")
-        }
-
-        if let subscriptionStatus = status.1 {
-            if #available(iOS 15.4, macOS 12.3, *) {
-                log("📝 [INFO] Subscription: \(subscriptionStatus.localizedDescription)")
-            }
-            subscriptionsState = subscriptionStatus
-        }
-    }
-
     func checkPassword() {
         authState = .loading
 
@@ -110,21 +90,25 @@ public extension LauncherViewModel {
             if self.pinCodeField == self.settingsService.getPINCode() {
                 self.authState = .unlocked
                 self.activeFullScreenSheet = nil
+                logSecurity("Unlocked by PIN")
             } else {
                 self.authState = .error
                 self.pinCodeField = ""
+                logError("PIN unlock failed")
             }
         }
     }
 
-    func appLockValidation() {
+    func appBiometricUnlock() {
         Task {
             let reason = "Auth in app"
             let authenticate = await biometricService.authenticating(reason: reason)
             if authenticate {
                 authState = .unlocked
                 activeFullScreenSheet = nil
+                logSecurity("Unlocked by biometric")
             } else {
+                logError("Biometric unlock failed")
                 authState = .error
             }
         }
@@ -133,6 +117,7 @@ public extension LauncherViewModel {
     func checkOnboarding() {
         if !appStateService.isCompletedOnboarding {
             activeFullScreenSheet = .onboarding
+            logNotice("Onboarding shown")
         }
     }
 
@@ -141,6 +126,7 @@ public extension LauncherViewModel {
         delay(time: 0.2) {
             Task { @MainActor in
                 self.activeFullScreenSheet = .payWall
+                logNotice("Paywall shown")
             }
         }
     }
@@ -148,20 +134,7 @@ public extension LauncherViewModel {
     func checkAppRate() async {
         if await reviewService.isShowReviewSheet, activeFullScreenSheet == nil {
             activeFullScreenSheet = .rate
-        }
-    }
-
-    func fetchAndSetSpecialOffer() async {
-        let result = await networkService.fetchSpecialOffers()
-        switch result {
-        case let .success(offers):
-            if let offer = offers.first(where: { checkDateInSelectedPeriod(startDate: $0.startDate, endDate: $0.endDate) }) {
-                if offer.id != lastClosedSpecialOffer {
-                    activeFullScreenSheet = .specialOffer(event: offer)
-                }
-            }
-        case .failure:
-            break
+            logNotice("App rate shown")
         }
     }
 
@@ -217,6 +190,55 @@ public extension LauncherViewModel {
             setPayWall()
         } else {
             activeFullScreenSheet = nil
+        }
+    }
+
+    func checkPremium() async {
+        guard let appStoreID = Info.app.appStoreID else {
+            logError("Not found App Store ID in AppConfig.plist")
+            return
+        }
+        let productIdsResult = await networkService.fetchAppStoreProductIds(appId: appStoreID)
+
+        guard let productIds = productIdsResult.successResult else {
+            logError("Not loaded product IDs")
+            return
+        }
+
+        let status = await storeKitService.fetchPremiumAndSubscriptionsStatus(productIds: productIds)
+
+        guard let premiumStatus = status.0 else {
+            logWarning("Could not fetch premium status")
+            return
+        }
+
+        isPremium = premiumStatus
+        log("\(premiumStatus ? "👑 [INFO] Premium status" : "🆓 [INFO] Free status")")
+
+        guard let subscriptionStatus = status.1 else {
+            logWarning("Could not fetch subscription status")
+            return
+        }
+
+        if #available(iOS 15.4, macOS 12.3, *) {
+            logInfo("Subscription: \(subscriptionStatus.localizedDescription)")
+        }
+        subscriptionsState = subscriptionStatus
+    }
+
+    func fetchAndSetSpecialOffer() async {
+        let result = await networkService.fetchSpecialOffers()
+        switch result {
+        case let .success(offers):
+            logSuccess("Offers loaded")
+            if let offer = offers.first(where: { checkDateInSelectedPeriod(startDate: $0.startDate, endDate: $0.endDate) }) {
+                if offer.id != lastClosedSpecialOffer {
+                    activeFullScreenSheet = .specialOffer(event: offer)
+                    logNotice("Offer shown")
+                }
+            }
+        case let .failure(error):
+            logError("Loading special offers failed", error: error)
         }
     }
 }

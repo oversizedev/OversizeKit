@@ -13,7 +13,7 @@ public struct BorderSettingView: View {
     public init() {}
 
     public var body: some View {
-        NavigationPageView("Borders in app") {
+        NavigationLayoutView("Borders in app") {
             settings
                 .surfaceContentRowMargins()
         } background: {

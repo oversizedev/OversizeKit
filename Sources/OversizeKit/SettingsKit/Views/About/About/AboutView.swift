@@ -68,7 +68,7 @@ public struct AboutView: View {
 
     public var body: some View {
         #if os(iOS)
-        NavigationPageView(L10n.Settings.about) {
+        NavigationLayoutView(L10n.Settings.about) {
             list
                 .surfaceContentRowMargins()
                 .task {

@@ -17,7 +17,7 @@ public struct NotificationsSettingsView: View {
     public init() {}
 
     public var body: some View {
-        NavigationPageView(L10n.Settings.notifications) {
+        NavigationLayoutView(L10n.Settings.notifications) {
             soundsAndVibrations
                 .surfaceContentRowMargins()
         } background: {

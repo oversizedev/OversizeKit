@@ -28,7 +28,7 @@ public struct StoreView: View {
     }
 
     public var body: some View {
-        NavigationPageView {
+        NavigationLayoutView {
             Group {
                 switch viewModel.state {
                 case .idle, .loading:
@@ -60,9 +60,6 @@ public struct StoreView: View {
                 )
             }
         }
-        #if os(macOS)
-        .backgroundSecondary()
-        #endif
         .safeAreaInset(edge: .bottom) {
             if !viewModel.isPremium {
                 StorePaymentButtonBar()

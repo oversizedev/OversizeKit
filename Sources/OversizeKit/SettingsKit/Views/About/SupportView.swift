@@ -21,7 +21,7 @@ public struct SupportView: View {
     public init() {}
 
     public var body: some View {
-        NavigationPageView(L10n.Settings.supportSection) {
+        NavigationLayoutView(L10n.Settings.supportSection) {
             VStack(spacing: .large) {
                 help
 

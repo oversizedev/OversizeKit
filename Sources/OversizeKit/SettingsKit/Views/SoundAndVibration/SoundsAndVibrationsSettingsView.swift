@@ -17,7 +17,7 @@ public struct SoundsAndVibrationsSettingsView: View {
     public init() {}
 
     public var body: some View {
-        NavigationPageView(title) {
+        NavigationLayoutView(title) {
             iOSSettings
                 .surfaceContentRowMargins()
         } background: {

@@ -16,7 +16,7 @@ public struct iCloudSettingsView: View { // Synchronization
     public init() {}
 
     public var body: some View {
-        NavigationPageView(L10n.Title.synchronization) {
+        NavigationLayoutView(L10n.Title.synchronization) {
             iOSSettings
                 .surfaceContentRowMargins()
         } background: {

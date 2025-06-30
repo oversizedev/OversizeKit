@@ -30,7 +30,7 @@ public struct SettingsView<AppSection: View, HeadSection: View>: View {
     }
 
     public var body: some View {
-        NavigationPageView(L10n.Settings.title) {
+        NavigationLayoutView(L10n.Settings.title) {
             #if os(iOS)
             iOSSettings
             #else

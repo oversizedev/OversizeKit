@@ -19,7 +19,7 @@ public struct FeedbackView: View {
     public init() {}
 
     public var body: some View {
-        NavigationPageView("Feedback") {
+        NavigationLayoutView("Feedback") {
             VStack(spacing: .large) {
                 SectionView {
                     FeedbackViewRows()
@@ -91,7 +91,7 @@ struct FeedbackViewRows: View {
             #elseif os(macOS)
 
             if let mail = Info.links?.company.email,
-               let appVersion = Info.app.verstion,
+               let appVersion = Info.app.version,
                let appName = Info.app.name,
                let appBuild = Info.app.build,
                let systemVersion = Info.app.system

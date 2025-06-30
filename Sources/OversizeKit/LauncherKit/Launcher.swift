@@ -85,11 +85,11 @@ public struct Launcher<Content: View, Onboarding: View>: View {
         ) {
             viewModel.checkPassword()
         } biometricAction: {
-            viewModel.appLockValidation()
+            viewModel.appBiometricUnlock()
         }
         .onAppear {
             if viewModel.settingsService.biometricEnabled, scenePhase != .background {
-                viewModel.appLockValidation()
+                viewModel.appBiometricUnlock()
             }
         }
     }

@@ -16,7 +16,7 @@ public struct DebugMenuView: View {
     public init() {}
 
     public var body: some View {
-        NavigationPageView("Debug") {
+        NavigationLayoutView("Debug") {
             contentView
         } background: {
             Color.backgroundSecondary

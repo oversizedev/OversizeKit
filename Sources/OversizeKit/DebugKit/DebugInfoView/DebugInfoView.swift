@@ -16,7 +16,7 @@ public struct DebugInfoView: View {
     public init() {}
 
     public var body: some View {
-        NavigationPageView("Information") {
+        NavigationLayoutView("Information") {
             contentView
         } background: {
             Color.backgroundSecondary

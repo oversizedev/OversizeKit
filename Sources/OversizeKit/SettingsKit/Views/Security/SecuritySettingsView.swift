@@ -22,7 +22,7 @@ public struct SecuritySettingsView: View {
     public init() {}
 
     public var body: some View {
-        NavigationPageView(L10n.Security.title) {
+        NavigationLayoutView(L10n.Security.title) {
             iOSSettings
                 .surfaceContentRowMargins()
         } background: {
@@ -157,7 +157,9 @@ extension SecuritySettingsView {
                                     .tag(self.min[$0])
                             }
                         }
+                        #if !os(macOS)
                         .pickerStyle(.navigationLink)
+                        #endif
                         .labelsHidden()
                         .clipped()
                     })
