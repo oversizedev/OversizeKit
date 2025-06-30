@@ -38,8 +38,8 @@ public final class LauncherViewModel: ObservableObject {
     let appUpdateAction: (() -> Void)?
 
     var isShowLockscreen: Bool {
-        if FeatureFlags.secure.lookscreen ?? false {
-            if settingsService.pinCodeEnabend || settingsService.biometricEnabled, authState != .unlocked {
+        if FeatureFlags.secure.lockscreen ?? false {
+            if settingsService.pinCodeEnabled || settingsService.biometricEnabled, authState != .unlocked {
                 true
             } else {
                 false
@@ -77,7 +77,7 @@ extension LauncherViewModel {
 
 // Lockscreen
 public extension LauncherViewModel {
-    func launcherSheetsChek() async {
+    func launcherSheetsCheck() async {
         checkOnboarding()
         await checkAppRate()
         checkSpecialOffer()

@@ -83,12 +83,12 @@ public struct PrmiumBannerRow: View {
             Spacer()
 
             HStack(spacing: .small) {
-                Text(viewModel.subsribtionStatusText)
+                Text(viewModel.subscriptionStatusText)
                     .headline(.medium)
                     .foregroundColor(.onSurfaceSecondary)
 
                 Circle()
-                    .foregroundColor(viewModel.subsribtionStatusColor)
+                    .foregroundColor(viewModel.subscriptionStatusColor)
                     .frame(width: 8, height: 8)
             }
 

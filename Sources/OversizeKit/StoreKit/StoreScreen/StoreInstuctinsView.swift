@@ -135,7 +135,7 @@ public struct StoreInstuctinsView: View {
                             Text("Begin your path towards feeling better with a ")
                                 .foregroundColor(.onSurfaceSecondary)
 
-                                + Text("\(viewModel.saleProcent)% discount")
+                                + Text("\(viewModel.salePercent)% discount")
                                 .foregroundColor(.accent)
                         }
                         .body(.semibold)

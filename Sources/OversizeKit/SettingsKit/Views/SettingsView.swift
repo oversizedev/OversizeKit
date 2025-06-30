@@ -81,16 +81,16 @@ extension SettingsView {
     private var app: some View {
         SectionView("General") {
             VStack(spacing: .zero) {
-                if FeatureFlags.app.apperance.valueOrFalse {
-                    Row(L10n.Settings.apperance) {
+                if FeatureFlags.app.appearance.valueOrFalse {
+                    Row(L10n.Settings.appearance) {
                         navigator.navigate(to: SettingsDestinations.appearance)
                     } leading: {
-                        apperanceSettingsIcon.icon()
+                        appearanceSettingsIcon.icon()
                     }
                     .rowArrow()
                 }
 
-                if FeatureFlags.app.сloudKit.valueOrFalse || FeatureFlags.app.healthKit.valueOrFalse {
+                if FeatureFlags.app.cloudKit.valueOrFalse || FeatureFlags.app.healthKit.valueOrFalse {
                     Row(L10n.Title.synchronization) {
                         navigator.navigate(to: SettingsDestinations.sync)
                     } leading: {
@@ -100,7 +100,7 @@ extension SettingsView {
                 }
 
                 if FeatureFlags.secure.faceID.valueOrFalse
-                    || FeatureFlags.secure.lookscreen.valueOrFalse
+                    || FeatureFlags.secure.lockscreen.valueOrFalse
                     || FeatureFlags.secure.CVVCodes.valueOrFalse
                     || FeatureFlags.secure.alertSecureCodes.valueOrFalse
                     || FeatureFlags.secure.blurMinimize.valueOrFalse
@@ -146,7 +146,7 @@ extension SettingsView {
         appSection
     }
 
-    var apperanceSettingsIcon: Image {
+    var appearanceSettingsIcon: Image {
         switch iconStyle {
         case .line:
             Image.Design.paintingPalette
@@ -387,10 +387,10 @@ extension SettingsView {
     @available(macOS 13.0, *)
     private var macSettings: some View {
         VStack(alignment: .center, spacing: 0) {
-            if let stoteKit = FeatureFlags.app.storeKit {
-                if stoteKit {
+            if let storeKit = FeatureFlags.app.storeKit {
+                if storeKit {
                     SectionView {
-                        PrmiumBannerRow()
+                        PremiumBannerRow()
                     }
                     .surfaceContentMargins(.zero)
                 }

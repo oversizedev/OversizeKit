@@ -12,7 +12,7 @@ import SwiftUI
 
 public struct StoreProductView: View {
     public enum StoreProductViewType {
-        case row, collumn
+        case row, column
     }
 
     @Injected(\.storeKitService) private var store: StoreKitService
@@ -48,11 +48,11 @@ public struct StoreProductView: View {
         }
     }
 
-    var saleProcent: String {
+    var salePercent: String {
         if let monthSubscriptionProduct {
             let yearPriceMonthly = monthSubscriptionProduct.price * 12
-            let procent = (yearPriceMonthly - product.price) / yearPriceMonthly
-            return (procent * 100).rounded(0).toString
+            let percent = (yearPriceMonthly - product.price) / yearPriceMonthly
+            return (percent * 100).rounded(0).toString
         } else {
             return ""
         }
@@ -76,7 +76,7 @@ public struct StoreProductView: View {
                         if product.type == .autoRenewable, let offer = product.subscription?.introductoryOffer {
                             topLabelRow(offer: offer)
                         }
-                    case .collumn:
+                    case .column:
                         topLabelCollumn
                     }
                 }
@@ -87,7 +87,7 @@ public struct StoreProductView: View {
         .buttonStyle(.plain)
         .onAppear {
             Task {
-                isPurchased = await (try? store.isPurchased(product, prducts: products)) ?? false
+                isPurchased = await (try? store.isPurchased(product, products: products)) ?? false
             }
         }
     }
@@ -151,7 +151,7 @@ public struct StoreProductView: View {
                 }
                 .padding(.vertical, platform == .macOS ? .xxSmall : .small)
                 .padding(.horizontal, platform == .macOS ? 12 : 18)
-            case .collumn:
+            case .column:
                 VStack(spacing: .zero) {
                     Text(product.displayMonthsCount)
                         .title2()
@@ -215,7 +215,7 @@ public struct StoreProductView: View {
                         .foregroundColor(.onSurfacePrimary)
 
                     if isHaveSale, !isPurchased {
-                        Text("Save " + saleProcent + "%")
+                        Text("Save " + salePercent + "%")
                             .caption2(.bold)
                             .foregroundColor(.onPrimary)
                             .padding(.horizontal, .xxSmall)
@@ -255,7 +255,7 @@ public struct StoreProductView: View {
 
             #if os(iOS) || os(macOS)
             if isHaveSale, !isPurchased {
-                Text("Save " + saleProcent + "%")
+                Text("Save " + salePercent + "%")
                     .caption2(.bold)
                     .foregroundColor(.onPrimary)
                     .padding(.vertical, .xxxSmall)
@@ -310,7 +310,7 @@ public struct StoreProductView: View {
                 RoundedRectangle(cornerRadius: platform == .macOS ? 5 : 10, style: .continuous)
                     .fill(Color.surfacePrimary)
                     .overlay {
-                        if type == .collumn, !isSelected {
+                        if type == .column, !isSelected {
                             RoundedRectangle(cornerRadius: platform == .macOS ? 6 : 12, style: .continuous)
                                 .strokeBorder(Color.backgroundTertiary, lineWidth: platform == .macOS ? 1 : 2)
                                 .padding(-2)
@@ -344,7 +344,7 @@ public struct StoreProductView: View {
             switch type {
             case .row:
                 .backgroundTertiary
-            case .collumn:
+            case .column:
                 .surfaceSecondary
             }
         }
@@ -384,7 +384,7 @@ public struct StoreProductView: View {
         }
     }
 
-    public func storeProductStyle(_ type: StoreProductViewType = .collumn) -> StoreProductView {
+    public func storeProductStyle(_ type: StoreProductViewType = .column) -> StoreProductView {
         var control = self
         control.type = type
         return control

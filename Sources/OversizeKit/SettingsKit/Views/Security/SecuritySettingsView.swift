@@ -67,13 +67,13 @@ extension SecuritySettingsView {
                     }
                 }
 
-                if FeatureFlags.secure.lookscreen.valueOrFalse {
+                if FeatureFlags.secure.lockscreen.valueOrFalse {
                     Switch(isOn:
                         Binding(get: {
-                            settingsService.pinCodeEnabend
+                            settingsService.pinCodeEnabled
                         }, set: {
                             if settingsService.isSetedPinCode() {
-                                settingsService.pinCodeEnabend = $0
+                                settingsService.pinCodeEnabled = $0
                             } else {
                                 navigator.navigate(to: SettingsDestinations.setPINCode)
                             }
@@ -104,11 +104,11 @@ extension SecuritySettingsView {
     private var additionally: some View {
         SectionView(L10n.Settings.additionally) {
             VStack(spacing: .zero) {
-//                if FeatureFlags.secure.lookscreen.valueOrFalse {
+//                if FeatureFlags.secure.lockscreen.valueOrFalse {
 //                    Row(L10n.Security.inactiveAskPassword, trallingType: .toggle(isOn: $settingsStore.askPasswordWhenInactiveEnabend))
 //                }
 //
-//                if FeatureFlags.secure.lookscreen.valueOrFalse {
+//                if FeatureFlags.secure.lockscreen.valueOrFalse {
 //                    Row(L10n.Security.minimizeAskPassword, trallingType: .toggle(isOn: $settingsStore.askPasswordAfterMinimizeEnabend))
 //                }
 
@@ -122,7 +122,7 @@ extension SecuritySettingsView {
 //                        .onPremiumTap()
 //                }
 
-//                if FeatureFlags.secure.lookscreen.valueOrFalse {
+//                if FeatureFlags.secure.lockscreen.valueOrFalse {
 //                    Row(L10n.Security.alertPINCode, trallingType: .toggle(isOn: $settingsStore.alertPINCodeEnabled))
 //                }
 //
@@ -130,7 +130,7 @@ extension SecuritySettingsView {
 //                    Row(L10n.Security.photoBreaker, trallingType: .toggle(isOn: $settingsStore.photoBreakerEnabend))
 //                }
 //
-//                if FeatureFlags.secure.lookscreen.valueOrFalse {
+//                if FeatureFlags.secure.lockscreen.valueOrFalse {
 //                    Row(L10n.Security.facedownLock, trallingType: .toggle(isOn: $settingsStore.lookScreenDownEnabend))
 //                }
 //
@@ -142,7 +142,7 @@ extension SecuritySettingsView {
                     .onPremiumTap()
                 }
 
-                if FeatureFlags.secure.lookscreen.valueOrFalse {
+                if FeatureFlags.secure.lockscreen.valueOrFalse {
                     Switch(isOn: $settingsService.fastEnter) {
                         Row("Fast enter")
                     }
@@ -166,7 +166,7 @@ extension SecuritySettingsView {
                     .rowArrow()
                 }
 
-//                    if FeatureFlags.secure.lookscreen.valueOrFalse {
+//                    if FeatureFlags.secure.lockscreen.valueOrFalse {
 //                        Row(L10n.Security.authHistory, trallingType: .toggle(isOn: $settingsService.authHistoryEnabend))
 //                            .premium()
 //                            .onPremiumTap()

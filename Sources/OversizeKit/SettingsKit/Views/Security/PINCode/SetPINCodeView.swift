@@ -43,7 +43,7 @@ public struct SetPINCodeView: View {
                 title: L10n.Security.oldPINCode,
                 errorText: viewModel.errorText
             ) {
-                viewModel.chekOldPINCode()
+                viewModel.checkOldPINCode()
             } biometricAction: {}
 
         case .newPINField:
