@@ -24,7 +24,7 @@ public struct AdView: View {
     public var body: some View {
         switch viewModel.state {
         case .initial:
-            VStack {}
+            EmptyView()
                 .task {
                     if !isPremium {
                         await viewModel.fetchAd()

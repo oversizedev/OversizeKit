@@ -42,17 +42,16 @@ public class AppStoreProductViewController: UIViewController {
 
         let parameters = [SKStoreProductParameterITunesItemIdentifier: appId]
         storeProductViewController.loadProduct(withParameters: parameters) { status, error in
-            if status {
-                self.present(storeProductViewController, animated: true, completion: nil)
-            } else {
-                if let error {
-                    print("Error: \(error.localizedDescription)")
+            DispatchQueue.main.async {
+                if status {
+                    self.present(storeProductViewController, animated: true, completion: nil)
+                } else {
+                    if let error {
+                        print("Error: \(error.localizedDescription)")
+                    }
                 }
+                self.isPresentStoreProduct.wrappedValue = false
             }
-        }
-
-        DispatchQueue.main.async {
-            self.isPresentStoreProduct.wrappedValue = false
         }
     }
 }

@@ -4,6 +4,7 @@
 //
 
 import OversizeLocalizable
+import OversizeNavigation
 import OversizeServices
 import OversizeUI
 import SwiftUI
@@ -16,11 +17,12 @@ public struct NotificationsSettingsView: View {
     public init() {}
 
     public var body: some View {
-        Page(L10n.Settings.notifications) {
+        NavigationLayoutView(L10n.Settings.notifications) {
             soundsAndVibrations
                 .surfaceContentRowMargins()
+        } background: {
+            Color.backgroundSecondary
         }
-        .backgroundSecondary()
     }
 }
 

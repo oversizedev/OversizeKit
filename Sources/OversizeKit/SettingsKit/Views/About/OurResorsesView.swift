@@ -8,6 +8,7 @@ import MessageUI
 #endif
 import OversizeComponents
 import OversizeLocalizable
+import OversizeNavigation
 import OversizeResources
 import OversizeServices
 import OversizeUI
@@ -18,12 +19,12 @@ public struct OurResorsesView: View {
     public init() {}
 
     public var body: some View {
-        Page("Our open resources") {
+        NavigationLayoutView("Our open resources") {
             links
                 .surfaceContentRowMargins()
+        } background: {
+            Color.backgroundSecondary
         }
-
-        .backgroundSecondary()
     }
 
     private var links: some View {

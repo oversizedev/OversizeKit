@@ -5,13 +5,14 @@
 
 import OversizeCore
 import OversizeLocalizable
+import OversizeNavigation
 import OversizeRouter
 import OversizeServices
 import OversizeUI
 import SwiftUI
 
 public struct AppearanceSettingView: View {
-    @Environment(Router<SettingsScreen>.self) var router
+    @Environment(\.navigator) var navigator
     @Environment(\.theme) private var theme: ThemeSettings
     @Environment(\.iconStyle) var iconStyle: IconStyle
     @Environment(\.isPremium) var isPremium: Bool
@@ -27,11 +28,12 @@ public struct AppearanceSettingView: View {
     public init() {}
 
     public var body: some View {
-        Page(L10n.Settings.apperance) {
+        NavigationLayoutView(L10n.Settings.apperance) {
             settings
                 .surfaceContentRowMargins()
+        } background: {
+            Color.backgroundSecondary
         }
-        .backgroundSecondary()
     }
 
     private var settings: some View {
@@ -133,7 +135,9 @@ public struct AppearanceSettingView: View {
                             )
                             .onTapGesture {
                                 if index != 0, isPremium == false {
-                                    router.present(.premium)
+                                    navigator.navigate(
+                                        to: SettingsDestinations.premium)
+
                                 } else {
                                     let defaultIconIndex = iconSettings.iconNames
                                         .firstIndex(of: UIApplication.shared.alternateIconName) ?? 0
@@ -162,7 +166,7 @@ public struct AppearanceSettingView: View {
         SectionView("Advanced settings") {
             VStack(spacing: .zero) {
                 Row("Fonts") {
-                    router.move(.font)
+                    navigator.navigate(to: SettingsDestinations.font)
                 } leading: {
                     textIcon.icon()
                 }
@@ -172,7 +176,8 @@ public struct AppearanceSettingView: View {
 
                 Switch(isOn: theme.$borderApp) {
                     Row("Borders") {
-                        router.move(.border)
+                        navigator.navigate(to: SettingsDestinations.border)
+
                     } leading: {
                         borderIcon.icon()
                     }
@@ -187,7 +192,8 @@ public struct AppearanceSettingView: View {
                 }
 
                 Row("Radius") {
-                    router.move(.radius)
+                    navigator.navigate(to: SettingsDestinations.radius)
+
                 } leading: {
                     radiusIcon.icon()
                 }

@@ -41,13 +41,17 @@ struct RateAppScreen: View {
                     .buttonStyle(.primary(infinityWidth: false))
                     .accent()
                     .simultaneousGesture(TapGesture().onEnded {
-                        reviewService.estimate(goodRating: true)
-                        dismiss()
+                        Task {
+                            await reviewService.estimate(goodRating: true)
+                            dismiss()
+                        }
                     })
 
                     Button {
-                        reviewService.estimate(goodRating: false)
-                        dismiss()
+                        Task {
+                            await reviewService.estimate(goodRating: false)
+                            dismiss()
+                        }
                     } label: {
                         IconDeprecated(.thumbsDown, color: .onSurfacePrimary)
                     }
@@ -64,8 +68,10 @@ struct RateAppScreen: View {
         .padding(.xLarge)
         .overlay(alignment: .topTrailing) {
             Button {
-                reviewService.rewiewBunnerClosed()
-                dismiss()
+                Task {
+                    await reviewService.rewiewBunnerClosed()
+                    dismiss()
+                }
             } label: {
                 IconDeprecated(.xMini, color: .onSurfacePrimary)
             }

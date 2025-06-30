@@ -40,9 +40,9 @@ public struct StoreInstuctinsView: View {
                 .paddingContent(.horizontal)
             }
             .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
-            .titleLabel {
-                PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: .medium)
-            }
+//            .titleLabel {
+//                PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: .medium)
+//            }
             .trailingBar {
                 BarButton(.close)
             }
@@ -171,7 +171,10 @@ public struct StoreInstuctinsView: View {
                     .id(10)
             }
 
-            SubscriptionPrivacyView(products: data)
+            SubscriptionPrivacyView(
+                subscriptionsName: viewModel.productsState.result?.banner.badge ?? "",
+                products: data
+            )
         }
         .padding(.bottom, 220)
         .onAppear {
@@ -285,21 +288,6 @@ public struct StoreInstuctinsView: View {
     @ViewBuilder
     func productsLust(data: StoreKitProducts) -> some View {
         VStack(spacing: .small) {
-//            VStack {
-//                if let currentSubscription = viewModel.currentSubscription {
-//                    VStack {
-//                        Text("My Subscription")
-//
-//                        StoreProductView(product: currentSubscription, products: data) {}
-//
-//                        if let status = viewModel.status {
-//                            StatusInfoView(product: currentSubscription, status: status, products: data)
-//                        }
-//                    }
-//                    .listStyle(GroupedListStyle())
-//                }
-//            }
-
             ForEach(viewModel.availableSubscriptions) { product in
                 if !product.isOffer {
                     StoreProductView(product: product, products: data, isSelected: .constant(false)) {

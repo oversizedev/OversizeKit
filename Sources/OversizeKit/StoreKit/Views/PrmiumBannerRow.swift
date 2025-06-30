@@ -3,6 +3,7 @@
 // PrmiumBannerRow.swift
 //
 
+import NavigatorUI
 import OversizeLocalizable
 import OversizeResources
 import OversizeServices
@@ -22,27 +23,21 @@ public struct PrmiumBannerRow: View {
 
     @State var showModal = false
 
+    @Environment(\.navigator) private var navigator
+
     public init() {
         _viewModel = StateObject(wrappedValue: StoreViewModel())
     }
 
     public var body: some View {
         VStack {
-            #if os(iOS)
-            NavigationLink {
-                StoreView()
-                    .closable(false)
-            } label: {
-                if viewModel.isPremium || viewModel.isPremiumActivated {
-                    subscriptionRow
-                } else {
-                    banner
-                }
-            }
-            .buttonStyle(.row)
-            #elseif os(macOS)
             Button {
+                #if os(macOS)
                 openWindow(id: "Window.StoreView")
+                #else
+                navigator.push(SettingsDestinations.premium)
+                #endif
+
             } label: {
                 if viewModel.isPremium || viewModel.isPremiumActivated {
                     subscriptionRow
@@ -51,7 +46,6 @@ public struct PrmiumBannerRow: View {
                 }
             }
             .buttonStyle(.row)
-            #endif
         }
         .task {
             await viewModel.fetchData()
@@ -82,7 +76,7 @@ public struct PrmiumBannerRow: View {
                     ))
             )
 
-            Text(Info.store.subscriptionsName)
+            Text(viewModel.productsState.result?.banner.badge ?? "")
                 .headline(.semibold)
                 .foregroundColor(.onSurfacePrimary)
 
@@ -120,7 +114,7 @@ public extension PrmiumBannerRow {
                             .colorMultiply(Color(hex: "B75375"))
                         #endif
 
-                        Text(viewModel.productsState.result?.banner.badge ?? "Pro")
+                        Text(viewModel.productsState.result?.banner.badge ?? "")
                             .font(.system(size: platform == .macOS ? 16 : 20, weight: platform == .macOS ? .bold : .heavy))
                             .foregroundColor(Color(hex: "B75375"))
                             .redacted(reason: viewModel.productsState.isLoading ? .placeholder : .init())

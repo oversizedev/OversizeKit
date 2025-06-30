@@ -4,23 +4,24 @@
 //
 
 import OversizeLocalizable
+import OversizeNavigation
 import OversizeServices
 import OversizeUI
 import SwiftUI
 
 // swiftlint:disable line_length type_name
-
 public struct iCloudSettingsView: View { // Synchronization
     @StateObject var settingsService = SettingsService()
 
     public init() {}
 
     public var body: some View {
-        Page(L10n.Title.synchronization) {
+        NavigationLayoutView(L10n.Title.synchronization) {
             iOSSettings
                 .surfaceContentRowMargins()
+        } background: {
+            Color.backgroundSecondary
         }
-        .backgroundSecondary()
     }
 }
 

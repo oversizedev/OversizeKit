@@ -5,6 +5,7 @@
 
 import FactoryKit
 import OversizeLocalizable
+import OversizeNavigation
 import OversizeRouter
 import OversizeServices
 import OversizeUI
@@ -14,17 +15,19 @@ import SwiftUI
 
 public struct SecuritySettingsView: View {
     @Injected(\.biometricService) var biometricService
-    @Environment(Router<SettingsScreen>.self) var router
+    @Environment(\.navigator) var navigator
     @StateObject var settingsService = SettingsService()
 
+    let min: [Double] = [60, 120, 300, 600]
     public init() {}
 
     public var body: some View {
-        Page(L10n.Security.title) {
+        NavigationLayoutView(L10n.Security.title) {
             iOSSettings
                 .surfaceContentRowMargins()
+        } background: {
+            Color.backgroundSecondary
         }
-        .backgroundSecondary()
     }
 }
 
@@ -33,7 +36,7 @@ extension SecuritySettingsView {
         VStack(alignment: .center, spacing: 0) {
             faceID
 
-            // additionally
+            additionally
         }
     }
 }
@@ -72,8 +75,7 @@ extension SecuritySettingsView {
                             if settingsService.isSetedPinCode() {
                                 settingsService.pinCodeEnabend = $0
                             } else {
-                                router.present(.setPINCode)
-
+                                navigator.navigate(to: SettingsDestinations.setPINCode)
                             }
                         })
                     ) {
@@ -84,7 +86,7 @@ extension SecuritySettingsView {
 
                     if settingsService.isSetedPinCode() {
                         Row(L10n.Security.changePINCode) {
-                            router.present(.updatePINCode)
+                            navigator.navigate(to: SettingsDestinations.updatePINCode)
                         }
                         .rowArrow()
                     }
@@ -138,6 +140,30 @@ extension SecuritySettingsView {
                             .premium()
                     }
                     .onPremiumTap()
+                }
+
+                if FeatureFlags.secure.lookscreen.valueOrFalse {
+                    Switch(isOn: $settingsService.fastEnter) {
+                        Row("Fast enter")
+                    }
+                }
+                if settingsService.fastEnter {
+                    Row("Time to enter", trailing: {
+                        Picker("", selection: $settingsService.appLockTimeout) {
+                            ForEach(0 ..< min.count) {
+                                let min = Int(self.min[$0] / 60)
+
+                                Text("\(min) \(OversizeLocalizable.L10n.Time.mins)")
+                                    .tag(self.min[$0])
+                            }
+                        }
+                        #if !os(macOS)
+                        .pickerStyle(.navigationLink)
+                        #endif
+                        .labelsHidden()
+                        .clipped()
+                    })
+                    .rowArrow()
                 }
 
 //                    if FeatureFlags.secure.lookscreen.valueOrFalse {
