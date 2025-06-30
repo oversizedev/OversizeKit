@@ -54,11 +54,9 @@ public struct Launcher<Content: View, Onboarding: View>: View {
             lockscreenView
         } else {
             content
-                .onAppear {
-                    Task { @MainActor in
-                        await viewModel.reviewService.launchEvent()
-                        await viewModel.launcherSheetsCheck()
-                    }
+                .task {
+                    await viewModel.reviewService.launchEvent()
+                    await viewModel.launcherSheetsCheck()
                 }
         }
     }

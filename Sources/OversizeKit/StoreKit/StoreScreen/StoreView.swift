@@ -134,7 +134,7 @@ public struct StoreView: View {
                     StoreProductView(product: currentSubscription, products: data) {}
 
                     if let status = viewModel.status {
-                        Text("Status: \(status.state)")
+                        Text("Status: \(status.state.localizedDescription)")
                             .caption()
                             .onSurfacePrimaryForeground()
                     }
@@ -267,3 +267,4 @@ public struct StoreView: View {
     }
 }
 #endif
+    
