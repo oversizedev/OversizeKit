@@ -344,7 +344,7 @@ extension SettingsView {
                 }
                 .rowArrow()
 
-                Row("Inofrmation") {
+                Row("Information") {
                     navigator.navigate(to: SettingsDestinations.debugInfo)
                 } leading: {
                     debugInfoIcon.icon()
