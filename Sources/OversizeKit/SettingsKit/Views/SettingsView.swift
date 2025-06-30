@@ -48,10 +48,10 @@ public struct SettingsView<AppSection: View, HeadSection: View>: View {
 extension SettingsView {
     private var iOSSettings: some View {
         VStack(alignment: .center, spacing: 0) {
-            if let stoteKit = FeatureFlags.app.storeKit {
-                if stoteKit {
+            if let storeKit = FeatureFlags.app.storeKit {
+                if storeKit {
                     SectionView {
-                        PrmiumBannerRow()
+                        PremiumBannerRow()
                     }
                     .surfaceContentMargins(.zero)
                 }
@@ -81,11 +81,11 @@ extension SettingsView {
     private var app: some View {
         SectionView("General") {
             VStack(spacing: .zero) {
-                if FeatureFlags.app.apperance.valueOrFalse {
+                if FeatureFlags.app.appearance.valueOrFalse {
                     Row(L10n.Settings.apperance) {
                         navigator.navigate(to: SettingsDestinations.appearance)
                     } leading: {
-                        apperanceSettingsIcon.icon()
+                        appearanceSettingsIcon.icon()
                     }
                     .rowArrow()
                 }
@@ -146,7 +146,7 @@ extension SettingsView {
         appSection
     }
 
-    var apperanceSettingsIcon: Image {
+    var appearanceSettingsIcon: Image {
         switch iconStyle {
         case .line:
             Image.Design.paintingPalette
@@ -387,10 +387,10 @@ extension SettingsView {
     @available(macOS 13.0, *)
     private var macSettings: some View {
         VStack(alignment: .center, spacing: 0) {
-            if let stoteKit = FeatureFlags.app.storeKit {
-                if stoteKit {
+            if let storeKit = FeatureFlags.app.storeKit {
+                if storeKit {
                     SectionView {
-                        PrmiumBannerRow()
+                        PremiumBannerRow()
                     }
                     .surfaceContentMargins(.zero)
                 }

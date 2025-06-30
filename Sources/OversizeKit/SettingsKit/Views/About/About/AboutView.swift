@@ -281,7 +281,7 @@ public struct AboutView: View {
             SectionView {
                 VStack(spacing: .zero) {
                     Row("Our open resources") {
-                        navigator.navigate(to: SettingsDestinations.ourResorses)
+                        navigator.navigate(to: SettingsDestinations.ourResources)
                     }
                     .rowArrow()
 

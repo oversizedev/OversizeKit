@@ -21,10 +21,10 @@ public final class DebugMenuViewModel: ObservableObject {
     public init() {}
 
     func onTapRestOnboarding() {
-        appStateService.restOnbarding()
+        appStateService.resetOnboarding()
     }
 
     func onTapRestAppRunCount() {
-        appStateService.restAppRunCount()
+        appStateService.resetAppRunCount()
     }
 }

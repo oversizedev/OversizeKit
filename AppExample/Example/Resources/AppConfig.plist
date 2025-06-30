@@ -21,7 +21,7 @@
 			<string>romanov.cc</string>
 			<key>Email</key>
 			<string>hello@oversize.app</string>
-			<key>Fecebook</key>
+			<key>Facebook</key>
 			<string></string>
 			<key>Telegram</key>
 			<string></string>
@@ -54,7 +54,7 @@
 	<dict>
 		<key>Onboarding</key>
 		<true/>
-		<key>Apperance</key>
+		<key>Appearance</key>
 		<true/>
 		<key>StoreKit</key>
 		<true/>
@@ -68,7 +68,7 @@
 		<false/>
 		<key>Notifications</key>
 		<false/>
-		<key>Lookscreen</key>
+		<key>Lockscreen</key>
 		<false/>
 		<key>Vibration</key>
 		<false/>
@@ -92,7 +92,7 @@
 		<dict>
 			<key>BlurMinimize</key>
 			<true/>
-			<key>Lookscreen</key>
+			<key>Lockscreen</key>
 			<true/>
 		</dict>
 	</dict>

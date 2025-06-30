@@ -38,7 +38,7 @@ public struct AppearanceSettingView: View {
 
     private var settings: some View {
         LazyVStack(alignment: .leading, spacing: 0) {
-            apperance
+            appearance
                 .padding(.top, .xxxSmall)
 
             #if os(iOS)
@@ -70,7 +70,7 @@ public struct AppearanceSettingView: View {
         .preferredColorScheme(theme.appearance.colorScheme)
     }
 
-    private var apperance: some View {
+    private var appearance: some View {
         SectionView {
             HStack {
                 ForEach(Appearance.allCases, id: \.self) { appearance in

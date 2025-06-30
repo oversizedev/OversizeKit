@@ -70,10 +70,10 @@ extension SecuritySettingsView {
                 if FeatureFlags.secure.lookscreen.valueOrFalse {
                     Switch(isOn:
                         Binding(get: {
-                            settingsService.pinCodeEnabend
+                            settingsService.pinCodeEnabled
                         }, set: {
-                            if settingsService.isSetedPinCode() {
-                                settingsService.pinCodeEnabend = $0
+                            if settingsService.isSetPinCode() {
+                                settingsService.pinCodeEnabled = $0
                             } else {
                                 navigator.navigate(to: SettingsDestinations.setPINCode)
                             }
@@ -84,7 +84,7 @@ extension SecuritySettingsView {
                         }
                     }
 
-                    if settingsService.isSetedPinCode() {
+                    if settingsService.isSetPinCode() {
                         Row(L10n.Security.changePINCode) {
                             navigator.navigate(to: SettingsDestinations.updatePINCode)
                         }
@@ -104,11 +104,11 @@ extension SecuritySettingsView {
     private var additionally: some View {
         SectionView(L10n.Settings.additionally) {
             VStack(spacing: .zero) {
-//                if FeatureFlags.secure.lookscreen.valueOrFalse {
+//                if FeatureFlags.secure.lockscreen.valueOrFalse {
 //                    Row(L10n.Security.inactiveAskPassword, trallingType: .toggle(isOn: $settingsStore.askPasswordWhenInactiveEnabend))
 //                }
 //
-//                if FeatureFlags.secure.lookscreen.valueOrFalse {
+//                if FeatureFlags.secure.lockscreen.valueOrFalse {
 //                    Row(L10n.Security.minimizeAskPassword, trallingType: .toggle(isOn: $settingsStore.askPasswordAfterMinimizeEnabend))
 //                }
 
@@ -122,7 +122,7 @@ extension SecuritySettingsView {
 //                        .onPremiumTap()
 //                }
 
-//                if FeatureFlags.secure.lookscreen.valueOrFalse {
+//                if FeatureFlags.secure.lockscreen.valueOrFalse {
 //                    Row(L10n.Security.alertPINCode, trallingType: .toggle(isOn: $settingsStore.alertPINCodeEnabled))
 //                }
 //
@@ -130,12 +130,12 @@ extension SecuritySettingsView {
 //                    Row(L10n.Security.photoBreaker, trallingType: .toggle(isOn: $settingsStore.photoBreakerEnabend))
 //                }
 //
-//                if FeatureFlags.secure.lookscreen.valueOrFalse {
+//                if FeatureFlags.secure.lockscreen.valueOrFalse {
 //                    Row(L10n.Security.facedownLock, trallingType: .toggle(isOn: $settingsStore.lookScreenDownEnabend))
 //                }
 //
                 if FeatureFlags.secure.blurMinimize.valueOrFalse {
-                    Switch(isOn: $settingsService.blurMinimizeEnabend) {
+                    Switch(isOn: $settingsService.blurMinimizeEnabled) {
                         Row(L10n.Security.blurMinimize)
                             .premium()
                     }
@@ -150,7 +150,7 @@ extension SecuritySettingsView {
                 if settingsService.fastEnter {
                     Row("Time to enter", trailing: {
                         Picker("", selection: $settingsService.appLockTimeout) {
-                            ForEach(0 ..< min.count) {
+                            ForEach(0 ..< min.count, id: \.self) { // Non-constant range: argument must be an integer literal
                                 let min = Int(self.min[$0] / 60)
 
                                 Text("\(min) \(OversizeLocalizable.L10n.Time.mins)")
@@ -166,7 +166,7 @@ extension SecuritySettingsView {
                     .rowArrow()
                 }
 
-//                    if FeatureFlags.secure.lookscreen.valueOrFalse {
+//                    if FeatureFlags.secure.lockscreen.valueOrFalse {
 //                        Row(L10n.Security.authHistory, trallingType: .toggle(isOn: $settingsService.authHistoryEnabend))
 //                            .premium()
 //                            .onPremiumTap()

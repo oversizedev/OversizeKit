@@ -86,7 +86,7 @@ public struct AdView: View {
                         .subheadline(.bold)
                         .onSurfacePrimaryForeground()
 
-                    Bage(color: .warning) {
+                    Badge(color: .warning) {
                         Text("Our app")
                             .bold()
                     }

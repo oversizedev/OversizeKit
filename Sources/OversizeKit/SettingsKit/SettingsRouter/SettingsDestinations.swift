@@ -15,7 +15,7 @@ public enum SettingsDestinations: Hashable {
     case sync
     case about
     case feedback
-    case ourResorses
+    case ourResources
     case support
     case border
     case font

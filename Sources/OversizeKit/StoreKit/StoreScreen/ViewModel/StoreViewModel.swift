@@ -61,7 +61,7 @@ public class StoreViewModel: ObservableObject {
 // MARK: - Descriptions
 
 extension StoreViewModel {
-    var subsribtionStatusText: String {
+    var subscriptionStatusText: String {
         guard case let .result(products) = state else { return "" }
         if !products.purchasedNonConsumable.isEmpty {
             return "Lifetime"
@@ -103,7 +103,7 @@ extension StoreViewModel {
         }
     }
 
-    var subsribtionStatusColor: Color {
+    var subscriptionStatusColor: Color {
         guard case let .result(products) = state else { return .gray }
         if !products.purchasedNonConsumable.isEmpty { return .green }
         guard let subscriptionStatus = products.subscriptionGroupStatus else { return .red }
@@ -135,12 +135,12 @@ extension StoreViewModel {
         }
     }
 
-    var saleProcent: String {
+    var salePercent: String {
         guard let yearSubscriptionProduct else { return "" }
         if let monthSubscriptionProduct {
             let yearPriceMonthly = monthSubscriptionProduct.price * 12
-            let procent = (yearPriceMonthly - yearSubscriptionProduct.price) / yearPriceMonthly
-            return (procent * 100).rounded(0).toString
+            let percent = (yearPriceMonthly - yearSubscriptionProduct.price) / yearPriceMonthly
+            return (percent * 100).rounded(0).toString
         } else {
             return ""
         }

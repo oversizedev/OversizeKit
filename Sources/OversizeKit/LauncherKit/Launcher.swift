@@ -57,7 +57,7 @@ public struct Launcher<Content: View, Onboarding: View>: View {
                 .onAppear {
                     Task { @MainActor in
                         await viewModel.reviewService.launchEvent()
-                        await viewModel.launcherSheetsChek()
+                        await viewModel.launcherSheetsCheck()
                     }
                 }
         }
@@ -67,7 +67,7 @@ public struct Launcher<Content: View, Onboarding: View>: View {
     private func fullScreenCover(sheet: LauncherViewModel.FullScreenSheet) -> some View {
         switch sheet {
         case .onboarding: onboarding
-        case .payWall: StoreInstuctinsView()
+        case .payWall: StoreInstructionsView()
         case .rate: RateAppScreen()
         case let .specialOffer(event): StoreSpecialOfferView(event: event)
         }
@@ -79,7 +79,7 @@ public struct Launcher<Content: View, Onboarding: View>: View {
             state: $viewModel.authState,
             title: L10n.Security.enterPINCode,
             errorText: L10n.Security.invalidPIN,
-            pinCodeEnabled: viewModel.settingsService.pinCodeEnabend,
+            pinCodeEnabled: viewModel.settingsService.pinCodeEnabled,
             biometricEnabled: viewModel.settingsService.biometricEnabled,
             biometricType: viewModel.biometricService.biometricType
         ) {

@@ -1,6 +1,6 @@
 //
 // Copyright © 2023 Alexander Romanov
-// StoreInstuctinsView.swift
+// StoreInstructionsView.swift
 //
 
 import OversizeComponents
@@ -11,7 +11,7 @@ import OversizeStoreService
 import OversizeUI
 import SwiftUI
 
-public struct StoreInstuctinsView: View {
+public struct StoreInstructionsView: View {
     @StateObject var viewModel: StoreViewModel
     @Environment(\.screenSize) var screenSize
     @Environment(\.isPremium) var isPremium
@@ -135,7 +135,7 @@ public struct StoreInstuctinsView: View {
                             Text("Begin your path towards feeling better with a ")
                                 .foregroundColor(.onSurfaceSecondary)
 
-                                + Text("\(viewModel.saleProcent)% discount")
+                                + Text("\(viewModel.salePercent)% discount")
                                 .foregroundColor(.accent)
                         }
                         .body(.semibold)
@@ -242,7 +242,7 @@ public struct StoreInstuctinsView: View {
                     .background {
                         Circle()
                             .fill(Color.surfacePrimary)
-                            .shadowElevaton(.z2)
+                            .shadowElevation(.z2)
                     }
 
                 TextBox(
@@ -270,7 +270,7 @@ public struct StoreInstuctinsView: View {
                     .background {
                         Circle()
                             .fill(Color.surfacePrimary)
-                            .shadowElevaton(.z2)
+                            .shadowElevation(.z2)
                     }
 
                 TextBox(
@@ -308,8 +308,8 @@ public struct StoreInstuctinsView: View {
     }
 }
 
-struct StoreViewInstuctins_Previews: PreviewProvider {
+struct StoreViewInstructions_Previews: PreviewProvider {
     static var previews: some View {
-        StoreInstuctinsView()
+        StoreInstructionsView()
     }
 }

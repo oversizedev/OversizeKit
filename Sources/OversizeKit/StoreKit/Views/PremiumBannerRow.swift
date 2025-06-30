@@ -1,6 +1,6 @@
 //
 // Copyright © 2023 Alexander Romanov
-// PrmiumBannerRow.swift
+// PremiumBannerRow.swift
 //
 
 import NavigatorUI
@@ -12,7 +12,7 @@ import OversizeUI
 import SwiftUI
 
 // swiftlint:disable all
-public struct PrmiumBannerRow: View {
+public struct PremiumBannerRow: View {
     @Environment(\.colorScheme) var colorScheme
     @StateObject private var viewModel: StoreViewModel
     #if os(macOS)
@@ -83,12 +83,12 @@ public struct PrmiumBannerRow: View {
             Spacer()
 
             HStack(spacing: .small) {
-                Text(viewModel.subsribtionStatusText)
+                Text(viewModel.subscriptionStatusText)
                     .headline(.medium)
                     .foregroundColor(.onSurfaceSecondary)
 
                 Circle()
-                    .foregroundColor(viewModel.subsribtionStatusColor)
+                    .foregroundColor(viewModel.subscriptionStatusColor)
                     .frame(width: 8, height: 8)
             }
 
@@ -99,7 +99,7 @@ public struct PrmiumBannerRow: View {
     }
 }
 
-public extension PrmiumBannerRow {
+public extension PremiumBannerRow {
     var banner: some View {
         HStack {
             Spacer()
@@ -154,8 +154,8 @@ public extension PrmiumBannerRow {
     }
 }
 
-struct PrmiumBannerRow_Previews: PreviewProvider {
+struct PremiumBannerRow_Previews: PreviewProvider {
     static var previews: some View {
-        PrmiumBannerRow()
+        PremiumBannerRow()
     }
 }

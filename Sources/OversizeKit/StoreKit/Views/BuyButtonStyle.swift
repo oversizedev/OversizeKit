@@ -56,7 +56,7 @@ public struct PaymentButtonStyle: ButtonStyle {
             .background(background)
             .overlay(loadingView(for: configuration.role))
             .scaleEffect(configuration.isPressed ? 0.98 : 1)
-            .shadowElevaton(elevation)
+            .shadowElevation(elevation)
     }
 
     @ViewBuilder
