@@ -38,7 +38,7 @@ public final class LauncherViewModel: ObservableObject {
     let appUpdateAction: (() -> Void)?
 
     var isShowLockscreen: Bool {
-        if FeatureFlags.secure.lockscreen ?? false {
+        if FeatureFlags.secure.lookscreen ?? false {
             if settingsService.pinCodeEnabled || settingsService.biometricEnabled, authState != .unlocked {
                 true
             } else {

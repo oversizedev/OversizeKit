@@ -82,7 +82,7 @@ extension SettingsView {
         SectionView("General") {
             VStack(spacing: .zero) {
                 if FeatureFlags.app.appearance.valueOrFalse {
-                    Row(L10n.Settings.appearance) {
+                    Row(L10n.Settings.apperance) {
                         navigator.navigate(to: SettingsDestinations.appearance)
                     } leading: {
                         appearanceSettingsIcon.icon()
@@ -90,7 +90,7 @@ extension SettingsView {
                     .rowArrow()
                 }
 
-                if FeatureFlags.app.cloudKit.valueOrFalse || FeatureFlags.app.healthKit.valueOrFalse {
+                if FeatureFlags.app.сloudKit.valueOrFalse || FeatureFlags.app.healthKit.valueOrFalse {
                     Row(L10n.Title.synchronization) {
                         navigator.navigate(to: SettingsDestinations.sync)
                     } leading: {
@@ -100,7 +100,7 @@ extension SettingsView {
                 }
 
                 if FeatureFlags.secure.faceID.valueOrFalse
-                    || FeatureFlags.secure.lockscreen.valueOrFalse
+                    || FeatureFlags.secure.lookscreen.valueOrFalse
                     || FeatureFlags.secure.CVVCodes.valueOrFalse
                     || FeatureFlags.secure.alertSecureCodes.valueOrFalse
                     || FeatureFlags.secure.blurMinimize.valueOrFalse

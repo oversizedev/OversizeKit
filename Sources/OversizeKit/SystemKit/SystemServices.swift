@@ -54,19 +54,19 @@ public struct SystemServicesModifier: ViewModifier {
     private func onChangeScenePhase(_ phase: ScenePhase) {
         switch phase {
         case .active:
-            if settingsService.blurMinimizeEnabend {
+            if settingsService.blurMinimizeEnabled {
                 withAnimation {
                     blurRadius = 0
                 }
             }
         case .background:
-            if settingsService.blurMinimizeEnabend {
+            if settingsService.blurMinimizeEnabled {
                 withAnimation {
                     blurRadius = 10
                 }
             }
         case .inactive:
-            if settingsService.blurMinimizeEnabend {
+            if settingsService.blurMinimizeEnabled {
                 withAnimation {
                     blurRadius = 10
                 }

@@ -67,12 +67,12 @@ extension SecuritySettingsView {
                     }
                 }
 
-                if FeatureFlags.secure.lockscreen.valueOrFalse {
+                if FeatureFlags.secure.lookscreen.valueOrFalse {
                     Switch(isOn:
                         Binding(get: {
                             settingsService.pinCodeEnabled
                         }, set: {
-                            if settingsService.isSetedPinCode() {
+                            if settingsService.isSetPinCode() {
                                 settingsService.pinCodeEnabled = $0
                             } else {
                                 navigator.navigate(to: SettingsDestinations.setPINCode)
@@ -84,7 +84,7 @@ extension SecuritySettingsView {
                         }
                     }
 
-                    if settingsService.isSetedPinCode() {
+                    if settingsService.isSetPinCode() {
                         Row(L10n.Security.changePINCode) {
                             navigator.navigate(to: SettingsDestinations.updatePINCode)
                         }
@@ -135,14 +135,14 @@ extension SecuritySettingsView {
 //                }
 //
                 if FeatureFlags.secure.blurMinimize.valueOrFalse {
-                    Switch(isOn: $settingsService.blurMinimizeEnabend) {
+                    Switch(isOn: $settingsService.blurMinimizeEnabled) {
                         Row(L10n.Security.blurMinimize)
                             .premium()
                     }
                     .onPremiumTap()
                 }
 
-                if FeatureFlags.secure.lockscreen.valueOrFalse {
+                if FeatureFlags.secure.lookscreen.valueOrFalse {
                     Switch(isOn: $settingsService.fastEnter) {
                         Row("Fast enter")
                     }
@@ -150,7 +150,7 @@ extension SecuritySettingsView {
                 if settingsService.fastEnter {
                     Row("Time to enter", trailing: {
                         Picker("", selection: $settingsService.appLockTimeout) {
-                            ForEach(0 ..< min.count) {
+                            ForEach(0 ..< min.count, id: \.self) { // Non-constant range: argument must be an integer literal
                                 let min = Int(self.min[$0] / 60)
 
                                 Text("\(min) \(OversizeLocalizable.L10n.Time.mins)")

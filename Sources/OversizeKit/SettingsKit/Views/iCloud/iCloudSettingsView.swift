@@ -37,7 +37,7 @@ extension iCloudSettingsView {
     private var soundsAndVibrations: some View {
         SectionView {
             VStack(spacing: .zero) {
-                if FeatureFlags.app.cloudKit.valueOrFalse {
+                if FeatureFlags.app.сloudKit.valueOrFalse {
                     Switch(isOn: $settingsService.cloudKitEnabled) {
                         Row(L10n.Settings.iCloudSync) {
                             Image.Weather.Cloud.square.icon()

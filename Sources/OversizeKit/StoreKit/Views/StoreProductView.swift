@@ -87,7 +87,7 @@ public struct StoreProductView: View {
         .buttonStyle(.plain)
         .onAppear {
             Task {
-                isPurchased = await (try? store.isPurchased(product, products: products)) ?? false
+                isPurchased = await (try? store.isPurchased(product, prducts: products)) ?? false
             }
         }
     }

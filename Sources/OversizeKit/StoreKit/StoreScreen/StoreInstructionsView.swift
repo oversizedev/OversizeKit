@@ -242,7 +242,7 @@ public struct StoreInstructionsView: View {
                     .background {
                         Circle()
                             .fill(Color.surfacePrimary)
-                            .shadowElevaton(.z2)
+                            .shadowElevation(.z2)
                     }
 
                 TextBox(
@@ -270,7 +270,7 @@ public struct StoreInstructionsView: View {
                     .background {
                         Circle()
                             .fill(Color.surfacePrimary)
-                            .shadowElevaton(.z2)
+                            .shadowElevation(.z2)
                     }
 
                 TextBox(

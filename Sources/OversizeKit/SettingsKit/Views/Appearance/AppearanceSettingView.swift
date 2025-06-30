@@ -28,7 +28,7 @@ public struct AppearanceSettingView: View {
     public init() {}
 
     public var body: some View {
-        NavigationLayoutView(L10n.Settings.appearance) {
+        NavigationLayoutView(L10n.Settings.apperance) {
             settings
                 .surfaceContentRowMargins()
         } background: {
