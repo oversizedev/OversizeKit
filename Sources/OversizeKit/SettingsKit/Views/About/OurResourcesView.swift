@@ -1,6 +1,6 @@
 //
 // Copyright © 2022 Alexander Romanov
-// OurResorsesView.swift
+// OurResourcesView.swift
 //
 
 #if canImport(MessageUI)
@@ -14,7 +14,7 @@ import OversizeServices
 import OversizeUI
 import SwiftUI
 
-public struct OurResorsesView: View {
+public struct OurResourcesView: View {
     @Environment(\.iconStyle) var iconStyle: IconStyle
     public init() {}
 

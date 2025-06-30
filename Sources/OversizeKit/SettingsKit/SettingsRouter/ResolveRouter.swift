@@ -26,8 +26,8 @@ extension SettingsDestinations: NavigationDestination {
         case .feedback:
             FeedbackView()
                 .presentationDetents([.height(485)])
-        case .ourResorses:
-            OurResorsesView()
+        case .ourResources:
+            OurResourcesView()
         case .support:
             SupportView()
                 .presentationDetents([.height(460)])
