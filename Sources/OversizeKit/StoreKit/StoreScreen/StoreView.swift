@@ -211,14 +211,14 @@ public struct StoreView: View {
                     StoreProductView(product: product, products: data, isSelected: .constant(viewModel.selectedProduct == product)) {
                         viewModel.selectedProduct = product
                     }
-                    .storeProductStyle(.collumn)
+                    .storeProductStyle(.column)
                 }
             }
             ForEach(data.nonConsumable) { product in
                 StoreProductView(product: product, products: data, isSelected: .constant(viewModel.selectedProduct == product)) {
                     viewModel.selectedProduct = product
                 }
-                .storeProductStyle(.collumn)
+                .storeProductStyle(.column)
             }
         }
     }

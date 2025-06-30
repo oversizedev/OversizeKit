@@ -48,10 +48,10 @@ public struct SettingsView<AppSection: View, HeadSection: View>: View {
 extension SettingsView {
     private var iOSSettings: some View {
         VStack(alignment: .center, spacing: 0) {
-            if let stoteKit = FeatureFlags.app.storeKit {
-                if stoteKit {
+            if let storeKit = FeatureFlags.app.storeKit {
+                if storeKit {
                     SectionView {
-                        PrmiumBannerRow()
+                        PremiumBannerRow()
                     }
                     .surfaceContentMargins(.zero)
                 }
