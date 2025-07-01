@@ -25,10 +25,6 @@ public final class NoticeListViewModel: ObservableObject {
     @Injected(\.networkService) var networkService
     @Injected(\.storeKitService) var storeKitService: StoreKitService
 
-    var isShowReviewBanner: Bool {
-        reviewService.isShowReviewBanner
-    }
-
     @AppStorage("AppState.LastClosedSpecialOfferBanner") var lastClosedSpecialOffer: Int = .init()
 
     private let expectedFormat = Date.ISO8601FormatStyle()
@@ -71,6 +67,7 @@ public final class NoticeListViewModel: ObservableObject {
         let result = await networkService.fetchSpecialOffers()
         switch result {
         case let .success(offers):
+            let isShowReviewBanner = await reviewService.isShowReviewBanner
             if let offer = offers.first(where: { checkDateInSelectedPeriod(startDate: $0.startDate, endDate: $0.endDate) }) {
                 if offer.id != lastClosedSpecialOffer {
                     withAnimation {
@@ -107,6 +104,6 @@ public final class NoticeListViewModel: ObservableObject {
         text
             .replacingOccurrences(of: "<salePercent>", with: salePercent.toString)
             .replacingOccurrences(of: "<freeDays>", with: trialDaysPeriodText)
-            .replacingOccurrences(of: "<subscriptionName>", with: Info.store.subscriptionsName)
+        // .replacingOccurrences(of: "<subscriptionName>", with: Info.store.subscriptionsName)
     }
 }

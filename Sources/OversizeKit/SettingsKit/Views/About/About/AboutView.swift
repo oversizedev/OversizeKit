@@ -4,9 +4,11 @@
 //
 
 import CachedAsyncImage
+import NavigatorUI
 import OversizeComponents
 import OversizeCore
 import OversizeLocalizable
+import OversizeNavigation
 import OversizeResources
 import OversizeRouter
 import OversizeServices
@@ -19,7 +21,7 @@ import MessageUI
 #endif
 
 public struct AboutView: View {
-    @Environment(Router<SettingsScreen>.self) var router
+    @Environment(\.navigator) var navigator
     @Environment(\.screenSize) var screenSize
     @Environment(\.iconStyle) var iconStyle: IconStyle
 
@@ -66,14 +68,15 @@ public struct AboutView: View {
 
     public var body: some View {
         #if os(iOS)
-        Page(L10n.Settings.about) {
+        NavigationLayoutView(L10n.Settings.about) {
             list
                 .surfaceContentRowMargins()
                 .task {
                     await viewModel.fetchApps()
                 }
+        } background: {
+            Color.backgroundSecondary
         }
-        .backgroundSecondary()
 
         #else
         list
@@ -221,7 +224,7 @@ public struct AboutView: View {
                     #if os(iOS)
                     if MFMailComposeViewController.canSendMail(),
                        let mail = Info.links?.company.email,
-                       let appVersion = Info.app.verstion,
+                       let appVersion = Info.app.version,
                        let appName = Info.app.name,
                        let device = Info.app.device,
                        let appBuild = Info.app.build,
@@ -278,19 +281,19 @@ public struct AboutView: View {
             SectionView {
                 VStack(spacing: .zero) {
                     Row("Our open resources") {
-                        router.move(.ourResorses)
+                        navigator.navigate(to: SettingsDestinations.ourResources)
                     }
                     .rowArrow()
 
                     if let privacyUrl = Info.url.appPrivacyPolicyUrl {
                         Row(L10n.Store.privacyPolicy) {
-                            router.present(.webView(url: privacyUrl))
+                            navigator.navigate(to: SettingsDestinations.webView(url: privacyUrl))
                         }
                     }
 
                     if let termsOfUde = Info.url.appTermsOfUseUrl {
                         Row(L10n.Store.termsOfUse) {
-                            router.present(.webView(url: termsOfUde))
+                            navigator.navigate(to: SettingsDestinations.webView(url: termsOfUde))
                         }
                     }
                 }
@@ -475,7 +478,7 @@ public struct AboutView: View {
                 if let authorLink = Info.links?.company.url {
                     Link(destination: authorLink) {
                         if let developerName = Info.developer.name,
-                           let appVersion = Info.app.verstion,
+                           let appVersion = Info.app.version,
                            let appName = Info.app.name,
                            let appBuild = Info.app.build
                         {

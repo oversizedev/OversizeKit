@@ -8,6 +8,7 @@ import MessageUI
 #endif
 import OversizeComponents
 import OversizeLocalizable
+import OversizeNavigation
 import OversizeResources
 import OversizeRouter
 import OversizeServices
@@ -15,31 +16,22 @@ import OversizeUI
 import SwiftUI
 
 public struct SupportView: View {
-    @Environment(Router<SettingsScreen>.self) var router
+    @Environment(\.navigator) var navigator
     @Environment(\.iconStyle) var iconStyle: IconStyle
     public init() {}
 
     public var body: some View {
-        Page(L10n.Settings.supportSection) {
+        NavigationLayoutView(L10n.Settings.supportSection) {
             VStack(spacing: .large) {
                 help
 
                 hero
                     .padding(.bottom, .medium)
             }
+        } background: {
+            Color.backgroundSecondary
         }
-        .backgroundSecondary()
-        #if !os(macOS)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button {
-                        router.dismissSheet()
-                    } label: {
-                        Image.Base.close.icon()
-                    }
-                }
-            }
-        #endif
+        .toolbarTitleDisplayMode(.inline)
     }
 
     private var hero: some View {
@@ -53,7 +45,7 @@ public struct SupportView: View {
                 #if os(iOS)
                 if MFMailComposeViewController.canSendMail(),
                    let mail = Info.links?.company.email,
-                   let appVersion = Info.app.verstion,
+                   let appVersion = Info.app.version,
                    let appName = Info.app.name,
                    let device = Info.app.device,
                    let appBuild = Info.app.build,
@@ -63,7 +55,14 @@ public struct SupportView: View {
                     let subject = "Support"
 
                     Row("Contact Us") {
-                        router.present(.sendMail(to: mail, subject: subject, content: contentPreText))
+                        navigator.navigate(
+                            to: SettingsDestinations.sendMail(
+                                to: mail,
+                                subject: subject,
+                                content: contentPreText
+                            )
+                        )
+
                     } leading: {
                         mailIcon.icon()
                     }

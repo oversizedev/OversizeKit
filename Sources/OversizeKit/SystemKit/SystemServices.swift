@@ -12,7 +12,7 @@ import SwiftUI
 public struct SystemServicesModifier: ViewModifier {
     @Injected(\.appStateService) private var appState: AppStateService
     @Injected(\.settingsService) private var settingsService: SettingsServiceProtocol
-    @Injected(\.appStoreReviewService) private var appStoreReviewService: AppStoreReviewServiceProtocol
+    @Injected(\.appStoreReviewService) private var appStoreReviewService: AppStoreReviewService
 
     @Environment(\.scenePhase) private var scenePhase: ScenePhase
     @Environment(\.theme) private var theme: ThemeSettings
@@ -42,7 +42,7 @@ public struct SystemServicesModifier: ViewModifier {
                 .theme(ThemeSettings())
                 .screenSize(screnSize)
             #if os(iOS)
-                .accentColor(theme.accentColor)
+                .tint(theme.accentColor)
             #endif
                 .onAppear(perform: { onAppear(geometry: geometry) })
                 .onChange(of: scenePhase) { _, phase in
@@ -54,19 +54,19 @@ public struct SystemServicesModifier: ViewModifier {
     private func onChangeScenePhase(_ phase: ScenePhase) {
         switch phase {
         case .active:
-            if settingsService.blurMinimizeEnabend {
+            if settingsService.blurMinimizeEnabled {
                 withAnimation {
                     blurRadius = 0
                 }
             }
         case .background:
-            if settingsService.blurMinimizeEnabend {
+            if settingsService.blurMinimizeEnabled {
                 withAnimation {
                     blurRadius = 10
                 }
             }
         case .inactive:
-            if settingsService.blurMinimizeEnabend {
+            if settingsService.blurMinimizeEnabled {
                 withAnimation {
                     blurRadius = 10
                 }

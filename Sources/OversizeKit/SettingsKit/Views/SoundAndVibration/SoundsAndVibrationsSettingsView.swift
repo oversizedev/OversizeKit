@@ -5,6 +5,7 @@
 
 import OversizeCore
 import OversizeLocalizable
+import OversizeNavigation
 import OversizeServices
 import OversizeUI
 import SwiftUI
@@ -16,11 +17,12 @@ public struct SoundsAndVibrationsSettingsView: View {
     public init() {}
 
     public var body: some View {
-        Page(title) {
+        NavigationLayoutView(title) {
             iOSSettings
                 .surfaceContentRowMargins()
+        } background: {
+            Color.backgroundSecondary
         }
-        .backgroundSecondary()
     }
 
     private var title: String {

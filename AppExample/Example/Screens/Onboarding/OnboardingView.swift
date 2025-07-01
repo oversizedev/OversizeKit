@@ -3,7 +3,7 @@
 // OnboardingView.swift, created on 25.09.2023
 //
 
-import Factory
+import FactoryKit
 import OversizeServices
 import OversizeUI
 import SwiftUI

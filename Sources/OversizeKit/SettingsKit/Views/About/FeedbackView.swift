@@ -8,6 +8,7 @@ import MessageUI
 #endif
 import OversizeComponents
 import OversizeLocalizable
+import OversizeNavigation
 import OversizeResources
 import OversizeRouter
 import OversizeServices
@@ -15,11 +16,10 @@ import OversizeUI
 import SwiftUI
 
 public struct FeedbackView: View {
-    @Environment(Router<SettingsScreen>.self) var router
     public init() {}
 
     public var body: some View {
-        Page("Feedback") {
+        NavigationLayoutView("Feedback") {
             VStack(spacing: .large) {
                 SectionView {
                     FeedbackViewRows()
@@ -29,17 +29,10 @@ public struct FeedbackView: View {
                 hero
                     .padding(.bottom, .medium)
             }
+        } background: {
+            Color.backgroundSecondary
         }
-        .backgroundSecondary()
-        .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                Button {
-                    router.dismiss()
-                } label: {
-                    Image.Base.close.icon()
-                }
-            }
-        }
+        .toolbarTitleDisplayMode(.inline)
     }
 
     private var hero: some View {
@@ -50,7 +43,7 @@ public struct FeedbackView: View {
 
 struct FeedbackViewRows: View {
     @Environment(\.iconStyle) var iconStyle: IconStyle
-    @Environment(Router<SettingsScreen>.self) var router
+    @Environment(\.navigator) var navigator
 
     var body: some View {
         LeadingVStack {
@@ -66,7 +59,7 @@ struct FeedbackViewRows: View {
             #if os(iOS)
             if MFMailComposeViewController.canSendMail(),
                let mail = Info.links?.company.email,
-               let appVersion = Info.app.verstion,
+               let appVersion = Info.app.version,
                let appName = Info.app.name,
                let device = Info.app.device,
                let appBuild = Info.app.build,
@@ -76,7 +69,11 @@ struct FeedbackViewRows: View {
                 let subject = "Feedback"
 
                 Row(L10n.Settings.feedbakAuthor) {
-                    router.present(.sendMail(to: mail, subject: subject, content: contentPreText))
+                    navigator.navigate(to: SettingsDestinations.sendMail(
+                        to: mail,
+                        subject: subject,
+                        content: contentPreText
+                    ))
                 } leading: {
                     mailIcon.icon()
                 }
@@ -94,7 +91,7 @@ struct FeedbackViewRows: View {
             #elseif os(macOS)
 
             if let mail = Info.links?.company.email,
-               let appVersion = Info.app.verstion,
+               let appVersion = Info.app.version,
                let appName = Info.app.name,
                let appBuild = Info.app.build,
                let systemVersion = Info.app.system

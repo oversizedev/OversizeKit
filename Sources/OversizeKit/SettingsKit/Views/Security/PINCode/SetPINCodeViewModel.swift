@@ -52,7 +52,7 @@ public final class SetPINCodeViewModel: ObservableObject {
         }
     }
 
-    public func chekOldPINCode() {
+    public func checkOldPINCode() {
         if oldCodeField != curentPinCode {
             authState = .error
             errorText = L10n.Security.invalidCurrentPINCode
@@ -74,7 +74,7 @@ public final class SetPINCodeViewModel: ObservableObject {
             let result = await settingsStore.updatePINCode(oldPIN: curentPinCode, newPIN: newPinCodeField)
             switch result {
             case true:
-                settingsStore.pinCodeEnabend = true
+                settingsStore.pinCodeEnabled = true
                 TapticEngine.success.vibrate()
                 return true
             case false:

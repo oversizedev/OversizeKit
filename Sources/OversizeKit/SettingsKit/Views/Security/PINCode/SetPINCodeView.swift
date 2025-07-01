@@ -4,13 +4,14 @@
 //
 
 import OversizeLocalizable
+import OversizeNavigation
 import OversizeRouter
 import OversizeUI
 import SwiftUI
 
 public struct SetPINCodeView: View {
-    @Environment(Router<SettingsScreen>.self) var router
-    @Environment(HUDRouter.self) private var hudRouter: HUDRouter
+    @Environment(\.navigator) var navigator
+    // @Environment(HUDRouter.self) private var hudRouter: HUDRouter
     @ObservedObject var viewModel: SetPINCodeViewModel
     @Environment(\.dismiss) var dismiss
 
@@ -23,7 +24,7 @@ public struct SetPINCodeView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button {
-                        router.dismiss()
+                        navigator.dismiss()
                     } label: {
                         Image.Base.close.icon()
                     }
@@ -42,7 +43,7 @@ public struct SetPINCodeView: View {
                 title: L10n.Security.oldPINCode,
                 errorText: viewModel.errorText
             ) {
-                viewModel.chekOldPINCode()
+                viewModel.checkOldPINCode()
             } biometricAction: {}
 
         case .newPINField:
@@ -71,9 +72,11 @@ public struct SetPINCodeView: View {
                         dismiss()
                         switch viewModel.action {
                         case .set:
-                            hudRouter.present(L10n.Security.createPINCode)
+                            break
+                        // hudRouter.present(L10n.Security.createPINCode)
                         case .update:
-                            hudRouter.present(L10n.Security.pinChanged)
+                            break
+                            // hudRouter.present(L10n.Security.pinChanged)
                         }
 
                     case false:

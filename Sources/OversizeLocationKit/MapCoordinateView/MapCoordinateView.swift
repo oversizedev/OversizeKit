@@ -96,7 +96,7 @@ public struct MapCoordinateView: View {
             .background {
                 Capsule()
                     .fillSurfacePrimary()
-                    .shadowElevaton(.z1)
+                    .shadowElevation(.z1)
             }
             Spacer()
         }
@@ -112,7 +112,7 @@ public struct MapCoordinateView: View {
             .background {
                 Capsule()
                     .fillSurfacePrimary()
-                    .shadowElevaton(.z1)
+                    .shadowElevation(.z1)
             }
         })
         .padding(.trailing, 16)

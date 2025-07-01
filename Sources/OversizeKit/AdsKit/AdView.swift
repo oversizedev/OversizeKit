@@ -24,7 +24,7 @@ public struct AdView: View {
     public var body: some View {
         switch viewModel.state {
         case .initial:
-            VStack {}
+            EmptyView()
                 .task {
                     if !isPremium {
                         await viewModel.fetchAd()
@@ -86,7 +86,7 @@ public struct AdView: View {
                         .subheadline(.bold)
                         .onSurfacePrimaryForeground()
 
-                    Bage(color: .warning) {
+                    Badge(color: .warning) {
                         Text("Our app")
                             .bold()
                     }

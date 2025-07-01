@@ -3,6 +3,7 @@
 // FontSettingView.swift
 //
 
+import OversizeNavigation
 import OversizeUI
 import SwiftUI
 

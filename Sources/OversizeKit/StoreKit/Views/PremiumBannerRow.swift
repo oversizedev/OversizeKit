@@ -1,8 +1,9 @@
 //
 // Copyright © 2023 Alexander Romanov
-// PrmiumBannerRow.swift
+// PremiumBannerRow.swift
 //
 
+import NavigatorUI
 import OversizeLocalizable
 import OversizeResources
 import OversizeServices
@@ -11,7 +12,7 @@ import OversizeUI
 import SwiftUI
 
 // swiftlint:disable all
-public struct PrmiumBannerRow: View {
+public struct PremiumBannerRow: View {
     @Environment(\.colorScheme) var colorScheme
     @StateObject private var viewModel: StoreViewModel
     #if os(macOS)
@@ -22,27 +23,21 @@ public struct PrmiumBannerRow: View {
 
     @State var showModal = false
 
+    @Environment(\.navigator) private var navigator
+
     public init() {
         _viewModel = StateObject(wrappedValue: StoreViewModel())
     }
 
     public var body: some View {
         VStack {
-            #if os(iOS)
-            NavigationLink {
-                StoreView()
-                    .closable(false)
-            } label: {
-                if viewModel.isPremium || viewModel.isPremiumActivated {
-                    subscriptionRow
-                } else {
-                    banner
-                }
-            }
-            .buttonStyle(.row)
-            #elseif os(macOS)
             Button {
+                #if os(macOS)
                 openWindow(id: "Window.StoreView")
+                #else
+                navigator.push(SettingsDestinations.premium)
+                #endif
+
             } label: {
                 if viewModel.isPremium || viewModel.isPremiumActivated {
                     subscriptionRow
@@ -51,7 +46,6 @@ public struct PrmiumBannerRow: View {
                 }
             }
             .buttonStyle(.row)
-            #endif
         }
         .task {
             await viewModel.fetchData()
@@ -82,19 +76,19 @@ public struct PrmiumBannerRow: View {
                     ))
             )
 
-            Text(Info.store.subscriptionsName)
+            Text(viewModel.productsState.result?.banner.badge ?? "")
                 .headline(.semibold)
                 .foregroundColor(.onSurfacePrimary)
 
             Spacer()
 
             HStack(spacing: .small) {
-                Text(viewModel.subsribtionStatusText)
+                Text(viewModel.subscriptionStatusText)
                     .headline(.medium)
                     .foregroundColor(.onSurfaceSecondary)
 
                 Circle()
-                    .foregroundColor(viewModel.subsribtionStatusColor)
+                    .foregroundColor(viewModel.subscriptionStatusColor)
                     .frame(width: 8, height: 8)
             }
 
@@ -105,7 +99,7 @@ public struct PrmiumBannerRow: View {
     }
 }
 
-public extension PrmiumBannerRow {
+public extension PremiumBannerRow {
     var banner: some View {
         HStack {
             Spacer()
@@ -120,7 +114,7 @@ public extension PrmiumBannerRow {
                             .colorMultiply(Color(hex: "B75375"))
                         #endif
 
-                        Text(viewModel.productsState.result?.banner.badge ?? "Pro")
+                        Text(viewModel.productsState.result?.banner.badge ?? "")
                             .font(.system(size: platform == .macOS ? 16 : 20, weight: platform == .macOS ? .bold : .heavy))
                             .foregroundColor(Color(hex: "B75375"))
                             .redacted(reason: viewModel.productsState.isLoading ? .placeholder : .init())
@@ -160,8 +154,8 @@ public extension PrmiumBannerRow {
     }
 }
 
-struct PrmiumBannerRow_Previews: PreviewProvider {
+struct PremiumBannerRow_Previews: PreviewProvider {
     static var previews: some View {
-        PrmiumBannerRow()
+        PremiumBannerRow()
     }
 }
