@@ -98,7 +98,7 @@ public struct NoticeListView: View {
             }
             .sheet(isPresented: $isShowOfferSheet) {
                 StoreSpecialOfferView(event: offer)
-                    .systemServices()
+                    .coreServices()
             }
         }
     }

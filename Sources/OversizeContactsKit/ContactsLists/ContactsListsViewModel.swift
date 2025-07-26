@@ -23,7 +23,7 @@ public class ContactsListsViewModel: ObservableObject {
 
     func fetchData() async {
         state = .loading
-        let _ = await contactsService.requestAccess()
+        _ = await contactsService.requestAccess()
 
         let keys = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactEmailAddressesKey, CNContactThumbnailImageDataKey]
         let result = await contactsService.fetchContacts(keysToFetch: keys as [CNKeyDescriptor])

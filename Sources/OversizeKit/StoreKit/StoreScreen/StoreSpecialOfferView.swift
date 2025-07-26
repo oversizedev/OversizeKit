@@ -102,11 +102,12 @@ public struct StoreSpecialOfferView: View {
                     #endif
                 }
             }
-            .toolbar(content: toolbarContent)
+            .toolbar(content: { toolbarContent })
         }
     }
 
-    @ToolbarContentBuilder private func toolbarContent() -> some ToolbarContent {
+    @ToolbarContentBuilder
+    private var toolbarContent: some ToolbarContent {
         #if !os(macOS)
         ToolbarItemGroup(placement: .cancellationAction) {
             Button {

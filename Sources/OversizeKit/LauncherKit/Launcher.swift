@@ -34,7 +34,7 @@ public struct Launcher<Content: View, Onboarding: View>: View {
             .task(viewModel.onAppear)
             .appLaunchCover(item: $viewModel.activeFullScreenSheet) {
                 fullScreenCover(sheet: $0)
-                    .systemServices()
+                    .coreServices()
                 #if os(macOS)
                     .frame(width: viewModel.activeFullScreenSheet == .onboarding ? 840 : 500, height: 672)
                 // .interactiveDismissDisabled(!viewModel.appStateService.isCompletedOnbarding)
@@ -83,11 +83,13 @@ public struct Launcher<Content: View, Onboarding: View>: View {
         ) {
             viewModel.checkPassword()
         } biometricAction: {
-            viewModel.appBiometricUnlock()
+            Task {
+                await viewModel.appBiometricUnlock()
+            }
         }
-        .onAppear {
+        .task {
             if viewModel.settingsService.biometricEnabled, scenePhase != .background {
-                viewModel.appBiometricUnlock()
+                await viewModel.appBiometricUnlock()
             }
         }
     }

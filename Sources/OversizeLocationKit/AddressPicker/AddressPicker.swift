@@ -171,7 +171,9 @@ public struct AddressPicker: View {
                     let reversedGeoLocation = LocationAddress(with: placemark)
 
                     let address = "\(reversedGeoLocation.streetName) \(reversedGeoLocation.streetNumber)".capitalizingFirstLetter()
-                    onCompleteSearth(seletedAddress: address, seletedLocation: c, seletedPlace: reversedGeoLocation)
+                    Task { @MainActor in
+                        onCompleteSearth(seletedAddress: address, seletedLocation: c, seletedPlace: reversedGeoLocation)
+                    }
                 }
             }
         }

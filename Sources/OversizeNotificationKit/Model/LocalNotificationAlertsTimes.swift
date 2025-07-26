@@ -5,7 +5,7 @@
 
 import Foundation
 
-public enum LocalNotificationTime: CaseIterable, Equatable, Identifiable, @unchecked Sendable {
+public enum LocalNotificationTime: CaseIterable, Equatable, Identifiable, Sendable {
     case oneMinuteBefore, fiveMinutesBefore, tenMinutesBefore, thirtyMinutesBefore, oneHourBefore, twoHoursBefore, oneDayBefore, twoDaysBefore, oneWeekBefore
 
     public var title: String {

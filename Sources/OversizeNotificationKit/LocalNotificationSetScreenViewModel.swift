@@ -15,7 +15,7 @@ class LocalNotificationSetScreenViewModel: ObservableObject {
     @Injected(\.localNotificationService) var localNotificationService: LocalNotificationServiceProtocol
     @Published var state = State.initial
 
-    public let id: UUID
+    let id: UUID
     private let date: Date
     private let title: String
     private let body: String

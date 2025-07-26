@@ -64,7 +64,7 @@ extension LauncherViewModel {
         case payWall
         case rate
         case specialOffer(event: Components.Schemas.InAppPurchaseOffer)
-        public var id: Int {
+        var id: Int {
             switch self {
             case .onboarding: 0
             case .payWall: 1
@@ -78,9 +78,9 @@ extension LauncherViewModel {
 // Lockscreen
 public extension LauncherViewModel {
     func launcherSheetsCheck() async {
-        checkOnboarding()
+        await checkOnboarding()
         await checkAppRate()
-        checkSpecialOffer()
+        await checkSpecialOffer()
     }
 
     func checkPassword() {
@@ -99,22 +99,20 @@ public extension LauncherViewModel {
         }
     }
 
-    func appBiometricUnlock() {
-        Task {
-            let reason = "Auth in app"
-            let authenticate = await biometricService.authenticating(reason: reason)
-            if authenticate {
-                authState = .unlocked
-                activeFullScreenSheet = nil
-                logSecurity("Unlocked by biometric")
-            } else {
-                logError("Biometric unlock failed")
-                authState = .error
-            }
+    func appBiometricUnlock() async {
+        let reason = "Auth in app"
+        let authenticate = await biometricService.authenticating(reason: reason)
+        if authenticate {
+            authState = .unlocked
+            activeFullScreenSheet = nil
+            logSecurity("Unlocked by biometric")
+        } else {
+            logError("Biometric unlock failed")
+            authState = .error
         }
     }
 
-    func checkOnboarding() {
+    func checkOnboarding() async {
         if !appStateService.isCompletedOnboarding {
             activeFullScreenSheet = .onboarding
             logNotice("Onboarding shown")
@@ -146,11 +144,9 @@ public extension LauncherViewModel {
         }
     }
 
-    func checkSpecialOffer() {
+    func checkSpecialOffer() async {
         if !isPremium, activeFullScreenSheet == nil {
-            Task {
-                await fetchAndSetSpecialOffer()
-            }
+            await fetchAndSetSpecialOffer()
         }
     }
 

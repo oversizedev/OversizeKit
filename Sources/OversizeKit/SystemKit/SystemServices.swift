@@ -31,7 +31,7 @@ public struct SystemServicesModifier: ViewModifier {
         }
     }
 
-    public nonisolated init() {}
+    public init() {}
 
     public func body(content: Content) -> some View {
         GeometryReader { geometry in
@@ -83,7 +83,12 @@ public struct SystemServicesModifier: ViewModifier {
 }
 
 public extension View {
-    nonisolated func systemServices() -> some View {
+    @available(*, deprecated, renamed: "coreServices", message: "Renamed")
+    func systemServices() -> some View {
+        modifier(SystemServicesModifier())
+    }
+
+    func coreServices() -> some View {
         modifier(SystemServicesModifier())
     }
 }

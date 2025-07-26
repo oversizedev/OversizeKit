@@ -74,7 +74,7 @@ struct StoreFeaturesView: View {
             StoreFeatureDetailView(selection: feature)
                 .environmentObject(viewModel)
                 .presentationDetents([.medium, .large])
-                .systemServices()
+                .coreServices()
             #endif
         }
     }
