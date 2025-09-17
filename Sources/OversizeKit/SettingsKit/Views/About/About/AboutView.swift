@@ -86,7 +86,7 @@ public struct AboutView: View {
 
     private func appLinks() -> some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(alignment: .top, spacing: Space.small) {
+            HStack(alignment: .top, spacing: .small) {
                 switch viewModel.state {
                 case .initial, .loading:
                     ForEach(0 ... 6, id: \.self) { _ in
@@ -496,7 +496,7 @@ public struct AboutView: View {
 
             Spacer()
         }
-        .padding(.top, Space.small)
+        .padding(.top, .small)
         .padding(.bottom, 40)
     }
 

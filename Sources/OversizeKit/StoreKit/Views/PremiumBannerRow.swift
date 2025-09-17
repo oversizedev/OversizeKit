@@ -53,16 +53,16 @@ public struct PremiumBannerRow: View {
     }
 
     var subscriptionRow: some View {
-        HStack(spacing: Space.small) {
+        HStack(spacing: .small) {
             HStack {
                 #if os(iOS) || os(macOS)
                 Resource.Store.zap
-                    .padding(.horizontal, Space.xxSmall)
-                    .padding(.vertical, Space.xxSmall)
+                    .padding(.horizontal, .xxSmall)
+                    .padding(.vertical, .xxSmall)
                 #endif
             }
             .background(
-                RoundedRectangle(cornerRadius: Radius.medium.rawValue, style: .continuous)
+                RoundedRectangle(cornerRadius: .xSmall, style: .continuous)
                     .fill(LinearGradient(
                         gradient: Gradient(
                             colors: [
@@ -92,7 +92,7 @@ public struct PremiumBannerRow: View {
                     .frame(width: 8, height: 8)
             }
 
-        }.padding(.vertical, Space.small)
+        }.padding(.vertical, .small)
             .padding(.leading, .small)
             .padding(.leading, .xxxSmall)
             .padding(.trailing, 26)
@@ -108,7 +108,7 @@ public extension PremiumBannerRow {
                 /* PremiumLabel(text: AppInfo.store.subscriptionsName, size: .medium)
                  .monochrom() */
                 HStack {
-                    HStack(alignment: .center, spacing: Space.xxSmall) {
+                    HStack(alignment: .center, spacing: .xxSmall) {
                         #if os(iOS) || os(macOS)
                         Resource.Store.zap
                             .colorMultiply(Color(hex: "B75375"))
@@ -119,12 +119,12 @@ public extension PremiumBannerRow {
                             .foregroundColor(Color(hex: "B75375"))
                             .redacted(reason: viewModel.productsState.isLoading ? .placeholder : .init())
                     }
-                    .padding(.leading, platform == .macOS ? Space.xxSmall : Space.xSmall)
-                    .padding(.vertical, platform == .macOS ? Space.xxxSmall : Space.xxSmall)
-                    .padding(.trailing, platform == .macOS ? Space.xSmall : Space.small)
+                    .padding(.leading, platform == .macOS ? .xxSmall : Space.xSmall)
+                    .padding(.vertical, platform == .macOS ? Space.xxxSmall : .xxSmall)
+                    .padding(.trailing, platform == .macOS ? Space.xSmall : .small)
                 }
                 .background(
-                    RoundedRectangle(cornerRadius: Radius.small.rawValue, style: .continuous)
+                    RoundedRectangle(cornerRadius: .xxSmall, style: .continuous)
                         .fill(Color.onPrimary))
 
                 Text(viewModel.productsState.result?.banner.description ?? "Long text")
@@ -138,10 +138,10 @@ public extension PremiumBannerRow {
 
             Spacer()
         }
-        .padding(.horizontal, Space.small)
+        .padding(.horizontal, .small)
         .padding(.vertical, Space.large)
         .background(
-            RoundedRectangle(cornerRadius: Radius.medium.rawValue, style: .continuous)
+            RoundedRectangle(cornerRadius: .xSmall, style: .continuous)
                 .fill(LinearGradient(
                     gradient: Gradient(
                         colors: [Color(hex: "EAAB44"),

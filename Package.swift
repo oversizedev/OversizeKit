@@ -1,4 +1,4 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 6.1
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import Foundation
@@ -7,14 +7,14 @@ import PackageDescription
 let commonDependencies: [PackageDescription.Package.Dependency] = [
     .package(url: "https://github.com/lorenzofiamingo/swiftui-cached-async-image.git", .upToNextMajor(from: "2.1.1")),
     .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "2.1.3")),
-    .package(url: "https://github.com/hmlongco/Navigator.git", .upToNextMajor(from: "1.0.0")),
+    .package(url: "https://github.com/hmlongco/Navigator.git", .upToNextMajor(from: "1.1.1")),
 ]
 
 let remoteDependencies: [PackageDescription.Package.Dependency] = commonDependencies + [
     .package(url: "https://github.com/oversizedev/OversizeUI.git", .upToNextMajor(from: "3.0.2")),
     .package(url: "https://github.com/oversizedev/OversizeCore.git", .upToNextMajor(from: "1.3.0")),
     .package(url: "https://github.com/oversizedev/OversizeServices.git", .upToNextMajor(from: "1.4.0")),
-    .package(url: "https://github.com/oversizedev/OversizeLocalizable.git", .upToNextMajor(from: "1.4.0")),
+    .package(url: "https://github.com/oversizedev/OversizeLocalizable.git", .upToNextMajor(from: "1.5.0")),
     .package(url: "https://github.com/oversizedev/OversizeComponents.git", .upToNextMajor(from: "2.0.0")),
     .package(url: "https://github.com/oversizedev/OversizeResources.git", .upToNextMajor(from: "2.0.0")),
     .package(url: "https://github.com/oversizedev/OversizeNetwork.git", .upToNextMajor(from: "1.0.0")),
@@ -36,7 +36,7 @@ let localDependencies: [PackageDescription.Package.Dependency] = commonDependenc
     .package(name: "OversizeNavigation", path: "../OversizeNavigation"),
 ]
 
-let dependencies: [PackageDescription.Package.Dependency] = remoteDependencies
+let dependencies: [PackageDescription.Package.Dependency] = localDependencies
 
 let package = Package(
     name: "OversizeKit",
@@ -94,7 +94,7 @@ let package = Package(
         .target(
             name: "OversizeContactsKit",
             dependencies: [
-                "OversizeKit",
+                // "OversizeKit",
                 .product(name: "OversizeUI", package: "OversizeUI"),
                 .product(name: "OversizeServices", package: "OversizeServices"),
                 .product(name: "OversizeContactsService", package: "OversizeServices"),

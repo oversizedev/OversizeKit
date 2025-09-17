@@ -93,8 +93,8 @@ public struct FontSettingView: View {
     }
 
     private var otherSelector: some View {
-        VStack(alignment: .leading, spacing: Space.medium.rawValue) {
-            VStack(alignment: .leading, spacing: Space.small.rawValue) {
+        VStack(alignment: .leading, spacing: .medium) {
+            VStack(alignment: .leading, spacing: .small) {
                 Text("Button".uppercased())
                     .bold()
                     .caption()
@@ -113,7 +113,7 @@ public struct FontSettingView: View {
                 .segmentedControlStyle(.island(selected: .graySurface))
             }
 
-            VStack(alignment: .leading, spacing: Space.small.rawValue) {
+            VStack(alignment: .leading, spacing: .small) {
                 Text("Overline & caption".uppercased())
                     .bold()
                     .caption()
@@ -140,8 +140,8 @@ extension FontSettingView {
     private var previewText: some View {
         ScrollViewOffset(offset: $offset) {
             HStack {
-                VStack(alignment: .leading, spacing: Space.medium.rawValue) {
-                    VStack(alignment: .leading, spacing: Space.xxSmall.rawValue) {
+                VStack(alignment: .leading, spacing: .medium) {
+                    VStack(alignment: .leading, spacing: .xxSmall) {
                         Text("Overline".uppercased())
                             .bold()
                             .caption()
@@ -156,7 +156,7 @@ extension FontSettingView {
                             .onBackgroundSecondaryForeground()
                     }
 
-                    VStack(alignment: .leading, spacing: Space.xxSmall.rawValue) {
+                    VStack(alignment: .leading, spacing: .xxSmall) {
                         Text("Title")
                             .title3()
                             .onBackgroundPrimaryForeground()

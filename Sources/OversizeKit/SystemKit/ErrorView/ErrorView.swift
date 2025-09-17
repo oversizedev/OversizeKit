@@ -26,7 +26,7 @@ public struct ErrorView: View {
     public var body: some View {
         VStack {
             Spacer()
-            ContentView(
+            ContentViewDeprecated(
                 image: error.image,
                 title: error.title,
                 subtitle: error.subtitle,
