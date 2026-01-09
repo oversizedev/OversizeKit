@@ -52,7 +52,7 @@ public struct AdView: View {
 
     func premiumBanner(appAd: Components.Schemas.Ad) -> some View {
         HStack(spacing: .zero) {
-            if let iconUrl = appAd.iconURL, let url = URL(string: iconUrl) {
+            if let iconUrl = appAd.iconUrl, let url = URL(string: iconUrl) {
                 CachedAsyncImage(url: url, urlCache: .imageCache, content: {
                     $0
                         .resizable()
@@ -84,7 +84,7 @@ public struct AdView: View {
                 HStack {
                     Text(appAd.title)
                         .subheadline(.bold)
-                        .onSurfacePrimaryForeground()
+                        .onSurfacePrimary()
 
                     Badge(color: .warning) {
                         Text("Our app")
@@ -94,7 +94,7 @@ public struct AdView: View {
 
                 Text(appAd.description)
                     .subheadline()
-                    .onSurfaceSecondaryForeground()
+                    .onSurfaceSecondary()
             }
             .padding(.leading, .xSmall)
 

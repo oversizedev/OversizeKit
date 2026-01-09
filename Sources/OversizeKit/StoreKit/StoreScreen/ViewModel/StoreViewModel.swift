@@ -188,14 +188,6 @@ extension StoreViewModel {
             featuresState = .error(.network(type: .unknown))
             return
         }
-//        async let resultFeatures = networkService.fetchPremiumFeatures(appId: appStoreID)
-//        async let resultProducts = networkService.fetchInAppPurchases(appId: appStoreID)
-//        if let features = await resultFeatures.successResult, let products = await resultProducts.successResult {
-//            featuresState = .result(features)
-//            productsState = .result(products)
-//        } else {
-//            featuresState = .error(.network(type: .unknown))
-//        }
 
         let resultFeatures = await networkService.fetchPremiumFeatures(appId: appStoreID)
         let resultProducts = await networkService.fetchInAppPurchases(appId: appStoreID)
@@ -211,20 +203,6 @@ extension StoreViewModel {
         case let .failure(error):
             logError("Error fetching resultProducts", error: error)
         }
-
-//        if let features = await resultFeatures.successResult, let products = await resultProducts.successResult {
-//
-//            productsState = .result(products)
-//        } else {
-//            featuresState = .error(.network(type: .unknown))
-//        }
-
-//        switch result {
-//        case let .success(features):
-//            featuresState = .result(features)
-//        case let .failure(error):
-//            featuresState = .error(error)
-//        }
     }
 
     public func listenForTransactions() -> Task<Void, Error> {

@@ -29,23 +29,40 @@ struct StoreFeaturesView: View {
                         } leading: {
                             Group {
                                 if let iconUrlString = feature.iconUrl, let iconUrl = URL(string: iconUrlString) {
-                                    CachedAsyncImage(url: iconUrl, urlCache: .imageCache) {
-                                        $0
-                                            .resizable()
-                                            .frame(width: 24, height: 24)
-
-                                    } placeholder: {
-                                        Circle()
-                                            .fillOnPrimaryTertiary()
-                                            .frame(width: 24, height: 24)
+                                    CachedAsyncImage(url: iconUrl) { phase in
+                                        switch phase {
+                                        case .empty:
+                                            Circle()
+                                                .fillOnPrimaryTertiary()
+                                                .frame(width: 24, height: 24)
+                                        case let .success(image):
+                                            image
+                                                .resizable()
+                                                .renderingMode(.template)
+                                                .foregroundColor(Color.onPrimary)
+                                                .frame(width: 24, height: 24)
+                                        case .failure:
+                                            Image.Base.check
+                                                .resizable()
+                                                .renderingMode(.template)
+                                                .foregroundColor(Color.onPrimary)
+                                                .frame(width: 24, height: 24)
+                                        @unknown default:
+                                            Image.Base.Check.square
+                                                .resizable()
+                                                .renderingMode(.template)
+                                                .foregroundColor(Color.accent)
+                                                .frame(width: 24, height: 24)
+                                        }
                                     }
 
                                 } else {
                                     Image.Base.Check.square
                                         .renderingMode(.template)
+                                        .frame(width: 24, height: 24)
                                 }
                             }
-                            .onPrimaryForeground()
+                            .onPrimary()
                             .iconOnSurface(surfaceSolor: backgroundColor(feature: feature))
                         }
                         .rowArrow()
@@ -66,7 +83,7 @@ struct StoreFeaturesView: View {
             VStack {
                 StoreFeatureDetailView(selection: feature)
                     .environmentObject(viewModel)
-                    .systemServices()
+                    .coreServices()
                     .frame(width: 440, height: 500)
             }
             .frame(width: 440, height: 500, alignment: .center)

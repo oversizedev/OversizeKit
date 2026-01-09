@@ -165,24 +165,26 @@ public extension LauncherViewModel {
 
     func onScenePhaseChange(_ scenePhase: ScenePhase) {
         switch scenePhase {
+        case .inactive:
+            log("⏸️ [STATE] App inactive")
         case .background:
-            log("↩️ [STATE] App background")
+            log("⏹️ [STATE] App background")
             appBackgroundDate = Date()
             pinCodeField = ""
             isNeedAuthCheking = true
         case .active:
-            log("❇️ [STATE] App active")
+            log("▶️ [STATE] App active")
             if isNeedAuthCheking, appBackgroundDate.addingTimeInterval(settingsService.appLockTimeout) < Date() {
                 authState = .locked
                 isNeedAuthCheking = false
             }
-        default:
+        @unknown default:
             break
         }
     }
 
-    func onCompeteOnboarding(_ isCompletedOnbarding: Bool) {
-        if isCompletedOnbarding, !isPremium {
+    func onCompeteOnboarding(_ isCompletedOnboarding: Bool) {
+        if isCompletedOnboarding, !isPremium {
             setPayWall()
         } else {
             activeFullScreenSheet = nil

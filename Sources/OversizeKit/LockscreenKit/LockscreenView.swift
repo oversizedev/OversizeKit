@@ -183,7 +183,7 @@ public struct LockscreenView: View {
 
             Text(errorText ?? "")
                 .subheadline()
-                .errorForeground()
+                .error()
                 .opacity(state == .error ? 1 : 0)
 
             if isShowTitle {

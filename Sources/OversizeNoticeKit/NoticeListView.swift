@@ -77,7 +77,7 @@ public struct NoticeListView: View {
 
     @ViewBuilder
     private func offerView(offer: Components.Schemas.InAppPurchaseOffer) -> some View {
-        if let imageUrl = offer.imageURL, let url = URL(string: imageUrl) {
+        if let imageUrl = offer.imageUrl, let url = URL(string: imageUrl) {
             NoticeView(
                 viewModel.textPrepere(offer.title),
                 subtitle: viewModel.textPrepere(offer.description ?? ""),

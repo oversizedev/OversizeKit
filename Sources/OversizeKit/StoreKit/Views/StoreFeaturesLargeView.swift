@@ -92,8 +92,8 @@ struct StoreFeaturesLargeView: View {
 
     func fetureItem(_ feature: Components.Schemas.Feature) -> some View {
         VStack(spacing: .zero) {
-            if let iconUrlString = feature.iconUrl, let iconUrl = URL(string: iconUrlString) {
-                CachedAsyncImage(url: iconUrl, urlCache: .imageCache) { image in
+            if let illustrationUrlString = feature.illustrationUrl, let illustrationUrl = URL(string: illustrationUrlString) {
+                CachedAsyncImage(url: illustrationUrl, urlCache: .imageCache) { image in
                     image
                         .resizable()
                         .scaledToFill()
@@ -105,8 +105,8 @@ struct StoreFeaturesLargeView: View {
                         .frame(width: 100, height: 100)
                 }
                 .padding(.bottom, .large)
-            } else if let illustrationUrlString = feature.illustrationUrl, let illustrationUrl = URL(string: illustrationUrlString) {
-                CachedAsyncImage(url: illustrationUrl, urlCache: .imageCache) { image in
+            } else if let iconUrlString = feature.iconUrl, let iconUrl = URL(string: iconUrlString) {
+                CachedAsyncImage(url: iconUrl, urlCache: .imageCache) { image in
                     image
                         .resizable()
                         .renderingMode(.template)

@@ -129,7 +129,7 @@ public extension PremiumBannerRow {
 
                 Text(viewModel.productsState.result?.banner.description ?? "Long text")
                     .headline(.semibold)
-                    .onPrimaryForeground()
+                    .onPrimary()
                     .multilineTextAlignment(.center)
                     .padding(.top, Space.xSmall)
                     .frame(maxWidth: 260)

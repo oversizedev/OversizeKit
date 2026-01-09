@@ -26,7 +26,7 @@ public struct SystemServicesModifier: ViewModifier {
         case onboarding
         case payWall
         case lockscreen
-        public var id: Int {
+        var id: Int {
             hashValue
         }
     }

@@ -26,7 +26,7 @@ public struct StoreInstructionsView: View {
     public var body: some View {
         ScrollViewReader { value in
             #if os(iOS) || os(macOS)
-            PageView { offset = $0 } content: {
+            LayoutView(onScroll: handleOffset) {
                 Group {
                     switch viewModel.state {
                     case .idle, .loading:
@@ -38,15 +38,18 @@ public struct StoreInstructionsView: View {
                     }
                 }
                 .paddingContent(.horizontal)
+            } background: {
+                LinearGradient(
+                    colors: [
+                        .backgroundPrimary,
+                        .backgroundSecondary,
+                    ],
+                    startPoint: .top,
+                    endPoint: .center
+                )
             }
-            .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
-//            .titleLabel {
-//                PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: .medium)
-//            }
-            .trailingBar {
-                BarButton(.close)
-            }
-            .bottomToolbar(style: .none) {
+            .toolbar { toolbarContent }
+            .safeAreaBarBottom {
                 VStack(spacing: .zero) {
                     StorePaymentButtonBar(trialNotification: true) {
                         isShowAllPlans = true
@@ -71,6 +74,43 @@ public struct StoreInstructionsView: View {
             EmptyView()
             #endif
         }
+    }
+
+    @ToolbarContentBuilder
+    private var toolbarContent: some ToolbarContent {
+        #if !os(macOS)
+        ToolbarItemGroup(placement: .cancellationAction) {
+            Button {
+                dismiss()
+            } label: {
+                Image.Base.close.icon()
+            }
+        }
+
+        if #available(iOS 26.0, *) {
+            ToolbarItem(placement: .principal) {
+                PremiumLabel(
+                    image: Resource.Store.zap,
+                    text: viewModel.productsState.result?.banner.badge ?? "",
+                    size: .medium
+                )
+            }
+        }
+
+        #else
+        ToolbarItem(placement: .cancellationAction) {
+            Button("Close") {
+                dismiss()
+            }
+            .keyboardShortcut(.cancelAction)
+            .controlSize(.large)
+        }
+        #endif
+    }
+
+    func handleOffset(_ scrollOffset: CGPoint, visibleHeaderRatio _: CGFloat) {
+        offset = -scrollOffset.y
+        // visibleRatio = visibleHeaderRati
     }
 
     @ViewBuilder
@@ -110,15 +150,14 @@ public struct StoreInstructionsView: View {
                     .foregroundColor(.onSurfacePrimary.opacity(0.3))
                     .frame(width: 30)
                     .offset(y: screenSize.safeAreaHeight - 300)
-                // .opacity(1 - (offset * 0.01))
+                    .opacity(1 - (offset * 0.01))
             }
 
             StoreFeaturesLargeView()
                 .paddingContent(.horizontal)
                 .environmentObject(viewModel)
-            // .opacity(0 + (offset * 0.01))
+                .opacity(0 + (offset * 0.01))
         }
-        .padding(.bottom, 220)
     }
 
     @ViewBuilder
@@ -158,13 +197,13 @@ public struct StoreInstructionsView: View {
                     .foregroundColor(.onSurfacePrimary.opacity(0.3))
                     .frame(width: 30)
                     .offset(y: screenSize.safeAreaHeight - 300)
-                // .opacity(1 - (offset * 0.01))
+                    .opacity(1 - (offset * 0.01))
             }
 
             StoreFeaturesLargeView()
                 .paddingContent(.horizontal)
                 .environmentObject(viewModel)
-            // .opacity(0 + (offset * 0.01))
+                .opacity(0 + (offset * 0.01))
 
             if isShowAllPlans {
                 productsLust(data: data)
@@ -176,7 +215,7 @@ public struct StoreInstructionsView: View {
                 products: data
             )
         }
-        .padding(.bottom, 220)
+        .padding(.bottom, .medium)
         .onAppear {
             Task {
                 await viewModel.updateSubscriptionStatus(products: data)

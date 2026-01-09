@@ -17,7 +17,7 @@ struct RateAppScreen: View {
         VStack {
             Text("If you love, evaluate)")
                 .largeTitle(.bold)
-                .onSurfacePrimaryForeground()
+                .onSurfacePrimary()
 
             Spacer()
 
@@ -29,7 +29,7 @@ struct RateAppScreen: View {
 
             Text((Info.app.name ?? "App") + " is developed only one person, and your assessment would very much drop in")
                 .title3()
-                .onSurfacePrimaryForeground()
+                .onSurfacePrimary()
 
             Spacer()
 
@@ -66,23 +66,19 @@ struct RateAppScreen: View {
         }
         .multilineTextAlignment(.center)
         .padding(.xLarge)
-        .overlay(alignment: .topTrailing) {
-            Button {
-                Task {
-                    await reviewService.reviewBannerClosed()
-                    dismiss()
+        .toolbarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem {
+                Button {
+                    Task {
+                        await reviewService.reviewBannerClosed()
+                        dismiss()
+                    }
+                } label: {
+                    IconDeprecated(.xMini, color: .onSurfacePrimary)
                 }
-            } label: {
-                IconDeprecated(.xMini, color: .onSurfacePrimary)
             }
-            .buttonStyle(.tertiary(infinityWidth: false))
-            .controlBorderShape(.capsule)
-            .padding(.medium)
-            #if !os(tvOS)
-                .controlSize(.mini)
-            #endif
         }
-        // reviewService.rewiewBunnerClosed()
     }
 }
 

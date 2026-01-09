@@ -60,7 +60,7 @@ public struct StoreSpecialOfferView: View {
     @available(iOS 16.0, macOS 13.0, *)
     var newPage: some View {
         NavigationStack {
-            Page(badgeText, onScroll: handleOffset) {
+            LayoutView(badgeText, onScroll: handleOffset) {
                 Group {
                     switch viewModel.state {
                     case .idle:
@@ -84,9 +84,11 @@ public struct StoreSpecialOfferView: View {
                         ErrorView(error)
                     }
                 }
+            } background: {
+                LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center)
             }
-            .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
-            .bottomToolbar(style: .gradient) {
+            .toolbarTitleDisplayMode(.inline)
+            .safeAreaBarBottom {
                 VStack(spacing: .small) {
                     productsLust
                         .padding(.horizontal, .medium)
@@ -115,6 +117,16 @@ public struct StoreSpecialOfferView: View {
                 dismiss()
             } label: {
                 Image.Base.close.icon()
+            }
+        }
+
+        if #available(iOS 26.0, *) {
+            ToolbarItem(placement: .principal) {
+                PremiumLabel(
+                    image: Resource.Store.zap,
+                    text: viewModel.productsState.result?.banner.badge ?? "",
+                    size: .medium
+                )
             }
         }
 
@@ -216,7 +228,6 @@ public struct StoreSpecialOfferView: View {
         ScrollViewReader { value in
             VStack(spacing: .medium) {
                 VStack(spacing: .zero) {
-                    // PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: platform == .macOS ? .small : .medium)
                     Text("")
                     #if os(macOS)
                         .padding(.vertical, .medium)
@@ -228,7 +239,7 @@ public struct StoreSpecialOfferView: View {
                         Spacer()
                     }
 
-                    if let imageURLString = event.imageURL, let imageURL = URL(string: imageURLString) {
+                    if let imageURLString = event.imageUrl, let imageURL = URL(string: imageURLString) {
                         CachedAsyncImage(url: imageURL, urlCache: .imageCache) { image in
                             image
                                 .resizable()
@@ -273,7 +284,7 @@ public struct StoreSpecialOfferView: View {
                 VStack(spacing: .zero) {
                     Text("Additional features in\nthe subscription")
                         .title()
-                        .onBackgroundPrimaryForeground()
+                        .onBackgroundPrimary()
                         .multilineTextAlignment(.center)
                         .fixedSize()
                         .padding(.top, .large)
@@ -292,7 +303,6 @@ public struct StoreSpecialOfferView: View {
                 .padding(.horizontal, .medium)
                 .padding(.bottom, .large)
             }
-            .padding(.bottom, 180)
             .task {
                 await viewModel.updateSubscriptionStatus(products: data)
             }
@@ -308,7 +318,7 @@ public struct StoreSpecialOfferView: View {
         VStack(spacing: .zero) {
             Text(badgeText.uppercased())
                 .footnote(.semibold)
-                .onBackgroundSecondaryForeground()
+                .onBackgroundSecondary()
                 .padding(.bottom, .xxxSmall)
 
             Text(headline)

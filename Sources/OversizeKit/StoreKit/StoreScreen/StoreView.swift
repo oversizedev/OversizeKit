@@ -55,7 +55,7 @@ public struct StoreView: View {
             ToolbarItem(placement: .principal) {
                 PremiumLabel(
                     image: Resource.Store.zap,
-                    text: Info.store.subscriptionsName,
+                    text: viewModel.productsState.result?.banner.badge ?? "",
                     size: .medium
                 )
             }
@@ -127,22 +127,22 @@ public struct StoreView: View {
             #if DEBUG
             if let currentSubscription = viewModel.currentSubscription {
                 LeadingVStack(spacing: .small) {
-                    Text("My Subscription")
+                    Text("My Subscription (Debug Only)")
                         .headline()
-                        .onSurfacePrimaryForeground()
+                        .onSurfacePrimary()
 
                     StoreProductView(product: currentSubscription, products: data) {}
 
                     if let status = viewModel.status {
                         Text("Status: \(status.state.localizedDescription)")
                             .caption()
-                            .onSurfacePrimaryForeground()
+                            .onSurfacePrimary()
                     }
                 }
             } else {
                 Surface {
                     Text("No subscription")
-                        .onSurfacePrimaryForeground()
+                        .onSurfacePrimary()
                         .body()
                         .frame(
                             maxWidth: .infinity,

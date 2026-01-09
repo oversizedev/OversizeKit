@@ -98,7 +98,7 @@ public struct FontSettingView: View {
                 Text("Button".uppercased())
                     .bold()
                     .caption()
-                    .onBackgroundSecondaryForeground()
+                    .onBackgroundSecondary()
                 SegmentedPickerSelector(FontDesignType.allCases, selection: theme.$fontButton) { fontStyle, _ in
                     VStack(alignment: .center, spacing: 8) {
                         Text("Aa")
@@ -117,7 +117,7 @@ public struct FontSettingView: View {
                 Text("Overline & caption".uppercased())
                     .bold()
                     .caption()
-                    .onBackgroundSecondaryForeground()
+                    .onBackgroundSecondary()
                 SegmentedPickerSelector(FontDesignType.allCases, selection: theme.$fontOverline) { fontStyle, _ in
                     VStack(alignment: .center, spacing: 8) {
                         Text("Aa")
@@ -145,34 +145,34 @@ extension FontSettingView {
                         Text("Overline".uppercased())
                             .bold()
                             .caption()
-                            .onBackgroundSecondaryForeground()
+                            .onBackgroundSecondary()
 
                         Text("Large title")
                             .largeTitle()
-                            .onBackgroundPrimaryForeground()
+                            .onBackgroundPrimary()
 
                         Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")
                             .body()
-                            .onBackgroundSecondaryForeground()
+                            .onBackgroundSecondary()
                     }
 
                     VStack(alignment: .leading, spacing: .xxSmall) {
                         Text("Title")
                             .title3()
-                            .onBackgroundPrimaryForeground()
+                            .onBackgroundPrimary()
 
                         Text("Subtitle")
                             .headline()
-                            .onBackgroundPrimaryForeground()
+                            .onBackgroundPrimary()
 
                         Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")
                             .bold()
                             .subheadline()
-                            .onBackgroundPrimaryForeground()
+                            .onBackgroundPrimary()
 
                         Text("Button")
                             .body()
-                            .onBackgroundPrimaryForeground()
+                            .onBackgroundPrimary()
                             .padding(.top, .xxxSmall)
                     }
                 }

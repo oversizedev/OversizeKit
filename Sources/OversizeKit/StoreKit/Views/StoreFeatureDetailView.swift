@@ -118,6 +118,7 @@ public struct StoreFeatureDetailView: View {
                                         ? (geometry.size.height * 0.1) - 24
                                         : (geometry.size.height * 0.1) + 12
                                 )
+                                .animation(.interactiveSpring)
                         }
                     }
                 }
@@ -139,7 +140,7 @@ public struct StoreFeatureDetailView: View {
 
     func iconFetureItem(_ feature: Components.Schemas.Feature, geometry: GeometryProxy) -> some View {
         VStack(spacing: .xxxSmall) {
-            if let IllustrationURLPath = feature.iconUrl {
+            if let IllustrationURLPath = feature.illustrationUrl {
                 CachedAsyncImage(url: URL(string: IllustrationURLPath), urlCache: .imageCache) { image in
                     image
                         .resizable()
@@ -153,7 +154,7 @@ public struct StoreFeatureDetailView: View {
                 }
                 .padding(.bottom, geometry.size.height * 0.07)
 
-            } else if let illustrationUrlString = feature.illustrationUrl, let illustrationUrl = URL(string: illustrationUrlString) {
+            } else if let iconUrlString = feature.iconUrl, let illustrationUrl = URL(string: iconUrlString) {
                 CachedAsyncImage(url: illustrationUrl, urlCache: .imageCache) { image in
                     image
                         .resizable()

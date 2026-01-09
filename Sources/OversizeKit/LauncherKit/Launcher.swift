@@ -37,11 +37,11 @@ public struct Launcher<Content: View, Onboarding: View>: View {
                     .coreServices()
                 #if os(macOS)
                     .frame(width: viewModel.activeFullScreenSheet == .onboarding ? 840 : 500, height: 672)
-                // .interactiveDismissDisabled(!viewModel.appStateService.isCompletedOnbarding)
+                // .interactiveDismissDisabled(!viewModel.appStateService.isCompletedOnboarding)
                 #endif
             }
-            .onChange(of: viewModel.appStateService.isCompletedOnboarding) { _, isCompletedOnbarding in
-                viewModel.onCompeteOnboarding(isCompletedOnbarding)
+            .onChange(of: viewModel.appStateService.isCompletedOnboarding) { _, isCompletedOnboarding in
+                viewModel.onCompeteOnboarding(isCompletedOnboarding)
             }
             .onChange(of: scenePhase) { _, value in
                 viewModel.onScenePhaseChange(value)
@@ -65,9 +65,18 @@ public struct Launcher<Content: View, Onboarding: View>: View {
     private func fullScreenCover(sheet: LauncherViewModel.FullScreenSheet) -> some View {
         switch sheet {
         case .onboarding: onboarding
-        case .payWall: StoreInstructionsView()
-        case .rate: RateAppScreen()
-        case let .specialOffer(event): StoreSpecialOfferView(event: event)
+        case .payWall:
+            NavigationStack {
+                StoreInstructionsView()
+            }
+        case .rate:
+            NavigationStack {
+                RateAppScreen()
+            }
+        case let .specialOffer(event):
+            NavigationStack {
+                StoreSpecialOfferView(event: event)
+            }
         }
     }
 
