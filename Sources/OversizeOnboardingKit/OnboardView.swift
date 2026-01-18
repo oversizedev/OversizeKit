@@ -12,6 +12,7 @@ public struct OnboardView<C, A>: View where A: View, C: View {
     private let backAction: (() -> Void)?
     private let skipAction: (() -> Void)?
     private let helpAction: (() -> Void)?
+    private var isIgnoresSafeArea: Bool = true
 
     public init(
         @ViewBuilder content: () -> C,
@@ -29,13 +30,13 @@ public struct OnboardView<C, A>: View where A: View, C: View {
 
     public var body: some View {
         content
-            .ignoresSafeArea(.all)
             .frame(
                 maxWidth: .infinity,
                 maxHeight: .infinity
             )
-            .safeAreaInset(edge: .top, content: topButtons)
-            .safeAreaInset(edge: .bottom, content: bottomButtons)
+            .safeAreaBarTop(content: topButtons)
+            .safeAreaBarBottom(content: bottomButtons)
+            .navigationBarTitleDisplayMode(.inline)
     }
 
     private func topButtons() -> some View {
@@ -54,7 +55,9 @@ public struct OnboardView<C, A>: View where A: View, C: View {
             }
             #endif
 
-            Spacer()
+            if helpAction != nil || skipAction != nil {
+                Spacer()
+            }
 
             if skipAction != nil {
                 Button {
@@ -70,7 +73,7 @@ public struct OnboardView<C, A>: View where A: View, C: View {
                 #endif
             }
         }
-        .padding(.medium)
+        .padding(helpAction != nil || skipAction != nil ? .medium : .zero)
     }
 
     private func bottomButtons() -> some View {
@@ -127,5 +130,127 @@ public struct OnboardView<C, A>: View where A: View, C: View {
             Separator()
         }
         #endif
+    }
+}
+
+#Preview {
+    NavigationStack {
+        OnboardView(
+            content: {
+                VStack(spacing: .large) {
+                    Spacer()
+
+                    Image(systemName: "star.circle.fill")
+                        .resizable()
+                        .frame(width: 120, height: 120)
+
+                    VStack(spacing: .small) {
+                        Text("Welcome")
+                            .title()
+
+                        Text("Start your journey with our app")
+                            .body()
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
+                    }
+
+                    Spacer()
+                }
+                .padding(.horizontal, .large)
+            },
+            actions: {
+                Button("Continue") {
+                    print("Continue tapped")
+                }
+            },
+            backAction: {
+                print("Back tapped")
+            },
+            skipAction: {
+                print("Skip tapped")
+            },
+            helpAction: {
+                print("Help tapped")
+            }
+        )
+    }
+}
+
+#Preview("Multiple Actions") {
+    NavigationStack {
+        OnboardView(
+            content: {
+                VStack(spacing: .large) {
+                    Spacer()
+
+                    Image(systemName: "bell.badge.fill")
+                        .resizable()
+                        .frame(width: 100, height: 100)
+                        .foregroundStyle(.blue)
+
+                    VStack(spacing: .small) {
+                        Text("Enable Notifications")
+                            .title2()
+
+                        Text("Get notified about important updates")
+                            .subheadline()
+                            .foregroundStyle(.secondary)
+                            .multilineTextAlignment(.center)
+                    }
+                    .padding(.horizontal, .large)
+
+                    Spacer()
+                }
+            },
+            actions: {
+                Button("Enable") {
+                    print("Enable tapped")
+                }
+
+                Button("Maybe Later") {
+                    print("Later tapped")
+                }
+                .buttonStyle(.secondary)
+            },
+            backAction: {
+                print("Back")
+            },
+            skipAction: {
+                print("Skip")
+            }
+        )
+    }
+}
+
+#Preview("No Back Button") {
+    NavigationStack {
+        OnboardView(
+            content: {
+                VStack(spacing: .large) {
+                    Spacer()
+
+                    Image(systemName: "checkmark.circle.fill")
+                        .resizable()
+                        .frame(width: 120, height: 120)
+                        .foregroundStyle(.green)
+
+                    VStack(spacing: .small) {
+                        Text("All Set!")
+                            .largeTitle()
+
+                        Text("You're ready to get started")
+                            .body()
+                            .foregroundStyle(.secondary)
+                    }
+
+                    Spacer()
+                }
+            },
+            actions: {
+                Button("Get Started") {
+                    print("Get started")
+                }
+            }
+        )
     }
 }
