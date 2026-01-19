@@ -17,7 +17,7 @@ public struct AppearanceSettingView: View {
     @Environment(\.iconStyle) var iconStyle: IconStyle
     @Environment(\.isPremium) var isPremium: Bool
 
-    @State var iconNameSelection = Info.app.alternateIconName ?? "AppIcon"
+    @State var iconNameSelection = Info.App.alternateIconName ?? "AppIcon"
 
     private let columns = [
         GridItem(.adaptive(minimum: 78)),
@@ -46,7 +46,7 @@ public struct AppearanceSettingView: View {
             advanded
 
             #if os(iOS)
-            if UIApplication.shared.supportsAlternateIcons, Info.app.alternateIconsNames.isEmpty == false {
+            if UIApplication.shared.supportsAlternateIcons, Info.App.alternateIconNames.isEmpty == false {
                 appIcon
             }
             #endif
@@ -114,7 +114,7 @@ public struct AppearanceSettingView: View {
     private var appIcon: some View {
         SectionView("App icon") {
             LazyVGrid(columns: columns, spacing: 24) {
-                ForEach(Info.app.alternateIconsNames, id: \.self) { iconName in
+                ForEach(Info.App.alternateIconNames, id: \.self) { iconName in
                     HStack {
                         Image(iconName)
                             .renderingMode(.original)

@@ -6,9 +6,7 @@
 #if canImport(Contacts)
 import Contacts
 #endif
-import OversizeComponents
 import OversizeCore
-import OversizeKit
 import OversizeLocalizable
 import OversizeUI
 import SwiftUI
@@ -35,7 +33,7 @@ public struct ContactsListsView: View {
                 case let .result(data):
                     content(data: data)
                 case let .error(error):
-                    ErrorView(error)
+                    ErrorView(error: error)
                 }
             }
         }

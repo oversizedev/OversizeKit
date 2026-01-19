@@ -114,7 +114,7 @@ public struct LockscreenView: View {
         VStack {
             Spacer()
 
-            if let appImage = Info.app.iconName {
+            if let appImage = Info.App.iconName {
                 #if os(iOS)
 
                 Image(uiImage: UIImage(named: appImage) ?? UIImage())

@@ -144,7 +144,7 @@ public struct AboutView: View {
                     EmptyView()
                 }
 
-                if let authorAllApps = Info.url.developerAllApps {
+                if let authorAllApps = Info.Developer.appsUrl {
                     VStack(spacing: .xSmall) {
                         Link(destination: authorAllApps) {
                             ZStack {
@@ -217,7 +217,7 @@ public struct AboutView: View {
 
             SectionView {
                 VStack(spacing: .zero) {
-                    if let reviewUrl = Info.url.appStoreReview, let id = Info.app.appStoreID, !id.isEmpty, let appName = Info.app.name {
+                    if let reviewUrl = Info.App.appStoreReviewUrl, let id = Info.App.appStoreId, !id.isEmpty, let appName = Info.App.name {
                         Link(destination: reviewUrl) {
                             Row("Rate \(appName) on App Store") {
                                 rateSettingsIcon.icon()
@@ -228,14 +228,14 @@ public struct AboutView: View {
 
                     #if os(iOS)
                     if MFMailComposeViewController.canSendMail(),
-                       let mail = Info.developer.email,
-                       let appVersion = Info.app.version,
-                       let appName = Info.app.name,
-                       let device = Info.app.device,
-                       let appBuild = Info.app.build,
-                       let systemVersion = Info.app.system
+                       let mail = Info.Developer.email,
+                       let appVersion = Info.App.version,
+                       let appName = Info.App.name,
+                       let device = Info.App.device,
+                       let appBuild = Info.App.build,
+                       let systemVersion = Info.App.osVersion
                     {
-                        let contentPreText = "\n\n\n\n\n\n————————————————\nApp: \(appName) \(appVersion) (\(appBuild))\nDevice: \(device), \(systemVersion)\nLocale: \(Info.app.language ?? "Not init")"
+                        let contentPreText = "\n\n\n\n\n\n————————————————\nApp: \(appName) \(appVersion) (\(appBuild))\nDevice: \(device), \(systemVersion)\nLocale: \(Info.App.localeIdentifier ?? "Not init")"
                         let subject = "Feedback"
 
                         Row(L10n.About.suggestIdea) {
@@ -252,7 +252,7 @@ public struct AboutView: View {
                     #endif
 
                     #if os(iOS)
-                    if let shareUrl = Info.url.appInstallShare, let id = Info.app.appStoreID, !id.isEmpty {
+                    if let shareUrl = Info.App.appStoreUrl, let id = Info.App.appStoreId, !id.isEmpty {
                         Row(L10n.Settings.shareApplication) {
                             isSharePresented.toggle()
                         } leading: {
@@ -290,13 +290,13 @@ public struct AboutView: View {
                     }
                     .rowArrow()
 
-                    if let privacyUrl = Info.url.appPrivacyPolicyUrl {
+                    if let privacyUrl = Info.App.privacyPolicyUrl {
                         Row(L10n.Store.privacyPolicy) {
                             navigator.navigate(to: SettingsDestinations.webView(url: privacyUrl))
                         }
                     }
 
-                    if let termsOfUde = Info.url.appTermsOfUseUrl {
+                    if let termsOfUde = Info.App.termsOfUseUrl {
                         Row(L10n.Store.termsOfUse) {
                             navigator.navigate(to: SettingsDestinations.webView(url: termsOfUde))
                         }
@@ -345,7 +345,7 @@ public struct AboutView: View {
 //                    EmptyView()
 //                }
 
-            if let facebook = Info.url.companyFacebook {
+            if let facebook = Info.Company.facebookUrl {
                 Link(destination: facebook) {
                     // Surface {
                     HStack {
@@ -359,7 +359,7 @@ public struct AboutView: View {
                 }
             }
 
-            if let instagram = Info.url.companyInstagram {
+            if let instagram = Info.Company.instagramUrl {
                 Link(destination: instagram) {
                     // Surface {
                     HStack {
@@ -373,7 +373,7 @@ public struct AboutView: View {
                 }
             }
 
-            if let twitter = Info.url.companyTwitter {
+            if let twitter = Info.Company.twitterUrl {
                 Link(destination: twitter) {
                     // Surface {
                     HStack {
@@ -387,7 +387,7 @@ public struct AboutView: View {
                 }
             }
 
-            if let telegramUrl = Info.url.companyTelegram {
+            if let telegramUrl = Info.Company.telegramUrl {
                 Link(destination: telegramUrl) {
                     // Surface {
                     HStack {
@@ -401,7 +401,7 @@ public struct AboutView: View {
                 }
             }
 
-            if let dribbble = Info.url.companyDribbble {
+            if let dribbble = Info.Company.dribbbleUrl {
                 Link(destination: dribbble) {
                     //  Surface {
                     HStack {
@@ -480,12 +480,12 @@ public struct AboutView: View {
             Spacer()
 
             VStack(alignment: .center) {
-                if let authorLink = Info.company.url {
+                if let authorLink = Info.Company.url {
                     Link(destination: authorLink) {
-                        if let developerName = Info.developer.name,
-                           let appVersion = Info.app.version,
-                           let appName = Info.app.name,
-                           let appBuild = Info.app.build
+                        if let developerName = Info.Developer.name,
+                           let appVersion = Info.App.version,
+                           let appName = Info.App.name,
+                           let appBuild = Info.App.build
                         {
                             Text("© 2024 \(developerName). \(appName) \(appVersion) (\(appBuild))")
                                 .footnote()

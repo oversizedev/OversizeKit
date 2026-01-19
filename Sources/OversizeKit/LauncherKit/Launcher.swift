@@ -37,7 +37,6 @@ public struct Launcher<Content: View, Onboarding: View>: View {
                     .coreServices()
                 #if os(macOS)
                     .frame(width: viewModel.activeFullScreenSheet == .onboarding ? 840 : 500, height: 672)
-                // .interactiveDismissDisabled(!viewModel.appStateService.isCompletedOnboarding)
                 #endif
             }
             .onChange(of: viewModel.appStateService.isCompletedOnboarding) { _, isCompletedOnboarding in
@@ -50,24 +49,28 @@ public struct Launcher<Content: View, Onboarding: View>: View {
 
     @ViewBuilder
     var contentView: some View {
-        if viewModel.isShowLockscreen {
-            lockscreenView
-        } else {
-            content
-                .task {
-                    await viewModel.reviewService.launchEvent()
-                    await viewModel.launcherSheetsCheck()
-                }
+        switch viewModel.contentType {
+        case .content:
+            if viewModel.isShowLockscreen {
+                lockscreenView
+            } else {
+                content
+                    .task {
+                        await viewModel.reviewService.launchEvent()
+                        await viewModel.launcherSheetsCheck()
+                    }
+            }
+        case .onboarding:
+            onboarding
         }
     }
 
     @ViewBuilder
     private func fullScreenCover(sheet: LauncherViewModel.FullScreenSheet) -> some View {
         switch sheet {
-        case .onboarding: onboarding
         case .payWall:
             NavigationStack {
-                StoreInstructionsView()
+                StoreInstructionsView(specialOfferMode: true)
             }
         case .rate:
             NavigationStack {

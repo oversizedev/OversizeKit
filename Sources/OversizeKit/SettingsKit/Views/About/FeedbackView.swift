@@ -47,7 +47,7 @@ struct FeedbackViewRows: View {
 
     var body: some View {
         LeadingVStack {
-            if let reviewUrl = Info.url.appStoreReview, let id = Info.app.appStoreID, !id.isEmpty {
+            if let reviewUrl = Info.App.appStoreReviewUrl, let id = Info.App.appStoreId, !id.isEmpty {
                 Link(destination: reviewUrl) {
                     Row(L10n.Settings.feedbakAppStore) {
                         heartIcon.icon()
@@ -58,14 +58,14 @@ struct FeedbackViewRows: View {
 
             #if os(iOS)
             if MFMailComposeViewController.canSendMail(),
-               let mail = Info.developer.email,
-               let appVersion = Info.app.version,
-               let appName = Info.app.name,
-               let device = Info.app.device,
-               let appBuild = Info.app.build,
-               let systemVersion = Info.app.system
+               let mail = Info.Developer.email,
+               let appVersion = Info.App.version,
+               let appName = Info.App.name,
+               let device = Info.App.device,
+               let appBuild = Info.App.build,
+               let systemVersion = Info.App.osVersion
             {
-                let contentPreText = "\n\n\n\n\n\n————————————————\nApp: \(appName) \(appVersion) (\(appBuild))\nDevice: \(device), \(systemVersion)\nLocale: \(Info.app.language ?? "Not init")"
+                let contentPreText = "\n\n\n\n\n\n————————————————\nApp: \(appName) \(appVersion) (\(appBuild))\nDevice: \(device), \(systemVersion)\nLocale: \(Info.App.localeIdentifier ?? "Not init")"
                 let subject = "Feedback"
 
                 Row(L10n.Settings.feedbakAuthor) {
@@ -79,7 +79,7 @@ struct FeedbackViewRows: View {
                 }
             } else {
                 // Send author
-                if let sendMailUrl = Info.url.developerSendMail {
+                if let sendMailUrl = Info.Developer.emailUrl {
                     Link(destination: sendMailUrl) {
                         Row(L10n.Settings.feedbakAuthor) {
                             mailIcon.icon()
@@ -90,13 +90,13 @@ struct FeedbackViewRows: View {
             }
             #elseif os(macOS)
 
-            if let mail = Info.developer.email,
-               let appVersion = Info.app.version,
-               let appName = Info.app.name,
-               let appBuild = Info.app.build,
-               let systemVersion = Info.app.system
+            if let mail = Info.Developer.email,
+               let appVersion = Info.App.version,
+               let appName = Info.App.name,
+               let appBuild = Info.App.build,
+               let systemVersion = Info.App.osVersion
             {
-                let contentPreText = "\n\n\n\n\n\n————————————————\nApp: \(appName) \(appVersion) (\(appBuild))\nDevice: \(systemVersion)\nLocale: \(Info.app.language ?? "Not init")"
+                let contentPreText = "\n\n\n\n\n\n————————————————\nApp: \(appName) \(appVersion) (\(appBuild))\nDevice: \(systemVersion)\nLocale: \(Info.App.localeIdentifier ?? "Not init")"
                 let subject = "Feedback"
 
                 let encodedSubject = subject.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""
@@ -109,7 +109,7 @@ struct FeedbackViewRows: View {
                         mailIcon.icon()
                     }
                 } else {
-                    if let sendMailUrl = Info.url.developerSendMail {
+                    if let sendMailUrl = Info.Developer.emailUrl {
                         Link(destination: sendMailUrl) {
                             Row(L10n.Settings.feedbakAuthor) {
                                 mailIcon.icon()
@@ -122,7 +122,7 @@ struct FeedbackViewRows: View {
             #endif
 
             // Telegramm chat
-            if let telegramChatUrl = Info.url.appTelegramChat, let id = Info.app.telegramChatID, !id.isEmpty {
+            if let telegramChatUrl = Info.App.telegramChatUrl, let id = Info.App.telegramChatId, !id.isEmpty {
                 Link(destination: telegramChatUrl) {
                     Row(L10n.Settings.telegramChat) {
                         chatIcon.icon()

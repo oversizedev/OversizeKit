@@ -44,7 +44,7 @@ public struct AddressPicker: View {
                         Spacer()
                     }
                     .title3()
-                    .onSurfaceSecondaryForeground()
+                    .onSurfaceSecondary()
                     .padding(.vertical, .xxSmall)
                     .paddingContent(.horizontal)
 

@@ -19,8 +19,11 @@ public struct StoreInstructionsView: View {
     @State var isShowAllPlans = false
     @State var offset: CGFloat = 0
 
-    public init() {
-        _viewModel = StateObject(wrappedValue: StoreViewModel())
+    let specialOfferMode: Bool
+
+    public init(specialOfferMode: Bool = false) {
+        self.specialOfferMode = specialOfferMode
+        _viewModel = StateObject(wrappedValue: StoreViewModel(specialOfferMode: specialOfferMode))
     }
 
     public var body: some View {
@@ -51,14 +54,18 @@ public struct StoreInstructionsView: View {
             .toolbar { toolbarContent }
             .safeAreaBarBottom {
                 VStack(spacing: .zero) {
-                    StorePaymentButtonBar(trialNotification: true) {
-                        isShowAllPlans = true
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            withAnimation {
-                                value.scrollTo(10, anchor: .top)
+                    StorePaymentButtonBar(
+                        trialNotification: true,
+                        showDescription: true,
+                        action: specialOfferMode ? nil : {
+                            isShowAllPlans = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                withAnimation {
+                                    value.scrollTo(10, anchor: .top)
+                                }
                             }
                         }
-                    }
+                    )
                     .environmentObject(viewModel)
                 }
             }
@@ -110,7 +117,6 @@ public struct StoreInstructionsView: View {
 
     func handleOffset(_ scrollOffset: CGPoint, visibleHeaderRatio _: CGFloat) {
         offset = -scrollOffset.y
-        // visibleRatio = visibleHeaderRati
     }
 
     @ViewBuilder
@@ -328,6 +334,16 @@ public struct StoreInstructionsView: View {
     func productsLust(data: StoreKitProducts) -> some View {
         VStack(spacing: .small) {
             ForEach(viewModel.availableSubscriptions) { product in
+                // if specialOfferMode {
+                if product.isOffer {
+                    StoreProductView(product: product, products: data, isSelected: .constant(false)) {
+                        Task {
+                            await viewModel.buy(product: product)
+                        }
+                    }
+                }
+                // } else {
+
                 if !product.isOffer {
                     StoreProductView(product: product, products: data, isSelected: .constant(false)) {
                         Task {
@@ -336,6 +352,10 @@ public struct StoreInstructionsView: View {
                     }
                 }
             }
+            // }
+
+            // if specialOfferMode == false {
+
             ForEach(data.nonConsumable) { product in
                 StoreProductView(product: product, products: data, isSelected: .constant(false)) {
                     Task {
@@ -343,6 +363,7 @@ public struct StoreInstructionsView: View {
                     }
                 }
             }
+            // }
         }
     }
 }

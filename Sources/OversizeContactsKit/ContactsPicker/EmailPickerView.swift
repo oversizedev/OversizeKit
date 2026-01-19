@@ -6,7 +6,6 @@
 #if canImport(Contacts)
 import Contacts
 #endif
-import OversizeKit
 import OversizeLocalizable
 import OversizeUI
 import SwiftUI
@@ -35,7 +34,7 @@ public struct EmailPickerView: View {
                 case let .result(data):
                     content(data: data)
                 case let .error(error):
-                    ErrorView(error)
+                    ErrorView(error: error)
                 }
             }
         }
@@ -98,7 +97,7 @@ public struct EmailPickerView: View {
                 Spacer()
             }
             .title3()
-            .onSurfaceSecondaryForeground()
+            .onSurfaceSecondary()
             .padding(.vertical, .xxSmall)
             .paddingContent(.horizontal)
 
@@ -136,7 +135,7 @@ public struct EmailPickerView: View {
                 Spacer()
             }
             .title3()
-            .onSurfaceSecondaryForeground()
+            .onSurfaceSecondary()
             .padding(.vertical, .xxSmall)
             .paddingContent(.horizontal)
             .padding(.top, viewModel.lastSelectedEmails.isEmpty ? .zero : .small)

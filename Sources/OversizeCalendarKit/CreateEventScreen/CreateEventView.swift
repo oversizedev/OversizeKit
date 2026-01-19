@@ -98,7 +98,7 @@ public struct CreateEventView: View {
             TextField("Event name", text: $viewModel.title)
                 .title(.bold)
                 .focused($focusedField, equals: .title)
-                .onSurfacePrimaryForeground()
+                .onSurfacePrimary()
                 .padding(.bottom, .xxxSmall)
                 .padding(.horizontal, .small)
 
@@ -148,7 +148,7 @@ public struct CreateEventView: View {
     var textEditor: some View {
         VStack(spacing: 2) {
             TextEditor(text: $viewModel.note)
-                .onSurfacePrimaryForeground()
+                .onSurfacePrimary()
                 .padding(.horizontal, .xSmall)
                 .padding(.vertical, .xxSmall)
                 .focused($focusedField, equals: .note)
@@ -162,7 +162,7 @@ public struct CreateEventView: View {
                             if viewModel.note.isEmpty {
                                 Text("Note")
                                     .body(.medium)
-                                    .onSurfaceTertiaryForeground()
+                                    .onSurfaceTertiary()
                                     .padding(.small)
                             }
                         }
@@ -173,7 +173,7 @@ public struct CreateEventView: View {
                             if viewModel.note.isEmpty {
                                 Text("Note")
                                     .body(.medium)
-                                    .onSurfaceTertiaryForeground()
+                                    .onSurfaceTertiary()
                                     .padding(.small)
                             }
                         }
@@ -183,7 +183,7 @@ public struct CreateEventView: View {
 
             TextField("URL", text: $viewModel.url)
                 .focused($focusedField, equals: .url)
-                .onSurfacePrimaryForeground()
+                .onSurfacePrimary()
                 .body(.medium)
                 .padding(.horizontal, .small)
                 .padding(.vertical, 18)
@@ -363,16 +363,16 @@ public struct CreateEventView: View {
             } label: {
                 VStack(alignment: .leading, spacing: .xxxSmall) {
                     Text("Starts")
-                        .onSurfaceSecondaryForeground()
+                        .onSurfaceSecondary()
                         .subheadline(.semibold)
 
                     Text(startDateText)
-                        .onSurfacePrimaryForeground()
+                        .onSurfacePrimary()
                         .headline(.semibold)
 
                     if !isCurrentYearEvent {
                         Text(viewModel.dateStart.formatted(.dateTime.year()))
-                            .onSurfacePrimaryForeground()
+                            .onSurfacePrimary()
                             .headline(.semibold)
                     }
                 }
@@ -391,16 +391,16 @@ public struct CreateEventView: View {
             } label: {
                 VStack(alignment: .leading, spacing: .xxxSmall) {
                     Text("Ended")
-                        .onSurfaceSecondaryForeground()
+                        .onSurfaceSecondary()
                         .subheadline(.semibold)
 
                     Text(endDateText)
-                        .onSurfacePrimaryForeground()
+                        .onSurfacePrimary()
                         .headline(.semibold)
 
                     if !isCurrentYearEvent {
                         Text(viewModel.dateEnd.formatted(.dateTime.year()))
-                            .onSurfacePrimaryForeground()
+                            .onSurfacePrimary()
                             .headline(.semibold)
                     }
                 }
@@ -485,7 +485,7 @@ public struct CreateEventView: View {
         .buttonStyle(.scale)
         .padding(.horizontal, .medium)
         .padding(.vertical, 20)
-        .onSurfaceSecondaryForeground()
+        .onSurfaceSecondary()
         #if !os(watchOS)
             .background(.ultraThinMaterial)
         #endif

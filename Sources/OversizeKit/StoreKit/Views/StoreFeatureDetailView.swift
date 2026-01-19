@@ -15,7 +15,6 @@ import SwiftUI
 public struct StoreFeatureDetailView: View {
     @EnvironmentObject var viewModel: StoreViewModel
     @State var selection: Components.Schemas.Feature
-    @Environment(\.screenSize) var screenSize
     @Environment(\.dismiss) var dismiss
     @Environment(\.isPremium) var isPremium
 
@@ -29,34 +28,25 @@ public struct StoreFeatureDetailView: View {
             VStack(spacing: .zero) {
                 #if os(macOS)
                 feature(geometry: geometry)
-
                 #else
                 if let features = viewModel.featuresState.result {
                     tabsFeatures(features, geometry: geometry)
                 }
                 #endif
-
+            }
+            .ignoresSafeArea(edges: .top)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(action: { dismiss() }) {
+                        Image.Base.close.icon(selection.screenshots.first == nil ? .onSurfacePrimary : .onPrimary)
+                    }
+                }
+            }
+            .safeAreaBarBottom {
                 if !isPremium {
                     StorePaymentButtonBar()
                         .environmentObject(viewModel)
                 }
-            }
-            .overlay(alignment: .topTrailing) {
-                Button {
-                    dismiss()
-                } label: {
-                    IconDeprecated(
-                        .xMini,
-                        color: selection.screenshots.first?.url != nil ? .onPrimary : .onSurfaceTertiary
-                    )
-                    .padding(.xxSmall)
-                    .background {
-                        Circle()
-                            .fill(.ultraThinMaterial)
-                    }
-                    .padding(.small)
-                }
-                .buttonStyle(.plain)
             }
             #endif
         }
@@ -72,7 +62,6 @@ public struct StoreFeatureDetailView: View {
         TabView(selection: $selection) {
             ForEach(features, id: \.id) { feature in
                 fetureItem(feature, geometry: geometry)
-                    .padding(.bottom, isPremium ? .large : .zero)
                     .tag(feature)
             }
         }
@@ -118,9 +107,9 @@ public struct StoreFeatureDetailView: View {
                                         ? (geometry.size.height * 0.1) - 24
                                         : (geometry.size.height * 0.1) + 12
                                 )
-                                .animation(.interactiveSpring)
                         }
                     }
+                    .animation(.interactiveSpring, value: geometry.size.height)
                 }
                 .clipped()
                 .overlay(alignment: .bottom) {
@@ -132,9 +121,7 @@ public struct StoreFeatureDetailView: View {
 
             TextBox(title: feature.title, subtitle: feature.subtitle, spacing: .xxSmall)
                 .multilineTextAlignment(.center)
-                .paddingContent(.horizontal)
-                .fixedSize(horizontal: false, vertical: true)
-                .padding(.vertical, (geometry.size.height * 0.1) - 20)
+                .paddingContent()
         }
     }
 

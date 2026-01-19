@@ -29,6 +29,7 @@ public final class LauncherViewModel: ObservableObject {
     @AppStorage("AppState.AppBackgroundDate") var appBackgroundDate: Date = .init()
     @Published public var pinCodeField: String = ""
     @Published public var authState: LockscreenViewState = .locked
+    @Published var contentType: ContentType = .content
     @Published var activeFullScreenSheet: FullScreenSheet?
     @Published var isShowSplashScreen: Bool = true
     @Published var isNeedAuthCheking = false
@@ -60,18 +61,20 @@ public final class LauncherViewModel: ObservableObject {
 
 extension LauncherViewModel {
     enum FullScreenSheet: Identifiable, Equatable, Sendable {
-        case onboarding
         case payWall
         case rate
         case specialOffer(event: Components.Schemas.InAppPurchaseOffer)
         var id: Int {
             switch self {
-            case .onboarding: 0
             case .payWall: 1
             case .rate: 2
             case .specialOffer: 3
             }
         }
+    }
+
+    enum ContentType {
+        case content, onboarding
     }
 }
 
@@ -114,7 +117,7 @@ public extension LauncherViewModel {
 
     func checkOnboarding() async {
         if !appStateService.isCompletedOnboarding {
-            activeFullScreenSheet = .onboarding
+            contentType = .onboarding
             logNotice("Onboarding shown")
         }
     }
@@ -154,7 +157,7 @@ public extension LauncherViewModel {
         isShowSplashScreen = false
         if appStateService.appRunCount == 0 {
             firstRunAction?()
-        } else if appStateService.lastRunVersion != Info.app.version {
+        } else if appStateService.lastRunVersion != Info.App.version {
             appUpdateAction?()
         }
 
@@ -184,15 +187,14 @@ public extension LauncherViewModel {
     }
 
     func onCompeteOnboarding(_ isCompletedOnboarding: Bool) {
+        contentType = .content
         if isCompletedOnboarding, !isPremium {
             setPayWall()
-        } else {
-            activeFullScreenSheet = nil
         }
     }
 
     func checkPremium() async {
-        guard let appStoreID = Info.app.appStoreID else {
+        guard let appStoreID = Info.App.appStoreId else {
             logError("Not found App Store ID in AppConfig.plist")
             return
         }

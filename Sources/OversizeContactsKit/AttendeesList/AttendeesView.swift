@@ -10,7 +10,6 @@ import EventKit
 import OversizeCalendarService
 import OversizeContactsService
 import OversizeCore
-import OversizeKit
 import OversizeLocalizable
 import OversizeUI
 import SwiftUI
@@ -40,7 +39,7 @@ public struct AttendeesView: View {
                 case let .result(data):
                     content(data)
                 case let .error(error):
-                    ErrorView(error)
+                    ErrorView(error: error)
                 }
             }
         }
@@ -83,7 +82,7 @@ public struct AttendeesView: View {
                             .fillBackgroundPrimary()
                     }
                 Image(systemName: participant.symbolName)
-                    .onPrimaryForeground()
+                    .onPrimary()
                     .font(.system(size: 9, weight: .black))
             }
         }

@@ -184,7 +184,7 @@ extension StoreViewModel {
 
 extension StoreViewModel {
     public func fetchFeatures() async {
-        guard let appStoreID = Info.app.appStoreID else {
+        guard let appStoreID = Info.App.appStoreId else {
             featuresState = .error(.network(type: .unknown))
             return
         }
@@ -347,7 +347,7 @@ extension StoreViewModel {
 
         state = .loading
 
-        guard let appStoreID = Info.app.appStoreID else {
+        guard let appStoreID = Info.App.appStoreId else {
             state = .error(.network(type: .unknown))
             return
         }

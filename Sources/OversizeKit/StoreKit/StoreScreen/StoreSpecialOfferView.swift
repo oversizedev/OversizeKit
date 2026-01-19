@@ -185,9 +185,6 @@ public struct StoreSpecialOfferView: View {
             .paddingContent(.horizontal)
         }
         .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
-//        .titleLabel {
-//            PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: .medium)
-//        }
         .trailingBar {
             BarButton(.closeAction {
                 lastClosedSpecialOffer = event.id

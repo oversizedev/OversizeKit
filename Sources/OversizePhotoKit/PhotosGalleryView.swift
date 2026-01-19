@@ -23,7 +23,7 @@ public struct PhotosGalleryView: View {
             if images.isEmpty {
                 Text("Not photos")
                     .title3()
-                    .onSurfacePrimaryForeground()
+                    .onSurfacePrimary()
             } else {
                 ImageGridView(images, columnCount: .constant(3)) { image in
                     let index = images.firstIndex(of: image)

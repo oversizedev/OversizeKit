@@ -27,13 +27,13 @@ struct RateAppScreen: View {
 
             Spacer()
 
-            Text((Info.app.name ?? "App") + " is developed only one person, and your assessment would very much drop in")
+            Text((Info.App.name ?? "App") + " is developed only one person, and your assessment would very much drop in")
                 .title3()
                 .onSurfacePrimary()
 
             Spacer()
 
-            if let reviewUrl = Info.url.appStoreReview {
+            if let reviewUrl = Info.App.appStoreReviewUrl {
                 HStack(spacing: .large) {
                     Link(destination: reviewUrl) {
                         IconDeprecated(.thumbsUp, color: .onPrimary)

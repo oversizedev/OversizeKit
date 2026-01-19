@@ -70,7 +70,7 @@ public struct AddressField: View {
                             Text(title)
                                 .font(!isSlectedAddress ? .headline : .subheadline)
                                 .fontWeight(!isSlectedAddress ? .medium : .semibold)
-                                .onSurfaceTertiaryForeground()
+                                .onSurfaceTertiary()
                                 .offset(y: !isSlectedAddress ? 0 : -13)
                                 .opacity(!isSlectedAddress ? 0 : 1)
                         }

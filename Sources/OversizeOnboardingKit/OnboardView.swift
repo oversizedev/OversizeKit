@@ -36,7 +36,9 @@ public struct OnboardView<C, A>: View where A: View, C: View {
             )
             .safeAreaBarTop(content: topButtons)
             .safeAreaBarBottom(content: bottomButtons)
+        #if !os(macOS)
             .navigationBarTitleDisplayMode(.inline)
+        #endif
     }
 
     private func topButtons() -> some View {

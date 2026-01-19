@@ -21,7 +21,7 @@ struct StoreFeaturesView: View {
             VStack {
                 switch viewModel.featuresState {
                 case .idle, .loading:
-                    ProgressView()
+                    StoreFeaturesPlaceholderView()
                 case let .result(features):
                     ForEach(features) { feature in
                         Row(feature.title, subtitle: feature.subtitle) {
@@ -88,10 +88,13 @@ struct StoreFeaturesView: View {
             }
             .frame(width: 440, height: 500, alignment: .center)
             #else
-            StoreFeatureDetailView(selection: feature)
-                .environmentObject(viewModel)
-                .presentationDetents([.medium, .large])
-                .coreServices()
+            NavigationStack {
+                StoreFeatureDetailView(selection: feature)
+                    .environmentObject(viewModel)
+                    .presentationDetents([.medium, .large])
+                    .presentationContentInteraction(.scrolls)
+                    .coreServices()
+            }
             #endif
         }
     }
