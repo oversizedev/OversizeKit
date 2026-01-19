@@ -90,7 +90,7 @@ public struct AboutView: View {
                 switch viewModel.state {
                 case .initial, .loading:
                     ForEach(0 ... 6, id: \.self) { _ in
-                        RoundedRectangle(cornerRadius: .large, style: .continuous)
+                        RoundedRectangle(cornerRadius: 18, style: .continuous)
                             .fillSurfaceSecondary()
                             .frame(width: 74, height: 74)
                     }
@@ -100,28 +100,33 @@ public struct AboutView: View {
                             isPresentStoreProduct = true
                         } label: {
                             VStack(spacing: .xSmall) {
-                                CachedAsyncImage(url: URL(string: "https://cdn.oversize.design/assets/apps/" + app.address + "/icon.png"), urlCache: .imageCache, content: {
-                                    $0
-                                        .resizable()
-                                        .frame(width: 74, height: 74)
-                                        .mask(RoundedRectangle(
-                                            cornerRadius: .large,
-                                            style: .continuous
-                                        ))
-                                        .overlay(
-                                            RoundedRectangle(
-                                                cornerRadius: 16,
+                                CachedAsyncImage(
+                                    url: URL(string: app.iconUrl ?? ""),
+                                    urlCache: .imageCache,
+                                    content: { image in
+                                        image
+                                            .resizable()
+                                            .frame(width: 74, height: 74)
+                                            .mask(RoundedRectangle(
+                                                cornerRadius: 18,
                                                 style: .continuous
+                                            ))
+                                            .overlay(
+                                                RoundedRectangle(
+                                                    cornerRadius: 18,
+                                                    style: .continuous
+                                                )
+                                                .stroke(lineWidth: 1)
+                                                .opacity(0.15)
                                             )
-                                            .stroke(lineWidth: 1)
-                                            .opacity(0.15)
-                                        )
 
-                                }, placeholder: {
-                                    RoundedRectangle(cornerRadius: .large, style: .continuous)
-                                        .fillSurfaceSecondary()
-                                        .frame(width: 74, height: 74)
-                                })
+                                    },
+                                    placeholder: {
+                                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                            .fillSurfaceSecondary()
+                                            .frame(width: 74, height: 74)
+                                    }
+                                )
 
                                 Text(app.name)
                                     .caption(.medium)
@@ -143,7 +148,7 @@ public struct AboutView: View {
                     VStack(spacing: .xSmall) {
                         Link(destination: authorAllApps) {
                             ZStack {
-                                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                RoundedRectangle(cornerRadius: 18, style: .continuous)
                                     .foregroundColor(.surfaceSecondary)
                                     .frame(width: 74, height: 74)
 
@@ -223,7 +228,7 @@ public struct AboutView: View {
 
                     #if os(iOS)
                     if MFMailComposeViewController.canSendMail(),
-                       let mail = Info.links?.company.email,
+                       let mail = Info.developer.email,
                        let appVersion = Info.app.version,
                        let appName = Info.app.name,
                        let device = Info.app.device,
@@ -475,7 +480,7 @@ public struct AboutView: View {
             Spacer()
 
             VStack(alignment: .center) {
-                if let authorLink = Info.links?.company.url {
+                if let authorLink = Info.company.url {
                     Link(destination: authorLink) {
                         if let developerName = Info.developer.name,
                            let appVersion = Info.app.version,

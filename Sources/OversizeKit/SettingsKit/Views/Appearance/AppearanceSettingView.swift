@@ -23,7 +23,7 @@ public struct AppearanceSettingView: View {
         GridItem(.adaptive(minimum: 78)),
     ]
 
-    public init() { }
+    public init() {}
 
     public var body: some View {
         NavigationLayoutView(L10n.Settings.apperance) {
@@ -63,7 +63,6 @@ public struct AppearanceSettingView: View {
             advanded
         }
         .frame(width: 400, height: 300)
-        // swiftlint:disable multiple_closures_with_trailing_closure superfluous_disable_command
         .navigationTitle("Appearance")
         .preferredColorScheme(theme.appearance.colorScheme)
     }
@@ -140,13 +139,17 @@ public struct AppearanceSettingView: View {
                                 }
                             }
                             .onTapGesture {
-                                iconNameSelection = iconName
-                                UIApplication.shared.setAlternateIconName(iconName) { error in
-                                    if let error {
-                                        logError("App icon change failed", error: error)
-                                    } else {
-                                        logSuccess("App icon changed")
+                                if isPremium {
+                                    iconNameSelection = iconName
+                                    UIApplication.shared.setAlternateIconName(iconName) { error in
+                                        if let error {
+                                            logError("App icon change failed", error: error)
+                                        } else {
+                                            logSuccess("App icon changed")
+                                        }
                                     }
+                                } else {
+                                    navigator.navigate(to: SettingsDestinations.premium)
                                 }
                             }
                     }

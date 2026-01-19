@@ -44,7 +44,7 @@ public struct SupportView: View {
             VStack(alignment: .leading) {
                 #if os(iOS)
                 if MFMailComposeViewController.canSendMail(),
-                   let mail = Info.links?.company.email,
+                   let mail = Info.developer.email,
                    let appVersion = Info.app.version,
                    let appName = Info.app.name,
                    let device = Info.app.device,
