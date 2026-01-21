@@ -15,6 +15,7 @@ struct StoreInstructionsPlaceholderView: View {
                         .footnote(.semibold)
                         .onBackgroundSecondary()
                         .padding(.bottom, .xxxSmall)
+                        .redacted(reason: .placeholder)
 
                     Text("How your free trial works")
                         .largeTitle()
@@ -23,9 +24,9 @@ struct StoreInstructionsPlaceholderView: View {
                     Text("Save --% on subscription")
                         .foregroundColor(.onSurfaceSecondary)
                         .body(.semibold)
+                        .redacted(reason: .placeholder)
                 }
                 .multilineTextAlignment(.center)
-                .redacted(reason: .placeholder)
 
                 Spacer()
 

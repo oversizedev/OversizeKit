@@ -6,12 +6,12 @@
 import FactoryKit
 import OversizeComponents
 import OversizeLocalizable
+import OversizeNavigation
 import OversizeResources
 import OversizeServices
 import OversizeStoreService
 import OversizeUI
 import SwiftUI
-import OversizeNavigation
 
 public struct StoreInstructionsView: View {
     @StateObject var viewModel: StoreViewModel
@@ -122,7 +122,6 @@ public struct StoreInstructionsView: View {
         VStack(spacing: .medium) {
             VStack {
                 VStack(spacing: .zero) {
-                    
                     Text(viewModel.specialOfferMode ? "Limited Time" : "Free Trial")
                         .textCase(.uppercase)
                         .footnote(.bold)
@@ -134,15 +133,15 @@ public struct StoreInstructionsView: View {
                         .foregroundColor(.onSurfacePrimary)
                         .padding(.bottom, .xSmall)
 
-                        Group {
-                            Text("Save ")
-                                .foregroundColor(.onSurfaceSecondary)
-                                + Text("\(viewModel.salePercent)%")
-                                .foregroundColor(.accent)
-                                + Text(" on subscription")
-                                .foregroundColor(.onSurfaceSecondary)
-                        }
-                        .body(.semibold)
+                    Group {
+                        Text("Save ")
+                            .foregroundColor(.onSurfaceSecondary)
+                            + Text("\(viewModel.salePercent)%")
+                            .foregroundColor(.accent)
+                            + Text(" on subscription")
+                            .foregroundColor(.onSurfaceSecondary)
+                    }
+                    .body(.semibold)
                 }
                 .multilineTextAlignment(.center)
 
@@ -294,7 +293,6 @@ public struct StoreInstructionsView: View {
     func productsLust(data: StoreKitProducts) -> some View {
         VStack(spacing: .small) {
             ForEach(viewModel.availableSubscriptions) { product in
-
                 if viewModel.specialOfferMode, product.isOffer {
                     StoreProductView(product: product, products: data, isSelected: .constant(false)) {
                         Task {
@@ -302,7 +300,6 @@ public struct StoreInstructionsView: View {
                         }
                     }
                 }
-                
 
                 if !product.isOffer {
                     StoreProductView(product: product, products: data, isSelected: .constant(false)) {

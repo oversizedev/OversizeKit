@@ -4,16 +4,15 @@
 //
 
 import FactoryKit
+import NavigatorUI
 import OversizeKit
 import OversizeNetwork
 import OversizeServices
 import OversizeUI
 import StoreKit
 import SwiftUI
-import NavigatorUI
 
 public struct NoticeListView: View {
-
     @Environment(\.navigator) var navigator
     @Environment(\.isPremium) var isPremium: Bool
     @StateObject private var viewModel = NoticeListViewModel()
@@ -21,27 +20,21 @@ public struct NoticeListView: View {
     public init() {}
 
     public var body: some View {
-        LeadingVStack {
-            if viewModel.isBannerClosed == false {
-                switch viewModel.noticeType {
-                case .offer(let inAppPurchaseOffer):
-                    if !isPremium {
-                        offerView(offer: inAppPurchaseOffer)
-                    }
-                case .rate:
-                    rateNoticeView
-                case .firstDay:
-                    if !isPremium {
-                        firstDayOfferView
-                    }
-                case .none:
-                    EmptyView()
+        if viewModel.isBannerClosed == false {
+            switch viewModel.noticeType {
+            case let .offer(inAppPurchaseOffer):
+                if !isPremium {
+                    offerView(offer: inAppPurchaseOffer)
                 }
-
+            case .rate:
+                rateNoticeView
+            case .firstDay:
+                if !isPremium {
+                    firstDayOfferView
+                }
+            case .none:
+                EmptyView()
             }
-        }
-        .task {
-            await viewModel.fetchData()
         }
     }
 
@@ -132,7 +125,6 @@ public struct NoticeListView: View {
                 viewModel.isBannerClosed = true
             }
         }
-
     }
 }
 

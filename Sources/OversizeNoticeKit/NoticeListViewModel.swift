@@ -14,22 +14,25 @@ import SwiftUI
 
 @MainActor
 public final class NoticeListViewModel: ObservableObject {
-
     @Injected(\.appStoreReviewService) var reviewService
     @Injected(\.networkService) var networkService
     @Injected(\.storeKitService) var storeKitService: StoreKitService
     @Injected(\.appStateService) var appStateService: AppStateService
 
     @AppStorage("AppState.LastClosedSpecialOfferBanner") var lastClosedSpecialOffer: Int = .init()
-    
+
     @Published var noticeType: NoticeType?
     @Published var isBannerClosed = false
-    
+
     public var trialDaysPeriodText: String = ""
     public var subscriptionName: String = ""
     public var salePercent: Decimal = 0
 
-    public init() { }
+    public init() {
+        Task {
+            await fetchData()
+        }
+    }
 
     public func fetchData() async {
         await fetchStoreKitProudcts()
@@ -41,7 +44,7 @@ public final class NoticeListViewModel: ObservableObject {
             return
         }
         let inAppPurchases = await networkService.fetchInAppPurchases(appId: appStoreID)
-        
+
         let result = await storeKitService.requestProducts(productIds: inAppPurchases.successResult?.productIds ?? [])
         switch result {
         case let .success(products):
@@ -72,6 +75,7 @@ public final class NoticeListViewModel: ObservableObject {
             break
         }
     }
+
     private func checkDateInSelectedPeriod(startDate: Date, endDate: Date) -> Bool {
         if startDate < endDate {
             (startDate ... endDate).contains(Date())
@@ -86,7 +90,6 @@ public final class NoticeListViewModel: ObservableObject {
             .replacingOccurrences(of: "<freeDays>", with: trialDaysPeriodText)
             .replacingOccurrences(of: "<subscriptionName>", with: subscriptionName)
     }
-    
 }
 
 extension NoticeListViewModel {

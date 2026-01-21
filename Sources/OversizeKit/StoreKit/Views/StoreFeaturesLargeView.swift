@@ -17,7 +17,7 @@ struct StoreFeaturesLargeView: View {
     var body: some View {
         switch viewModel.featuresState {
         case .idle, .loading:
-           placeholder
+            placeholder
 
         case let .result(features):
             VStack {
@@ -90,8 +90,6 @@ struct StoreFeaturesLargeView: View {
         .padding(.vertical, .large)
         .elevation(.z3)
     }
-    
-
 
     func fetureItem(_ feature: Components.Schemas.Feature) -> some View {
         VStack(spacing: .zero) {
@@ -155,7 +153,7 @@ struct StoreFeaturesLargeView: View {
         }
         .padding(.vertical, .large)
     }
-    
+
     private var placeholder: some View {
         VStack(spacing: .zero) {
             ForEach(0 ..< 3, id: \.self) { _ in

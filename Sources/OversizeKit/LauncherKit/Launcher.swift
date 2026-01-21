@@ -3,12 +3,12 @@
 // Launcher.swift
 //
 
+import NavigatorUI
 import OversizeCore
 import OversizeLocalizable
 import OversizeServices
 import OversizeUI
 import SwiftUI
-import NavigatorUI
 
 public struct Launcher<Content: View, Onboarding: View>: View {
     @Environment(\.scenePhase) var scenePhase

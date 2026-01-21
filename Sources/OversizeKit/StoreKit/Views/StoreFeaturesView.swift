@@ -98,7 +98,7 @@ struct StoreFeaturesView: View {
             #endif
         }
     }
-    
+
     private var placeholder: some View {
         VStack(spacing: .zero) {
             ForEach(0 ..< 3, id: \.self) { _ in
