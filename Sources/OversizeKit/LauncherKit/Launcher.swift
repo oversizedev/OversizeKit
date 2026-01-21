@@ -8,6 +8,7 @@ import OversizeLocalizable
 import OversizeServices
 import OversizeUI
 import SwiftUI
+import NavigatorUI
 
 public struct Launcher<Content: View, Onboarding: View>: View {
     @Environment(\.scenePhase) var scenePhase
@@ -69,15 +70,15 @@ public struct Launcher<Content: View, Onboarding: View>: View {
     private func fullScreenCover(sheet: LauncherViewModel.FullScreenSheet) -> some View {
         switch sheet {
         case .payWall:
-            NavigationStack {
+            ManagedNavigationStack {
                 StoreInstructionsView(specialOfferMode: true)
             }
         case .rate:
-            NavigationStack {
+            ManagedNavigationStack {
                 RateAppScreen()
             }
         case let .specialOffer(event):
-            NavigationStack {
+            ManagedNavigationStack {
                 StoreSpecialOfferView(event: event)
             }
         }

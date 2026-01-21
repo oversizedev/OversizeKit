@@ -3,42 +3,52 @@
 // NoticeListView.swift
 //
 
+import FactoryKit
 import OversizeKit
 import OversizeNetwork
 import OversizeServices
 import OversizeUI
 import StoreKit
 import SwiftUI
+import NavigatorUI
 
 public struct NoticeListView: View {
+
+    @Environment(\.navigator) var navigator
     @Environment(\.isPremium) var isPremium: Bool
     @StateObject private var viewModel = NoticeListViewModel()
-
-    @State private var isBannerClosed = false
-    @State private var isShowOfferSheet: Bool = false
 
     public init() {}
 
     public var body: some View {
-        switch viewModel.state {
-        case let .result(offer: offer, isShowRate: isShowRate) where (offer != nil || isShowRate) && !isBannerClosed && !isPremium:
-            VStack(spacing: .small) {
-                if isShowRate {
+        LeadingVStack {
+            if viewModel.isBannerClosed == false {
+                switch viewModel.noticeType {
+                case .offer(let inAppPurchaseOffer):
+                    if !isPremium {
+                        offerView(offer: inAppPurchaseOffer)
+                    }
+                case .rate:
                     rateNoticeView
+                case .firstDay:
+                    if !isPremium {
+                        firstDayOfferView
+                    }
+                case .none:
+                    EmptyView()
                 }
-                if let offer {
-                    offerView(offer: offer)
-                }
+
             }
-        case .initial, .loading, .error, .result, .empty:
-            EmptyView()
+        }
+        .task {
+            await viewModel.fetchData()
         }
     }
 
     @ViewBuilder
     private var rateNoticeView: some View {
-        if let reviewUrl = Info.url.appStoreReview {
-            NoticeView("How do you like the \(Info.app.name ?? "app"))?") {
+        if let reviewUrl = Info.App.appStoreReviewUrl {
+            NoticeView("How do you like the \(Info.App.name ?? "app"))?") {
                 Link(destination: reviewUrl) {
                     Text("Good")
                 }
@@ -48,7 +58,7 @@ public struct NoticeListView: View {
                     Task {
                         await viewModel.reviewService.estimate(goodRating: true)
                         withAnimation {
-                            isBannerClosed = true
+                            viewModel.isBannerClosed = true
                         }
                     }
                 })
@@ -57,7 +67,7 @@ public struct NoticeListView: View {
                     Task {
                         await viewModel.reviewService.estimate(goodRating: false)
                         withAnimation {
-                            isBannerClosed = true
+                            viewModel.isBannerClosed = true
                         }
                     }
                 }
@@ -67,40 +77,62 @@ public struct NoticeListView: View {
                 Task {
                     await viewModel.reviewService.reviewBannerClosed()
                     withAnimation {
-                        isBannerClosed = true
+                        viewModel.isBannerClosed = true
                     }
                 }
             }
-            .animation(.default, value: isBannerClosed)
+            .animation(.default, value: viewModel.isBannerClosed)
+        }
+    }
+
+    @ViewBuilder
+    private var firstDayOfferView: some View {
+        NoticeView(
+            "Get \(viewModel.salePercent)% Off",
+            subtitle: "On your first year of \(viewModel.subscriptionName)"
+        ) {
+            Button {
+                navigator.navigate(
+                    to: SettingsDestinations.premiumInstructions(
+                        specialOfferMode: true
+                    ),
+                    method: .managedSheet
+                )
+            } label: {
+                Text("Claim Offer")
+            }
+            .accent()
+        } closeAction: {
+            withAnimation {
+                viewModel.isBannerClosed = true
+            }
         }
     }
 
     @ViewBuilder
     private func offerView(offer: Components.Schemas.InAppPurchaseOffer) -> some View {
-        if let imageUrl = offer.imageUrl, let url = URL(string: imageUrl) {
-            NoticeView(
-                viewModel.textPrepere(offer.title),
-                subtitle: viewModel.textPrepere(offer.description ?? ""),
-                imageURL: url
-            ) {
-                Button {
-                    isShowOfferSheet.toggle()
-                } label: {
-                    Text("Accept Offer")
-                }
-                .accent()
-
-            } closeAction: {
-                viewModel.lastClosedSpecialOffer = offer.id
-                withAnimation {
-                    isBannerClosed = true
-                }
+        NoticeView(
+            viewModel.textPrepere(offer.title),
+            subtitle: viewModel.textPrepere(offer.description ?? ""),
+            imageURL: offer.imageUrl?.url
+        ) {
+            Button {
+                navigator.navigate(
+                    to: SettingsDestinations.offer(event: offer),
+                    method: .managedSheet
+                )
+            } label: {
+                Text("Accept Offer")
             }
-            .sheet(isPresented: $isShowOfferSheet) {
-                StoreSpecialOfferView(event: offer)
-                    .coreServices()
+            .accent()
+
+        } closeAction: {
+            viewModel.lastClosedSpecialOffer = offer.id
+            withAnimation {
+                viewModel.isBannerClosed = true
             }
         }
+
     }
 }
 

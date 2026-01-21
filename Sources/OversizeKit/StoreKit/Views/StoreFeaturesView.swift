@@ -21,7 +21,7 @@ struct StoreFeaturesView: View {
             VStack {
                 switch viewModel.featuresState {
                 case .idle, .loading:
-                    StoreFeaturesPlaceholderView()
+                    placeholder
                 case let .result(features):
                     ForEach(features) { feature in
                         Row(feature.title, subtitle: feature.subtitle) {
@@ -96,6 +96,21 @@ struct StoreFeaturesView: View {
                     .coreServices()
             }
             #endif
+        }
+    }
+    
+    private var placeholder: some View {
+        VStack(spacing: .zero) {
+            ForEach(0 ..< 3, id: \.self) { _ in
+                Row("Feature", subtitle: "Description") {} leading: {
+                    Circle()
+                        .fillSurfaceSecondary()
+                        .frame(width: 24, height: 24)
+                }
+                .rowArrow()
+                .redacted(reason: .placeholder)
+                .disabled(true)
+            }
         }
     }
 

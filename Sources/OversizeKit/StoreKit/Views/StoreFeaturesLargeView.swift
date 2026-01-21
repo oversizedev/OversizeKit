@@ -17,7 +17,7 @@ struct StoreFeaturesLargeView: View {
     var body: some View {
         switch viewModel.featuresState {
         case .idle, .loading:
-            ProgressView()
+           placeholder
 
         case let .result(features):
             VStack {
@@ -38,7 +38,7 @@ struct StoreFeaturesLargeView: View {
     func fetureScreenItem(_ feature: Components.Schemas.Feature) -> some View {
         Surface {
             VStack(spacing: .zero) {
-                RoundedRectangle(cornerRadius: .medium, style: .continuous)
+                RoundedRectangle(cornerRadius: .large - 4, style: .continuous)
                     .fill(
                         LinearGradient(
                             gradient: Gradient(
@@ -72,6 +72,7 @@ struct StoreFeaturesLargeView: View {
                     Text(feature.title)
                         .title2(.bold)
                         .foregroundColor(.onSurfacePrimary)
+                        .frame(maxWidth: .infinity, alignment: .center)
 
                     if let subtitle = feature.subtitle {
                         Text(subtitle)
@@ -84,11 +85,13 @@ struct StoreFeaturesLargeView: View {
             }
             .multilineTextAlignment(.center)
         }
-        .controlRadius(.large)
+        .surfaceRadius(.large)
         .surfaceContentMargins(.xxxSmall)
         .padding(.vertical, .large)
         .elevation(.z3)
     }
+    
+
 
     func fetureItem(_ feature: Components.Schemas.Feature) -> some View {
         VStack(spacing: .zero) {
@@ -151,6 +154,21 @@ struct StoreFeaturesLargeView: View {
             }
         }
         .padding(.vertical, .large)
+    }
+    
+    private var placeholder: some View {
+        VStack(spacing: .zero) {
+            ForEach(0 ..< 3, id: \.self) { _ in
+                Row("Feature", subtitle: "Description") {} leading: {
+                    Circle()
+                        .fillSurfaceSecondary()
+                        .frame(width: 24, height: 24)
+                }
+                .rowArrow()
+                .redacted(reason: .placeholder)
+                .disabled(true)
+            }
+        }
     }
 
     func backgroundColor(feature: Components.Schemas.Feature) -> Color {

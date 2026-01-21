@@ -121,6 +121,7 @@ let package = Package(
                 .product(name: "OversizeServices", package: "OversizeServices"),
                 .product(name: "OversizeStoreService", package: "OversizeServices"),
                 .product(name: "FactoryKit", package: "Factory"),
+                .product(name: "NavigatorUI", package: "Navigator"),
             ]
         ),
         .target(

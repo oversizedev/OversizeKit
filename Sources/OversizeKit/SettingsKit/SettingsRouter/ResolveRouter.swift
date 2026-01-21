@@ -63,6 +63,8 @@ extension SettingsDestinations: NavigationDestination {
             DebugMenuView()
         case .debugInfo:
             DebugInfoView()
+        case let .premiumInstructions(specialOfferMode):
+            StoreInstructionsView(specialOfferMode: specialOfferMode)
         }
     }
 

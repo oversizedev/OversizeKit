@@ -9,7 +9,9 @@ import OversizeNetwork
 
 public enum SettingsDestinations: Hashable {
     case premium
+    case premiumInstructions(specialOfferMode: Bool)
     case premiumFeature(feature: Components.Schemas.Feature)
+    case offer(event: Components.Schemas.InAppPurchaseOffer)
     case soundAndVibration
     case appearance
     case sync
@@ -24,7 +26,6 @@ public enum SettingsDestinations: Hashable {
     case setPINCode
     case updatePINCode
     case security
-    case offer(event: Components.Schemas.InAppPurchaseOffer)
     case webView(url: URL)
     case sendMail(to: String, subject: String, content: String)
     case debugMenu
