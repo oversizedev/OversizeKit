@@ -99,14 +99,7 @@ extension SettingsView {
                     .rowArrow()
                 }
 
-                if FeatureFlags.secure.faceID.valueOrFalse
-                    || FeatureFlags.secure.lookscreen.valueOrFalse
-                    || FeatureFlags.secure.CVVCodes.valueOrFalse
-                    || FeatureFlags.secure.alertSecureCodes.valueOrFalse
-                    || FeatureFlags.secure.blurMinimize.valueOrFalse
-                    || FeatureFlags.secure.bruteForceSecure.valueOrFalse
-                    || FeatureFlags.secure.photoBreaker.valueOrFalse
-                {
+                if FeatureFlags.secure.faceID.valueOrFalse || FeatureFlags.secure.lookscreen.valueOrFalse || FeatureFlags.secure.blurMinimize.valueOrFalse {
                     Row(L10n.Security.title) {
                         navigator.navigate(to: SettingsDestinations.security)
 

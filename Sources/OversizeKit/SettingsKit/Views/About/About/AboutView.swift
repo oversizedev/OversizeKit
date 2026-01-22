@@ -15,7 +15,6 @@ import OversizeServices
 import OversizeUI
 import SwiftUI
 
-// swiftlint:disable all
 #if canImport(MessageUI)
 import MessageUI
 #endif
@@ -480,14 +479,14 @@ public struct AboutView: View {
             Spacer()
 
             VStack(alignment: .center) {
-                if let authorLink = Info.Company.url {
+                if let authorLink = Info.Company.websiteUrl {
                     Link(destination: authorLink) {
                         if let developerName = Info.Developer.name,
                            let appVersion = Info.App.version,
                            let appName = Info.App.name,
                            let appBuild = Info.App.build
                         {
-                            Text("© 2024 \(developerName). \(appName) \(appVersion) (\(appBuild))")
+                            Text("© 2026 \(developerName). \(appName) \(appVersion) (\(appBuild))")
                                 .footnote()
                                 .foregroundColor(.onBackgroundTertiary)
                         } else {
