@@ -70,7 +70,8 @@ public struct PremiumBannerRow: View {
                                 Color(hex: "D24A44"),
                                 Color(hex: "9C5BA2"),
                                 Color(hex: "4B5B94"),
-                            ]),
+                            ]
+                        ),
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
                     ))
@@ -125,7 +126,8 @@ public extension PremiumBannerRow {
                 }
                 .background(
                     RoundedRectangle(cornerRadius: .xxSmall, style: .continuous)
-                        .fill(Color.onPrimary))
+                        .fill(Color.onPrimary)
+                )
 
                 Text(viewModel.productsState.result?.banner.description ?? "Long text")
                     .headline(.semibold)
@@ -147,10 +149,12 @@ public extension PremiumBannerRow {
                         colors: [Color(hex: "EAAB44"),
                                  Color(hex: "D24A44"),
                                  Color(hex: "9C5BA2"),
-                                 Color(hex: "4B5B94")]),
+                                 Color(hex: "4B5B94")]
+                    ),
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
-                )))
+                ))
+        )
     }
 }
 

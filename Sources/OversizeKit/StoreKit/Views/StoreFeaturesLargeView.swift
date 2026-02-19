@@ -5,7 +5,7 @@
 
 import CachedAsyncImage
 import OversizeComponents
-import OversizeModels
+import OversizeCore
 import OversizeNetwork
 import OversizeServices
 import OversizeUI
@@ -31,7 +31,7 @@ struct StoreFeaturesLargeView: View {
             }
 
         case let .error(appError):
-            ErrorView(appError)
+            OversizeUI.ErrorView(error: appError)
         }
     }
 
@@ -85,7 +85,7 @@ struct StoreFeaturesLargeView: View {
             }
             .multilineTextAlignment(.center)
         }
-        .surfaceRadius(.large)
+        .surfaceRadius(.regular)
         .surfaceContentMargins(.xxxSmall)
         .padding(.vertical, .large)
         .elevation(.z3)

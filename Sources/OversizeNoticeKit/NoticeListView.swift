@@ -78,7 +78,6 @@ public struct NoticeListView: View {
         }
     }
 
-    @ViewBuilder
     private var firstDayOfferView: some View {
         NoticeView(
             "Get \(viewModel.salePercent)% Off",
@@ -102,7 +101,6 @@ public struct NoticeListView: View {
         }
     }
 
-    @ViewBuilder
     private func offerView(offer: Components.Schemas.InAppPurchaseOffer) -> some View {
         NoticeView(
             viewModel.textPrepere(offer.title),

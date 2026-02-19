@@ -39,7 +39,7 @@ public struct AttendeesView: View {
                 case let .result(data):
                     content(data)
                 case let .error(error):
-                    ErrorView(error: error)
+                    OversizeUI.ErrorView(error: error)
                 }
             }
         }

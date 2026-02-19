@@ -16,11 +16,15 @@ import SwiftUI
 public struct StoreInstructionsView: View {
     @StateObject var viewModel: StoreViewModel
     @Environment(\.screenSize) var screenSize
+    @Environment(\.safeAreaInsets) var safeAreaInsets
     @Environment(\.isPremium) var isPremium
     @Environment(\.dismiss) var dismiss
 
     @State var isShowAllPlans = false
     @State var offset: CGFloat = 0
+    private var safeAreaHeight: CGFloat {
+        screenSize.height - safeAreaInsets.top - safeAreaInsets.bottom
+    }
 
     public init(specialOfferMode: Bool = false) {
         _viewModel = StateObject(wrappedValue: StoreViewModel(specialOfferMode: specialOfferMode))
@@ -37,7 +41,7 @@ public struct StoreInstructionsView: View {
                     case let .result(data):
                         content(data: data)
                     case let .error(error):
-                        ErrorView(error)
+                        OversizeUI.ErrorView(error: error)
                     }
                 }
                 .paddingContent(.horizontal)
@@ -112,12 +116,10 @@ public struct StoreInstructionsView: View {
         offset = -scrollOffset.y
     }
 
-    @ViewBuilder
     private func contentPlaceholder() -> some View {
         StoreInstructionsPlaceholderView(offset: offset)
     }
 
-    @ViewBuilder
     private func content(data: StoreKitProducts) -> some View {
         VStack(spacing: .medium) {
             VStack {
@@ -152,13 +154,13 @@ public struct StoreInstructionsView: View {
 
                 Spacer()
             }
-            .frame(height: screenSize.safeAreaHeight - 230)
+            .frame(height: safeAreaHeight - 230)
             .overlay {
                 ScrollArrow(width: 30, offset: -5 + (offset * 0.05))
                     .stroke(style: StrokeStyle(lineWidth: 5, lineCap: .round))
                     .foregroundColor(.onSurfacePrimary.opacity(0.3))
                     .frame(width: 30)
-                    .offset(y: screenSize.safeAreaHeight - 300)
+                    .offset(y: safeAreaHeight - 300)
                     .opacity(1 - (offset * 0.01))
             }
 
@@ -190,7 +192,6 @@ public struct StoreInstructionsView: View {
         }
     }
 
-    @ViewBuilder
     var stepsView: some View {
         VStack(alignment: .leading, spacing: .xxxSmall) {
             HStack(alignment: .top, spacing: .small) {
@@ -205,7 +206,8 @@ public struct StoreInstructionsView: View {
                                     colors: [Color(hex: "EAAB44"),
                                              Color(hex: "D24A44"),
                                              Color(hex: "9C5BA2"),
-                                             Color(hex: "4B5B94")]),
+                                             Color(hex: "4B5B94")]
+                                ),
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             ))
@@ -227,7 +229,8 @@ public struct StoreInstructionsView: View {
                         gradient: Gradient(
                             colors: [Color(hex: "EAAB44"),
                                      Color(hex: "D24A44"),
-                                     Color(hex: "9C5BA2")]),
+                                     Color(hex: "9C5BA2")]
+                        ),
                         startPoint: .topLeading,
                         endPoint: .trailing
                     ))
@@ -289,7 +292,6 @@ public struct StoreInstructionsView: View {
         .frame(maxWidth: .infinity)
     }
 
-    @ViewBuilder
     func productsLust(data: StoreKitProducts) -> some View {
         VStack(spacing: .small) {
             ForEach(viewModel.availableSubscriptions) { product in

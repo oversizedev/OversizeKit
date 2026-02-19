@@ -33,7 +33,7 @@ public struct ContactsListsView: View {
                 case let .result(data):
                     content(data: data)
                 case let .error(error):
-                    ErrorView(error: error)
+                    OversizeUI.ErrorView(error: error)
                 }
             }
         }
@@ -45,7 +45,6 @@ public struct ContactsListsView: View {
         }
     }
 
-    @ViewBuilder
     private func content(data: [CNContact]) -> some View {
         ForEach(emails, id: \.self) { email in
             if let contact = viewModel.getContactFromEmail(email: email, contacts: data) {
@@ -83,7 +82,6 @@ public struct ContactsListsView: View {
         #endif
     }
 
-    @ViewBuilder
     private func placeholder() -> some View {
         ForEach(emails, id: \.self) { email in
             Row(email) {

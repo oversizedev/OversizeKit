@@ -18,8 +18,7 @@ public struct AppStoreProductViewControllerRepresentable: UIViewControllerRepres
     }
 
     public func makeUIViewController(context _: Context) -> UIViewControllerType {
-        let viewController = AppStoreProductViewController(isPresentStoreProduct: isPresentStoreProduct, appId: appId)
-        return viewController
+        AppStoreProductViewController(isPresentStoreProduct: isPresentStoreProduct, appId: appId)
     }
 
     public func updateUIViewController(_ uiViewController: UIViewControllerType, context _: Context) {

@@ -5,7 +5,6 @@
 
 import CachedAsyncImage
 import OversizeCore
-import OversizeModels
 import OversizeNetwork
 import OversizeServices
 import OversizeUI
@@ -69,7 +68,7 @@ struct StoreFeaturesView: View {
                         .rowIconBackgroundColor(backgroundColor(feature: feature))
                     }
                 case let .error(appError):
-                    ErrorView(appError)
+                    OversizeUI.ErrorView(error: appError)
                 }
             }
         }

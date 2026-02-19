@@ -140,7 +140,6 @@ public struct StoreProductView: View {
         }
     }
 
-    @ViewBuilder
     var label: some View {
         Group {
             switch type {

@@ -26,7 +26,7 @@ public struct SaveForView: View {
                         span = .thisEvent
                         dismiss()
                     } leading: {
-                        Image.Date.calendar
+                        Image.Base.calendar
                             .renderingMode(.template)
                             .foregroundColor(.onSurfacePrimary)
                     }

@@ -6,7 +6,7 @@
 import OversizeUI
 import SwiftUI
 
-public struct OnboardView<C, A>: View where A: View, C: View {
+public struct OnboardView<C: View, A: View>: View {
     private let content: C
     private let actions: Group<A>
     private let backAction: (() -> Void)?

@@ -5,7 +5,7 @@
 
 import FactoryKit
 import Foundation
-import OversizeModels
+import OversizeCore
 import OversizeNetwork
 import OversizeServices
 import OversizeStoreService

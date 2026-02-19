@@ -20,7 +20,6 @@ public struct SystemServicesModifier: ViewModifier {
 
     @State private var blurRadius: CGFloat = 0
     @State private var oppacity: CGFloat = 1
-    @State private var screnSize: ScreenSize = .init(width: 375, height: 667)
 
     private enum FullScreenSheet: Identifiable, Equatable, Sendable {
         case onboarding
@@ -34,21 +33,18 @@ public struct SystemServicesModifier: ViewModifier {
     public init() {}
 
     public func body(content: Content) -> some View {
-        GeometryReader { geometry in
-            content
-                .blur(radius: blurRadius)
-                .preferredColorScheme(theme.appearance.colorScheme)
-                .premiumStatus(isPremium)
-                .theme(ThemeSettings())
-                .screenSize(screnSize)
-            #if os(iOS)
-                .tint(theme.accentColor)
-            #endif
-                .onAppear(perform: { onAppear(geometry: geometry) })
-                .onChange(of: scenePhase) { _, phase in
-                    onChangeScenePhase(phase)
-                }
-        }
+        content
+            .blur(radius: blurRadius)
+            .preferredColorScheme(theme.appearance.colorScheme)
+            .premiumStatus(isPremium)
+            .theme(ThemeSettings())
+#if os(iOS)
+            .tint(theme.accentColor)
+#endif
+            .onChange(of: scenePhase) { _, phase in
+                onChangeScenePhase(phase)
+            }
+        
     }
 
     private func onChangeScenePhase(_ phase: ScenePhase) {
@@ -74,11 +70,6 @@ public struct SystemServicesModifier: ViewModifier {
         @unknown default:
             break
         }
-    }
-
-    private func onAppear(geometry: GeometryProxy) {
-        let updatedScreenSize = ScreenSize(geometry: geometry)
-        screnSize = updatedScreenSize
     }
 }
 

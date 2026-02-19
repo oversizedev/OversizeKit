@@ -3,7 +3,7 @@
 // Example__watchOS_App.swift, created on 19.05.2024
 //
 
-import Factory
+import FactoryKit
 import OversizeKit
 import OversizeServices
 import OversizeUI

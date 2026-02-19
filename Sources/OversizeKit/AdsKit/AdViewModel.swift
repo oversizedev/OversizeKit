@@ -4,7 +4,7 @@
 //
 
 import FactoryKit
-import OversizeModels
+import OversizeCore
 import OversizeNetwork
 import OversizeServices
 import SwiftUI
@@ -19,7 +19,7 @@ public class AdViewModel: ObservableObject {
 
     public func fetchAd() async {
         guard let id = Info.App.appStoreId else {
-            state = .error(.network(type: .unknown))
+            state = .error(NetworkError.unknown(nil))
             return
         }
         let result = await networkService.fetchAd(appId: id)
@@ -37,6 +37,6 @@ extension AdViewModel {
         case initial
         case loading
         case result(Components.Schemas.Ad)
-        case error(AppError)
+        case error(Error)
     }
 }

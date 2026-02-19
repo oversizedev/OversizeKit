@@ -4,7 +4,7 @@
 //
 
 import Foundation
-import OversizeModels
+import OversizeCore
 import OversizeNetwork
 
 public enum SettingsDestinations: Hashable {

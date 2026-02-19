@@ -78,7 +78,7 @@ extension LauncherViewModel {
     }
 }
 
-// Lockscreen
+/// Lockscreen
 public extension LauncherViewModel {
     func launcherSheetsCheck() async {
         await checkOnboarding()

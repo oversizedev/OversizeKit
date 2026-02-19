@@ -4,7 +4,7 @@
 //
 
 import FactoryKit
-import OversizeModels
+import OversizeCore
 import OversizeNetwork
 import OversizeServices
 import SwiftUI
@@ -23,7 +23,7 @@ public class AboutViewModel: ObservableObject {
         if case let .success(apps) = await resultApps, case let .success(info) = await resultInfo {
             state = .result(apps, info)
         } else {
-            state = .error(.network(type: .noResponse))
+            state = .error(NetworkError.noResponse)
         }
     }
 }
@@ -33,6 +33,6 @@ extension AboutViewModel {
         case initial
         case loading
         case result([Components.Schemas.App], Components.Schemas.Company)
-        case error(AppError)
+        case error(Error)
     }
 }

@@ -34,7 +34,7 @@ public struct EmailPickerView: View {
                 case let .result(data):
                     content(data: data)
                 case let .error(error):
-                    ErrorView(error: error)
+                    OversizeUI.ErrorView(error: error)
                 }
             }
         }
@@ -63,7 +63,6 @@ public struct EmailPickerView: View {
         }
     }
 
-    @ViewBuilder
     private func content(data: [CNContact]) -> some View {
         LazyVStack(spacing: .zero) {
             newEmailView()

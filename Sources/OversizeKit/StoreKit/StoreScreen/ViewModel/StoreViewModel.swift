@@ -6,7 +6,6 @@
 import FactoryKit
 import OversizeCore
 import OversizeLocalizable
-import OversizeModels
 import OversizeNetwork
 import OversizeNotificationService
 import OversizeServices
@@ -22,9 +21,9 @@ public class StoreViewModel: ObservableObject {
     @Injected(\.localNotificationService) var localNotificationService: LocalNotificationServiceProtocol
     #endif
 
-    @Published var state: LoadingViewState<StoreKitProducts> = .idle
-    @Published var featuresState: LoadingViewState<[Components.Schemas.Feature]> = .idle
-    @Published var productsState: LoadingViewState<InAppPurchaseResponse> = .idle
+    @Published var state: LoadingState<StoreKitProducts> = .idle
+    @Published var featuresState: LoadingState<[Components.Schemas.Feature]> = .idle
+    @Published var productsState: LoadingState<InAppPurchaseResponse> = .idle
 
     @Published var currentSubscription: Product?
     @Published var status: Product.SubscriptionInfo.Status?
@@ -185,7 +184,7 @@ extension StoreViewModel {
 extension StoreViewModel {
     public func fetchFeatures() async {
         guard let appStoreID = Info.App.appStoreId else {
-            featuresState = .error(.network(type: .unknown))
+            featuresState = .error(NetworkError.unknown(nil))
             return
         }
 
@@ -307,7 +306,7 @@ extension StoreViewModel {
             }
         } catch StoreError.failedVerification {
             isBuyLoading = false
-            state = .error(.custom(title: "Your purchase could not be verified by the App Store."))
+            state = .error(CustomError(title: "Your purchase could not be verified by the App Store."))
             return false
         } catch {
             isBuyLoading = false
@@ -348,7 +347,7 @@ extension StoreViewModel {
         state = .loading
 
         guard let appStoreID = Info.App.appStoreId else {
-            state = .error(.network(type: .unknown))
+            state = .error(NetworkError.unknown(nil))
             return
         }
 
@@ -442,7 +441,7 @@ extension StoreViewModel {
         "You are currently subscribed to \(product.displayName)."
     }
 
-    // Build a string description of the `expirationReason` to display to the user.
+    /// Build a string description of the `expirationReason` to display to the user.
     private func expirationDescription(_ expirationReason: RenewalInfo.ExpirationReason, expirationDate: Date, product: Product) -> String {
         var description = ""
 

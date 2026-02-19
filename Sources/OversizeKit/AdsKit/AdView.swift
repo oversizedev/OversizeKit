@@ -5,7 +5,6 @@
 
 import CachedAsyncImage
 import OversizeCore
-import OversizeModels
 import OversizeNetwork
 import OversizeServices
 import OversizeUI

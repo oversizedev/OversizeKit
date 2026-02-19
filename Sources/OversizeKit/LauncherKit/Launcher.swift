@@ -37,7 +37,7 @@ public struct Launcher<Content: View, Onboarding: View>: View {
                 fullScreenCover(sheet: $0)
                     .coreServices()
                 #if os(macOS)
-                    .frame(width: viewModel.activeFullScreenSheet == .onboarding ? 840 : 500, height: 672)
+                    .frame(width: viewModel.contentType == .onboarding ? 840 : 500, height: 672)
                 #endif
             }
             .onChange(of: viewModel.appStateService.isCompletedOnboarding) { _, isCompletedOnboarding in
@@ -46,6 +46,7 @@ public struct Launcher<Content: View, Onboarding: View>: View {
             .onChange(of: scenePhase) { _, value in
                 viewModel.onScenePhaseChange(value)
             }
+            .coreServices()
     }
 
     @ViewBuilder
@@ -158,9 +159,9 @@ public extension View {
 }
 
 private extension View {
-    func appLaunchCover<Item>(
+    func appLaunchCover<Item: Identifiable>(
         item: Binding<Item?>, onDismiss: (() -> Void)? = nil, @ViewBuilder content: @escaping (Item) -> some View
-    ) -> some View where Item: Identifiable {
+    ) -> some View {
         #if os(macOS)
         sheet(item: item, onDismiss: onDismiss, content: content)
         #else

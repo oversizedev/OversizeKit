@@ -6,6 +6,11 @@ struct StoreInstructionsPlaceholderView: View {
     let offset: CGFloat
 
     @Environment(\.screenSize) private var screenSize
+    @Environment(\.safeAreaInsets) private var safeAreaInsets
+
+    private var safeAreaHeight: CGFloat {
+        screenSize.height - safeAreaInsets.top - safeAreaInsets.bottom
+    }
 
     var body: some View {
         VStack(spacing: .medium) {
@@ -35,13 +40,13 @@ struct StoreInstructionsPlaceholderView: View {
 
                 Spacer()
             }
-            .frame(height: screenSize.safeAreaHeight - 230)
+            .frame(height: safeAreaHeight - 230)
             .overlay {
                 ScrollArrow(width: 30, offset: -5 + (offset * 0.05))
                     .stroke(style: StrokeStyle(lineWidth: 5, lineCap: .round))
                     .foregroundColor(.onSurfacePrimary.opacity(0.3))
                     .frame(width: 30)
-                    .offset(y: screenSize.safeAreaHeight - 300)
+                    .offset(y: safeAreaHeight - 300)
                     .opacity(1 - (offset * 0.01))
             }
 

@@ -7,8 +7,8 @@ import Combine
 import CoreLocation
 import FactoryKit
 import MapKit
+import OversizeCore
 import OversizeLocationService
-import OversizeModels
 import SwiftUI
 
 #if !os(watchOS)
@@ -31,7 +31,7 @@ class AddressPickerViewModel: NSObject, ObservableObject {
     private var searchCompleter = MKLocalSearchCompleter()
     private var currentPromise: ((Result<[MKLocalSearchCompletion], Error>) -> Void)?
 
-    @State var appError: AppError?
+    @State var appError: LocationError?
 
     override init() {
         super.init()
@@ -80,7 +80,7 @@ extension AddressPickerViewModel {
             print("📍 Location: \(newLocation.latitude), \(newLocation.longitude)")
             isFetchUpdatePositon = false
         case let .failure(error):
-            appError = error
+            appError = error as? LocationError ?? .unknown(error)
         }
     }
 }

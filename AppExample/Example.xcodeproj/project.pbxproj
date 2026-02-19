@@ -46,7 +46,7 @@
 		848479602BF9FFA4003FC3FC /* OversizeOnboardingKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8484795F2BF9FFA4003FC3FC /* OversizeOnboardingKit */; };
 		848479622BF9FFA4003FC3FC /* OversizePhotoKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479612BF9FFA4003FC3FC /* OversizePhotoKit */; };
 		848479652BFA0E64003FC3FC /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848479642BFA0E64003FC3FC /* TestView.swift */; };
-		84A876512E129B0F00CC6DDA /* FactoryKit in Frameworks */ = {isa = PBXBuildFile; productRef = 84A876502E129B0F00CC6DDA /* FactoryKit */; };
+		84A876512E129B0F00CC6DDA /* Factory in Frameworks */ = {isa = PBXBuildFile; productRef = 84A876502E129B0F00CC6DDA /* Factory */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -115,7 +115,7 @@
 				848479622BF9FFA4003FC3FC /* OversizePhotoKit in Frameworks */,
 				848479542BF9FFA4003FC3FC /* OversizeCalendarKit in Frameworks */,
 				8484795E2BF9FFA4003FC3FC /* OversizeNotificationKit in Frameworks */,
-				84A876512E129B0F00CC6DDA /* FactoryKit in Frameworks */,
+				84A876512E129B0F00CC6DDA /* Factory in Frameworks */,
 				848479582BF9FFA4003FC3FC /* OversizeKit in Frameworks */,
 				8484795A2BF9FFA4003FC3FC /* OversizeLocationKit in Frameworks */,
 				8484795C2BF9FFA4003FC3FC /* OversizeNoticeKit in Frameworks */,
@@ -317,7 +317,7 @@
 				8484795D2BF9FFA4003FC3FC /* OversizeNotificationKit */,
 				8484795F2BF9FFA4003FC3FC /* OversizeOnboardingKit */,
 				848479612BF9FFA4003FC3FC /* OversizePhotoKit */,
-				84A876502E129B0F00CC6DDA /* FactoryKit */,
+				84A876502E129B0F00CC6DDA /* Factory */,
 			);
 			productName = Example;
 			productReference = 840CD6632AC0E39D00C6AAD0 /* Example.app */;
@@ -903,10 +903,10 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = OversizePhotoKit;
 		};
-		84A876502E129B0F00CC6DDA /* FactoryKit */ = {
+		84A876502E129B0F00CC6DDA /* Factory */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 840CD6AD2AC0E44E00C6AAD0 /* XCRemoteSwiftPackageReference "Factory" */;
-			productName = FactoryKit;
+			productName = Factory;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

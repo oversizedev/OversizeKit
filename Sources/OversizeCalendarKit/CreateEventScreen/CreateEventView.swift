@@ -11,7 +11,6 @@ import OversizeCalendarService
 import OversizeComponents
 import OversizeCore
 import OversizeLocalizable
-import OversizeModels
 import OversizeUI
 import SwiftUI
 
@@ -92,7 +91,6 @@ public struct CreateEventView: View {
         }
     }
 
-    @ViewBuilder
     private func content() -> some View {
         VStack(spacing: .small) {
             TextField("Event name", text: $viewModel.title)
@@ -258,7 +256,6 @@ public struct CreateEventView: View {
         }
     }
 
-    @ViewBuilder
     var alarmView: some View {
         Group {
             if !viewModel.alarms.isEmpty {

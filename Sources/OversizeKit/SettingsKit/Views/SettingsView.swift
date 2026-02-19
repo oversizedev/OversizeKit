@@ -205,7 +205,7 @@ extension SettingsView {
         }
     }
 
-    // App Store Review
+    /// App Store Review
     private var help: some View {
         SectionView(L10n.Settings.supportSection) {
             VStack(alignment: .leading) {

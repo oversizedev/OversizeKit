@@ -10,7 +10,6 @@ import EventKit
 import FactoryKit
 import OversizeContactsService
 import OversizeCore
-import OversizeModels
 import SwiftUI
 
 #if !os(tvOS)
@@ -37,8 +36,8 @@ class AttendeesViewModel: ObservableObject {
             log("✅ CNContact fetched")
             state = .result(data)
         case let .failure(error):
-            log("❌ CNContact not fetched (\(error.title))")
-            state = .error(error)
+            log("❌ CNContact not fetched (\(error.localizedDescription))")
+            state = .error(error as? ContactsError ?? .unknown(error))
         }
     }
 
@@ -59,6 +58,6 @@ enum AttendeesViewModelState {
     case initial
     case loading
     case result([CNContact])
-    case error(AppError)
+    case error(ContactsError)
 }
 #endif

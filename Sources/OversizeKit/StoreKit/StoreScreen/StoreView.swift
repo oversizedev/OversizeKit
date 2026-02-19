@@ -36,7 +36,7 @@ public struct StoreView: View {
                 case let .result(data):
                     content(data: data)
                 case let .error(error):
-                    ErrorView(error)
+                    OversizeUI.ErrorView(error: error)
                 }
             }
             .paddingContent(.horizontal)
@@ -92,7 +92,6 @@ public struct StoreView: View {
         }
     }
 
-    @ViewBuilder
     private func contentPlaceholder() -> some View {
         VStack(spacing: .medium) {
             VStack(spacing: .xxSmall) {
@@ -119,7 +118,6 @@ public struct StoreView: View {
         }
     }
 
-    @ViewBuilder
     private func content(data: StoreKitProducts) -> some View {
         LazyVStack(spacing: .medium) {
             titleView
@@ -203,7 +201,6 @@ public struct StoreView: View {
         .multilineTextAlignment(.center)
     }
 
-    @ViewBuilder
     private func productsCollum(data: StoreKitProducts) -> some View {
         HStack(spacing: .xSmall) {
             ForEach(viewModel.availableSubscriptions /* data.autoRenewable */ ) { product in
@@ -223,7 +220,6 @@ public struct StoreView: View {
         }
     }
 
-    @ViewBuilder
     private func productsList(data: StoreKitProducts) -> some View {
         VStack(spacing: .small) {
             ForEach(viewModel.availableSubscriptions /* data.autoRenewable */ ) { product in
@@ -262,8 +258,7 @@ public struct StoreView: View {
     }
 
     public func closable(_: Bool = true) -> StoreView {
-        let control = self
-        return control
+        self
     }
 }
 #endif

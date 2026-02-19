@@ -15,7 +15,7 @@ private struct SharePhoto: Transferable {
     fileprivate var image: Image
 }
 
-public struct PhotoOptionsView<A>: View where A: View {
+public struct PhotoOptionsView<A: View>: View {
     @Environment(\.dismiss) private var dismiss: DismissAction
     private let image: Image
 

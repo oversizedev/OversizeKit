@@ -26,7 +26,7 @@ final class Router: ObservableObject {
     @Published var isShowHud: Bool = false
     @Published var hudText: String = ""
 
-    // Alert
+    /// Alert
     @Published var alert: RootAlert? = nil
 }
 

@@ -59,7 +59,6 @@ public struct PaymentButtonStyle: ButtonStyle {
             .shadowElevation(elevation)
     }
 
-    @ViewBuilder
     private var background: some View {
         RoundedRectangle(cornerRadius: 10, style: .continuous)
             .fill(

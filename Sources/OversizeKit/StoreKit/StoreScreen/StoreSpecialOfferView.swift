@@ -16,6 +16,7 @@ import SwiftUI
 
 public struct StoreSpecialOfferView: View {
     @Environment(\.screenSize) private var screenSize
+    @Environment(\.safeAreaInsets) private var safeAreaInsets
     @Environment(\.dismiss) private var dismiss
     @Environment(\.platform) private var platform
     @Environment(\.isPremium) private var isPremium
@@ -28,6 +29,9 @@ public struct StoreSpecialOfferView: View {
 
     @State var trialDaysPeriodText: String = ""
     @State var salePercent: Decimal = 0
+    private var safeAreaHeight: CGFloat {
+        screenSize.height - safeAreaInsets.top - safeAreaInsets.bottom
+    }
 
     public init(event: Components.Schemas.InAppPurchaseOffer) {
         self.event = event
@@ -81,7 +85,7 @@ public struct StoreSpecialOfferView: View {
                                 effectsView
                             }
                     case let .error(error):
-                        ErrorView(error)
+                        OversizeUI.ErrorView(error: error)
                     }
                 }
             } background: {
@@ -179,7 +183,7 @@ public struct StoreSpecialOfferView: View {
                 case let .result(data):
                     content(data: data)
                 case let .error(error):
-                    ErrorView(error)
+                    OversizeUI.ErrorView(error: error)
                 }
             }
             .paddingContent(.horizontal)
@@ -220,7 +224,6 @@ public struct StoreSpecialOfferView: View {
         #endif
     }
 
-    @ViewBuilder
     private func content(data: StoreKitProducts) -> some View {
         ScrollViewReader { value in
             VStack(spacing: .medium) {
@@ -267,14 +270,14 @@ public struct StoreSpecialOfferView: View {
                     Spacer()
                 }
                 #if os(iOS)
-                .frame(height: screenSize.safeAreaHeight - 235)
+                .frame(height: safeAreaHeight - 235)
                 #endif
                 .overlay {
                     ScrollArrow(width: 30, offset: -5 + (offset * 0.05))
                         .stroke(style: StrokeStyle(lineWidth: 5, lineCap: .round))
                         .foregroundColor(.onSurfacePrimary.opacity(0.3))
                         .frame(width: 30)
-                        .offset(y: screenSize.safeAreaHeight - (platform == .macOS ? 200 : 280))
+                        .offset(y: safeAreaHeight - (platform == .macOS ? 200 : 280))
                         .opacity(1 - (offset * 0.01))
                 }
 

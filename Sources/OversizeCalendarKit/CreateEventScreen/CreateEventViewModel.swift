@@ -10,7 +10,6 @@ import FactoryKit
 import OversizeCalendarService
 import OversizeCore
 import OversizeLocationService
-import OversizeModels
 import SwiftUI
 
 #if !os(tvOS)
@@ -98,7 +97,7 @@ public class CreateEventViewModel: ObservableObject, @unchecked Sendable {
             log("✅ EKCalendars fetched")
             calendars = data
         case let .failure(error):
-            log("❌ EKCalendars not fetched (\(error.title))")
+            log("❌ EKCalendars not fetched (\(error.localizedDescription))")
             state = .error(error)
         }
         async let soursesResult = await calendarService.fetchSourses()
@@ -107,7 +106,7 @@ public class CreateEventViewModel: ObservableObject, @unchecked Sendable {
             log("✅ EKSource fetched")
             sourses = data
         case let .failure(error):
-            log("❌ EKSource not fetched (\(error.title))")
+            log("❌ EKSource not fetched (\(error.localizedDescription))")
             state = .error(error)
         }
         if case let .new(_, calendar) = type, calendar == nil {
@@ -116,12 +115,12 @@ public class CreateEventViewModel: ObservableObject, @unchecked Sendable {
             case let .success(calendar):
                 self.calendar = calendar
             case let .failure(error):
-                log("❌ Default calendar not fetched (\(error.title))")
+                log("❌ Default calendar not fetched (\(error.localizedDescription))")
             }
         }
     }
 
-    func save() async -> Result<Bool, AppError> {
+    func save() async -> Result<Bool, Error> {
         var oldEvent: EKEvent?
 
         if case let .update(event) = type {
@@ -150,7 +149,7 @@ public class CreateEventViewModel: ObservableObject, @unchecked Sendable {
             log("✅ EKEvent saved")
             return .success(data)
         case let .failure(error):
-            log("❌ EKEvent not saved (\(error.title))")
+            log("❌ EKEvent not saved (\(error.localizedDescription))")
             return .failure(error)
         }
     }
@@ -181,6 +180,6 @@ public enum CreateEventViewModelState {
     case initial
     case loading
     case result([EKEvent])
-    case error(AppError)
+    case error(EventKitError)
 }
 #endif

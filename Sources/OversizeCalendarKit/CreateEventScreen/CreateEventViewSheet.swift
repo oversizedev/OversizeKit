@@ -115,7 +115,6 @@ public extension CreateEventView {
                     .presentationDetents([.height(270)])
             }
         }
-        .systemServices()
     }
 }
 #endif
