@@ -56,6 +56,13 @@ public final class LauncherViewModel: ObservableObject {
     ) {
         self.firstRunAction = firstRunAction
         self.appUpdateAction = appUpdateAction
+        Container.shared.networkService.register {
+            NetworkService(headers: .init(
+                appBundleId: Info.App.bundleId,
+                acceptLanguage: Info.App.localeIdentifier,
+                appStoreId: Info.App.appStoreId
+            ))
+        }
     }
 }
 
