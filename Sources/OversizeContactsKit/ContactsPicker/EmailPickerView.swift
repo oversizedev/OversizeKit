@@ -18,15 +18,13 @@ public struct EmailPickerView: View {
     @Binding private var selection: [String]
     @State private var selectedEmails: [String] = .init()
 
-    @FocusState private var isFocusSearth
-
     public init(selection: Binding<[String]>) {
         _viewModel = StateObject(wrappedValue: EmailPickerViewModel())
         _selection = selection
     }
 
     public var body: some View {
-        PageView("Add Invitees") {
+        LayoutView("Add Invitees") {
             Group {
                 switch viewModel.state {
                 case .initial, .loading:
@@ -34,30 +32,41 @@ public struct EmailPickerView: View {
                 case let .result(data):
                     content(data: data)
                 case let .error(error):
-                    OversizeUI.ErrorView(error: error)
+                    ErrorView(error: error)
                 }
             }
+        } background: {
+            Color.backgroundSecondary
         }
-        .leadingBar {
-            BarButton(.close)
+        #if os(iOS)
+        .searchable(text: $viewModel.searchText, placement: .navigationBarDrawer(displayMode: .always), prompt: "Email or name")
+        #else
+        .searchable(text: $viewModel.searchText, prompt: "Email or name")
+        #endif
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Close", systemImage: "xmark", role: .cancel) {
+                    dismiss()
+                }
+                .labelStyle(.toolbar)
+                .buttonStyle(.toolbarSecondary)
+                #if !os(tvOS)
+                    .keyboardShortcut(.cancelAction)
+                #endif
+            }
+            ToolbarItem(placement: .primaryAction) {
+                Button("Done", systemImage: "checkmark") {
+                    onDoneAction()
+                }
+                .labelStyle(.toolbar)
+                .buttonStyle(.toolbarPrimary)
+                .disabled(selectedEmails.isEmpty && !viewModel.searchText.isEmail)
+                #if !os(tvOS)
+                    .keyboardShortcut(.defaultAction)
+                #endif
+            }
         }
-        .trailingBar {
-            BarButton(.accent("Done", action: {
-                onDoneAction()
-            }))
-            .disabled(selectedEmails.isEmpty && !viewModel.searchText.isEmail)
-        }
-        .topToolbar {
-            TextField("Email or name", text: $viewModel.searchText)
-                .textFieldStyle(.default)
-                .focused($isFocusSearth)
-            #if os(iOS)
-                .keyboardType(.emailAddress)
-            #endif
-        }
-        .onAppear {
-            isFocusSearth = true
-        }
+        .toolbarTitleDisplayMode(.inline)
         .task {
             await viewModel.fetchData()
         }
@@ -222,18 +231,22 @@ public struct EmailPickerView: View {
         }
     }
 
-    @ViewBuilder
     private func placeholder() -> some View {
-        #if os(watchOS)
-        ProgressView()
-        #else
-        LoaderOverlayView()
-        #endif
+        LazyVStack(spacing: .zero) {
+            ForEach(0 ..< 10, id: \.self) { _ in
+                Row("Contact Name", subtitle: "contact@email.com") {
+                    Avatar(firstName: "A", lastName: "B")
+                }
+                .redacted(reason: .placeholder)
+                .disabled(true)
+            }
+        }
+    }
+}
+
+#Preview {
+    NavigationStack {
+        EmailPickerView(selection: .constant([]))
     }
 }
 #endif
-// struct ContactsPickerView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        EmailPickerView()
-//    }
-// }

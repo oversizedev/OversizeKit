@@ -81,7 +81,8 @@ public struct AddressField: View {
                             .lineLimit(1)
                     }
                     Spacer()
-                    IconDeprecated(.chevronDown, color: .onSurfacePrimary)
+                    Image(systemName: "chevron.down")
+                        .foregroundStyle(Color.onSurfacePrimary)
                 }
             }
             .contentShape(Rectangle())

@@ -8,7 +8,6 @@ import EventKit
 #endif
 import MapKit
 import OversizeCalendarService
-import OversizeComponents
 import OversizeCore
 import OversizeLocalizable
 import OversizeUI
@@ -25,52 +24,66 @@ public struct CreateEventView: View {
     }
 
     public var body: some View {
-        PageView {
-            content()
+        LayoutView("") {
+            content
+        } background: {
+            Color.backgroundPrimary
         }
-        .leadingBar {
-            BarButton(.closeAction {
-                dismiss()
-            })
-        }
-        .trailingBar {
-            BarButton(.accent(L10n.Button.save, action: {
-                switch viewModel.type {
-                case .new:
-                    Task {
-                        _ = await viewModel.save()
-                        dismiss()
-                    }
-                case .update:
-                    if viewModel.span == nil, viewModel.repitRule != .never {
-                        viewModel.present(.span)
-                    } else {
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Close", systemImage: "xmark", role: .cancel) {
+                    dismiss()
+                }
+                .labelStyle(.toolbar)
+                .buttonStyle(.toolbarSecondary)
+                #if !os(tvOS)
+                    .keyboardShortcut(.cancelAction)
+                #endif
+            }
+            ToolbarItem(placement: .primaryAction) {
+                Button(L10n.Button.save, systemImage: "checkmark") {
+                    switch viewModel.type {
+                    case .new:
                         Task {
                             _ = await viewModel.save()
                             dismiss()
                         }
+                    case .update:
+                        if viewModel.span == nil, viewModel.repitRule != .never {
+                            viewModel.present(.span)
+                        } else {
+                            Task {
+                                _ = await viewModel.save()
+                                dismiss()
+                            }
+                        }
                     }
                 }
-            }))
-            .disabled(viewModel.title.isEmpty)
-        }
-        .titleLabel {
-            Button { viewModel.present(.calendar) } label: {
-                HStack(spacing: .xxxSmall) {
-                    Circle()
-                        .fill(Color(viewModel.calendar?.cgColor ?? CGColor(red: 0.4, green: 0.4, blue: 0.4, alpha: 1)))
-                        .frame(width: 16, height: 16)
-                        .padding(.xxxSmall)
-
-                    Text(viewModel.calendar?.title ?? "")
-                        .padding(.trailing, .xxSmall)
-                }
+                .labelStyle(.toolbar)
+                .buttonStyle(.toolbarPrimary)
+                .disabled(viewModel.title.isEmpty)
+                #if !os(tvOS)
+                    .keyboardShortcut(.defaultAction)
+                #endif
             }
-            .buttonStyle(.tertiary)
-            .controlBorderShape(.capsule)
-            .controlSize(.mini)
+            ToolbarItem(placement: .principal) {
+                Button { viewModel.present(.calendar) } label: {
+                    HStack(spacing: .xxxSmall) {
+                        Circle()
+                            .fill(Color(viewModel.calendar?.cgColor ?? CGColor(red: 0.4, green: 0.4, blue: 0.4, alpha: 1)))
+                            .frame(width: 16, height: 16)
+                            .padding(.xxxSmall)
+
+                        Text(viewModel.calendar?.title ?? "")
+                            .padding(.trailing, .xxSmall)
+                    }
+                }
+                .buttonStyle(.tertiary)
+                .controlBorderShape(.capsule)
+                .controlSize(.mini)
+            }
         }
-        .navigationBarDividerColor(Color.onSurfacePrimary.opacity(0.1))
+        .toolbarTitleDisplayMode(.inline)
         .safeAreaInset(edge: .bottom) {
             bottomBar
         }
@@ -91,7 +104,7 @@ public struct CreateEventView: View {
         }
     }
 
-    private func content() -> some View {
+    private var content: some View {
         VStack(spacing: .small) {
             TextField("Event name", text: $viewModel.title)
                 .title(.bold)
@@ -127,7 +140,7 @@ public struct CreateEventView: View {
             HStack {
                 Text("All-day event")
                     .headline(.semibold)
-                    .foregroundColor(.onSurfacePrimary)
+                    .foregroundStyle(Color.onSurfacePrimary)
                     .padding(.leading, .xxxSmall)
 
                 Spacer()
@@ -139,7 +152,7 @@ public struct CreateEventView: View {
         .surfaceBorderColor(Color.surfaceSecondary)
         .surfaceBorderWidth(1)
         .surfaceContentMargins(.init(horizontal: .xSmall, vertical: .xSmall))
-        .controlRadius(.large)
+        .controlRadius(.small)
     }
 
     #if !os(watchOS)
@@ -195,7 +208,7 @@ public struct CreateEventView: View {
                     #endif
                 }
         }
-        .clipShape(RoundedRectangle(cornerRadius: .large, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: .small, style: .continuous))
     }
     #endif
 
@@ -206,8 +219,8 @@ public struct CreateEventView: View {
                     Row(viewModel.repitRule.title, subtitle: repeatSubtitleText) {
                         viewModel.present(.repeat)
                     } leading: {
-                        IconDeprecated(.refresh)
-                            .iconColor(.onSurfacePrimary)
+                        Image.Base.swap
+                            .icon(.onSurfacePrimary)
                     }
                     .rowClearButton(style: .onSurface) {
                         viewModel.repitRule = .never
@@ -232,8 +245,8 @@ public struct CreateEventView: View {
                             Row(email) {
                                 viewModel.present(.invites)
                             } leading: {
-                                IconDeprecated(.user)
-                                    .iconColor(.onSurfacePrimary)
+                                Image.Base.profile
+                                    .icon(.onSurfacePrimary)
                             }
                             .rowClearButton(style: .onSurface) {
                                 viewModel.members.remove(email)
@@ -265,8 +278,8 @@ public struct CreateEventView: View {
                             Row(alarm.title) {
                                 viewModel.present(.alarm)
                             } leading: {
-                                IconDeprecated(.bell)
-                                    .iconColor(.onSurfacePrimary)
+                                Image.Base.notification
+                                    .icon(.onSurfacePrimary)
                             }
                             .rowClearButton(style: .onSurface) {
                                 viewModel.alarms.remove(alarm)
@@ -299,8 +312,8 @@ public struct CreateEventView: View {
                             Row(locationName) {
                                 viewModel.present(.location)
                             } leading: {
-                                IconDeprecated(.mapPin)
-                                    .iconColor(.onSurfacePrimary)
+                                Image.Base.location
+                                    .icon(.onSurfacePrimary)
                             }
                             .rowClearButton(style: .onSurface) {
                                 viewModel.locationName = nil
@@ -324,7 +337,7 @@ public struct CreateEventView: View {
                             )
                         }
                         .frame(height: 130)
-                        .cornerRadius(.small)
+                        .clipShape(RoundedRectangle(cornerRadius: .small, style: .continuous))
                         .padding(.horizontal, .xxSmall)
                         .padding(.bottom, .xxSmall)
                         .onTapGesture {
@@ -376,7 +389,7 @@ public struct CreateEventView: View {
                 .padding(.small)
                 .hLeading()
                 .background {
-                    RoundedRectangle(cornerRadius: .large, style: .continuous)
+                    RoundedRectangle(cornerRadius: .small, style: .continuous)
                         .fillSurfaceSecondary()
                 }
             }
@@ -404,7 +417,7 @@ public struct CreateEventView: View {
                 .padding(.small)
                 .hLeading()
                 .background {
-                    RoundedRectangle(cornerRadius: .large, style: .continuous)
+                    RoundedRectangle(cornerRadius: .small, style: .continuous)
                         .fillSurfaceSecondary()
                 }
             }
@@ -451,40 +464,37 @@ public struct CreateEventView: View {
                 if viewModel.isFetchUpdatePositon {
                     ProgressView()
                 } else {
-                    IconDeprecated(.mapPin)
+                    Image.Base.location.icon()
                 }
             }
             .disabled(viewModel.isFetchUpdatePositon)
 
             Button { viewModel.present(.alarm) } label: {
-                IconDeprecated(.bell)
+                Image.Base.notification.icon()
             }
 
             Button { viewModel.present(.repeat) } label: {
-                IconDeprecated(.refresh)
+                Image.Base.swap.icon()
             }
 
             /*
              Button { viewModel.present(.attachment) } label: {
-                IconDeprecated(.moreHorizontal)
+                Image.Base.more.icon()
              }
               */
 
             Spacer()
 
             Button { viewModel.present(.invites) } label: {
-                IconDeprecated(.userPlus)
+                Image.Base.addUser.icon()
             }
-
-//            Icon.Solid.UserInterface.plusCrFr
-//                .renderingMode(.template)
         }
         .buttonStyle(.scale)
         .padding(.horizontal, .medium)
         .padding(.vertical, 20)
-        .onSurfaceSecondary()
         #if !os(watchOS)
-            .background(.ultraThinMaterial)
+
+            .background { Color.surfaceSecondary.ignoresSafeArea(.keyboard, edges: .bottom) }
         #endif
             .overlay(alignment: .top) {
                 Rectangle()
@@ -505,9 +515,7 @@ extension CreateEventView {
     }
 }
 
-struct CreateEventView_Previews: PreviewProvider {
-    static var previews: some View {
-        CreateEventView()
-    }
+#Preview {
+    CreateEventView()
 }
 #endif

@@ -11,65 +11,46 @@ import SwiftUI
 public struct MapCoordinateView: View {
     @Environment(\.screenSize) var screenSize
     @Environment(\.openURL) var openURL
-    @StateObject var viewModel: MapCoordinateViewModel
+    @State var viewModel: MapCoordinateViewModel
 
     public init(_ location: CLLocationCoordinate2D, annotation: String? = nil) {
-        _viewModel = StateObject(wrappedValue: MapCoordinateViewModel(location: location, annotation: annotation))
+        _viewModel = State(wrappedValue: MapCoordinateViewModel(location: location, annotation: annotation))
     }
 
     public var body: some View {
-        VStack(spacing: 0) {
-            if #available(iOS 16.0, *) {
-                mapView
-                    .ignoresSafeArea()
-                    .safeAreaInset(edge: .top) {
-                        ModalNavigationBar(title: viewModel.annotation ?? "", largeTitle: false, leadingBar: {
-                            BarButton(.back)
-                        }, trailingBar: {
-                            BarButton(.icon(.map, action: {
-                                viewModel.isShowRoutePickerSheet.toggle()
-                            }))
-                        })
-                        .background(.thickMaterial, ignoresSafeAreaEdges: .top)
+        mapView
+            .ignoresSafeArea()
+            .navigationTitle(viewModel.annotation ?? "")
+        #if os(iOS)
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbarBackground(.thickMaterial, for: .navigationBar)
+        #endif
+            .toolbar {
+                ToolbarItem(placement: .primaryAction) {
+                    Button("Route", systemImage: "map") {
+                        viewModel.isShowRoutePickerSheet.toggle()
                     }
-                #if os(iOS)
-                    .toolbar(.hidden, for: .tabBar)
-                #endif
-            } else {
-                mapView
-                    .safeAreaInset(edge: .top) {
-                        ModalNavigationBar(title: viewModel.annotation ?? "", largeTitle: false, leadingBar: {
-                            BarButton(.back)
-                        }, trailingBar: {
-                            BarButton(.icon(.map, action: {
-                                viewModel.isShowRoutePickerSheet.toggle()
-                            }))
-                        })
-                    }
+                    .labelStyle(.toolbar)
+                }
             }
-        }
-        .sheet(isPresented: $viewModel.isShowRoutePickerSheet) {
-            routeSheetView
-                .presentationDetents([.height(260)])
-        }
+        #if os(iOS)
+            .toolbar(.hidden, for: .tabBar)
+        #endif
+            .sheet(isPresented: $viewModel.isShowRoutePickerSheet) {
+                routeSheetView
+                    .presentationDetents([.height(260)])
+            }
     }
 
     var mapView: some View {
         ZStack(alignment: .trailing) {
-            Map(coordinateRegion: region, showsUserLocation: true, userTrackingMode: $viewModel.userTrackingMode, annotationItems: viewModel.annotations) {
-                MapMarker(coordinate: $0.coordinate)
+            Map(position: $viewModel.cameraPosition) {
+                ForEach(viewModel.annotations) { point in
+                    Marker(point.name, coordinate: point.coordinate)
+                }
+                UserAnnotation()
             }
             controlButtons
-        }
-    }
-
-    private var region: Binding<MKCoordinateRegion> {
-        Binding {
-            viewModel.region
-        } set: { region in
-            DispatchQueue.main.async {
-                viewModel.region = region
-            }
         }
     }
 
@@ -80,7 +61,7 @@ public struct MapCoordinateView: View {
                 Button {
                     viewModel.zoomIn()
                 } label: {
-                    IconDeprecated(.plus)
+                    Image(systemName: "plus")
                         .onSurfaceSecondary()
                         .padding(.xxSmall)
                 }
@@ -88,7 +69,7 @@ public struct MapCoordinateView: View {
                 Button {
                     viewModel.zoomOut()
                 } label: {
-                    IconDeprecated(.minus)
+                    Image(systemName: "minus")
                         .onSurfaceSecondary()
                         .padding(.xxSmall)
                 }
@@ -103,9 +84,8 @@ public struct MapCoordinateView: View {
         .overlay(alignment: .bottomTrailing, content: {
             Button {
                 viewModel.positionInLocation()
-
             } label: {
-                IconDeprecated(.navigation)
+                Image(systemName: "location.fill")
                     .onSurfaceSecondary()
                     .padding(.xxSmall)
             }
@@ -120,22 +100,32 @@ public struct MapCoordinateView: View {
     }
 
     var routeSheetView: some View {
-        PageView("Route") {
-            SectionView {
-                Row("Apple Maps") {
-                    onTapAppleMaps()
+        NavigationStack {
+            LayoutView("Route") {
+                SectionView {
+                    Row("Apple Maps") {
+                        onTapAppleMaps()
+                    }
+                    Row("Google Maps") {
+                        onTapGoogleMaps()
+                    }
                 }
-                Row("Google Maps") {
-                    onTapGoogleMaps()
+            }
+            .surfaceContentRowMargins()
+            .backgroundSecondary()
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Close", systemImage: "xmark", role: .cancel) {
+                        viewModel.isShowRoutePickerSheet = false
+                    }
+                    .labelStyle(.toolbar)
+                    .buttonStyle(.toolbarSecondary)
+                    #if !os(tvOS)
+                        .keyboardShortcut(.cancelAction)
+                    #endif
                 }
             }
         }
-        .leadingBar(leadingBar: {
-            BarButton(.close)
-        })
-        .backgroundSecondary()
-        .disableScrollShadow(true)
-        .surfaceContentRowMargins()
     }
 
     func onTapAppleMaps() {

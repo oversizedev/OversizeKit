@@ -23,7 +23,7 @@ public struct ContactsListsView: View {
     }
 
     public var body: some View {
-        PageView("") {
+        LayoutView("Contacts") {
             Group {
                 switch viewModel.state {
                 case .initial:
@@ -36,10 +36,22 @@ public struct ContactsListsView: View {
                     OversizeUI.ErrorView(error: error)
                 }
             }
+        } background: {
+            Color.backgroundSecondary
         }
-        .leadingBar {
-            BarButton(.close)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Close", systemImage: "xmark", role: .cancel) {
+                    dismiss()
+                }
+                .labelStyle(.toolbar)
+                .buttonStyle(.toolbarSecondary)
+                #if !os(tvOS)
+                    .keyboardShortcut(.cancelAction)
+                #endif
+            }
         }
+        .toolbarTitleDisplayMode(.inline)
         .task {
             await viewModel.fetchData()
         }

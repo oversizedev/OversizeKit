@@ -98,7 +98,7 @@ public class CreateEventViewModel: ObservableObject, @unchecked Sendable {
             calendars = data
         case let .failure(error):
             log("❌ EKCalendars not fetched (\(error.localizedDescription))")
-            state = .error(error)
+            state = .error(error as? CalendarError ?? .unknown(error))
         }
         async let soursesResult = await calendarService.fetchSourses()
         switch await soursesResult {
@@ -107,7 +107,7 @@ public class CreateEventViewModel: ObservableObject, @unchecked Sendable {
             sourses = data
         case let .failure(error):
             log("❌ EKSource not fetched (\(error.localizedDescription))")
-            state = .error(error)
+            state = .error(error as? CalendarError ?? .unknown(error))
         }
         if case let .new(_, calendar) = type, calendar == nil {
             let result = await calendarService.fetchDefaultCalendar()
@@ -180,6 +180,6 @@ public enum CreateEventViewModelState {
     case initial
     case loading
     case result([EKEvent])
-    case error(EventKitError)
+    case error(CalendarError)
 }
 #endif

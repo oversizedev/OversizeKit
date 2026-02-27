@@ -24,7 +24,7 @@ public struct AttendeesView: View {
     }
 
     public var body: some View {
-        PageView("Invitees") {
+        LayoutView("Invitees") {
             Group {
                 switch viewModel.state {
                 case .initial:
@@ -42,10 +42,22 @@ public struct AttendeesView: View {
                     OversizeUI.ErrorView(error: error)
                 }
             }
+        } background: {
+            Color.backgroundSecondary
         }
-        .leadingBar {
-            BarButton(.close)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Close", systemImage: "xmark", role: .cancel) {
+                    dismiss()
+                }
+                .labelStyle(.toolbar)
+                .buttonStyle(.toolbarSecondary)
+                #if !os(tvOS)
+                    .keyboardShortcut(.cancelAction)
+                #endif
+            }
         }
+        .toolbarTitleDisplayMode(.inline)
     }
 
     @ViewBuilder

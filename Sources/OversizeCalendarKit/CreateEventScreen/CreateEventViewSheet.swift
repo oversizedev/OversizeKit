@@ -6,7 +6,6 @@
 #if canImport(EventKit)
 import EventKit
 #endif
-import OversizeComponents
 import OversizeContactsKit
 import OversizeLocationKit
 import OversizeUI

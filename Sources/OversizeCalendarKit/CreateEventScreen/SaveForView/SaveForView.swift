@@ -19,33 +19,46 @@ public struct SaveForView: View {
     }
 
     public var body: some View {
-        PageView("This is repeating event") {
-            SectionView {
-                VStack(spacing: .zero) {
-                    Row("Save for this event only") {
-                        span = .thisEvent
-                        dismiss()
-                    } leading: {
-                        Image.Base.calendar
-                            .renderingMode(.template)
-                            .foregroundColor(.onSurfacePrimary)
-                    }
+        NavigationStack {
+            LayoutView("This is repeating event") {
+                SectionView {
+                    VStack(spacing: .zero) {
+                        Row("Save for this event only") {
+                            span = .thisEvent
+                            dismiss()
+                        } leading: {
+                            Image.Base.calendar
+                                .renderingMode(.template)
+                                .foregroundStyle(Color.onSurfacePrimary)
+                        }
 
-                    Row("Save for feature events") {
-                        span = .futureEvents
-                        dismiss()
-                    } leading: {
-                        Image.Base.calendar
-                            .renderingMode(.template)
-                            .foregroundColor(.onSurfacePrimary)
+                        Row("Save for feature events") {
+                            span = .futureEvents
+                            dismiss()
+                        } leading: {
+                            Image.Base.calendar
+                                .renderingMode(.template)
+                                .foregroundStyle(Color.onSurfacePrimary)
+                        }
                     }
                 }
+                .surfaceContentRowMargins()
+            } background: {
+                Color.backgroundSecondary
             }
-            .surfaceContentRowMargins()
-        }
-        .backgroundSecondary()
-        .leadingBar {
-            BarButton(.close)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Close", systemImage: "xmark", role: .cancel) {
+                        dismiss()
+                    }
+                    .labelStyle(.toolbar)
+                    .buttonStyle(.toolbarSecondary)
+                    #if !os(tvOS)
+                        .keyboardShortcut(.cancelAction)
+                    #endif
+                }
+            }
+            .toolbarTitleDisplayMode(.inline)
         }
     }
 }

@@ -69,17 +69,18 @@ extension AddressPickerViewModel: @preconcurrency MKLocalSearchCompleterDelegate
 }
 
 extension AddressPickerViewModel {
-    func updateCurrentPosition() async throws {
+    func updateCurrentPosition() async {
         let status = locationService.permissionsStatus()
         switch status {
         case .success:
             isFetchUpdatePositon = true
-            let currentPosition = try await locationService.currentLocation()
+            let currentPosition = try? await locationService.currentLocation()
             guard let newLocation = currentPosition else { return }
             currentLocation = newLocation
-            print("📍 Location: \(newLocation.latitude), \(newLocation.longitude)")
+            log("📍 [LOCATION] latitude: \(newLocation.latitude), longitude:\(newLocation.longitude)")
             isFetchUpdatePositon = false
         case let .failure(error):
+            logError("Update current", error: error)
             appError = error as? LocationError ?? .unknown(error)
         }
     }

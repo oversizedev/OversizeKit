@@ -29,18 +29,51 @@ public struct CalendarPicker: View {
     }
 
     public var body: some View {
-        PageView("Calendar") {
-            ForEach(sourses, id: \.sourceIdentifier) { source in
-                let filtredCalendar: [EKCalendar] = calendars.filter { $0.source.sourceIdentifier == source.sourceIdentifier && $0.allowsContentModifications }
-                if !filtredCalendar.isEmpty {
-                    calendarSection(source: source, calendars: filtredCalendar)
+        LayoutView("Calendar") {
+            LeadingVStack {
+                ForEach(sourses, id: \.sourceIdentifier) { source in
+                    let filtredCalendar: [EKCalendar] = calendars.filter { $0.source.sourceIdentifier == source.sourceIdentifier && $0.allowsContentModifications }
+                    if !filtredCalendar.isEmpty {
+                        calendarSection(source: source, calendars: filtredCalendar)
+                    }
                 }
             }
+        } background: {
+            Color.backgroundSecondary
         }
-        .backgroundSecondary()
-        .leadingBar {
-            BarButton(closable ? .close : .back)
+        .toolbar {
+            if closable {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Close", systemImage: "xmark", role: .cancel) {
+                        dismiss()
+                    }
+                    .labelStyle(.toolbar)
+                    .buttonStyle(.toolbarSecondary)
+                    #if !os(tvOS)
+                        .keyboardShortcut(.cancelAction)
+                    #endif
+                }
+            } else {
+                #if os(iOS)
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Button("Back", systemImage: "chevron.left") {
+                        dismiss()
+                    }
+                    .labelStyle(.toolbar)
+                    .buttonStyle(.toolbarSecondary)
+                }
+                #else
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Back", systemImage: "chevron.left") {
+                        dismiss()
+                    }
+                    .labelStyle(.toolbar)
+                    .buttonStyle(.toolbarSecondary)
+                }
+                #endif
+            }
         }
+        .toolbarTitleDisplayMode(.inline)
     }
 
     func calendarSection(source: EKSource, calendars: [EKCalendar]) -> some View {
@@ -64,9 +97,7 @@ public struct CalendarPicker: View {
     }
 }
 
-struct CalendarPicker_Previews: PreviewProvider {
-    static var previews: some View {
-        CalendarPicker(selection: .constant(nil), calendars: [], sourses: [])
-    }
+#Preview {
+    CalendarPicker(selection: .constant(nil), calendars: [], sourses: [])
 }
 #endif

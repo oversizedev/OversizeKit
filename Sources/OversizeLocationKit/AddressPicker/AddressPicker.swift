@@ -15,7 +15,7 @@ import SwiftUI
 public struct AddressPicker: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel = AddressPickerViewModel()
-    @FocusState private var isFocusSearth
+    @State private var isFocusSearth = true
 
     @Binding private var seletedAddress: String?
     @Binding private var seletedLocation: CLLocationCoordinate2D?
@@ -32,9 +32,12 @@ public struct AddressPicker: View {
     }
 
     public var body: some View {
-        PageView("Location") {
+        LayoutView("Location") {
             LazyVStack(spacing: .zero) {
-                if viewModel.appError != nil {
+                if viewModel.isSaveFromSearth {
+                    searchPlaceholder
+                }
+                if viewModel.appError == nil {
                     currentLocation
                 }
 
@@ -54,53 +57,60 @@ public struct AddressPicker: View {
                 }
             }
         }
-        .leadingBar {
-            BarButton(.close)
-        }
-        .topToolbar {
-            TextField("Search places or addresses", text: $viewModel.searchTerm)
-                .submitScope(viewModel.searchTerm.count < 2)
-                .textFieldStyle(.default)
-                .focused($isFocusSearth)
-                .submitLabel(.done)
-                .onSubmit {
-                    if viewModel.searchTerm.count > 2 {
-                        viewModel.isSaveFromSearth = true
-                        seletedAddress = viewModel.searchTerm
-                        Task {
-                            let coordinate = try? await viewModel.locationService.fetchCoordinateFromAddress(viewModel.searchTerm)
-                            if let coordinate {
-                                let address = try? await viewModel.locationService.fetchAddressFromLocation(coordinate)
-                                seletedLocation = coordinate
-                                seletedPlace = address
-                            } else {
-                                seletedPlace = nil
-                                seletedLocation = nil
-                            }
-                            viewModel.isSaveFromSearth = false
-                            saveToHistory()
-                            dismiss()
-                        }
+        #if os(iOS)
+        .searchable(text: $viewModel.searchTerm, isPresented: $isFocusSearth, placement: .navigationBarDrawer(displayMode: .always), prompt: "Search places or addresses")
+        #else
+        .searchable(text: $viewModel.searchTerm, isPresented: $isFocusSearth, placement: .toolbar, prompt: "Search places or addresses")
+        #endif
+        .onSubmit(of: .search) {
+            if viewModel.searchTerm.count > 2 {
+                viewModel.isSaveFromSearth = true
+                seletedAddress = viewModel.searchTerm
+                Task {
+                    let coordinate = try? await viewModel.locationService.fetchCoordinateFromAddress(viewModel.searchTerm)
+                    if let coordinate {
+                        let address = try? await viewModel.locationService.fetchAddressFromLocation(coordinate)
+                        seletedLocation = coordinate
+                        seletedPlace = address
+                    } else {
+                        seletedPlace = nil
+                        seletedLocation = nil
                     }
+                    viewModel.isSaveFromSearth = false
+                    saveToHistory()
+                    dismiss()
                 }
-                .overlay(alignment: .trailing) {
-                    if viewModel.isSaveFromSearth {
-                        ProgressView()
-                            .padding(.trailing, .xSmall)
-                    }
-                }
+            }
         }
-        // .scrollDismissesKeyboard(.immediately)
-        .task(priority: .background) {
-            do {
-                try await viewModel.updateCurrentPosition()
-                if viewModel.isSaveCurentPositon {
-                    onSaveCurrntPosition()
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Close", systemImage: "xmark", role: .cancel) {
+                    dismiss()
                 }
-            } catch {}
+                .labelStyle(.toolbar)
+                .buttonStyle(.toolbarSecondary)
+                #if !os(tvOS)
+                    .keyboardShortcut(.cancelAction)
+                #endif
+            }
         }
-        .onAppear {
-            isFocusSearth = true
+        .toolbarTitleDisplayMode(.inline)
+        .task {
+            await viewModel.updateCurrentPosition()
+            if viewModel.isSaveCurentPositon {
+                onSaveCurrntPosition()
+            }
+        }
+    }
+
+    private var searchPlaceholder: some View {
+        ForEach(0 ..< 3, id: \.self) { _ in
+            Row("Address placeholder", subtitle: "City, Country") {} leading: {
+                Image(systemName: "mappin")
+                    .iconOnSurface()
+            }
+            .redacted(reason: .placeholder)
+            .disabled(true)
         }
     }
 
@@ -112,7 +122,8 @@ public struct AddressPicker: View {
                 onSaveCurrntPosition()
             }
         } leading: {
-            IconDeprecated(.navigation)
+            Image.Base.nearMe
+                .icon
                 .iconOnSurface()
         }
         .padding(.bottom, viewModel.searchTerm.isEmpty ? .small : .zero)
@@ -128,10 +139,11 @@ public struct AddressPicker: View {
                     onCompleteSearth(seletedAddress: address.address, seletedLocation: nil, seletedPlace: address.place, saveToHistory: false)
                 }
             } leading: {
-                IconDeprecated(.mapPin)
+                Image.Base.location
+                    .icon
                     .iconOnSurface()
             }
-            .rowClearButton {
+            .rowClearButton(style: .onSurface) {
                 if let fooOffset = viewModel.lastSearchAddresses.firstIndex(where: { $0.id == address.id }) {
                     viewModel.lastSearchAddresses.remove(at: fooOffset)
                 }
@@ -144,7 +156,8 @@ public struct AddressPicker: View {
             Row(location.title, subtitle: location.subtitle) {
                 reverseGeo(location: location)
             } leading: {
-                IconDeprecated(.mapPin)
+                Image.Base.location
+                    .icon
                     .iconOnSurface()
             }
         }
@@ -227,9 +240,11 @@ public struct AddressPicker: View {
         }
         viewModel.lastSearchAddresses.append(lastSearth)
     }
+}
 
-    private func onDoneAction() {
-        dismiss()
+#Preview {
+    NavigationStack {
+        AddressPicker()
     }
 }
 #endif
