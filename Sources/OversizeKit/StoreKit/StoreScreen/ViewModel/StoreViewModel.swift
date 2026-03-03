@@ -21,9 +21,9 @@ public class StoreViewModel: ObservableObject {
     @Injected(\.localNotificationService) var localNotificationService: LocalNotificationServiceProtocol
     #endif
 
-    @Published var state: LoadingState<StoreKitProducts> = .idle
-    @Published var featuresState: LoadingState<[Components.Schemas.Feature]> = .idle
-    @Published var productsState: LoadingState<InAppPurchaseResponse> = .idle
+    @Published public var state: LoadingState<StoreKitProducts> = .idle
+    @Published public var featuresState: LoadingState<[Components.Schemas.Feature]> = .idle
+    @Published public var productsState: LoadingState<InAppPurchaseResponse> = .idle
 
     @Published var currentSubscription: Product?
     @Published var status: Product.SubscriptionInfo.Status?

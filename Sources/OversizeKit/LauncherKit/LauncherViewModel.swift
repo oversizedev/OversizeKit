@@ -60,7 +60,8 @@ public final class LauncherViewModel: ObservableObject {
             NetworkService(headers: .init(
                 appBundleId: Info.App.bundleId,
                 acceptLanguage: Info.App.localeIdentifier,
-                appStoreId: Info.App.appStoreId
+                appStoreId: Info.App.appStoreId,
+                appVersion: Info.App.version
             ))
         }
     }
