@@ -31,7 +31,7 @@ struct StoreFeaturesLargeView: View {
             }
 
         case let .error(appError):
-            OversizeUI.ErrorView(error: appError)
+            ErrorView(error: appError)
         }
     }
 

@@ -6,6 +6,7 @@
 import NavigatorUI
 import OversizeCore
 import OversizeLocalizable
+import OversizeNavigation
 import OversizeServices
 import OversizeUI
 import SwiftUI
@@ -81,6 +82,10 @@ public struct Launcher<Content: View, Onboarding: View>: View {
         case let .specialOffer(event):
             ManagedNavigationStack {
                 StoreSpecialOfferView(event: event)
+            }
+        case let .whatsNew(version):
+            ManagedNavigationStack {
+                AppUpdate.build(input: version)
             }
         }
     }

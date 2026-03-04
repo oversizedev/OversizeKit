@@ -30,4 +30,6 @@ public enum SettingsDestinations: Hashable {
     case sendMail(to: String, subject: String, content: String)
     case debugMenu
     case debugInfo
+    case appUpdates
+    case appUpdate(version: Components.Schemas.Version)
 }

@@ -65,6 +65,10 @@ extension SettingsDestinations: NavigationDestination {
             DebugInfoView()
         case let .premiumInstructions(specialOfferMode):
             StoreInstructionsView(specialOfferMode: specialOfferMode)
+        case .appUpdates:
+            AppUpdates.buildCached()
+        case let .appUpdate(version):
+            AppUpdate.build(input: version)
         }
     }
 

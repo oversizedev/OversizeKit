@@ -68,15 +68,17 @@ public final class LauncherViewModel: ObservableObject {
 }
 
 extension LauncherViewModel {
-    enum FullScreenSheet: Identifiable, Equatable, Sendable {
+    enum FullScreenSheet: Identifiable, Equatable {
         case payWall
         case rate
         case specialOffer(event: Components.Schemas.InAppPurchaseOffer)
+        case whatsNew(version: Components.Schemas.Version)
         var id: Int {
             switch self {
             case .payWall: 1
             case .rate: 2
             case .specialOffer: 3
+            case .whatsNew: 4
             }
         }
     }
@@ -167,11 +169,25 @@ public extension LauncherViewModel {
             firstRunAction?()
         } else if appStateService.lastRunVersion != Info.App.version {
             appUpdateAction?()
+            await fetchAndShowWhatsNew()
         }
 
         appStateService.appRun()
 
         await checkPremium()
+    }
+
+    func fetchAndShowWhatsNew() async {
+        guard let appStoreID = Info.App.appStoreId,
+              let currentVersion = Info.App.version else { return }
+        let result = await networkService.fetchAppUpdate(appId: appStoreID, version: currentVersion)
+        switch result {
+        case let .success(version):
+            activeFullScreenSheet = .whatsNew(version: version)
+            logNotice("App update screen shown")
+        case let .failure(error):
+            logError("Loading app update failed", error: error)
+        }
     }
 
     func onScenePhaseChange(_ scenePhase: ScenePhase) {

@@ -230,7 +230,26 @@ extension SettingsView {
                 }
                 .rowArrow()
                 .buttonStyle(.row)
+
+                Row("What's New") {
+                    navigator.navigate(to: SettingsDestinations.appUpdates)
+                } leading: {
+                    updatesIcon.icon()
+                }
+                .rowArrow()
+                .buttonStyle(.row)
             }
+        }
+    }
+
+    var updatesIcon: Image {
+        switch iconStyle {
+        case .line:
+            Image.Base.star
+        case .fill:
+            Image.Base.Star.fill
+        case .twoTone:
+            Image.Base.Star.TwoTone.fill
         }
     }
 

@@ -21,7 +21,7 @@ public struct SystemServicesModifier: ViewModifier {
     @State private var blurRadius: CGFloat = 0
     @State private var oppacity: CGFloat = 1
 
-    private enum FullScreenSheet: Identifiable, Equatable, Sendable {
+    private enum FullScreenSheet: Identifiable, Equatable {
         case onboarding
         case payWall
         case lockscreen
