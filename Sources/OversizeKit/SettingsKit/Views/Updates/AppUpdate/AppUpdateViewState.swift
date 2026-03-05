@@ -5,14 +5,20 @@
 
 import Observation
 import OversizeArchitecture
+import OversizeCore
 import OversizeNetwork
 import SwiftUI
 
 @Observable
 public final class AppUpdateViewState: ViewStateProtocol {
-    var version: Components.Schemas.Version?
+    var state: LoadingState<Components.Schemas.Version> = .idle
+    var versionString: String?
 
     public init(input: AppUpdate.Input?) {
-        version = input
+        if case let .version(v) = input?.source {
+            state = .result(v)
+        } else if case let .versionString(s) = input?.source {
+            versionString = s
+        }
     }
 }

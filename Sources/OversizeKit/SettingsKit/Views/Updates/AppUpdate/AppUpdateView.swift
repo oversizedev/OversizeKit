@@ -13,50 +13,77 @@ import SwiftUI
 
 @View(module: AppUpdate.self)
 public struct AppUpdateView: ViewProtocol {
-
     public var body: some View {
-        NavigationLayoutView("Version \(viewState.version?.version ?? "")") {
+        NavigationLayoutView("Version \(viewState.state.result?.version ?? viewState.versionString ?? "")") {
             content
         } background: {
             Color.backgroundSecondary
         }
         .toolbarTitleDisplayMode(.inline)
+        .task { reducer(.onFetch) }
     }
 
+    @ViewBuilder
     var content: some View {
+        switch viewState.state {
+        case .idle, .loading:
+            placeholder
+        case let .result(version):
+            versionContent(version)
+        case let .error(error):
+            ErrorView(error: error)
+        }
+    }
+
+    private var placeholder: some View {
         VStack(spacing: .large) {
-            if let version = viewState.version {
-                VStack(spacing: .small) {
-                    Text("What's New")
-                        .largeTitle(.bold)
-                        .onSurfacePrimary()
-                        .multilineTextAlignment(.center)
-                    
-                    if let whatsNew = version.whatsNew {
-                        Text(whatsNew)
-                            .title3()
-                            .onSurfaceSecondary()
-                            .multilineTextAlignment(.center)
-                    }
-                    
-                }
-                
-                if !version.features.isEmpty {
-                   
-                        ForEach(version.features, id: \.id) { feature in
-                            if !feature.screenshots.isEmpty {
-                                featureScreenItem(feature)
-                            } else {
-                                featureIconItem(feature)
-                            }
-                        }
-                    
-                }
+            VStack(spacing: .small) {
+                Text("What's New")
+                    .largeTitle(.bold)
+                    .onSurfacePrimary()
+                    .multilineTextAlignment(.center)
+                Text("Loading version details...")
+                    .title3()
+                    .onSurfaceSecondary()
+                    .multilineTextAlignment(.center)
             }
-            
+            ForEach(0 ..< 3, id: \.self) { _ in
+                Surface {}
+                    .frame(height: 200)
+                    .surfaceRadius(.large)
+                    .redacted(reason: .placeholder)
+            }
         }
         .padding(.horizontal, .medium)
-        
+    }
+
+    private func versionContent(_ version: Components.Schemas.Version) -> some View {
+        VStack(spacing: .large) {
+            VStack(spacing: .small) {
+                Text("What's New")
+                    .largeTitle(.bold)
+                    .onSurfacePrimary()
+                    .multilineTextAlignment(.center)
+
+                if let whatsNew = version.whatsNew {
+                    Text(whatsNew)
+                        .title3()
+                        .onSurfaceSecondary()
+                        .multilineTextAlignment(.center)
+                }
+            }
+
+            if let features = version.features, !features.isEmpty {
+                ForEach(features) { feature in
+                    if !feature.screenshots.isEmpty {
+                        featureScreenItem(feature)
+                    } else {
+                        featureIconItem(feature)
+                    }
+                }
+            }
+        }
+        .padding(.horizontal, .medium)
     }
 
     private func featureScreenItem(_ feature: Components.Schemas.Feature) -> some View {
@@ -178,8 +205,10 @@ public struct AppUpdateView: ViewProtocol {
 
 #Preview {
     NavigationStack {
-        AppUpdate.build(input: .init(
+        AppUpdate.build(input: .init(version: .init(
+            id: 1,
             version: "2.0.0",
+            releasedAt: .now,
             whatsNew: "Improved performance and new features for a better experience.",
             features: [
                 .init(
@@ -205,6 +234,6 @@ public struct AppUpdateView: ViewProtocol {
                     screenshots: []
                 ),
             ]
-        ))
+        )))
     }
 }

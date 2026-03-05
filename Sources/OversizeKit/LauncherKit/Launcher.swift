@@ -85,7 +85,7 @@ public struct Launcher<Content: View, Onboarding: View>: View {
             }
         case let .whatsNew(version):
             ManagedNavigationStack {
-                AppUpdate.build(input: version)
+                AppUpdate.build(input: .init(version: version))
             }
         }
     }

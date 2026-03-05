@@ -22,6 +22,9 @@ public struct DebugInfoView: View {
             Color.backgroundSecondary
         }
         .toolbarTitleDisplayMode(.inline)
+        .task {
+            await viewModel.loadReviewData()
+        }
     }
 
     var contentView: some View {

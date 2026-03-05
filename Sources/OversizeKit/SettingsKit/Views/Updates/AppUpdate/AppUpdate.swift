@@ -9,6 +9,21 @@ import OversizeNetwork
 @Module
 public enum AppUpdate: ModuleProtocol {}
 
-public typealias AppUpdateInput = Components.Schemas.Version
+public struct AppUpdateInput: Sendable {
+    public enum Source: Sendable {
+        case version(Components.Schemas.Version)
+        case versionString(String)
+    }
+
+    public let source: Source
+
+    public init(version: Components.Schemas.Version) {
+        source = .version(version)
+    }
+
+    public init(versionString: String) {
+        source = .versionString(versionString)
+    }
+}
 
 public struct AppUpdateOutput: Sendable {}

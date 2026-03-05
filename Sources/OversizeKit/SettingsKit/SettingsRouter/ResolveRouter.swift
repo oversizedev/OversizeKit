@@ -68,7 +68,7 @@ extension SettingsDestinations: NavigationDestination {
         case .appUpdates:
             AppUpdates.buildCached()
         case let .appUpdate(version):
-            AppUpdate.build(input: version)
+            AppUpdate.build(input: .init(version: version))
         }
     }
 

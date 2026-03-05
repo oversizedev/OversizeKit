@@ -18,6 +18,8 @@ import FactoryKit
 public final class DebugMenuViewModel: ObservableObject {
     @Injected(\.appStateService) var appStateService: AppStateService
 
+    @Published var selectedServer: APIServer = .stored
+
     public init() {}
 
     func onTapRestOnboarding() {
@@ -26,5 +28,11 @@ public final class DebugMenuViewModel: ObservableObject {
 
     func onTapRestAppRunCount() {
         appStateService.resetAppRunCount()
+    }
+
+    func onChangeAPIServer(_ server: APIServer) {
+        server.store()
+        selectedServer = server
+        Container.shared.networkService.reset()
     }
 }

@@ -26,13 +26,9 @@ public final class DebugInfoViewModel: ObservableObject {
     @Published var launchReviewCount: [Int] = []
     @Published var eventReviewCount: [Int] = []
 
-    public init() {
-        Task {
-            await loadReviewData()
-        }
-    }
+    public init() {}
 
-    private func loadReviewData() async {
+    func loadReviewData() async {
         eventCount = await reviewService.appStoreReviewReceivedActionsCount
         reviewBannerClosedDate = await reviewService.appReviewBannerClosedDate
         reviewEstimateDate = await reviewService.appReviewEstimateDate
