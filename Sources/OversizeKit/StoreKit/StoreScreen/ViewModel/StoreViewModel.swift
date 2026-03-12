@@ -37,11 +37,15 @@ public class StoreViewModel: ObservableObject {
     @AppStorage("AppState.PremiumRenewalState") var currentSubscriptionStatus: RenewalState = .revoked
 
     var availableSubscriptions: [Product] {
-        if case let .result(products) = state {
-            products.autoRenewable.filter { $0.id != currentSubscription?.id }
+        guard case let .result(products) = state else { return [] }
+        let isCancelled: Bool = if let statusInfo = status,
+                                   case let .verified(renewalInfo) = statusInfo.renewalInfo
+        {
+            !renewalInfo.willAutoRenew
         } else {
-            []
+            false
         }
+        return isCancelled ? products.autoRenewable : products.autoRenewable.filter { $0.id != currentSubscription?.id }
     }
 
     public var updateListenerTask: Task<Void, Error>?
@@ -68,6 +72,17 @@ extension StoreViewModel {
         guard let subscriptionStatus = products.subscriptionGroupStatus else { return "" }
         switch subscriptionStatus {
         case .subscribed:
+            if let statusInfo = status,
+               case let .verified(renewalInfo) = statusInfo.renewalInfo,
+               !renewalInfo.willAutoRenew
+            {
+                if let transaction = try? statusInfo.transaction.payloadValue,
+                   let expirationDate = transaction.expirationDate
+                {
+                    return "Cancels \(expirationDate.formattedDate())"
+                }
+                return "Cancelling"
+            }
             return L10n.Store.active
         case .revoked:
             if #available(iOS 15.4, macOS 12.3, *) {
@@ -107,7 +122,14 @@ extension StoreViewModel {
         if !products.purchasedNonConsumable.isEmpty { return .green }
         guard let subscriptionStatus = products.subscriptionGroupStatus else { return .red }
         switch subscriptionStatus {
-        case .subscribed: return .green
+        case .subscribed:
+            if let statusInfo = status,
+               case let .verified(renewalInfo) = statusInfo.renewalInfo,
+               !renewalInfo.willAutoRenew
+            {
+                return .orange
+            }
+            return .green
         case .revoked: return .red
         case .expired: return .red
         case .inBillingRetryPeriod: return .yellow
@@ -285,6 +307,10 @@ extension StoreViewModel {
 
             status = highestStatus
             currentSubscription = highestProduct
+
+            if highestProduct == nil, products.purchasedNonConsumable.isEmpty {
+                isPremium = false
+            }
         } catch {
             logError("Could not update subscription status", error: error)
         }
@@ -370,6 +396,13 @@ extension StoreViewModel {
                     currentSubscriptionStatus = status
                 }
                 state = .result(finalProducts)
+                if finalProducts.purchasedAutoRenewable.isEmpty, finalProducts.purchasedNonConsumable.isEmpty,
+                   !finalProducts.autoRenewable.isEmpty
+                {
+                    isPremiumActivated = false
+                    isPremium = false
+                }
+                await updateSubscriptionStatus(products: finalProducts)
                 logSuccess("StoreKit products fetched")
                 if finalProducts.autoRenewable.isEmpty {
                     logError("No autoRenewable products")

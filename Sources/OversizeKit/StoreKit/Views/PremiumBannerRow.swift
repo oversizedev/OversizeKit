@@ -11,7 +11,6 @@ import OversizeStoreService
 import OversizeUI
 import SwiftUI
 
-// swiftlint:disable all
 public struct PremiumBannerRow: View {
     @Environment(\.colorScheme) var colorScheme
     @StateObject private var viewModel: StoreViewModel

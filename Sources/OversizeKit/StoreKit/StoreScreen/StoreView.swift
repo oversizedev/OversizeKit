@@ -36,7 +36,7 @@ public struct StoreView: View {
                 case let .result(data):
                     content(data: data)
                 case let .error(error):
-                    OversizeUI.ErrorView(error: error)
+                    ErrorView(error: error)
                 }
             }
             .paddingContent(.horizontal)
@@ -61,7 +61,7 @@ public struct StoreView: View {
             }
         }
         .safeAreaInset(edge: .bottom) {
-            if !viewModel.isPremium {
+            if !viewModel.isPremium || isCancelledSubscription {
                 StorePaymentButtonBar()
                     .environmentObject(viewModel)
             }
@@ -76,8 +76,17 @@ public struct StoreView: View {
         }
     }
 
+    var isCancelledSubscription: Bool {
+        guard let statusInfo = viewModel.status,
+              case let .verified(renewalInfo) = statusInfo.renewalInfo
+        else { return false }
+        return !renewalInfo.willAutoRenew && viewModel.isPremium
+    }
+
     var titleText: String {
-        if viewModel.isPremium {
+        if isCancelledSubscription {
+            "Subscription Cancelling"
+        } else if viewModel.isPremium {
             "You are all set!"
         } else {
             "Upgrade to \(viewModel.productsState.result?.banner.badge ?? "")"
@@ -85,7 +94,9 @@ public struct StoreView: View {
     }
 
     var subtitleText: String {
-        if viewModel.isPremium {
+        if isCancelledSubscription {
+            "Your subscription \(viewModel.subscriptionStatusText.lowercased()). Resubscribe to keep your benefits."
+        } else if viewModel.isPremium {
             "Thank you for use to \(viewModel.productsState.result?.banner.badge ?? "").\nHere's what is now unlocked."
         } else {
             "Remove ads and unlock all features"
@@ -150,7 +161,7 @@ public struct StoreView: View {
             }
             #endif
 
-            if !viewModel.isPremium {
+            if !viewModel.isPremium || isCancelledSubscription {
                 productsCollum(data: data)
             }
 
@@ -162,7 +173,7 @@ public struct StoreView: View {
                 products: data
             )
 
-            if !viewModel.isPremium {
+            if !viewModel.isPremium || isCancelledSubscription {
                 productsList(data: data)
             }
         }
