@@ -147,6 +147,7 @@ let package = Package(
                 "OversizeKit",
                 .product(name: "OversizeUI", package: "OversizeUI"),
                 .product(name: "OversizePhotoComponents", package: "OversizeComponents"),
+                .product(name: "OversizeResources", package: "OversizeResources"),
             ]
         ),
         .testTarget(

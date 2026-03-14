@@ -22,6 +22,7 @@ public struct StoreView: View {
     @Environment(\.isPortrait) private var isPortrait
     private var isClosable = true
     @State var isShowFireworks = false
+    @State var isPresentedManageSubscription = false
 
     public init() {
         _viewModel = StateObject(wrappedValue: StoreViewModel())
@@ -73,6 +74,14 @@ public struct StoreView: View {
         }
         .task {
             await viewModel.fetchData()
+        }
+        .manageSubscriptionsSheet(isPresented: $isPresentedManageSubscription)
+        .onChange(of: isPresentedManageSubscription) { _, isPresented in
+            if isPresented == false {
+                Task {
+                    await viewModel.fetchData()
+                }
+            }
         }
     }
 
@@ -133,49 +142,63 @@ public struct StoreView: View {
         LazyVStack(spacing: .medium) {
             titleView
 
-            #if DEBUG
-            if let currentSubscription = viewModel.currentSubscription {
-                LeadingVStack(spacing: .small) {
-                    Text("My Subscription (Debug Only)")
-                        .headline()
-                        .onSurfacePrimary()
-
-                    StoreProductView(product: currentSubscription, products: data) {}
-
-                    if let status = viewModel.status {
-                        Text("Status: \(status.state.localizedDescription)")
-                            .caption()
-                            .onSurfacePrimary()
-                    }
-                }
-            } else {
-                Surface {
-                    Text("No subscription")
-                        .onSurfacePrimary()
-                        .body()
-                        .frame(
-                            maxWidth: .infinity,
-                            alignment: .center
-                        )
-                }
-            }
-            #endif
-
             if !viewModel.isPremium || isCancelledSubscription {
                 productsCollum(data: data)
             }
 
             StoreFeaturesView()
                 .environmentObject(viewModel)
+            
+            if viewModel.isPremium {
+                Surface{
+                    isPresentedManageSubscription = true
+
+                } label: {
+                    Text("Manage Subscription")
+                        .body(.semibold)
+                        .onSurfaceSecondary()
+                        .frame(maxWidth: .infinity,  alignment: .center)
+                }
+                .surfaceBorderColor(Color.surfaceSecondary)
+                .surfaceBorderWidth(platform == .macOS ? 1 : 2)
+            }
 
             SubscriptionPrivacyView(
                 subscriptionsName: viewModel.productsState.result?.banner.badge ?? "",
                 products: data
             )
+            
+#if DEBUG
+if let currentSubscription = viewModel.currentSubscription {
+    LeadingVStack(spacing: .small) {
+        Text("My Subscription")
+            .headline()
+            .onSurfacePrimary()
+
+        StoreProductView(product: currentSubscription, products: data) {}
+
+        if let status = viewModel.status {
+            Text("Status: \(status.state.localizedDescription)")
+                .caption()
+                .onSurfacePrimary()
+        }
+    }
+} else {
+    Surface {
+        Text("No subscription")
+            .body(.semibold)
+            .onSurfaceSecondary()
+            .frame(maxWidth: .infinity,  alignment: .center)
+    }
+    .surfaceBorderColor(Color.surfaceSecondary)
+    .surfaceBorderWidth(platform == .macOS ? 1 : 2)
+}
+#endif
 
             if !viewModel.isPremium || isCancelledSubscription {
                 productsList(data: data)
             }
+            
         }
         .padding(.top, 24)
         .padding(.bottom, 12)
