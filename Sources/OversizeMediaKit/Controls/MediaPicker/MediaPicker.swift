@@ -49,7 +49,8 @@ public struct MediaPicker<CustomSection: View>: View {
             isPresented: $isShowPicker,
             onDismiss: {
                 selectedAssets = []
-            }) {
+            }
+        ) {
             NavigationStack {
                 sheet
                     .scrollDisabled(true)
