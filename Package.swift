@@ -55,7 +55,7 @@ let package = Package(
         .library(name: "OversizeContactsKit", targets: ["OversizeContactsKit"]),
         .library(name: "OversizeLocationKit", targets: ["OversizeLocationKit"]),
         .library(name: "OversizeNotificationKit", targets: ["OversizeNotificationKit"]),
-        .library(name: "OversizePhotoKit", targets: ["OversizePhotoKit"]),
+        .library(name: "OversizeMediaKit", targets: ["OversizeMediaKit"]),
     ],
     dependencies: dependencies,
     targets: [
@@ -142,11 +142,10 @@ let package = Package(
             ]
         ),
         .target(
-            name: "OversizePhotoKit",
+            name: "OversizeMediaKit",
             dependencies: [
                 "OversizeKit",
                 .product(name: "OversizeUI", package: "OversizeUI"),
-                .product(name: "OversizePhotoComponents", package: "OversizeComponents"),
                 .product(name: "OversizeResources", package: "OversizeResources"),
             ]
         ),

@@ -1,13 +1,12 @@
 //
 // Copyright © 2023 Alexander Romanov
-// PhotosGalleryView.swift
+// ImageGalleryView.swift
 //
 
-import OversizePhotoComponents
 import OversizeUI
 import SwiftUI
 
-public struct PhotosGalleryView: View {
+public struct ImageGallery: View {
     private let title: String
     private let images: [Image]
     @State private var isShowPhoto: Bool = false
@@ -19,7 +18,7 @@ public struct PhotosGalleryView: View {
     }
 
     public var body: some View {
-        PageView(title) {
+        LayoutView(title) {
             if images.isEmpty {
                 Text("Not photos")
                     .title3()
@@ -32,17 +31,22 @@ public struct PhotosGalleryView: View {
                 } longPressAction: { _ in }
             }
         }
-        .leadingBar {
-            BarButton(.back)
-        }
         #if os(iOS)
         .photoOverlay(isPresent: $isShowPhoto, selection: $selection, photos: images)
         #endif
     }
 }
 
-struct PhotosGalleryView_Previews: PreviewProvider {
-    static var previews: some View {
-        PhotosGalleryView(images: [])
+// MARK: - Deprecated
+
+@available(*, deprecated, renamed: "ImageGallery")
+public typealias ImageGalleryView = ImageGallery
+
+@available(*, deprecated, renamed: "ImageGallery")
+public typealias PhotosGalleryView = ImageGallery
+
+#Preview {
+    NavigationStack {
+        ImageGallery(images: [])
     }
 }

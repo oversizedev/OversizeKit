@@ -41,17 +41,25 @@ public struct PhotoOptionsView<A: View>: View {
     }
 
     public var body: some View {
-        PageView {
-            content
-        }
-        .titleLabel {
-            Row("Photo", subtitle: date?.formatted(date: .long, time: .omitted)) {
-                image
+        LayoutView(
+            "Photo",
+            content: { content
+            },
+            background: { Color.backgroundSecondary }
+        )
+        .toolbarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Close", systemImage: "xmark", role: .cancel) {
+                    dismiss()
+                }
+                .labelStyle(.toolbar)
+                .buttonStyle(.toolbarSecondary)
+                #if !os(tvOS)
+                    .keyboardShortcut(.cancelAction)
+                #endif
             }
-            .rowContentMargins(.init(horizontal: .zero, vertical: .xSmall))
         }
-        .trailingBar { BarButton(.close) }
-        .backgroundSecondary()
         .alert("Are you sure you want to delete?", isPresented: $isShowAlert) {
             Button("Delete", role: .destructive) {
                 deleteAction?()

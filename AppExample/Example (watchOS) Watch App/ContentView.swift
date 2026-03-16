@@ -7,10 +7,10 @@ import OversizeCalendarKit
 import OversizeContactsKit
 import OversizeKit
 import OversizeLocationKit
+import OversizeMediaKit
 import OversizeNoticeKit
 import OversizeNotificationKit
 import OversizeOnboardingKit
-import OversizePhotoKit
 import SwiftUI
 
 struct ContentView: View {

@@ -148,16 +148,16 @@ public struct StoreView: View {
 
             StoreFeaturesView()
                 .environmentObject(viewModel)
-            
+
             if viewModel.isPremium {
-                Surface{
+                Surface {
                     isPresentedManageSubscription = true
 
                 } label: {
                     Text("Manage Subscription")
                         .body(.semibold)
                         .onSurfaceSecondary()
-                        .frame(maxWidth: .infinity,  alignment: .center)
+                        .frame(maxWidth: .infinity, alignment: .center)
                 }
                 .surfaceBorderColor(Color.surfaceSecondary)
                 .surfaceBorderWidth(platform == .macOS ? 1 : 2)
@@ -167,38 +167,37 @@ public struct StoreView: View {
                 subscriptionsName: viewModel.productsState.result?.banner.badge ?? "",
                 products: data
             )
-            
-#if DEBUG
-if let currentSubscription = viewModel.currentSubscription {
-    LeadingVStack(spacing: .small) {
-        Text("My Subscription")
-            .headline()
-            .onSurfacePrimary()
 
-        StoreProductView(product: currentSubscription, products: data) {}
+            #if DEBUG
+            if let currentSubscription = viewModel.currentSubscription {
+                LeadingVStack(spacing: .small) {
+                    Text("My Subscription")
+                        .headline()
+                        .onSurfacePrimary()
 
-        if let status = viewModel.status {
-            Text("Status: \(status.state.localizedDescription)")
-                .caption()
-                .onSurfacePrimary()
-        }
-    }
-} else {
-    Surface {
-        Text("No subscription")
-            .body(.semibold)
-            .onSurfaceSecondary()
-            .frame(maxWidth: .infinity,  alignment: .center)
-    }
-    .surfaceBorderColor(Color.surfaceSecondary)
-    .surfaceBorderWidth(platform == .macOS ? 1 : 2)
-}
-#endif
+                    StoreProductView(product: currentSubscription, products: data) {}
+
+                    if let status = viewModel.status {
+                        Text("Status: \(status.state.localizedDescription)")
+                            .caption()
+                            .onSurfacePrimary()
+                    }
+                }
+            } else {
+                Surface {
+                    Text("No subscription")
+                        .body(.semibold)
+                        .onSurfaceSecondary()
+                        .frame(maxWidth: .infinity, alignment: .center)
+                }
+                .surfaceBorderColor(Color.surfaceSecondary)
+                .surfaceBorderWidth(platform == .macOS ? 1 : 2)
+            }
+            #endif
 
             if !viewModel.isPremium || isCancelledSubscription {
                 productsList(data: data)
             }
-            
         }
         .padding(.top, 24)
         .padding(.bottom, 12)
