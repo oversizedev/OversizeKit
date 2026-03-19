@@ -63,7 +63,7 @@ public struct MediaPicker<CustomSection: View>: View {
         LayoutView("Select media") {
             LeadingVStack {
                 ScrollView(.horizontal, showsIndicators: false) {
-                    LazyHStack(spacing: .xSmall) {
+                    LazyHStack(spacing: .small) {
                         Button {
                             cameraImage = UIImage()
                             isShowCamera.toggle()

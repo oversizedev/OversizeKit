@@ -29,7 +29,7 @@ struct FilePicker: View {
     @State private var isShowScanner = false
 
     var body: some View {
-        GroupedListLayoutView("File") {
+        ListLayoutView("File") {
             Section {
                 Button { isShowDocumentPicker = true } label: {
                     ListRow("Select in Files", leading: { Image.Base.folder.iconOnSurface()
@@ -71,6 +71,7 @@ struct FilePicker: View {
                 .listRowSeparator(.hidden, edges: .all)
             }
         }
+        .listLayoutStyle(.insetGrouped)
         .toolbarTitleDisplayMode(.inline)
         .fileImporter(
             isPresented: $isShowDocumentPicker,

@@ -104,7 +104,7 @@ public struct PhotosField: View {
         .surfaceBackgroundColor(.surfacePrimary)
         .surfaceBorderColor(.surfaceSecondary)
         .surfaceBorderWidth(2)
-        .surfaceContentMargins(EdgeSpaceInsets(top: .medium, leading: .xxSmall, bottom: .medium, trailing: .xxSmall))
+        .surfaceContentMargins(EdgeInsets(top: .medium, leading: .xxSmall, bottom: .medium, trailing: .xxSmall))
     }
 }
 
