@@ -76,7 +76,8 @@ public struct PhotoLibraryPicker: View {
                     if isImportingPhotos {
                         ProgressView()
                     } else if !selectedAssets.isEmpty {
-                        Button("\(L10n.Button.add) (\(selectedAssets.count))", systemImage: "plus") {
+                        Button("\(L10n.Button.add) (\(selectedAssets.count))", systemImage: "checkmark") {
+                            isImportingPhotos = true
                             Task { await importMultiplePhotos() }
                         }
                         .labelStyle(.toolbar)
@@ -221,7 +222,6 @@ public struct PhotoLibraryPicker: View {
 
     @MainActor
     func importMultiplePhotos() async {
-        isImportingPhotos = true
         let images = selectedAssets.map { getFullImageFromAsset(asset: $0) }
         let dates = selectedAssets.map { $0.creationDate ?? Date() }
         multiSelection += images

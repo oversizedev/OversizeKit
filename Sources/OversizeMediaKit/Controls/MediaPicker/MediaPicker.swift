@@ -268,10 +268,10 @@ public struct MediaPicker<CustomSection: View>: View {
     }
 
     private func importSelectedAssets() {
-        for asset in selectedAssets {
-            selectionPhotos.append(getFullImage(asset: asset))
-            selectionPhotosDate.append(asset.creationDate ?? Date())
-        }
+        let images = selectedAssets.map { getFullImage(asset: $0) }
+        let dates = selectedAssets.map { $0.creationDate ?? Date() }
+        selectionPhotos.append(contentsOf: images)
+        selectionPhotosDate.append(contentsOf: dates)
         isShowPicker = false
     }
 

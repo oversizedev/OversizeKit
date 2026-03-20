@@ -18,17 +18,21 @@ struct RecentFileEntry: Codable, Identifiable, Equatable {
     }
 }
 
-struct FilePicker: View {
+public struct FilePicker: View {
     @Environment(\.dismiss) private var dismiss
 
-    @Binding var url: URL?
+    @Binding public var url: URL?
+
+    public init(url: Binding<URL?>) {
+        _url = url
+    }
 
     @AppStorage("MediaPicker.RecentFiles") private var recentFilesData: Data = .init()
     @State private var recentFiles: [RecentFileEntry] = []
     @State private var isShowDocumentPicker = false
     @State private var isShowScanner = false
 
-    var body: some View {
+    public var body: some View {
         ListLayoutView("File") {
             Section {
                 Button { isShowDocumentPicker = true } label: {
