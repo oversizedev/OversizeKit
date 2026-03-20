@@ -6,21 +6,24 @@
 import OversizeUI
 import SwiftUI
 
-public struct ImageGridView: View {
-    @Environment(\.isLoading) var isLoading: Bool
+public struct ImageGridView<ItemOverlay: View>: View {
+    @Environment(\.isLoading) private var isLoading: Bool
     @Binding private var columnCount: Int
     private let images: [Image]
-    private let tapAction: ((Image) -> Void)?
-    private let longPressAction: ((Image) -> Void)?
+    private let itemOverlay: (Int, Image) -> ItemOverlay
+    private let tapAction: ((Int) -> Void)?
+    private let longPressAction: ((Int) -> Void)?
 
     public init(
         _ images: [Image],
         columnCount: Binding<Int>,
-        tapAction: ((Image) -> Void)? = nil,
-        longPressAction: ((Image) -> Void)? = nil
+        @ViewBuilder itemOverlay: @escaping (Int, Image) -> ItemOverlay,
+        tapAction: ((Int) -> Void)? = nil,
+        longPressAction: ((Int) -> Void)? = nil
     ) {
         self.images = images
         _columnCount = columnCount
+        self.itemOverlay = itemOverlay
         self.tapAction = tapAction
         self.longPressAction = longPressAction
     }
@@ -35,26 +38,39 @@ public struct ImageGridView: View {
                         .contentShape(Rectangle())
                 }
             } else {
-                ForEach(0 ..< images.count, id: \.self) { index in
+                ForEach(Array(images.enumerated()), id: \.offset) { index, image in
                     Color.clear
                         .background(
-                            images[index]
+                            image
                                 .resizable()
                                 .scaledToFill()
                         )
                         .aspectRatio(1, contentMode: .fill)
                         .clipped()
                         .contentShape(Rectangle())
-                        .onTapGesture {
-                            tapAction?(images[index])
-                        }
-                        .onLongPressGesture {
-                            longPressAction?(images[index])
-                        }
+                        .overlay { itemOverlay(index, image) }
+                        .photoOverlaySource(id: index)
+                        .onTapGesture { tapAction?(index) }
+                        .onLongPressGesture { longPressAction?(index) }
                 }
             }
         }
         .padding(.vertical, .xxxSmall)
+    }
+}
+
+public extension ImageGridView where ItemOverlay == EmptyView {
+    init(
+        _ images: [Image],
+        columnCount: Binding<Int>,
+        tapAction: ((Int) -> Void)? = nil,
+        longPressAction: ((Int) -> Void)? = nil
+    ) {
+        self.images = images
+        _columnCount = columnCount
+        itemOverlay = { _, _ in EmptyView() }
+        self.tapAction = tapAction
+        self.longPressAction = longPressAction
     }
 }
 

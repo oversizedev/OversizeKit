@@ -24,11 +24,10 @@ public struct ImageGallery: View {
                     .title3()
                     .onSurfacePrimary()
             } else {
-                ImageGridView(images, columnCount: .constant(3)) { image in
-                    let index = images.firstIndex(of: image)
-                    selection = index ?? 0
+                ImageGridView(images, columnCount: .constant(3), tapAction: { index in
+                    selection = index
                     isShowPhoto = true
-                } longPressAction: { _ in }
+                })
             }
         }
         #if os(iOS)

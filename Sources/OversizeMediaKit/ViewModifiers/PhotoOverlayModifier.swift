@@ -7,17 +7,8 @@ import OversizeCore
 import OversizeUI
 import SwiftUI
 
-// MARK: - Environment Key
-
-private struct PhotoOverlayNamespaceKey: EnvironmentKey {
-    static let defaultValue: Namespace.ID? = nil
-}
-
 public extension EnvironmentValues {
-    var photoOverlayNamespace: Namespace.ID? {
-        get { self[PhotoOverlayNamespaceKey.self] }
-        set { self[PhotoOverlayNamespaceKey.self] = newValue }
-    }
+    @Entry var photoOverlayNamespace: Namespace.ID?
 }
 
 // MARK: - Source Modifier
@@ -37,7 +28,7 @@ public struct PhotoOverlaySourceModifier<ID: Hashable>: ViewModifier {
 }
 
 public extension View {
-    func photoOverlaySource<ID: Hashable>(id: ID) -> some View {
+    func photoOverlaySource(id: some Hashable) -> some View {
         modifier(PhotoOverlaySourceModifier(id: id))
     }
 }
@@ -49,6 +40,7 @@ public struct PhotoOverlayModifier: ViewModifier {
     @Namespace private var heroNamespace
 
     @State private var isShowOptions: Bool = true
+    @State private var dragOffset: CGFloat = 0
 
     @Binding private var selectionIndex: Int
     private let photos: [Image]
@@ -69,6 +61,7 @@ public struct PhotoOverlayModifier: ViewModifier {
             .environment(\.photoOverlayNamespace, heroNamespace)
             .fullScreenCover(isPresented: $isShowPhotoDetail) {
                 isShowOptions = true
+                dragOffset = 0
             } content: {
                 photoDetailView
             }
@@ -85,10 +78,10 @@ public struct PhotoOverlayModifier: ViewModifier {
                         .aspectRatio(contentMode: .fit)
                         .tag(index)
                 }
+                .ignoresSafeArea()
             }
             .tabViewStyle(.page(indexDisplayMode: .never))
             .indexViewStyle(.page(backgroundDisplayMode: .never))
-            .ignoresSafeArea()
             .background(.black)
             .onTapGesture {
                 withAnimation {
@@ -123,6 +116,34 @@ public struct PhotoOverlayModifier: ViewModifier {
         }
         .applyZoomTransition(sourceID: selectionIndex, namespace: heroNamespace)
         .colorScheme(.dark)
+        .offset(y: max(0, dragOffset))
+        .scaleEffect(max(0.85, 1 - dragOffset / 1200))
+        .gesture(dismissGesture)
+    }
+
+    // MARK: - Dismiss Gesture
+
+    private var dismissGesture: some Gesture {
+        DragGesture(minimumDistance: 10)
+            .onChanged { value in
+                let isVertical = abs(value.translation.height) > abs(value.translation.width)
+                guard value.translation.height > 0, isVertical else { return }
+                withAnimation(.interactiveSpring) {
+                    dragOffset = value.translation.height
+                }
+            }
+            .onEnded { value in
+                let shouldDismiss = value.translation.height > 80
+                    || value.predictedEndTranslation.height > 200
+                if shouldDismiss {
+                    dragOffset = 0
+                    isShowPhotoDetail = false
+                } else {
+                    withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
+                        dragOffset = 0
+                    }
+                }
+            }
     }
 }
 
@@ -132,7 +153,7 @@ private extension View {
     @ViewBuilder
     func applyZoomTransition(sourceID: Int, namespace: Namespace.ID) -> some View {
         if #available(iOS 18, *) {
-            self.navigationTransition(.zoom(sourceID: sourceID, in: namespace))
+            navigationTransition(.zoom(sourceID: sourceID, in: namespace))
         } else {
             self
         }

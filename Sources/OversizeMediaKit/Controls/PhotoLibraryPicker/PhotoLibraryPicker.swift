@@ -23,6 +23,8 @@ public struct PhotoLibraryPicker: View {
     @State var importProgress = 0.0
     @State private var selectedAssets: [PHAsset] = []
     @State private var isShimmering: Bool = false
+    @State private var albums: [PHAssetCollection] = []
+    @State private var selectedAlbum: PHAssetCollection?
 
     @Binding var selection: UIImage?
     @Binding var selectionDate: Date?
@@ -54,8 +56,12 @@ public struct PhotoLibraryPicker: View {
         isMultiMode = true
     }
 
+    private var albumTitle: String {
+        selectedAlbum?.localizedTitle ?? "Recents"
+    }
+
     public var body: some View {
-        LayoutView("Gallery") {
+        LayoutView("") {
             content()
                 .disabled(isImportingPhotos)
                 .opacity(isImportingPhotos ? 0.6 : 1)
@@ -63,9 +69,47 @@ public struct PhotoLibraryPicker: View {
                     getImages()
                     isShimmering = true
                 }
+                .onChange(of: selectedAlbum?.localIdentifier) {
+                    galleryImages = []
+                    isShimmering = true
+                    getImages()
+                }
         }
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            ToolbarItem(placement: .principal) {
+                Menu {
+                    Button {
+                        selectedAlbum = nil
+                    } label: {
+                        if selectedAlbum == nil {
+                            Label("Recents", systemImage: "checkmark")
+                        } else {
+                            Text("Recents")
+                        }
+                    }
+
+                    ForEach(albums, id: \.localIdentifier) { album in
+                        Button {
+                            selectedAlbum = album
+                        } label: {
+                            if selectedAlbum?.localIdentifier == album.localIdentifier {
+                                Label(album.localizedTitle ?? "Untitled", systemImage: "checkmark")
+                            } else {
+                                Text(album.localizedTitle ?? "Untitled")
+                            }
+                        }
+                    }
+                } label: {
+                    HStack(spacing: 4) {
+                        Text(albumTitle)
+                            .font(.headline)
+                        Image(systemName: "chevron.down")
+                            .font(.caption2.weight(.bold))
+                    }
+                    .foregroundStyle(.primary)
+                }
+            }
             ToolbarItem(placement: .cancellationAction) {
                 Button("Close", systemImage: "xmark", role: .cancel) { dismiss() }
                     .labelStyle(.toolbar)
@@ -262,10 +306,23 @@ public struct PhotoLibraryPicker: View {
         Task {
             let status = await PHPhotoLibrary.requestAuthorization(for: .readWrite)
             guard status == .authorized || status == .limited else { return }
+
+            if albums.isEmpty {
+                fetchAlbums()
+            }
+
             let fetchOptions = PHFetchOptions()
             fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
             fetchOptions.fetchLimit = 25000
-            let assets = PHAsset.fetchAssets(with: .image, options: fetchOptions)
+
+            let assets: PHFetchResult<PHAsset>
+            if let album = selectedAlbum {
+                fetchOptions.predicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.image.rawValue)
+                assets = PHAsset.fetchAssets(in: album, options: fetchOptions)
+            } else {
+                assets = PHAsset.fetchAssets(with: .image, options: fetchOptions)
+            }
+
             var images: [PHAsset] = []
             assets.enumerateObjects { object, _, _ in
                 images.append(object)
@@ -274,6 +331,44 @@ public struct PhotoLibraryPicker: View {
                 galleryImages = images
             }
         }
+    }
+
+    func fetchAlbums() {
+        let smartAlbumTypes: [PHAssetCollectionSubtype] = [
+            .smartAlbumFavorites,
+            .smartAlbumScreenshots,
+            .smartAlbumSelfPortraits,
+            .smartAlbumPanoramas,
+            .smartAlbumLivePhotos,
+        ]
+
+        var result: [PHAssetCollection] = []
+
+        for subtype in smartAlbumTypes {
+            let fetch = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: subtype, options: nil)
+            fetch.enumerateObjects { collection, _, _ in
+                let checkOptions = PHFetchOptions()
+                checkOptions.fetchLimit = 1
+                checkOptions.predicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.image.rawValue)
+                let count = PHAsset.fetchAssets(in: collection, options: checkOptions).count
+                if count > 0 {
+                    result.append(collection)
+                }
+            }
+        }
+
+        let userAlbums = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: nil)
+        userAlbums.enumerateObjects { collection, _, _ in
+            let checkOptions = PHFetchOptions()
+            checkOptions.fetchLimit = 1
+            checkOptions.predicate = NSPredicate(format: "mediaType == %d", PHAssetMediaType.image.rawValue)
+            let count = PHAsset.fetchAssets(in: collection, options: checkOptions).count
+            if count > 0 {
+                result.append(collection)
+            }
+        }
+
+        albums = result
     }
 }
 
