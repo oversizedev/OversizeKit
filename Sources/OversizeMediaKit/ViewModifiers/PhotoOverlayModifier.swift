@@ -78,8 +78,8 @@ public struct PhotoOverlayModifier: ViewModifier {
                         .aspectRatio(contentMode: .fit)
                         .tag(index)
                 }
-                .ignoresSafeArea()
             }
+            
             .tabViewStyle(.page(indexDisplayMode: .never))
             .indexViewStyle(.page(backgroundDisplayMode: .never))
             .background(.black)
@@ -109,10 +109,11 @@ public struct PhotoOverlayModifier: ViewModifier {
                     }
                 }
             }
-            .toolbar(isShowOptions ? .visible : .hidden, for: .navigationBar)
-            .toolbarBackground(.hidden, for: .navigationBar)
             .navigationBarBackButtonHidden()
             .statusBar(hidden: !isShowOptions)
+            .toolbarBackground(.hidden, for: .navigationBar)
+            .toolbar(isShowOptions ? .visible : .hidden, for: .navigationBar)
+            .ignoresSafeArea(.all)
         }
         .applyZoomTransition(sourceID: selectionIndex, namespace: heroNamespace)
         .colorScheme(.dark)
@@ -124,7 +125,7 @@ public struct PhotoOverlayModifier: ViewModifier {
     // MARK: - Dismiss Gesture
 
     private var dismissGesture: some Gesture {
-        DragGesture(minimumDistance: 10)
+        DragGesture(minimumDistance: 5)
             .onChanged { value in
                 let isVertical = abs(value.translation.height) > abs(value.translation.width)
                 guard value.translation.height > 0, isVertical else { return }
