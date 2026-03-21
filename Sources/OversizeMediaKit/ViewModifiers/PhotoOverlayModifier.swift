@@ -77,7 +77,7 @@ public struct PhotoOverlayModifier: ViewModifier {
                         .tag(index)
                 }
             }
-            
+
             .tabViewStyle(.page(indexDisplayMode: .never))
             .indexViewStyle(.page(backgroundDisplayMode: .never))
             .background(.black)

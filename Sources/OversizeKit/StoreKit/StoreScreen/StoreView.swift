@@ -22,7 +22,9 @@ public struct StoreView: View {
     @Environment(\.isPortrait) private var isPortrait
     private var isClosable = true
     @State var isShowFireworks = false
+    #if os(iOS)
     @State var isPresentedManageSubscription = false
+    #endif
 
     public init() {
         _viewModel = StateObject(wrappedValue: StoreViewModel())
@@ -75,6 +77,7 @@ public struct StoreView: View {
         .task {
             await viewModel.fetchData()
         }
+        #if os(iOS)
         .manageSubscriptionsSheet(isPresented: $isPresentedManageSubscription)
         .onChange(of: isPresentedManageSubscription) { _, isPresented in
             if isPresented == false {
@@ -83,6 +86,7 @@ public struct StoreView: View {
                 }
             }
         }
+        #endif
     }
 
     var isCancelledSubscription: Bool {
@@ -149,6 +153,7 @@ public struct StoreView: View {
             StoreFeaturesView()
                 .environmentObject(viewModel)
 
+            #if os(iOS)
             if viewModel.isPremium {
                 Surface {
                     isPresentedManageSubscription = true
@@ -160,8 +165,9 @@ public struct StoreView: View {
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
                 .surfaceBorderColor(Color.surfaceSecondary)
-                .surfaceBorderWidth(platform == .macOS ? 1 : 2)
+                .surfaceBorderWidth(2)
             }
+            #endif
 
             SubscriptionPrivacyView(
                 subscriptionsName: viewModel.productsState.result?.banner.badge ?? "",
