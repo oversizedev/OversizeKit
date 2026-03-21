@@ -40,7 +40,6 @@ public struct PhotoOverlayModifier: ViewModifier {
     @Namespace private var heroNamespace
 
     @State private var isShowOptions: Bool = true
-    @State private var dragOffset: CGFloat = 0
 
     @Binding private var selectionIndex: Int
     private let photos: [Image]
@@ -61,7 +60,6 @@ public struct PhotoOverlayModifier: ViewModifier {
             .environment(\.photoOverlayNamespace, heroNamespace)
             .fullScreenCover(isPresented: $isShowPhotoDetail) {
                 isShowOptions = true
-                dragOffset = 0
             } content: {
                 photoDetailView
             }
@@ -117,34 +115,6 @@ public struct PhotoOverlayModifier: ViewModifier {
         }
         .applyZoomTransition(sourceID: selectionIndex, namespace: heroNamespace)
         .colorScheme(.dark)
-        .offset(y: max(0, dragOffset))
-        .scaleEffect(max(0.85, 1 - dragOffset / 1200))
-        .gesture(dismissGesture)
-    }
-
-    // MARK: - Dismiss Gesture
-
-    private var dismissGesture: some Gesture {
-        DragGesture(minimumDistance: 5)
-            .onChanged { value in
-                let isVertical = abs(value.translation.height) > abs(value.translation.width)
-                guard value.translation.height > 0, isVertical else { return }
-                withAnimation(.interactiveSpring) {
-                    dragOffset = value.translation.height
-                }
-            }
-            .onEnded { value in
-                let shouldDismiss = value.translation.height > 80
-                    || value.predictedEndTranslation.height > 200
-                if shouldDismiss {
-                    dragOffset = 0
-                    isShowPhotoDetail = false
-                } else {
-                    withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
-                        dragOffset = 0
-                    }
-                }
-            }
     }
 }
 
