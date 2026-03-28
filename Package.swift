@@ -7,7 +7,7 @@ import PackageDescription
 let commonDependencies: [PackageDescription.Package.Dependency] = [
     .package(url: "https://github.com/lorenzofiamingo/swiftui-cached-async-image.git", .upToNextMajor(from: "2.1.1")),
     .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "2.5.0")),
-    .package(url: "https://github.com/hmlongco/Navigator.git", .upToNextMajor(from: "2.0.0")),
+    .package(url: "https://github.com/hmlongco/Navigator.git", .upToNextMajor(from: "1.4.6")),
 ]
 
 let remoteDependencies: [PackageDescription.Package.Dependency] = commonDependencies + [

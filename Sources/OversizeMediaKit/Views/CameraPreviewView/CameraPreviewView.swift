@@ -5,7 +5,6 @@
 
 import AVFoundation
 import SwiftUI
-
 #if os(iOS)
 import UIKit
 
@@ -85,14 +84,16 @@ public class CameraPreviewUIView: UIView {
     }
 
     private func startSession() async {
-        guard let session = captureSession else { return }
+        guard let captureSession else { return }
+        nonisolated(unsafe) let session = captureSession
         await Task.detached(priority: .userInitiated) {
             session.startRunning()
         }.value
     }
 
     private func stopSession() async {
-        guard let session = captureSession else { return }
+        guard let captureSession else { return }
+        nonisolated(unsafe) let session = captureSession
         await Task.detached(priority: .userInitiated) {
             session.stopRunning()
         }.value

@@ -108,6 +108,7 @@ public struct NoticeListView: View {
             imageURL: offer.imageUrl?.url
         ) {
             Button {
+                print("On tap")
                 navigator.navigate(
                     to: SettingsDestinations.offer(event: offer),
                     method: .managedSheet

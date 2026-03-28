@@ -40,14 +40,29 @@ public struct StoreSpecialOfferView: View {
 
     public var body: some View {
         #if os(iOS) || os(macOS)
-        Group {
-            if #available(iOS 16.0, macOS 13.0, *) {
-                newPage
-            } else {
-                oldPage
+        LayoutView(badgeText, onScroll: handleOffset) {
+            content
+        } background: {
+            LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center)
+        }
+        .toolbarTitleDisplayMode(.inline)
+        .safeAreaBarBottom {
+            VStack(spacing: .small) {
+                productsLust
+                    .padding(.horizontal, .medium)
+                #if os(macOS)
+                    .padding(.bottom, .medium)
+                #endif
+
+                #if os(iOS)
+                StorePaymentButtonBar(showDescription: false)
+                    .environmentObject(viewModel)
+                    .padding(.horizontal, .small)
+
+                #endif
             }
         }
-
+        .toolbar(content: { toolbarContent })
         .onChange(of: isPremium) { _, status in
             if status {
                 dismiss()
@@ -61,54 +76,29 @@ public struct StoreSpecialOfferView: View {
         #endif
     }
 
-    @available(iOS 16.0, macOS 13.0, *)
-    var newPage: some View {
-        NavigationStack {
-            LayoutView(badgeText, onScroll: handleOffset) {
-                Group {
-                    switch viewModel.state {
-                    case .idle:
-                        VStack {
-                            Spacer()
-                            HStack {
-                                Spacer()
-                                ProgressView()
-                                Spacer()
-                            }
-                            Spacer()
-                        }
-                    case .loading:
+    var content: some View {
+        Group {
+            switch viewModel.state {
+            case .idle:
+                VStack {
+                    Spacer()
+                    HStack {
+                        Spacer()
                         ProgressView()
-                    case let .result(data):
-                        content(data: data)
-                            .background {
-                                effectsView
-                            }
-                    case let .error(error):
-                        OversizeUI.ErrorView(error: error)
+                        Spacer()
                     }
+                    Spacer()
                 }
-            } background: {
-                LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center)
+            case .loading:
+                ProgressView()
+            case let .result(data):
+                content(data: data)
+                    .background {
+                        effectsView
+                    }
+            case let .error(error):
+                ErrorView(error: error)
             }
-            .toolbarTitleDisplayMode(.inline)
-            .safeAreaBarBottom {
-                VStack(spacing: .small) {
-                    productsLust
-                        .padding(.horizontal, .medium)
-                    #if os(macOS)
-                        .padding(.bottom, .medium)
-                    #endif
-
-                    #if os(iOS)
-                    StorePaymentButtonBar(showDescription: false)
-                        .environmentObject(viewModel)
-                        .padding(.horizontal, .small)
-
-                    #endif
-                }
-            }
-            .toolbar(content: { toolbarContent })
         }
     }
 
@@ -161,47 +151,6 @@ public struct StoreSpecialOfferView: View {
             EmptyView()
         default:
             EmptyView()
-        }
-    }
-
-    var oldPage: some View {
-        PageView { offset = $0 } content: {
-            Group {
-                switch viewModel.state {
-                case .idle:
-                    VStack {
-                        Spacer()
-                        HStack {
-                            Spacer()
-                            ProgressView()
-                            Spacer()
-                        }
-                        Spacer()
-                    }
-                case .loading:
-                    ProgressView()
-                case let .result(data):
-                    content(data: data)
-                case let .error(error):
-                    OversizeUI.ErrorView(error: error)
-                }
-            }
-            .paddingContent(.horizontal)
-        }
-        .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
-        .trailingBar {
-            BarButton(.closeAction {
-                lastClosedSpecialOffer = event.id
-                dismiss()
-            })
-        }
-        .bottomToolbar(style: .none) {
-            VStack(spacing: .zero) {
-                productsLust
-                StorePaymentButtonBar()
-                    .environmentObject(viewModel)
-                    .padding(.horizontal, 8)
-            }
         }
     }
 

@@ -43,60 +43,62 @@ public struct MapCoordinateView: View {
     }
 
     var mapView: some View {
-        ZStack(alignment: .trailing) {
-            Map(position: $viewModel.cameraPosition) {
-                ForEach(viewModel.annotations) { point in
-                    Marker(point.name, coordinate: point.coordinate)
-                }
-                UserAnnotation()
+        Map(position: $viewModel.cameraPosition) {
+            ForEach(viewModel.annotations) { point in
+                Marker(point.name, coordinate: point.coordinate)
             }
-            controlButtons
+            UserAnnotation()
+        }
+        .safeAreaInset(edge: .trailing) {
+            zoomButtons
+        }
+        .safeAreaInset(edge: .bottom) {
+            locationButton
         }
     }
 
-    var controlButtons: some View {
-        VStack {
-            Spacer()
-            VStack(spacing: .zero) {
-                Button {
-                    viewModel.zoomIn()
-                } label: {
-                    Image(systemName: "plus")
-                        .onSurfaceSecondary()
-                        .padding(.xxSmall)
-                }
+    var zoomButtons: some View {
+        VStack(spacing: .zero) {
+            Button {
+                viewModel.zoomIn()
+            } label: {
+                Image(systemName: "plus")
+                    .onSurfaceSecondary()
+                    .padding(.xxSmall)
+            }
 
-                Button {
-                    viewModel.zoomOut()
-                } label: {
-                    Image(systemName: "minus")
-                        .onSurfaceSecondary()
-                        .padding(.xxSmall)
-                }
+            Button {
+                viewModel.zoomOut()
+            } label: {
+                Image(systemName: "minus")
+                    .onSurfaceSecondary()
+                    .padding(.xxSmall)
             }
-            .background {
-                Capsule()
-                    .fillSurfacePrimary()
-                    .shadowElevation(.z1)
-            }
-            Spacer()
         }
-        .overlay(alignment: .bottomTrailing, content: {
+        .background {
+            Capsule()
+                .fillSurfacePrimary()
+                .shadowElevation(.z1)
+        }
+    }
+
+    var locationButton: some View {
+        HStack {
+            Spacer()
+
             Button {
                 viewModel.positionInLocation()
             } label: {
                 Image(systemName: "location.fill")
                     .onSurfaceSecondary()
                     .padding(.xxSmall)
+                    .background {
+                        Capsule()
+                            .fillSurfacePrimary()
+                            .shadowElevation(.z1)
+                    }
             }
-            .background {
-                Capsule()
-                    .fillSurfacePrimary()
-                    .shadowElevation(.z1)
-            }
-        })
-        .padding(.trailing, 16)
-        .padding(.bottom, screenSize.safeAreaBottom)
+        }
     }
 
     var routeSheetView: some View {

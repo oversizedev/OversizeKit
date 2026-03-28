@@ -3,7 +3,7 @@
 // TabbedMediaPicker.swift
 //
 
-import OversizePhotoComponents
+import OversizeMediaKit
 import OversizeUI
 import SwiftUI
 

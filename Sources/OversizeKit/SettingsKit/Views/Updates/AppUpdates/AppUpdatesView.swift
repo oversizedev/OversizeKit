@@ -54,15 +54,12 @@ public struct AppUpdatesView: ViewProtocol {
         SectionView {
             VStack(spacing: .zero) {
                 ForEach(versions) { version in
-                    if versions.first == version {
-                        Row(version.version, subtitle: version.whatsNew)
-                    } else {
-                        Row(version.version, subtitle: version.whatsNew) {
-                            navigator.navigate(to: SettingsDestinations.appUpdate(version: version))
-                        }
-                        .rowArrow()
-                        .buttonStyle(.row)
-                    }
+                    let isFirstFersion = version.version == "1.0" || version.version == "1.0.0"
+                    Row(version.version, subtitle: version.whatsNew, action: isFirstFersion ? nil : {
+                        navigator.navigate(to: SettingsDestinations.appUpdate(version: version))
+                    })
+                    .rowArrow(!isFirstFersion)
+                    .buttonStyle(.row)
                 }
             }
         }

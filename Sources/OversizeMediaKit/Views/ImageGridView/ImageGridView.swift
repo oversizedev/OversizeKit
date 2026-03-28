@@ -6,6 +6,7 @@
 import OversizeUI
 import SwiftUI
 
+#if os(iOS)
 public struct ImageGridView<ItemOverlay: View>: View {
     @Environment(\.isLoading) private var isLoading: Bool
     @Binding private var columnCount: Int
@@ -89,3 +90,4 @@ public extension ImageGridView where ItemOverlay == EmptyView {
         )
     }
 }
+#endif

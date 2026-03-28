@@ -7,6 +7,7 @@ import OversizeCore
 import OversizeUI
 import SwiftUI
 
+#if os(iOS)
 public extension EnvironmentValues {
     @Entry var photoOverlayNamespace: Namespace.ID?
 }
@@ -35,7 +36,6 @@ public extension View {
 
 // MARK: - Photo Overlay Modifier
 
-#if os(iOS)
 public struct PhotoOverlayModifier: ViewModifier {
     @Namespace private var heroNamespace
 
