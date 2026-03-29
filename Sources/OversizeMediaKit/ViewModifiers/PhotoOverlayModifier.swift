@@ -77,7 +77,7 @@ public struct PhotoOverlayModifier: ViewModifier {
                         .tag(index)
                 }
             }
-
+            .ignoresSafeArea(.all)
             .tabViewStyle(.page(indexDisplayMode: .never))
             .indexViewStyle(.page(backgroundDisplayMode: .never))
             .background(.black)
@@ -86,32 +86,65 @@ public struct PhotoOverlayModifier: ViewModifier {
                     isShowOptions.toggle()
                 }
             }
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Back", systemImage: "chevron.left") {
-                        isShowPhotoDetail = false
+            .safeAreaInset(edge: .top) {
+                if isShowOptions {
+                    HStack {
+                        if #available(iOS 26.0, *) {
+                            Button {
+                                isShowPhotoDetail = false
+                            } label: {
+                                Image(systemName: "chevron.left")
+                                    .font(.title3)
+                                    .foregroundStyle(Color.white)
+                                    .frame(width: 20, height: 30)
+                            }
+                            .buttonStyle(.glass)
+                        } else {
+                            Button {
+                                isShowPhotoDetail = false
+                            } label: {
+                                Image(systemName: "chevron.left")
+                                    .font(.title3)
+                                    .foregroundStyle(Color.white)
+                                    .frame(width: 20, height: 30)
+                            }
+                        }
+
+                        Spacer(minLength: 0)
+
+                        Text("\(selectionIndex + 1) of \(photos.count)")
+                            .foregroundStyle(Color.white)
+                            .font(.headline)
+
+                        Spacer(minLength: 0)
+
+                        if let action {
+                            if #available(iOS 26.0, *) {
+                            Button(action: action) {
+                                Image(systemName: "ellipsis")
+                                    .font(.title3)
+                                    .foregroundStyle(Color.white)
+                                    .frame(width: 20, height: 30)
+                            }
+                            .buttonStyle(.glass)
+                            } else {
+                                Button(action: action) {
+                                    Image(systemName: "ellipsis")
+                                        .font(.title3)
+                                        .foregroundStyle(Color.white)
+                                        .frame(width: 20, height: 30)
+                                }
+                            }
+                        } else {
+                            Color.clear
+                                .frame(width: 20, height: 30)
+                        }
                     }
-                    .labelStyle(.toolbar)
-                    .buttonStyle(.toolbarSecondary)
-                }
-                ToolbarItem(placement: .principal) {
-                    Text("\(selectionIndex + 1) of \(photos.count)")
-                        .foregroundStyle(.white)
-                        .font(.headline)
-                }
-                if let action {
-                    ToolbarItem(placement: .primaryAction) {
-                        Button("More", systemImage: "ellipsis", action: action)
-                            .labelStyle(.toolbar)
-                            .buttonStyle(.toolbarSecondary)
-                    }
+                    .padding(.horizontal, 20)
+                    .transition(.opacity)
                 }
             }
-            .navigationBarBackButtonHidden()
             .statusBar(hidden: !isShowOptions)
-            .toolbarBackground(.hidden, for: .navigationBar)
-            .toolbar(isShowOptions ? .visible : .hidden, for: .navigationBar)
-            .ignoresSafeArea(.all)
         }
         .applyZoomTransition(sourceID: selectionIndex, namespace: heroNamespace)
         .colorScheme(.dark)
