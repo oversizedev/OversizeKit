@@ -43,8 +43,7 @@ public struct PhotoOptionsView<A: View>: View {
     public var body: some View {
         LayoutView(
             "Photo",
-            content: { content
-            },
+            content: { content },
             background: { Color.backgroundSecondary }
         )
         .toolbarTitleDisplayMode(.inline)

@@ -36,24 +36,18 @@ public extension View {
 
 // MARK: - Photo Overlay Modifier
 
-public struct PhotoOverlayModifier: ViewModifier {
+public struct PhotoOverlayModifier<OptionsSheet: View>: ViewModifier {
     @Namespace private var heroNamespace
 
     @State private var isShowOptions: Bool = true
+    @State private var isShowOptionsSheet: Bool = false
 
     @Binding private var selectionIndex: Int
     private let photos: [Image]
 
     @Binding private var isShowPhotoDetail: Bool
 
-    private let action: (() -> Void)?
-
-    public init(isPresent: Binding<Bool>, selection: Binding<Int>, photos: [Image], action: (() -> Void)? = nil) {
-        _selectionIndex = selection
-        self.photos = photos
-        _isShowPhotoDetail = isPresent
-        self.action = action
-    }
+    private let optionsSheet: (() -> OptionsSheet)?
 
     public func body(content: Content) -> some View {
         content
@@ -118,17 +112,21 @@ public struct PhotoOverlayModifier: ViewModifier {
 
                         Spacer(minLength: 0)
 
-                        if let action {
+                        if optionsSheet != nil {
                             if #available(iOS 26.0, *) {
-                            Button(action: action) {
-                                Image(systemName: "ellipsis")
-                                    .font(.title3)
-                                    .foregroundStyle(Color.white)
-                                    .frame(width: 20, height: 30)
-                            }
-                            .buttonStyle(.glass)
+                                Button {
+                                    isShowOptionsSheet = true
+                                } label: {
+                                    Image(systemName: "ellipsis")
+                                        .font(.title3)
+                                        .foregroundStyle(Color.white)
+                                        .frame(width: 20, height: 30)
+                                }
+                                .buttonStyle(.glass)
                             } else {
-                                Button(action: action) {
+                                Button {
+                                    isShowOptionsSheet = true
+                                } label: {
                                     Image(systemName: "ellipsis")
                                         .font(.title3)
                                         .foregroundStyle(Color.white)
@@ -146,8 +144,31 @@ public struct PhotoOverlayModifier: ViewModifier {
             }
             .statusBar(hidden: !isShowOptions)
         }
+        .sheet(isPresented: $isShowOptionsSheet) {
+            optionsSheet?()
+        }
         .applyZoomTransition(sourceID: selectionIndex, namespace: heroNamespace)
         .colorScheme(.dark)
+    }
+}
+
+// MARK: - Initializers
+
+extension PhotoOverlayModifier {
+    public init(isPresent: Binding<Bool>, selection: Binding<Int>, photos: [Image], @ViewBuilder optionsSheet: @escaping () -> OptionsSheet) {
+        _selectionIndex = selection
+        self.photos = photos
+        _isShowPhotoDetail = isPresent
+        self.optionsSheet = optionsSheet
+    }
+}
+
+extension PhotoOverlayModifier where OptionsSheet == EmptyView {
+    public init(isPresent: Binding<Bool>, selection: Binding<Int>, photos: [Image]) {
+        _selectionIndex = selection
+        self.photos = photos
+        _isShowPhotoDetail = isPresent
+        self.optionsSheet = nil
     }
 }
 
@@ -167,11 +188,24 @@ private extension View {
 // MARK: - Deprecated
 
 @available(*, deprecated, renamed: "PhotoOverlayModifier")
-public typealias PhotoShowViewModifier = PhotoOverlayModifier
+public typealias PhotoShowViewModifier = PhotoOverlayModifier<EmptyView>
 
 public extension View {
-    func photoOverlay(isPresent: Binding<Bool>, selection: Binding<Int>, photos: [Image], action: (() -> Void)? = nil) -> some View {
-        modifier(PhotoOverlayModifier(isPresent: isPresent, selection: selection, photos: photos, action: action))
+    func photoOverlay<OptionsSheet: View>(
+        isPresent: Binding<Bool>,
+        selection: Binding<Int>,
+        photos: [Image],
+        @ViewBuilder optionsSheet: @escaping () -> OptionsSheet
+    ) -> some View {
+        modifier(PhotoOverlayModifier(isPresent: isPresent, selection: selection, photos: photos, optionsSheet: optionsSheet))
+    }
+
+    func photoOverlay(
+        isPresent: Binding<Bool>,
+        selection: Binding<Int>,
+        photos: [Image]
+    ) -> some View {
+        modifier(PhotoOverlayModifier<EmptyView>(isPresent: isPresent, selection: selection, photos: photos))
     }
 }
 
