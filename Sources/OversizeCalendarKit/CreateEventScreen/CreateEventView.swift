@@ -94,7 +94,9 @@ public struct CreateEventView: View {
             focusedField = .title
         }
         .sheet(item: $viewModel.sheet) { sheet in
-            resolveSheet(sheet: sheet)
+            NavigationStack {
+                resolveSheet(sheet: sheet)
+            }
         }
         .onChange(of: viewModel.span) { _, _ in
             Task {

@@ -12,7 +12,6 @@ public struct AttachmentView: View {
     public init() {}
 
     public var body: some View {
-        NavigationStack {
             LayoutView("Attachment") {
                 SectionView {
                     VStack(spacing: .zero) {
@@ -44,7 +43,7 @@ public struct AttachmentView: View {
                 }
             }
             .toolbarTitleDisplayMode(.inline)
-        }
+        
     }
 }
 

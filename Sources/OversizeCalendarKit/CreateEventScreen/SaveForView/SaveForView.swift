@@ -19,7 +19,7 @@ public struct SaveForView: View {
     }
 
     public var body: some View {
-        NavigationStack {
+
             LayoutView("This is repeating event") {
                 SectionView {
                     VStack(spacing: .zero) {
@@ -59,7 +59,7 @@ public struct SaveForView: View {
                 }
             }
             .toolbarTitleDisplayMode(.inline)
-        }
+        
     }
 }
 #endif
