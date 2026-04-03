@@ -10,6 +10,7 @@ import MapKit
 import OversizeCalendarService
 import OversizeCore
 import OversizeLocalizable
+import OversizeResources
 import OversizeUI
 import SwiftUI
 
@@ -19,16 +20,17 @@ public struct CreateEventView: View {
     @Environment(\.dismiss) var dismiss
     @FocusState private var focusedField: FocusField?
 
+    @Namespace var unionNamespace
+
     public init(_ type: CreateEventType = .new(nil, calendar: nil)) {
         _viewModel = StateObject(wrappedValue: CreateEventViewModel(type))
     }
 
     public var body: some View {
-        LayoutView("") {
+        LayoutView {
             content
-        } background: {
-            Color.backgroundPrimary
         }
+        .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Close", systemImage: "xmark", role: .cancel) {
@@ -39,6 +41,36 @@ public struct CreateEventView: View {
                 #if !os(tvOS)
                     .keyboardShortcut(.cancelAction)
                 #endif
+            }
+            ToolbarItem(placement: .principal) {
+                if #available(iOS 26, *) {
+                    Button { viewModel.present(.calendar) } label: {
+                        HStack(spacing: .xxxSmall) {
+                            Circle()
+                                .fill(Color(viewModel.calendar?.cgColor ?? CGColor(red: 0.4, green: 0.4, blue: 0.4, alpha: 1)))
+                                .frame(width: 16, height: 16)
+                                .padding(.xxxSmall)
+                            Text(viewModel.calendar?.title ?? "")
+                                .padding(.trailing, .xxSmall)
+                        }
+                    }
+                    .buttonStyle(.tertiary(infinityWidth: false))
+                    .controlBorderShape(.capsule)
+                } else {
+                    Button { viewModel.present(.calendar) } label: {
+                        HStack(spacing: .xxxSmall) {
+                            Circle()
+                                .fill(Color(viewModel.calendar?.cgColor ?? CGColor(red: 0.4, green: 0.4, blue: 0.4, alpha: 1)))
+                                .frame(width: 16, height: 16)
+                                .padding(.xxxSmall)
+                            Text(viewModel.calendar?.title ?? "")
+                                .padding(.trailing, .xxSmall)
+                        }
+                    }
+                    .buttonStyle(.tertiary)
+                    .controlBorderShape(.capsule)
+                    .controlSize(.mini)
+                }
             }
             ToolbarItem(placement: .primaryAction) {
                 Button(L10n.Button.save, systemImage: "checkmark") {
@@ -66,26 +98,13 @@ public struct CreateEventView: View {
                     .keyboardShortcut(.defaultAction)
                 #endif
             }
-            ToolbarItem(placement: .principal) {
-                Button { viewModel.present(.calendar) } label: {
-                    HStack(spacing: .xxxSmall) {
-                        Circle()
-                            .fill(Color(viewModel.calendar?.cgColor ?? CGColor(red: 0.4, green: 0.4, blue: 0.4, alpha: 1)))
-                            .frame(width: 16, height: 16)
-                            .padding(.xxxSmall)
-
-                        Text(viewModel.calendar?.title ?? "")
-                            .padding(.trailing, .xxSmall)
-                    }
-                }
-                .buttonStyle(.tertiary)
-                .controlBorderShape(.capsule)
-                .controlSize(.mini)
-            }
         }
-        .toolbarTitleDisplayMode(.inline)
-        .safeAreaInset(edge: .bottom) {
-            bottomBar
+        .safeAreaBarBottom {
+            if #available(iOS 26.0, *) {
+                glassBottomBar
+            } else {
+                bottomBar
+            }
         }
         .task {
             await viewModel.fetchData()
@@ -142,7 +161,7 @@ public struct CreateEventView: View {
             HStack {
                 Text("All-day event")
                     .headline(.semibold)
-                    .foregroundStyle(Color.onSurfacePrimary)
+                    .foregroundColor(.onSurfacePrimary)
                     .padding(.leading, .xxxSmall)
 
                 Spacer()
@@ -153,8 +172,8 @@ public struct CreateEventView: View {
         }
         .surfaceBorderColor(Color.surfaceSecondary)
         .surfaceBorderWidth(1)
-        .surfaceContentMargins(.init(horizontal: .xSmall, vertical: .xSmall))
-        .controlRadius(.small)
+        .surfaceRadius(.regular)
+        .surfaceContentMargins(.small)
     }
 
     #if !os(watchOS)
@@ -210,7 +229,7 @@ public struct CreateEventView: View {
                     #endif
                 }
         }
-        .clipShape(RoundedRectangle(cornerRadius: .small, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: .regular, style: .continuous))
     }
     #endif
 
@@ -221,19 +240,18 @@ public struct CreateEventView: View {
                     Row(viewModel.repitRule.title, subtitle: repeatSubtitleText) {
                         viewModel.present(.repeat)
                     } leading: {
-                        Image.Base.swap
-                            .icon(.onSurfacePrimary)
+                        Image.Arrow.update.icon()
                     }
                     .rowClearButton(style: .onSurface) {
                         viewModel.repitRule = .never
                         viewModel.repitEndRule = .never
                     }
-                    .surfaceContentMargins(.init(horizontal: .small, vertical: .medium))
+                    .rowContentMargins(.init(horizontal: .small, vertical: .small))
                 }
                 .surfaceBorderColor(Color.surfaceSecondary)
                 .surfaceBorderWidth(1)
                 .surfaceContentMargins(.zero)
-                .controlRadius(.large)
+                .surfaceRadius(.regular)
             }
         }
     }
@@ -247,13 +265,12 @@ public struct CreateEventView: View {
                             Row(email) {
                                 viewModel.present(.invites)
                             } leading: {
-                                Image.Base.profile
-                                    .icon(.onSurfacePrimary)
+                                Image.Base.profile.icon()
                             }
                             .rowClearButton(style: .onSurface) {
                                 viewModel.members.remove(email)
                             }
-                            .rowContentMargins(.small)
+                            .rowContentMargins(.init(horizontal: .small, vertical: .small))
                             .overlay(alignment: .bottomLeading) {
                                 Rectangle()
                                     .fillSurfaceSecondary()
@@ -266,41 +283,40 @@ public struct CreateEventView: View {
                 .surfaceBorderColor(Color.surfaceSecondary)
                 .surfaceBorderWidth(1)
                 .surfaceContentMargins(.zero)
-                .controlRadius(.large)
+                .surfaceRadius(.regular)
             }
         }
     }
 
+    @ViewBuilder
     var alarmView: some View {
-        Group {
-            if !viewModel.alarms.isEmpty {
-                Surface {
-                    VStack(spacing: .zero) {
-                        ForEach(viewModel.alarms) { alarm in
-                            Row(alarm.title) {
-                                viewModel.present(.alarm)
-                            } leading: {
-                                Image.Base.notification
-                                    .icon(.onSurfacePrimary)
-                            }
-                            .rowClearButton(style: .onSurface) {
-                                viewModel.alarms.remove(alarm)
-                            }
-                            .surfaceContentMargins(.init(horizontal: .small, vertical: .medium))
-                            .overlay(alignment: .bottomLeading) {
-                                Rectangle()
-                                    .fillSurfaceSecondary()
-                                    .padding(.leading, 56)
-                                    .frame(height: 1)
-                            }
+        if !viewModel.alarms.isEmpty {
+            Surface {
+                VStack(spacing: .zero) {
+                    ForEach(viewModel.alarms) { alarm in
+                        Row(alarm.title) {
+                            viewModel.present(.alarm)
+                        } leading: {
+                            Image.Alert.bell.icon()
+                        }
+                        .rowClearButton(style: .onSurface) {
+                            viewModel.alarms.remove(alarm)
+                        }
+                        .rowContentMargins(.init(horizontal: .small, vertical: .small))
+                        .overlay(alignment: .bottomLeading) {
+                            Rectangle()
+                                .fillSurfaceSecondary()
+                                .padding(.leading, 56)
+                                .frame(height: 1)
+                                .opacity(alarm.id == viewModel.alarms.last?.id ? 0 : 1)
                         }
                     }
                 }
-                .surfaceBorderColor(Color.surfaceSecondary)
-                .surfaceBorderWidth(1)
-                .surfaceContentMargins(.zero)
-                .controlRadius(.large)
             }
+            .surfaceBorderColor(Color.surfaceSecondary)
+            .surfaceBorderWidth(1)
+            .surfaceContentMargins(.zero)
+            .surfaceRadius(.regular)
         }
     }
 
@@ -314,14 +330,13 @@ public struct CreateEventView: View {
                             Row(locationName) {
                                 viewModel.present(.location)
                             } leading: {
-                                Image.Base.location
-                                    .icon(.onSurfacePrimary)
+                                Image.Base.location.icon()
                             }
                             .rowClearButton(style: .onSurface) {
                                 viewModel.locationName = nil
                                 viewModel.location = nil
                             }
-                            .rowContentMargins(.init(horizontal: .small, vertical: .xSmall))
+                            .rowContentMargins(.init(horizontal: .small, vertical: .small))
                         }
                     }
 
@@ -352,7 +367,7 @@ public struct CreateEventView: View {
             .surfaceBorderColor(Color.surfaceSecondary)
             .surfaceBorderWidth(1)
             .surfaceContentMargins(.zero)
-            .controlRadius(.large)
+            .surfaceRadius(.regular)
         }
     }
 
@@ -391,7 +406,7 @@ public struct CreateEventView: View {
                 .padding(.small)
                 .hLeading()
                 .background {
-                    RoundedRectangle(cornerRadius: .small, style: .continuous)
+                    RoundedRectangle(cornerRadius: .regular, style: .continuous)
                         .fillSurfaceSecondary()
                 }
             }
@@ -419,7 +434,7 @@ public struct CreateEventView: View {
                 .padding(.small)
                 .hLeading()
                 .background {
-                    RoundedRectangle(cornerRadius: .small, style: .continuous)
+                    RoundedRectangle(cornerRadius: .regular, style: .continuous)
                         .fillSurfaceSecondary()
                 }
             }
@@ -455,6 +470,58 @@ public struct CreateEventView: View {
         }
     }
 
+    @available(iOS 26.0, *)
+    var glassBottomBar: some View {
+        HStack {
+            GlassEffectContainer {
+                HStack {
+                    Button {
+                        Task {
+                            focusedField = nil
+                            viewModel.present(.location)
+                        }
+                    } label: {
+                        if viewModel.isFetchUpdatePositon {
+                            ProgressView()
+                        } else {
+                            Image.Base.location.icon()
+                                .padding(.vertical)
+                                .padding(.leading)
+                                .padding(.trailing, .xxSmall)
+                        }
+                    }
+                    .glassEffect()
+                    .glassEffectUnion(id: "mapOptions", namespace: unionNamespace)
+                    .disabled(viewModel.isFetchUpdatePositon)
+
+                    Button { viewModel.present(.alarm) } label: {
+                        Image.Alert.bell.icon().padding(.vertical).padding(.horizontal, .xSmall)
+                    }
+                    .glassEffect()
+                    .glassEffectUnion(id: "mapOptions", namespace: unionNamespace)
+
+                    Button { viewModel.present(.repeat) } label: {
+                        Image.Arrow.update.icon().padding(.vertical).padding(.trailing).padding(.leading, .xxSmall)
+                    }
+                    .glassEffect()
+                    .glassEffectUnion(id: "mapOptions", namespace: unionNamespace)
+                }
+            }
+
+            Spacer()
+
+            Button { viewModel.present(.invites) } label: {
+                Image.User.addUser.icon()
+            }
+            .buttonStyle(.glass)
+            .buttonBorderShape(.circle)
+            .controlSize(.large)
+        }
+        .padding(.horizontal, .small)
+        .padding(.vertical, .xSmall)
+        .controlSize(.regular)
+    }
+
     var bottomBar: some View {
         HStack(spacing: .medium) {
             Button {
@@ -466,47 +533,37 @@ public struct CreateEventView: View {
                 if viewModel.isFetchUpdatePositon {
                     ProgressView()
                 } else {
-                    Image.Base.location.icon()
+                    Image.Base.location
                 }
             }
             .disabled(viewModel.isFetchUpdatePositon)
 
             Button { viewModel.present(.alarm) } label: {
-                Image.Base.notification.icon()
+                Image.Alert.bell
             }
 
             Button { viewModel.present(.repeat) } label: {
-                Image.Base.swap.icon()
+                Image.Arrow.update
             }
-
-            /*
-             Button { viewModel.present(.attachment) } label: {
-                Image.Base.more.icon()
-             }
-              */
 
             Spacer()
 
             Button { viewModel.present(.invites) } label: {
-                Image.Base.addUser.icon()
+                Image.User.addUser
             }
         }
         .buttonStyle(.scale)
         .padding(.horizontal, .medium)
         .padding(.vertical, 20)
-        #if !os(watchOS)
-
-            .background { Color.surfaceSecondary.ignoresSafeArea(.keyboard, edges: .bottom) }
-        #endif
-            .overlay(alignment: .top) {
-                Rectangle()
-                    .fill(Color.onSurfacePrimary.opacity(0.05))
-                    .frame(height: 1)
-            }
+        .background {
+            Color.backgroundSecondary.ignoresSafeArea()
+        }
+        .overlay(alignment: .top) {
+            Rectangle()
+                .fill(Color.onSurfacePrimary.opacity(0.05))
+                .frame(height: 1)
+        }
     }
-
-    @ViewBuilder
-    private func placeholder() -> some View {}
 }
 
 extension CreateEventView {

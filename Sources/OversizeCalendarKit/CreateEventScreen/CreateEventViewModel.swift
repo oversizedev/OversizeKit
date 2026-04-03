@@ -13,12 +13,13 @@ import OversizeLocationService
 import SwiftUI
 
 #if !os(tvOS)
-public enum CreateEventType: Equatable, @unchecked Sendable {
+public enum CreateEventType: Equatable {
     case new(Date?, calendar: EKCalendar?)
     case update(EKEvent)
 }
 
-public class CreateEventViewModel: ObservableObject, @unchecked Sendable {
+@MainActor
+public class CreateEventViewModel: ObservableObject {
     @Injected(\.calendarService) private var calendarService: CalendarService
     @Injected(\.locationService) private var locationService: LocationServiceProtocol
 
@@ -91,8 +92,8 @@ public class CreateEventViewModel: ObservableObject, @unchecked Sendable {
 
     func fetchData() async {
         state = .loading
-        async let calendarsResult = await calendarService.fetchCalendars()
-        switch await calendarsResult {
+        let calendarsResult = await calendarService.fetchCalendars()
+        switch calendarsResult {
         case let .success(data):
             log("✅ EKCalendars fetched")
             calendars = data
@@ -100,8 +101,8 @@ public class CreateEventViewModel: ObservableObject, @unchecked Sendable {
             log("❌ EKCalendars not fetched (\(error.localizedDescription))")
             state = .error(error as? CalendarError ?? .unknown(error))
         }
-        async let soursesResult = await calendarService.fetchSourses()
-        switch await soursesResult {
+        let soursesResult = await calendarService.fetchSourses()
+        switch soursesResult {
         case let .success(data):
             log("✅ EKSource fetched")
             sourses = data
@@ -121,11 +122,14 @@ public class CreateEventViewModel: ObservableObject, @unchecked Sendable {
     }
 
     func save() async -> Result<Bool, Error> {
-        var oldEvent: EKEvent?
+        nonisolated(unsafe) var oldEvent: EKEvent?
 
         if case let .update(event) = type {
             oldEvent = event
         }
+
+        nonisolated(unsafe) let currentCalendar = calendar
+        nonisolated(unsafe) let currentStructuredLocation = getEKStructuredLocation()
 
         let result = await calendarService.createEvent(
             event: oldEvent,
@@ -133,10 +137,10 @@ public class CreateEventViewModel: ObservableObject, @unchecked Sendable {
             notes: note,
             startDate: dateStart,
             endDate: dateEnd,
-            calendar: calendar,
+            calendar: currentCalendar,
             isAllDay: isAllDay,
             location: locationName,
-            structuredLocation: getEKStructuredLocation(),
+            structuredLocation: currentStructuredLocation,
             alarms: alarms,
             url: URL(string: url),
             memberEmails: members,

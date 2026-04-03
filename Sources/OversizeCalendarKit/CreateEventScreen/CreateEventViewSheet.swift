@@ -74,6 +74,8 @@ public extension CreateEventView {
                         }
                     }
                     .presentationDetents([.height(500)])
+                    .presentationDragIndicator(.hidden)
+                    .scrollDisabled(true)
                 #else
                 EmptyView()
                 #endif
@@ -82,6 +84,8 @@ public extension CreateEventView {
                 DatePickerSheet(title: "Ends time", selection: $viewModel.dateEnd)
                     .datePickerMinimumDate(viewModel.dateStart.minute)
                     .presentationDetents([.height(500)])
+                    .presentationDragIndicator(.hidden)
+                    .scrollDisabled(true)
                 #else
                 EmptyView()
                 #endif

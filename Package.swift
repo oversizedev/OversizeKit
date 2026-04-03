@@ -86,6 +86,7 @@ let package = Package(
                 "OversizeContactsKit",
                 "OversizeLocationKit",
                 .product(name: "OversizeUI", package: "OversizeUI"),
+                .product(name: "OversizeResources", package: "OversizeResources"),
                 .product(name: "OversizeServices", package: "OversizeServices"),
                 .product(name: "OversizeCalendarService", package: "OversizeServices"),
                 .product(name: "OversizeLocationService", package: "OversizeServices"),

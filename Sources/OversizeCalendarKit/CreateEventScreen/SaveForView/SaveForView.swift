@@ -19,47 +19,45 @@ public struct SaveForView: View {
     }
 
     public var body: some View {
-
-            LayoutView("This is repeating event") {
-                SectionView {
-                    VStack(spacing: .zero) {
-                        Row("Save for this event only") {
-                            span = .thisEvent
-                            dismiss()
-                        } leading: {
-                            Image.Base.calendar
-                                .renderingMode(.template)
-                                .foregroundStyle(Color.onSurfacePrimary)
-                        }
-
-                        Row("Save for feature events") {
-                            span = .futureEvents
-                            dismiss()
-                        } leading: {
-                            Image.Base.calendar
-                                .renderingMode(.template)
-                                .foregroundStyle(Color.onSurfacePrimary)
-                        }
-                    }
-                }
-                .surfaceContentRowMargins()
-            } background: {
-                Color.backgroundSecondary
-            }
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Close", systemImage: "xmark", role: .cancel) {
+        LayoutView("This is repeating event") {
+            SectionView {
+                VStack(spacing: .zero) {
+                    Row("Save for this event only") {
+                        span = .thisEvent
                         dismiss()
+                    } leading: {
+                        Image.Base.calendar
+                            .renderingMode(.template)
+                            .foregroundStyle(Color.onSurfacePrimary)
                     }
-                    .labelStyle(.toolbar)
-                    .buttonStyle(.toolbarSecondary)
-                    #if !os(tvOS)
-                        .keyboardShortcut(.cancelAction)
-                    #endif
+
+                    Row("Save for feature events") {
+                        span = .futureEvents
+                        dismiss()
+                    } leading: {
+                        Image.Base.calendar
+                            .renderingMode(.template)
+                            .foregroundStyle(Color.onSurfacePrimary)
+                    }
                 }
             }
-            .toolbarTitleDisplayMode(.inline)
-        
+            .surfaceContentRowMargins()
+        } background: {
+            Color.backgroundSecondary
+        }
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Close", systemImage: "xmark", role: .cancel) {
+                    dismiss()
+                }
+                .labelStyle(.toolbar)
+                .buttonStyle(.toolbarSecondary)
+                #if !os(tvOS)
+                    .keyboardShortcut(.cancelAction)
+                #endif
+            }
+        }
+        .toolbarTitleDisplayMode(.inline)
     }
 }
 #endif

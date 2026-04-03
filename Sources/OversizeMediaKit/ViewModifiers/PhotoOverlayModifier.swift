@@ -154,8 +154,8 @@ public struct PhotoOverlayModifier<OptionsSheet: View>: ViewModifier {
 
 // MARK: - Initializers
 
-extension PhotoOverlayModifier {
-    public init(isPresent: Binding<Bool>, selection: Binding<Int>, photos: [Image], @ViewBuilder optionsSheet: @escaping () -> OptionsSheet) {
+public extension PhotoOverlayModifier {
+    init(isPresent: Binding<Bool>, selection: Binding<Int>, photos: [Image], @ViewBuilder optionsSheet: @escaping () -> OptionsSheet) {
         _selectionIndex = selection
         self.photos = photos
         _isShowPhotoDetail = isPresent
@@ -163,12 +163,12 @@ extension PhotoOverlayModifier {
     }
 }
 
-extension PhotoOverlayModifier where OptionsSheet == EmptyView {
-    public init(isPresent: Binding<Bool>, selection: Binding<Int>, photos: [Image]) {
+public extension PhotoOverlayModifier where OptionsSheet == EmptyView {
+    init(isPresent: Binding<Bool>, selection: Binding<Int>, photos: [Image]) {
         _selectionIndex = selection
         self.photos = photos
         _isShowPhotoDetail = isPresent
-        self.optionsSheet = nil
+        optionsSheet = nil
     }
 }
 
@@ -191,11 +191,11 @@ private extension View {
 public typealias PhotoShowViewModifier = PhotoOverlayModifier<EmptyView>
 
 public extension View {
-    func photoOverlay<OptionsSheet: View>(
+    func photoOverlay(
         isPresent: Binding<Bool>,
         selection: Binding<Int>,
         photos: [Image],
-        @ViewBuilder optionsSheet: @escaping () -> OptionsSheet
+        @ViewBuilder optionsSheet: @escaping () -> some View
     ) -> some View {
         modifier(PhotoOverlayModifier(isPresent: isPresent, selection: selection, photos: photos, optionsSheet: optionsSheet))
     }
