@@ -347,7 +347,7 @@ public struct CreateEventView: View {
                             longitudinalMeters: 10000
                         )
 
-                        Map(initialPosition: .region(region)) {
+                        Map(initialPosition: .region(region), interactionModes: []) {
                             Marker(
                                 viewModel.locationName ?? "",
                                 coordinate: location

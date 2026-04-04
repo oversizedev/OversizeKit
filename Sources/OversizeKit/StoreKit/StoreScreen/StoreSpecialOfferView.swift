@@ -43,7 +43,14 @@ public struct StoreSpecialOfferView: View {
         LayoutView(badgeText, onScroll: handleOffset) {
             content
         } background: {
-            LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center)
+            LinearGradient(
+                colors: [
+                    .backgroundPrimary,
+                    .backgroundSecondary
+                ],
+                startPoint: .top,
+                endPoint: .center
+            )
         }
         .toolbarTitleDisplayMode(.inline)
         .safeAreaBarBottom {
@@ -140,7 +147,6 @@ public struct StoreSpecialOfferView: View {
                 .controlSize(.large)
                 .environmentObject(viewModel)
         }
-
         #endif
     }
 

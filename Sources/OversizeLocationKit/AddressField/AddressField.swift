@@ -91,7 +91,9 @@ public struct AddressField: View {
         .buttonStyle(.field)
         #if !os(watchOS)
             .sheet(isPresented: $isShowPicker) {
-                AddressPicker(address: $seletedAddress, location: $seletedLocation, place: $seletedPlace)
+                NavigationStack {
+                    AddressPicker(address: $seletedAddress, location: $seletedLocation, place: $seletedPlace)
+                }
             }
         #endif
     }
