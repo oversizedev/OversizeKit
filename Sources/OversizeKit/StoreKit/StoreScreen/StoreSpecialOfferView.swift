@@ -4,6 +4,7 @@
 //
 
 import CachedAsyncImage
+import NavigatorUI
 import OversizeComponents
 import OversizeCore
 import OversizeLocalizable
@@ -17,6 +18,7 @@ import SwiftUI
 public struct StoreSpecialOfferView: View {
     @Environment(\.screenSize) private var screenSize
     @Environment(\.safeAreaInsets) private var safeAreaInsets
+    @Environment(\.navigator) private var navigator: Navigator
     @Environment(\.dismiss) private var dismiss
     @Environment(\.platform) private var platform
     @Environment(\.isPremium) private var isPremium
@@ -46,7 +48,7 @@ public struct StoreSpecialOfferView: View {
             LinearGradient(
                 colors: [
                     .backgroundPrimary,
-                    .backgroundSecondary
+                    .backgroundSecondary,
                 ],
                 startPoint: .top,
                 endPoint: .center
@@ -72,7 +74,7 @@ public struct StoreSpecialOfferView: View {
         .toolbar(content: { toolbarContent })
         .onChange(of: isPremium) { _, status in
             if status {
-                dismiss()
+                closeScreen()
             }
         }
         .task {
@@ -115,7 +117,7 @@ public struct StoreSpecialOfferView: View {
         ToolbarItemGroup(placement: .cancellationAction) {
             Button {
                 lastClosedSpecialOffer = event.id
-                dismiss()
+                closeScreen()
             } label: {
                 Image.Base.close.icon()
             }
@@ -135,7 +137,7 @@ public struct StoreSpecialOfferView: View {
         ToolbarItem(placement: .cancellationAction) {
             Button("Close") {
                 lastClosedSpecialOffer = event.id
-                dismiss()
+                closeScreen()
             }
             .keyboardShortcut(.cancelAction)
             .controlSize(.large)
@@ -163,6 +165,12 @@ public struct StoreSpecialOfferView: View {
     func handleOffset(_ scrollOffset: CGPoint, visibleHeaderRatio _: CGFloat) {
         offset = -scrollOffset.y
         // visibleRatio = visibleHeaderRatio
+    }
+
+    private func closeScreen() {
+        if !navigator.dismiss() {
+            dismiss()
+        }
     }
 
     var imageSize: CGFloat {

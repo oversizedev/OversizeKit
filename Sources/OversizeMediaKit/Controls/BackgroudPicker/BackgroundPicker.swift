@@ -33,9 +33,9 @@ public struct BackgroundPicker: View {
     // MARK: - Constants
 
     private static let threeColumnGrid = [
-        GridItem(.flexible(), spacing: 8),
-        GridItem(.flexible(), spacing: 8),
-        GridItem(.flexible(), spacing: 8),
+        GridItem(.flexible(), spacing: .xxxSmall),
+        GridItem(.flexible(), spacing: .xxxSmall),
+        GridItem(.flexible(), spacing: .xxxSmall),
     ]
 
     public static let defaultGradients: [(startColor: Color, endColor: Color, direction: GradientDirection)] = [
@@ -70,10 +70,9 @@ public struct BackgroundPicker: View {
 
     public var body: some View {
         LayoutView("Background") {
-            tabContent
-                .padding(.horizontal)
-                .padding(.top, .small)
-                .padding(.bottom, .medium)
+            content
+                .padding(.horizontal, .xxSmall)
+                .padding(.vertical, .small)
         }
         .safeAreaBarTop {
             tabBar
@@ -85,6 +84,7 @@ public struct BackgroundPicker: View {
                     .buttonStyle(.toolbarSecondary)
             }
         }
+        .toolbarTitleDisplayMode(.inline)
         .sheet(isPresented: $isPhotoLibraryPresented) {
             NavigationStack {
                 PhotoLibraryPicker(selection: $pickedImage)
@@ -110,15 +110,15 @@ public struct BackgroundPicker: View {
             }
         }
         .pickerStyle(.segmented)
-        .padding(.horizontal)
-        .padding(.vertical, 8)
+        .padding(.horizontal, .xSmall)
+        .padding(.top, .xxSmall)
         .controlSize(.large)
     }
 
     // MARK: - Tab Content
 
     @ViewBuilder
-    private var tabContent: some View {
+    private var content: some View {
         switch selectedTab {
         case .image: imageTabContent
         case .color: colorTabContent
@@ -134,7 +134,7 @@ public struct BackgroundPicker: View {
                 pickedImagePreview(pickedImage)
             }
 
-            LazyVGrid(columns: BackgroundPicker.threeColumnGrid, spacing: 8) {
+            LazyVGrid(columns: BackgroundPicker.threeColumnGrid, spacing: .xxxSmall) {
                 addPhotoCell
                 ForEach(presetImages.indices, id: \.self) { index in
                     imageCell(presetImages[index])
@@ -179,10 +179,10 @@ public struct BackgroundPicker: View {
     private var addPhotoCell: some View {
         Color.secondary.opacity(0.15)
             .aspectRatio(1, contentMode: .fill)
-            .clipShape(RoundedRectangle(cornerRadius: .medium, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: .small, style: .continuous))
             .padding(4)
             .overlay {
-                RoundedRectangle(cornerRadius: .medium + 4, style: .continuous)
+                RoundedRectangle(cornerRadius: .small + 4, style: .continuous)
                     .strokeBorder(Color.clear, lineWidth: 2)
             }
             .overlay {
@@ -190,7 +190,7 @@ public struct BackgroundPicker: View {
                     .font(.title2.weight(.semibold))
                     .foregroundStyle(.secondary)
             }
-            .contentShape(RoundedRectangle(cornerRadius: .medium + 4, style: .continuous))
+            .contentShape(RoundedRectangle(cornerRadius: .small + 4, style: .continuous))
             .onTapGesture {
                 isPhotoLibraryPresented = true
             }
@@ -208,10 +208,10 @@ public struct BackgroundPicker: View {
             .resizable()
             .scaledToFill()
             .aspectRatio(1, contentMode: .fill)
-            .clipShape(RoundedRectangle(cornerRadius: .medium, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: .small, style: .continuous))
             .padding(4)
             .overlay {
-                RoundedRectangle(cornerRadius: .medium + 4, style: .continuous)
+                RoundedRectangle(cornerRadius: .small + 4, style: .continuous)
                     .strokeBorder(isSelected ? Color.accent : Color.clear, lineWidth: 2)
             }
             .overlay(alignment: .bottomTrailing) {
@@ -222,7 +222,7 @@ public struct BackgroundPicker: View {
                         .padding(.small)
                 }
             }
-            .contentShape(RoundedRectangle(cornerRadius: .medium + 4, style: .continuous))
+            .contentShape(RoundedRectangle(cornerRadius: .small + 4, style: .continuous))
             .onTapGesture {
                 selection = .image(image)
             }
@@ -231,7 +231,7 @@ public struct BackgroundPicker: View {
     // MARK: - Color Tab
 
     private var colorTabContent: some View {
-        LazyVGrid(columns: BackgroundPicker.threeColumnGrid, spacing: 8) {
+        LazyVGrid(columns: BackgroundPicker.threeColumnGrid, spacing: .xxxSmall) {
             ForEach(presetColors.indices, id: \.self) { index in
                 colorCell(presetColors.element(index) ?? Color.clear)
             }
@@ -251,10 +251,10 @@ public struct BackgroundPicker: View {
             center: .center
         )
         .aspectRatio(1, contentMode: .fill)
-        .clipShape(RoundedRectangle(cornerRadius: .medium, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: .small, style: .continuous))
         .padding(4)
         .overlay {
-            RoundedRectangle(cornerRadius: .medium + 4, style: .continuous)
+            RoundedRectangle(cornerRadius: .small + 4, style: .continuous)
                 .strokeBorder(Color.clear, lineWidth: 2)
         }
         .overlay {
@@ -268,7 +268,7 @@ public struct BackgroundPicker: View {
                 .labelsHidden()
                 .opacity(0.05)
         }
-        .contentShape(RoundedRectangle(cornerRadius: .medium + 4, style: .continuous))
+        .contentShape(RoundedRectangle(cornerRadius: .small + 4, style: .continuous))
     }
 
     private func colorCell(_ color: Color) -> some View {
@@ -281,10 +281,10 @@ public struct BackgroundPicker: View {
 
         return color
             .aspectRatio(1, contentMode: .fill)
-            .clipShape(RoundedRectangle(cornerRadius: .medium, style: .continuous))
+            .clipShape(RoundedRectangle(cornerRadius: .small, style: .continuous))
             .padding(4)
             .overlay {
-                RoundedRectangle(cornerRadius: .medium + 4, style: .continuous)
+                RoundedRectangle(cornerRadius: .small + 4, style: .continuous)
                     .strokeBorder(isSelected ? Color.accent : Color.clear, lineWidth: 2)
             }
             .overlay(alignment: .bottomTrailing) {
@@ -306,7 +306,7 @@ public struct BackgroundPicker: View {
     // MARK: - Gradient Tab
 
     private var gradientTabContent: some View {
-        LazyVGrid(columns: BackgroundPicker.threeColumnGrid, spacing: 8) {
+        LazyVGrid(columns: BackgroundPicker.threeColumnGrid, spacing: .xxxSmall) {
             ForEach(presetGradients.indices, id: \.self) { index in
                 gradientCell(presetGradients[index], index: index)
             }
@@ -346,10 +346,10 @@ public struct BackgroundPicker: View {
             endPoint: .bottomTrailing
         )
         .aspectRatio(1, contentMode: .fill)
-        .clipShape(RoundedRectangle(cornerRadius: .medium, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: .small, style: .continuous))
         .padding(4)
         .overlay {
-            RoundedRectangle(cornerRadius: .medium + 4, style: .continuous)
+            RoundedRectangle(cornerRadius: .small + 4, style: .continuous)
                 .strokeBorder(Color.clear, lineWidth: 2)
         }
         .overlay {
@@ -358,7 +358,7 @@ public struct BackgroundPicker: View {
                 .foregroundStyle(.white)
                 .shadow(radius: 4)
         }
-        .contentShape(RoundedRectangle(cornerRadius: .medium + 4, style: .continuous))
+        .contentShape(RoundedRectangle(cornerRadius: .small + 4, style: .continuous))
         .onTapGesture {
             isCustomGradientPickerPresented = true
         }
@@ -381,10 +381,10 @@ public struct BackgroundPicker: View {
             endPoint: preset.direction.endPoint
         )
         .aspectRatio(1, contentMode: .fill)
-        .clipShape(RoundedRectangle(cornerRadius: .medium, style: .continuous))
+        .clipShape(RoundedRectangle(cornerRadius: .small, style: .continuous))
         .padding(4)
         .overlay {
-            RoundedRectangle(cornerRadius: .medium + 4, style: .continuous)
+            RoundedRectangle(cornerRadius: .small + 4, style: .continuous)
                 .strokeBorder(isSelected ? Color.accent : Color.clear, lineWidth: 2)
         }
         .overlay(alignment: .bottomTrailing) {
@@ -395,7 +395,7 @@ public struct BackgroundPicker: View {
                     .padding(.small)
             }
         }
-        .contentShape(RoundedRectangle(cornerRadius: .medium + 4, style: .continuous))
+        .contentShape(RoundedRectangle(cornerRadius: .small + 4, style: .continuous))
         .onTapGesture {
             gradientStart = preset.startColor
             gradientEnd = preset.endColor
@@ -449,7 +449,14 @@ extension BackgroundPicker {
 // MARK: - Preview
 
 @available(iOS 17.0, *)
-#Preview {
+#Preview("Image") {
+    NavigationStack {
+        BackgroundPicker(selection: .constant(.image(.actions)))
+    }
+}
+
+@available(iOS 17.0, *)
+#Preview("Color") {
     NavigationStack {
         BackgroundPicker(selection: .constant(.color(.blue)))
     }
