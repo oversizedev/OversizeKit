@@ -38,27 +38,13 @@ public struct BackgroundPicker: View {
         GridItem(.flexible(), spacing: .xxxSmall),
     ]
 
-    public static let defaultGradients: [(startColor: Color, endColor: Color, direction: GradientDirection)] = [
-        (.blue, .purple, .topBottom),
-        (.red, .orange, .topBottom),
-        (.green, .teal, .topBottom),
-        (.pink, .red, .leadingTrailing),
-        (.orange, .yellow, .leadingTrailing),
-        (.indigo, .blue, .topLeadingBottomTrailing),
-        (.purple, .pink, .topLeadingBottomTrailing),
-        (.teal, .green, .topTrailingBottomLeading),
-        (.cyan, .blue, .bottomTop),
-    ]
-
-    public static let defaultColors: [Color] = Palette.baseColors
-
     // MARK: - Init
 
     public init(
         selection: Binding<BackgroundPickerResult>,
         images: [UIImage] = [],
-        colors: [Color] = BackgroundPicker.defaultColors,
-        gradients: [(startColor: Color, endColor: Color, direction: GradientDirection)] = BackgroundPicker.defaultGradients
+        colors: [Color] = [],
+        gradients: [(startColor: Color, endColor: Color, direction: GradientDirection)] = []
     ) {
         _selection = selection
         presetImages = images
@@ -418,8 +404,6 @@ public struct BackgroundPicker: View {
             selectedTab = .gradient
         case .image:
             selectedTab = .image
-        case .builtIn:
-            selectedTab = .image
         }
     }
 }
@@ -458,14 +442,24 @@ extension BackgroundPicker {
 @available(iOS 17.0, *)
 #Preview("Color") {
     NavigationStack {
-        BackgroundPicker(selection: .constant(.color(.blue)))
+        BackgroundPicker(
+            selection: .constant(.color(.blue)),
+            colors: Palette.baseColors
+        )
     }
 }
 
 @available(iOS 17.0, *)
 #Preview("Gradient") {
     NavigationStack {
-        BackgroundPicker(selection: .constant(.gradient(startColor: .blue, endColor: .purple, direction: .topBottom)))
+        BackgroundPicker(
+            selection: .constant(.gradient(startColor: .blue, endColor: .purple, direction: .topBottom)),
+            gradients: [
+                (.blue, .purple, .topBottom),
+                (.red, .orange, .topBottom),
+                (.green, .teal, .topBottom),
+            ]
+        )
     }
 }
 #endif

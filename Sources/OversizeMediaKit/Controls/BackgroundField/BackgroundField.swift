@@ -12,8 +12,20 @@ public struct BackgroundField: View {
     @Binding private var selection: BackgroundPickerResult
     @State private var isShowPicker = false
 
-    public init(_ selection: Binding<BackgroundPickerResult>) {
+    private let presetImages: [UIImage]
+    private let presetColors: [Color]
+    private let presetGradients: [(startColor: Color, endColor: Color, direction: GradientDirection)]
+
+    public init(
+        _ selection: Binding<BackgroundPickerResult>,
+        images: [UIImage] = [],
+        colors: [Color] = [],
+        gradients: [(startColor: Color, endColor: Color, direction: GradientDirection)] = []
+    ) {
         _selection = selection
+        presetImages = images
+        presetColors = colors
+        presetGradients = gradients
     }
 
     public var body: some View {
@@ -38,9 +50,14 @@ public struct BackgroundField: View {
         .animation(.default, value: selectionLabel)
         .sheet(isPresented: $isShowPicker) {
             NavigationStack {
-                BackgroundPicker(selection: $selection)
-                    .navigationTitle("Background")
-                    .navigationBarTitleDisplayMode(.inline)
+                BackgroundPicker(
+                    selection: $selection,
+                    images: presetImages,
+                    colors: presetColors,
+                    gradients: presetGradients
+                )
+                .navigationTitle("Background")
+                .navigationBarTitleDisplayMode(.inline)
             }
         }
     }
@@ -50,8 +67,6 @@ public struct BackgroundField: View {
     @ViewBuilder
     private var thumbnail: some View {
         switch selection {
-        case let .builtIn(bg):
-            bg.gradient
         case let .image(image):
             Image(uiImage: image)
                 .resizable()
@@ -71,7 +86,6 @@ public struct BackgroundField: View {
 
     private var selectionLabel: String {
         switch selection {
-        case let .builtIn(bg): bg.rawValue.capitalized
         case .image: "Photo"
         case .color: "Color"
         case .gradient: "Gradient"
@@ -82,7 +96,6 @@ public struct BackgroundField: View {
 @available(iOS 17.0, *)
 #Preview {
     VStack {
-        BackgroundField(.constant(.builtIn(.ocean)))
         BackgroundField(.constant(.color(.blue)))
         BackgroundField(.constant(.gradient(startColor: .blue, endColor: .purple, direction: .topBottom)))
     }
