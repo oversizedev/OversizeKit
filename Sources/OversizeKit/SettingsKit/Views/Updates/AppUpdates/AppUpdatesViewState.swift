@@ -11,7 +11,16 @@ import SwiftUI
 
 @Observable
 public final class AppUpdatesViewState: ViewStateProtocol {
-    var state: LoadingState<[Components.Schemas.Version]> = .idle
+    var state: LoadingState<StateModel> = .idle
+    var isNavigationBack: Bool = false
 
     public init(input _: AppUpdates.Input?) {}
+}
+
+extension AppUpdatesViewState {
+    struct StateModel {
+        let lastVersion: Components.Schemas.Version?
+        let versions: [Components.Schemas.Version]
+        let firstVersion: Components.Schemas.Version
+    }
 }

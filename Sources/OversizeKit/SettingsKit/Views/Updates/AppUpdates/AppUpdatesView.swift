@@ -21,6 +21,7 @@ public struct AppUpdatesView: ViewProtocol {
         }
         .toolbarTitleDisplayMode(.inline)
         .task { reducer(.onFetch) }
+        .navigationBack($viewState.isNavigationBack)
     }
 
     @ViewBuilder
@@ -50,17 +51,96 @@ public struct AppUpdatesView: ViewProtocol {
         .surfaceContentRowMargins()
     }
 
-    private func versionsList(_ versions: [Components.Schemas.Version]) -> some View {
-        SectionView {
-            VStack(spacing: .zero) {
-                ForEach(versions) { version in
-                    let isFirstFersion = version.version == "1.0" || version.version == "1.0.0"
-                    Row(version.version, subtitle: version.whatsNew, action: isFirstFersion ? nil : {
-                        navigator.navigate(to: SettingsDestinations.appUpdate(version: version))
-                    })
-                    .rowArrow(!isFirstFersion)
-                    .buttonStyle(.row)
+    private func versionsList(_ stateModel: AppUpdatesViewState.StateModel) -> some View {
+        VStack(spacing: .zero) {
+            if let lastVersion = stateModel.lastVersion {
+                SectionView {
+                    HStack(spacing: .small) {
+                        Icon(Image.Base.Check.Circle.fill)
+                            .iconColor(Color.success)
+                            .iconOnSurface()
+
+                        VStack(alignment: .leading, spacing: .xxxSmall) {
+                            HStack {
+                                Text(lastVersion.version)
+                                    .headline()
+                                    .onSurfacePrimary()
+
+                                Badge {
+                                    Text("Latest")
+                                }
+                            }
+                            if let whatsNew = lastVersion.whatsNew {
+                                Text(whatsNew)
+                                    .body()
+                                    .onSurfaceSecondary()
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                        }
+                    }
+                    .padding(.horizontal, .small)
+                    .padding(.vertical, .xxSmall)
                 }
+            }
+
+            SectionView {
+                LazyVStack(spacing: .zero) {
+                    ForEach(stateModel.versions) { version in
+                        HStack(alignment: .top, spacing: .medium) {
+                            VStack {
+                                Icon(Image.Base.Clock.fill)
+                                    .iconColor(Color.onSurfaceTertiary)
+
+                                Separator(.vertical)
+                            }
+
+                            VStack(alignment: .leading, spacing: .xxxSmall) {
+                                Text(version.version)
+                                    .headline()
+                                    .onSurfacePrimary()
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                                if let whatsNew = version.whatsNew {
+                                    Text(whatsNew)
+                                        .body()
+                                        .onSurfaceSecondary()
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                }
+                            }
+                            .padding(.bottom, .xSmall)
+                        }
+                        .padding(
+                            .init(
+                                top: .zero,
+                                leading: .medium,
+                                bottom: .xxSmall,
+                                trailing: .xxSmall
+                            )
+                        )
+                    }
+
+                    HStack(alignment: .top, spacing: .medium) {
+                        VStack {
+                            Icon(Image.Base.Clock.fill)
+                                .iconColor(Color.onSurfaceTertiary)
+                        }
+
+                        VStack(alignment: .leading, spacing: .xxxSmall) {
+                            Text(stateModel.firstVersion.version)
+                                .headline()
+                                .onSurfacePrimary()
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                    }
+                    .padding(
+                        .init(
+                            top: .zero,
+                            leading: .medium,
+                            bottom: .xxSmall,
+                            trailing: .xxSmall
+                        )
+                    )
+                }
+                .padding(.vertical, .small)
             }
         }
         .surfaceContentRowMargins()
