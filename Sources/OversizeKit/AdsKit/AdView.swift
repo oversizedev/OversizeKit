@@ -22,7 +22,7 @@ public struct AdView: View {
 
     public var body: some View {
         switch viewModel.state {
-        case .initial:
+        case .idle:
             EmptyView()
                 .task {
                     if !isPremium {

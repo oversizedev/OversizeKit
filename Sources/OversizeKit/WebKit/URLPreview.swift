@@ -9,7 +9,7 @@ import SwiftUI
 import UIKit
 
 @available(iOS 16.0, tvOS 16.0, *)
-public struct LinkView: UIViewRepresentable {
+public struct URLPreview: UIViewRepresentable {
     private let url: URL
     @Binding private var size: CGSize
 
@@ -38,7 +38,7 @@ public struct LinkView: UIViewRepresentable {
 #Preview {
     @Previewable @State var size: CGSize = .zero
     let url = URL(string: "https://apple.com")!
-    LinkView(url: url, size: $size)
+    URLPreview(url: url, size: $size)
         .frame(width: size.width, height: size.height)
 }
 #endif

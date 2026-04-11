@@ -49,6 +49,7 @@ let package = Package(
     ],
     products: [
         .library(name: "OversizeKit", targets: ["OversizeKit"]),
+        .library(name: "OversizeEditorKit", targets: ["OversizeEditorKit"]),
         .library(name: "OversizeOnboardingKit", targets: ["OversizeOnboardingKit"]),
         .library(name: "OversizeNoticeKit", targets: ["OversizeNoticeKit"]),
         .library(name: "OversizeCalendarKit", targets: ["OversizeCalendarKit"]),
@@ -149,6 +150,12 @@ let package = Package(
                 "OversizeKit",
                 .product(name: "OversizeUI", package: "OversizeUI"),
                 .product(name: "OversizeResources", package: "OversizeResources"),
+            ]
+        ),
+        .target(
+            name: "OversizeEditorKit",
+            dependencies: [
+                .product(name: "OversizeUI", package: "OversizeUI"),
             ]
         ),
         .testTarget(

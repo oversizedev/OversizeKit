@@ -13,7 +13,7 @@ import SwiftUI
 public class AdViewModel: ObservableObject {
     @Injected(\.networkService) var networkService
 
-    @Published var state = State.initial
+    @Published var state: LoadingState<Components.Schemas.Ad> = .idle
 
     public init() {}
 
@@ -26,17 +26,10 @@ public class AdViewModel: ObservableObject {
         switch result {
         case let .success(ad):
             state = .result(ad)
+            logSuccess("Ads loaded")
         case let .failure(error):
             state = .error(error)
+            logError("Not load Ads", error: error)
         }
-    }
-}
-
-extension AdViewModel {
-    enum State {
-        case initial
-        case loading
-        case result(Components.Schemas.Ad)
-        case error(Error)
     }
 }

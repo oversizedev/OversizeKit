@@ -10,7 +10,8 @@ import SwiftUI
 
 #if os(iOS)
 public struct MediaPicker<CustomSection: View>: View {
-    @State private var isShowPicker: Bool = false
+    @Environment(\.dismiss) private var dismiss
+
     @State private var isShowCamera: Bool = false
     @State private var isShowGallery: Bool = false
     @State private var isShowDocumentPicker: Bool = false
@@ -39,27 +40,6 @@ public struct MediaPicker<CustomSection: View>: View {
     }
 
     public var body: some View {
-        Button {
-            isShowPicker.toggle()
-        } label: {
-            Text("Add media")
-        }
-        .buttonStyle(.field)
-        .sheet(
-            isPresented: $isShowPicker,
-            onDismiss: {
-                selectedAssets = []
-            }
-        ) {
-            NavigationStack {
-                sheet
-                    .scrollDisabled(true)
-                    .presentationDetents(customSection == nil ? [.height(430)] : [.medium, .large])
-            }
-        }
-    }
-
-    private var sheet: some View {
         LayoutView("Select media") {
             LeadingVStack {
                 ScrollView(.horizontal, showsIndicators: false) {
@@ -133,11 +113,11 @@ public struct MediaPicker<CustomSection: View>: View {
                             action: { isShowScanner = true },
                             leading: { Image.Base.scan.iconOnSurface() }
                         )
+
+                        customSection
                     }
                 }
                 .sectionContentCompactRowMargins()
-
-                customSection
             }
         } background: {
             Color.backgroundSecondary
@@ -150,7 +130,7 @@ public struct MediaPicker<CustomSection: View>: View {
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Close", systemImage: "xmark", role: .cancel) {
-                    isShowPicker = false
+                    dismiss()
                 }
                 .labelStyle(.toolbar)
                 .buttonStyle(.toolbarSecondary)
@@ -169,7 +149,7 @@ public struct MediaPicker<CustomSection: View>: View {
             if cameraImage.size != .zero {
                 selectionPhotos.append(cameraImage)
                 selectionPhotosDate.append(Date())
-                isShowPicker = false
+                dismiss()
             }
         }) {
             ImagePicker(sourceType: .camera, selectedImage: $cameraImage)
@@ -177,7 +157,7 @@ public struct MediaPicker<CustomSection: View>: View {
         }
         .sheet(isPresented: $isShowGallery, onDismiss: {
             selectedAssets = []
-            isShowPicker = false
+            dismiss()
         }) {
             NavigationStack {
                 PhotoLibraryPicker(
@@ -197,13 +177,13 @@ public struct MediaPicker<CustomSection: View>: View {
                 let accessing = picked.startAccessingSecurityScopedResource()
                 defer { if accessing { picked.stopAccessingSecurityScopedResource() } }
                 selectionURL = persistentCopy(of: picked)
-                isShowPicker = false
+                dismiss()
             }
         }
         .fullScreenCover(isPresented: $isShowScanner) {
             DocumentScanner(selectedURL: $selectionURL) {
                 isShowScanner = false
-                isShowPicker = false
+                dismiss()
             }
             .ignoresSafeArea()
         }
@@ -272,7 +252,7 @@ public struct MediaPicker<CustomSection: View>: View {
         let dates = selectedAssets.map { $0.creationDate ?? Date() }
         selectionPhotos.append(contentsOf: images)
         selectionPhotosDate.append(contentsOf: dates)
-        isShowPicker = false
+        dismiss()
     }
 
     // MARK: - Helpers
@@ -338,11 +318,12 @@ public extension MediaPicker where CustomSection == EmptyView {
 }
 
 #Preview {
-    MediaPicker(
-        photos: .constant([]),
-        photosDate: .constant([]),
-        selectionURL: .constant(nil)
-    )
-    .padding()
+    NavigationStack {
+        MediaPicker(
+            photos: .constant([]),
+            photosDate: .constant([]),
+            selectionURL: .constant(nil)
+        )
+    }
 }
 #endif

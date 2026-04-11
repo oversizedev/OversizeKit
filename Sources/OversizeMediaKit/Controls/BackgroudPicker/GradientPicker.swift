@@ -34,12 +34,12 @@ public struct GradientPicker: View {
 
             ListSection("Start Color") {
                 ColorSelector(selection: $startColor)
-                    .listRowInsets(.init(.zero))
+                    .listRowInsets(.init(0))
             }
 
             ListSection("End Color") {
                 ColorSelector(selection: $endColor)
-                    .listRowInsets(.init(.zero))
+                    .listRowInsets(.init(0))
             }
 
             ListSection("Direction") {

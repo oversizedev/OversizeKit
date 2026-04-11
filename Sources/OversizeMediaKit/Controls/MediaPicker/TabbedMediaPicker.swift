@@ -8,8 +8,6 @@ import SwiftUI
 
 #if os(iOS)
 public struct TabbedMediaPicker: View {
-    @State var isShowPicker: Bool = false
-
     @Binding var selectionPhotos: [UIImage]
     @Binding var selectionPhotosDate: [Date]
     @Binding var selectionURL: URL?
@@ -21,16 +19,6 @@ public struct TabbedMediaPicker: View {
     }
 
     public var body: some View {
-        Button {
-            isShowPicker.toggle()
-        } label: {
-            Text("Add photo")
-        }
-        .buttonStyle(.field)
-        .sheet(isPresented: $isShowPicker) { tabedSheet }
-    }
-
-    private var tabedSheet: some View {
         TabView {
             NavigationStack {
                 PhotoLibraryPicker(selection: $selectionPhotos, dates: $selectionPhotosDate)
@@ -58,11 +46,4 @@ public struct TabbedMediaPicker: View {
         }
     }
 }
-
-// struct MediaPickerView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        TabbedMediaPicker(avatar: .constant(nil))
-//    }
-// }
-//
 #endif

@@ -40,9 +40,7 @@ public struct AppUpdatesView: ViewProtocol {
         SectionView {
             VStack(spacing: .zero) {
                 ForEach(0 ..< 3, id: \.self) { _ in
-                    Row("Version 1.0.0", subtitle: "What's new in this version") {}
-                        .rowArrow()
-                        .buttonStyle(.row)
+                    AppUpdatesPlaceholderRow()
                         .redacted(reason: .placeholder)
                         .disabled(true)
                 }
@@ -52,95 +50,25 @@ public struct AppUpdatesView: ViewProtocol {
     }
 
     private func versionsList(_ stateModel: AppUpdatesViewState.StateModel) -> some View {
-        VStack(spacing: .zero) {
+        VStack(spacing: .medium) {
             if let lastVersion = stateModel.lastVersion {
                 SectionView {
-                    HStack(spacing: .small) {
-                        Icon(Image.Base.Check.Circle.fill)
-                            .iconColor(Color.success)
-                            .iconOnSurface()
-
-                        VStack(alignment: .leading, spacing: .xxxSmall) {
-                            HStack {
-                                Text(lastVersion.version)
-                                    .headline()
-                                    .onSurfacePrimary()
-
-                                Badge {
-                                    Text("Latest")
-                                }
-                            }
-                            if let whatsNew = lastVersion.whatsNew {
-                                Text(whatsNew)
-                                    .body()
-                                    .onSurfaceSecondary()
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                            }
-                        }
-                    }
-                    .padding(.horizontal, .small)
-                    .padding(.vertical, .xxSmall)
+                    AppUpdatesLatestVersionCard(version: lastVersion)
                 }
             }
 
             SectionView {
-                LazyVStack(spacing: .zero) {
+                VStack(spacing: .small) {
                     ForEach(stateModel.versions) { version in
-                        HStack(alignment: .top, spacing: .medium) {
-                            VStack {
-                                Icon(Image.Base.Clock.fill)
-                                    .iconColor(Color.onSurfaceTertiary)
-
-                                Separator(.vertical)
-                            }
-
-                            VStack(alignment: .leading, spacing: .xxxSmall) {
-                                Text(version.version)
-                                    .headline()
-                                    .onSurfacePrimary()
-                                    .frame(maxWidth: .infinity, alignment: .leading)
-                                if let whatsNew = version.whatsNew {
-                                    Text(whatsNew)
-                                        .body()
-                                        .onSurfaceSecondary()
-                                        .frame(maxWidth: .infinity, alignment: .leading)
-                                }
-                            }
-                            .padding(.bottom, .xSmall)
-                        }
-                        .padding(
-                            .init(
-                                top: .zero,
-                                leading: .medium,
-                                bottom: .xxSmall,
-                                trailing: .xxSmall
-                            )
-                        )
+                        AppUpdatesVersionRow(version: version)
                     }
 
-                    HStack(alignment: .top, spacing: .medium) {
-                        VStack {
-                            Icon(Image.Base.Clock.fill)
-                                .iconColor(Color.onSurfaceTertiary)
-                        }
-
-                        VStack(alignment: .leading, spacing: .xxxSmall) {
-                            Text(stateModel.firstVersion.version)
-                                .headline()
-                                .onSurfacePrimary()
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                    }
-                    .padding(
-                        .init(
-                            top: .zero,
-                            leading: .medium,
-                            bottom: .xxSmall,
-                            trailing: .xxSmall
-                        )
+                    AppUpdatesVersionRow(
+                        version: stateModel.firstVersion,
+                        showsConnector: false
                     )
                 }
-                .padding(.vertical, .small)
+                .padding(.vertical, .xSmall)
             }
         }
         .surfaceContentRowMargins()
