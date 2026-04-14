@@ -76,8 +76,6 @@ public struct PaymentButtonStyle: ButtonStyle {
         if isLoading {
             ProgressView()
                 .progressViewStyle(CircularProgressViewStyle(tint: Color.onPrimary))
-        } else {
-            EmptyView()
         }
     }
 

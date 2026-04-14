@@ -22,7 +22,7 @@ public struct CreateEventView: View {
 
     @Namespace var unionNamespace
 
-    public init(_ type: CreateEventType = .new(nil, calendar: nil)) {
+    public init(_ type: CreateEventType = .new()) {
         _viewModel = StateObject(wrappedValue: CreateEventViewModel(type))
     }
 

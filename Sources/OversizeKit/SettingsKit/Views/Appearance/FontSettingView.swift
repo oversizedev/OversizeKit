@@ -15,7 +15,6 @@ public struct FontSettingView: View {
     @Environment(\.theme) private var theme: ThemeSettings
 
     @State private var activeTab: FontSetting = .title
-    @State var offset = CGPoint(x: 0, y: 0)
 
     public init() {}
 
@@ -33,9 +32,7 @@ public struct FontSettingView: View {
         }
         .padding(.horizontal)
         .padding(.bottom)
-        .navigationBar("Fonts", style: .fixed($offset)) {
-            BarButton(.back)
-        } trailingBar: {} bottomBar: {}
+        .navigationTitle("Fonts")
     }
 
     @ViewBuilder
@@ -138,7 +135,7 @@ public struct FontSettingView: View {
 // swiftlint:disable all
 extension FontSettingView {
     private var previewText: some View {
-        ScrollViewOffset(offset: $offset) {
+        ScrollView {
             HStack {
                 VStack(alignment: .leading, spacing: .medium) {
                     VStack(alignment: .leading, spacing: .xxSmall) {

@@ -84,9 +84,9 @@ public struct AppearanceSettingView: View {
                                 .padding(.vertical, .medium)
 
                             if appearance == theme.appearance {
-                                IconDeprecated(.checkCircle, color: Color.accent)
+                                Icon(Image.Base.Check.circle).iconColor(Color.accent)
                             } else {
-                                IconDeprecated(.circle, color: .onSurfaceSecondary)
+                                Icon("circle").iconColor(.onSurfaceSecondary)
                             }
                         }
                         Spacer()

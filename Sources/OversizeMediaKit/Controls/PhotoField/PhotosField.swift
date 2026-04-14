@@ -64,7 +64,7 @@ public struct PhotosField: View {
                                     }
 
                                 } label: {
-                                    IconDeprecated(.xMini)
+                                    Icon(Image.Base.Close.mini)
                                         .iconColor(.white)
                                         .padding(.xxxSmall)
                                         .background {
@@ -92,7 +92,7 @@ public struct PhotosField: View {
                     .frame(width: 48, height: 48)
                     .shadowElevation(.z1)
                     .overlay {
-                        IconDeprecated(.plus, color: .onSurfacePrimary)
+                        Icon(Image.Base.plus).iconColor(.onSurfacePrimary)
                             .shadowElevation(.z1)
                     }
                 Text(L10n.Button.add)

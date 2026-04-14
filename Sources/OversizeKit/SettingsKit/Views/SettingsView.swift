@@ -231,13 +231,15 @@ extension SettingsView {
                 .rowArrow()
                 .buttonStyle(.row)
 
-                Row("What's New") {
-                    navigator.navigate(to: SettingsDestinations.appUpdates)
-                } leading: {
-                    updatesIcon.icon()
+                if let version = Info.App.version, version != "1.0" || version != "1.0.0" {
+                    Row("What's New") {
+                        navigator.navigate(to: SettingsDestinations.appUpdates)
+                    } leading: {
+                        updatesIcon.icon()
+                    }
+                    .rowArrow()
+                    .buttonStyle(.row)
                 }
-                .rowArrow()
-                .buttonStyle(.row)
             }
         }
     }

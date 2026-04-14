@@ -234,7 +234,7 @@ public struct LockscreenView: View {
                 } else if pinCode.isEmpty, !biometricEnabled {
                     EmptyView()
                 } else {
-                    IconDeprecated(.delete)
+                    Icon(Image.Base.delete)
                 }
             } // .opacity(pinCode.isEmpty && biometricEnabled ? 1 : 0)
         }

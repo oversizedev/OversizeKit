@@ -66,12 +66,12 @@ class CameraController: NSObject {
             throw CameraControllerError.captureSessionIsMissing
         }
 
-        previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
-        previewLayer?.videoGravity = .resizeAspectFill
-        previewLayer?.connection?.videoOrientation = .portrait
-
-        view.layer.insertSublayer(previewLayer!, at: 0)
-        previewLayer?.frame = view.bounds
+        let layer = AVCaptureVideoPreviewLayer(session: captureSession)
+        layer.videoGravity = .resizeAspectFill
+        layer.connection?.videoRotationAngle = 90
+        view.layer.insertSublayer(layer, at: 0)
+        layer.frame = view.bounds
+        previewLayer = layer
     }
 }
 

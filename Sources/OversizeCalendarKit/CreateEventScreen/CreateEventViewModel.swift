@@ -14,7 +14,7 @@ import SwiftUI
 
 #if !os(tvOS)
 public enum CreateEventType: Equatable {
-    case new(Date?, calendar: EKCalendar?)
+    case new(title: String? = nil, date: Date? = nil, locationName: String? = nil, location: CLLocationCoordinate2D? = nil, calendar: EKCalendar? = nil)
     case update(EKEvent)
 }
 
@@ -57,14 +57,15 @@ public class CreateEventViewModel: ObservableObject {
 
     func setEvent(type: CreateEventType) {
         switch type {
-        case let .new(date, calendar):
+        case let .new(title, date, locationName, location, calendar):
+            if let title { self.title = title }
             if let date {
                 dateStart = date
                 dateEnd = date.halfHour
             }
-            if let calendar {
-                self.calendar = calendar
-            }
+            self.locationName = locationName
+            self.location = location
+            if let calendar { self.calendar = calendar }
         case let .update(event):
             title = event.title
             note = event.notes ?? ""
@@ -110,7 +111,11 @@ public class CreateEventViewModel: ObservableObject {
             log("❌ EKSource not fetched (\(error.localizedDescription))")
             state = .error(error as? CalendarError ?? .unknown(error))
         }
-        if case let .new(_, calendar) = type, calendar == nil {
+        let needsDefaultCalendar: Bool = switch type {
+        case let .new(_, _, _, _, calendar): calendar == nil
+        case .update: false
+        }
+        if needsDefaultCalendar {
             let result = await calendarService.fetchDefaultCalendar()
             switch result {
             case let .success(calendar):

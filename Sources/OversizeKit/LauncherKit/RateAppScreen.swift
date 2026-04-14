@@ -32,13 +32,32 @@ struct RateAppScreen: View {
                 .onSurfacePrimary()
 
             Spacer()
-
+        }
+        .multilineTextAlignment(.center)
+        .padding(.xLarge)
+        .toolbarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Close", systemImage: "xmark", role: .cancel) {
+                    Task {
+                        await reviewService.reviewBannerClosed()
+                        dismiss()
+                    }
+                }
+                .labelStyle(.toolbar)
+                .buttonStyle(.toolbarSecondary)
+                #if !os(tvOS) && !os(watchOS)
+                    .keyboardShortcut(.cancelAction)
+                #endif
+            }
+        }
+        .safeAreaInset(edge: .bottom) {
             if let reviewUrl = Info.App.appStoreReviewUrl {
                 HStack(spacing: .large) {
                     Link(destination: reviewUrl) {
-                        IconDeprecated(.thumbsUp, color: .onPrimary)
+                        Icon("hand.thumbsup").iconColor(.onPrimary)
                     }
-                    .buttonStyle(.primary(infinityWidth: false))
+                    .buttonStyle(.iconPrimary)
                     .accent()
                     .simultaneousGesture(TapGesture().onEnded {
                         Task {
@@ -53,30 +72,15 @@ struct RateAppScreen: View {
                             dismiss()
                         }
                     } label: {
-                        IconDeprecated(.thumbsDown, color: .onSurfacePrimary)
+                        Icon("hand.thumbsdown").iconColor(.onSurfacePrimary)
                     }
-                    .buttonStyle(.secondary(infinityWidth: false))
+                    .buttonStyle(.iconSecondary)
                 }
-                .controlBorderShape(.capsule)
                 .elevation(.z3)
                 #if !os(tvOS)
                     .controlSize(.large)
                 #endif
-            }
-        }
-        .multilineTextAlignment(.center)
-        .padding(.xLarge)
-        .toolbarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem {
-                Button {
-                    Task {
-                        await reviewService.reviewBannerClosed()
-                        dismiss()
-                    }
-                } label: {
-                    IconDeprecated(.xMini, color: .onSurfacePrimary)
-                }
+                    .padding(.bottom, .medium)
             }
         }
     }
