@@ -151,7 +151,7 @@ public struct AboutView: View {
                                     .foregroundColor(.surfaceSecondary)
                                     .frame(width: 74, height: 74)
 
-                                IconDeprecated(.externalLink)
+                                Icon(Image.Base.link)
                             }
                         }
 
@@ -482,7 +482,7 @@ public struct AboutView: View {
                 if let authorLink = Info.Company.websiteUrl {
                     Link(destination: authorLink) {
                         if let developerName = Info.Developer.name,
-                           let appVersion = Info.App.version,
+                           let appVersion = Info.App.version?.stringValue,
                            let appName = Info.App.name,
                            let appBuild = Info.App.build
                         {

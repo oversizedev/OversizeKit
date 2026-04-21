@@ -9,7 +9,7 @@ import SwiftUI
 #if os(iOS)
 @available(iOS 17.0, *)
 public struct BackgroundField: View {
-    @Binding private var selection: BackgroundPickerResult
+    @Binding private var selection: BackgroundPickerType
     @State private var isShowPicker = false
 
     private let presetImages: [UIImage]
@@ -17,7 +17,7 @@ public struct BackgroundField: View {
     private let presetGradients: [(startColor: Color, endColor: Color, direction: GradientDirection)]
 
     public init(
-        _ selection: Binding<BackgroundPickerResult>,
+        _ selection: Binding<BackgroundPickerType>,
         images: [UIImage] = [],
         colors: [Color] = [],
         gradients: [(startColor: Color, endColor: Color, direction: GradientDirection)] = []

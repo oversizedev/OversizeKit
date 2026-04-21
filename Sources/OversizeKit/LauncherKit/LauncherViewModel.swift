@@ -61,7 +61,7 @@ public final class LauncherViewModel: ObservableObject {
                 appBundleId: Info.App.bundleId,
                 acceptLanguage: Info.App.localeIdentifier,
                 appStoreId: Info.App.appStoreId,
-                appVersion: Info.App.version
+                appVersion: Info.App.version?.stringValue
             ))
         }
     }
@@ -167,7 +167,7 @@ public extension LauncherViewModel {
         isShowSplashScreen = false
         if appStateService.appRunCount == 0 {
             firstRunAction?()
-        } else if appStateService.lastRunVersion != Info.App.version {
+        } else if appStateService.lastRunVersion != Info.App.version?.stringValue {
             appUpdateAction?()
             await fetchAndShowWhatsNew()
         }
@@ -180,7 +180,7 @@ public extension LauncherViewModel {
     func fetchAndShowWhatsNew() async {
         guard let appStoreID = Info.App.appStoreId,
               let currentVersion = Info.App.version else { return }
-        let result = await networkService.fetchAppUpdate(appId: appStoreID, version: currentVersion)
+        let result = await networkService.fetchAppUpdate(appId: appStoreID, version: currentVersion.stringValue)
         switch result {
         case let .success(version):
             activeFullScreenSheet = .whatsNew(version: version)

@@ -11,7 +11,11 @@ import SwiftUI
 public struct BackgroundPicker: View {
     @Environment(\.dismiss) var dismiss
 
-    @Binding private var selection: BackgroundPickerResult
+    @Binding private var selection: BackgroundPickerType
+
+    // MARK: - Actions
+
+    private let onSave: (() -> Void)?
 
     // MARK: - Presets
 
@@ -41,15 +45,17 @@ public struct BackgroundPicker: View {
     // MARK: - Init
 
     public init(
-        selection: Binding<BackgroundPickerResult>,
+        selection: Binding<BackgroundPickerType>,
         images: [UIImage] = [],
         colors: [Color] = [],
-        gradients: [(startColor: Color, endColor: Color, direction: GradientDirection)] = []
+        gradients: [(startColor: Color, endColor: Color, direction: GradientDirection)] = [],
+        onSave: (() -> Void)? = nil
     ) {
         _selection = selection
         presetImages = images
         presetColors = colors
         presetGradients = gradients
+        self.onSave = onSave
     }
 
     // MARK: - Body
@@ -65,9 +71,22 @@ public struct BackgroundPicker: View {
         }
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
-                Button("Close", systemImage: "xmark", role: .cancel) { dismiss() }
-                    .labelStyle(.toolbar)
-                    .buttonStyle(.toolbarSecondary)
+                Button("Close", systemImage: "xmark", role: .cancel) {
+                    dismiss()
+                }
+                .labelStyle(.toolbar)
+                .buttonStyle(.toolbarSecondary)
+                .keyboardShortcut(.cancelAction)
+            }
+
+            ToolbarItem(placement: .confirmationAction) {
+                Button("Save", systemImage: "checkmark") {
+                    onSave?()
+                    dismiss()
+                }
+                .labelStyle(.toolbar)
+                .buttonStyle(.toolbarPrimary)
+                .keyboardShortcut(.defaultAction)
             }
         }
         .toolbarTitleDisplayMode(.inline)

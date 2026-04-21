@@ -91,18 +91,6 @@ public struct CloudParticipantPermissionView: View {
             Text("This participant will lose access to the shared content.")
         }
         .toolbarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                Button("Close", systemImage: "xmark", role: .cancel) {
-                    dismiss()
-                }
-                .labelStyle(.toolbar)
-                .buttonStyle(.toolbarSecondary)
-                #if !os(tvOS) && !os(watchOS)
-                    .keyboardShortcut(.cancelAction)
-                #endif
-            }
-        }
     }
 
     private var avatarView: some View {

@@ -13,7 +13,6 @@ public struct CloudParticipantsListView: View {
     public let onRemove: (ShareParticipant) -> Void
 
     @State private var participantPendingRemoval: ShareParticipant?
-    @Environment(\.dismiss) private var dismiss
 
     public init(
         participants: [ShareParticipant],
@@ -95,18 +94,6 @@ public struct CloudParticipantsListView: View {
             Text("This participant will lose access to the shared content.")
         }
         .toolbarTitleDisplayMode(.inline)
-        .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                Button("Close", systemImage: "xmark", role: .cancel) {
-                    dismiss()
-                }
-                .labelStyle(.toolbar)
-                .buttonStyle(.toolbarSecondary)
-                #if !os(tvOS) && !os(watchOS)
-                    .keyboardShortcut(.cancelAction)
-                #endif
-            }
-        }
     }
 
     private var removeConfirmationBinding: Binding<Bool> {

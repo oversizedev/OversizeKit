@@ -32,6 +32,7 @@ public struct PhotoLibraryPicker: View {
     @Binding private var multiSelectionDates: [Date]
 
     private let isMultiMode: Bool
+    private let onSelect: (([UIImage], [Date]) -> Void)?
 
     private let threeColumnGrid = [
         GridItem(.flexible(minimum: 40), spacing: 2),
@@ -45,15 +46,22 @@ public struct PhotoLibraryPicker: View {
         _multiSelection = .constant([])
         _multiSelectionDates = .constant([])
         isMultiMode = false
+        onSelect = nil
     }
 
-    public init(selection: Binding<[UIImage]>, dates: Binding<[Date]>, preselected: [PHAsset] = []) {
+    public init(
+        selection: Binding<[UIImage]>,
+        dates: Binding<[Date]>,
+        preselected: [PHAsset] = [],
+        onSelect: (([UIImage], [Date]) -> Void)? = nil
+    ) {
         _selection = .constant(nil)
         _selectionDate = .constant(nil)
         _multiSelection = selection
         _multiSelectionDates = dates
         _selectedAssets = State(initialValue: preselected)
         isMultiMode = true
+        self.onSelect = onSelect
     }
 
     private var albumTitle: String {
@@ -132,8 +140,7 @@ public struct PhotoLibraryPicker: View {
         }
         .fullScreenCover(isPresented: $isShowCamera, onDismiss: {
             if isMultiMode {
-                multiSelection.append(cameraImage)
-                multiSelectionDates.append(Date())
+                appendPhotos([cameraImage], dates: [Date()])
             } else {
                 selection = cameraImage
             }
@@ -268,9 +275,14 @@ public struct PhotoLibraryPicker: View {
     func importMultiplePhotos() async {
         let images = selectedAssets.map { getFullImageFromAsset(asset: $0) }
         let dates = selectedAssets.map { $0.creationDate ?? Date() }
-        multiSelection += images
-        multiSelectionDates += dates
+        appendPhotos(images, dates: dates)
         dismiss()
+    }
+
+    private func appendPhotos(_ photos: [UIImage], dates: [Date]) {
+        multiSelection += photos
+        multiSelectionDates += dates
+        onSelect?(photos, dates)
     }
 
     func incrementImportCounter() {

@@ -20,15 +20,18 @@ public struct AddressPicker: View {
     @Binding private var seletedAddress: String?
     @Binding private var seletedLocation: CLLocationCoordinate2D?
     @Binding private var seletedPlace: LocationAddress?
+    private let onSelect: ((String?, CLLocationCoordinate2D?, LocationAddress?) -> Void)?
 
     public init(
         address: Binding<String?> = .constant(nil),
         location: Binding<CLLocationCoordinate2D?> = .constant(nil),
-        place: Binding<LocationAddress?> = .constant(nil)
+        place: Binding<LocationAddress?> = .constant(nil),
+        onSelect: ((String?, CLLocationCoordinate2D?, LocationAddress?) -> Void)? = nil
     ) {
         _seletedAddress = address
         _seletedLocation = location
         _seletedPlace = place
+        self.onSelect = onSelect
     }
 
     public var body: some View {
@@ -70,15 +73,11 @@ public struct AddressPicker: View {
                     let coordinate = try? await viewModel.locationService.fetchCoordinateFromAddress(viewModel.searchTerm)
                     if let coordinate {
                         let address = try? await viewModel.locationService.fetchAddressFromLocation(coordinate)
-                        seletedLocation = coordinate
-                        seletedPlace = address
+                        onCompleteSearth(seletedAddress: viewModel.searchTerm, seletedLocation: coordinate, seletedPlace: address)
                     } else {
-                        seletedPlace = nil
-                        seletedLocation = nil
+                        onCompleteSearth(seletedAddress: viewModel.searchTerm, seletedLocation: nil, seletedPlace: nil)
                     }
                     viewModel.isSaveFromSearth = false
-                    saveToHistory()
-                    dismiss()
                 }
             }
         }
@@ -193,32 +192,25 @@ public struct AddressPicker: View {
     }
 
     func onCompleteSearth(seletedAddress: String?, seletedLocation: CLLocationCoordinate2D?, seletedPlace: LocationAddress?, saveToHistory: Bool = true) {
-        if let seletedAddress {
-            self.seletedAddress = seletedAddress
-        } else {
-            self.seletedAddress = seletedPlace?.address
-        }
+        let selectedAddress = seletedAddress ?? seletedPlace?.address
+        self.seletedAddress = selectedAddress
         self.seletedLocation = seletedLocation
         self.seletedPlace = seletedPlace
         if saveToHistory {
             self.saveToHistory()
         }
+        onSelect?(selectedAddress, seletedLocation, seletedPlace)
         dismiss()
     }
 
     private func onSaveCurrntPosition() {
         Task {
             let address = try? await viewModel.locationService.fetchAddressFromLocation(viewModel.currentLocation)
-            if let address {
-                seletedAddress = address.address
-                seletedPlace = address
-            } else {
-                seletedAddress = nil
-                seletedPlace = nil
-            }
-            seletedLocation = viewModel.currentLocation
-            saveToHistory()
-            dismiss()
+            onCompleteSearth(
+                seletedAddress: address?.address,
+                seletedLocation: viewModel.currentLocation,
+                seletedPlace: address
+            )
         }
     }
 

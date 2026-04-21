@@ -25,17 +25,20 @@ public struct MediaPicker<CustomSection: View>: View {
     @Binding var selectionPhotosDate: [Date]
     @Binding var selectionURL: URL?
 
+    private let onPhotosSelected: (([UIImage], [Date]) -> Void)?
     private var customSection: CustomSection?
 
     public init(
         photos: Binding<[UIImage]>,
         photosDate: Binding<[Date]>,
         selectionURL: Binding<URL?>,
+        onPhotosSelected: (([UIImage], [Date]) -> Void)? = nil,
         @ViewBuilder customSection: () -> CustomSection
     ) {
         _selectionPhotos = photos
         _selectionPhotosDate = photosDate
         _selectionURL = selectionURL
+        self.onPhotosSelected = onPhotosSelected
         self.customSection = customSection()
     }
 
@@ -147,8 +150,7 @@ public struct MediaPicker<CustomSection: View>: View {
         }
         .fullScreenCover(isPresented: $isShowCamera, onDismiss: {
             if cameraImage.size != .zero {
-                selectionPhotos.append(cameraImage)
-                selectionPhotosDate.append(Date())
+                appendPhotos([cameraImage], dates: [Date()])
                 dismiss()
             }
         }) {
@@ -163,7 +165,8 @@ public struct MediaPicker<CustomSection: View>: View {
                 PhotoLibraryPicker(
                     selection: $selectionPhotos,
                     dates: $selectionPhotosDate,
-                    preselected: selectedAssets
+                    preselected: selectedAssets,
+                    onSelect: { photos, dates in onPhotosSelected?(photos, dates) }
                 )
                 .hideCamera()
             }
@@ -250,9 +253,14 @@ public struct MediaPicker<CustomSection: View>: View {
     private func importSelectedAssets() {
         let images = selectedAssets.map { getFullImage(asset: $0) }
         let dates = selectedAssets.map { $0.creationDate ?? Date() }
-        selectionPhotos.append(contentsOf: images)
-        selectionPhotosDate.append(contentsOf: dates)
+        appendPhotos(images, dates: dates)
         dismiss()
+    }
+
+    private func appendPhotos(_ photos: [UIImage], dates: [Date]) {
+        selectionPhotos.append(contentsOf: photos)
+        selectionPhotosDate.append(contentsOf: dates)
+        onPhotosSelected?(photos, dates)
     }
 
     // MARK: - Helpers

@@ -231,7 +231,7 @@ extension SettingsView {
                 .rowArrow()
                 .buttonStyle(.row)
 
-                if let version = Info.App.version, version != "1.0" || version != "1.0.0" {
+                if Info.App.version?.isFirstVersion == false {
                     Row("What's New") {
                         navigator.navigate(to: SettingsDestinations.appUpdates)
                     } leading: {
