@@ -10,14 +10,17 @@ import OversizeServices
 import SwiftUI
 
 @MainActor
-public class AdViewModel: ObservableObject {
+@Observable
+public final class AdViewModel {
+    @ObservationIgnored
     @Injected(\.networkService) var networkService
 
-    @Published var state: LoadingState<Components.Schemas.Ad> = .idle
+    var state: LoadingState<Components.Schemas.Ad> = .idle
 
     public init() {}
 
     public func fetchAd() async {
+        guard case .idle = state else { return }
         guard let id = Info.App.appStoreId else {
             state = .error(NetworkError.unknown(nil))
             return

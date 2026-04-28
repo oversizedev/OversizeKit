@@ -33,7 +33,9 @@ public struct DebugMenuView: View {
                         Text(server.title).tag(server)
                     }
                 }
+                #if !os(watchOS)
                 .pickerStyle(.segmented)
+                #endif
                 .padding(.horizontal, .medium)
                 .padding(.vertical, .small)
                 .onChange(of: viewModel.selectedServer) { _, new in

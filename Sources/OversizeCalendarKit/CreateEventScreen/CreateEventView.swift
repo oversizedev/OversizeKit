@@ -22,8 +22,11 @@ public struct CreateEventView: View {
 
     @Namespace var unionNamespace
 
-    public init(_ type: CreateEventType = .new()) {
+    private let onSave: ((EKEvent) -> Void)?
+
+    public init(_ type: CreateEventType = .new(), onSave: ((EKEvent) -> Void)? = nil) {
         _viewModel = StateObject(wrappedValue: CreateEventViewModel(type))
+        self.onSave = onSave
     }
 
     public var body: some View {
@@ -77,7 +80,9 @@ public struct CreateEventView: View {
                     switch viewModel.type {
                     case .new:
                         Task {
-                            _ = await viewModel.save()
+                            if case let .success(event) = await viewModel.save() {
+                                onSave?(event)
+                            }
                             dismiss()
                         }
                     case .update:
@@ -85,7 +90,9 @@ public struct CreateEventView: View {
                             viewModel.present(.span)
                         } else {
                             Task {
-                                _ = await viewModel.save()
+                                if case let .success(event) = await viewModel.save() {
+                                    onSave?(event)
+                                }
                                 dismiss()
                             }
                         }
@@ -119,7 +126,9 @@ public struct CreateEventView: View {
         }
         .onChange(of: viewModel.span) { _, _ in
             Task {
-                _ = await viewModel.save()
+                if case let .success(event) = await viewModel.save() {
+                    onSave?(event)
+                }
                 dismiss()
             }
         }

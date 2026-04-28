@@ -3,7 +3,7 @@
 // LinkView.swift, created on 17.03.2026
 //
 
-#if canImport(LinkPresentation) && canImport(UIKit)
+#if canImport(LinkPresentation) && canImport(UIKit) && !os(watchOS)
 @preconcurrency import LinkPresentation
 import SwiftUI
 import UIKit

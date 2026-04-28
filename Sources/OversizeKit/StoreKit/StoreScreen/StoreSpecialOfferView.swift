@@ -113,7 +113,7 @@ public struct StoreSpecialOfferView: View {
 
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
-        #if !os(macOS)
+        #if !os(macOS) && !os(watchOS)
         ToolbarItemGroup(placement: .cancellationAction) {
             Button {
                 lastClosedSpecialOffer = event.id
@@ -133,6 +133,15 @@ public struct StoreSpecialOfferView: View {
             }
         }
 
+        #elseif os(watchOS)
+        ToolbarItem(placement: .cancellationAction) {
+            Button {
+                lastClosedSpecialOffer = event.id
+                closeScreen()
+            } label: {
+                Image.Base.close.icon()
+            }
+        }
         #else
         ToolbarItem(placement: .cancellationAction) {
             Button("Close") {

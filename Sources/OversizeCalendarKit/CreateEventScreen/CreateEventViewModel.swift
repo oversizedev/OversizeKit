@@ -126,7 +126,7 @@ public class CreateEventViewModel: ObservableObject {
         }
     }
 
-    func save() async -> Result<Bool, Error> {
+    func save() async -> Result<EKEvent, Error> {
         nonisolated(unsafe) var oldEvent: EKEvent?
 
         if case let .update(event) = type {
@@ -154,9 +154,9 @@ public class CreateEventViewModel: ObservableObject {
             span: span ?? .thisEvent
         )
         switch result {
-        case let .success(data):
+        case let .success(event):
             log("✅ EKEvent saved")
-            return .success(data)
+            return .success(event)
         case let .failure(error):
             log("❌ EKEvent not saved (\(error.localizedDescription))")
             return .failure(error)

@@ -89,7 +89,15 @@ public struct StoreInstructionsView: View {
 
     @ToolbarContentBuilder
     private var toolbarContent: some ToolbarContent {
-        #if !os(macOS)
+        #if os(macOS)
+        ToolbarItem(placement: .cancellationAction) {
+            Button("Close") {
+                dismiss()
+            }
+            .keyboardShortcut(.cancelAction)
+            .controlSize(.large)
+        }
+        #elseif !os(watchOS)
         if #available(iOS 26.0, *) {
             ToolbarItem(placement: .principal) {
                 PremiumLabel(
@@ -100,14 +108,9 @@ public struct StoreInstructionsView: View {
                 .redacted(reason: viewModel.productsState.result?.banner.badge == nil ? .placeholder : .init())
             }
         }
-
         #else
         ToolbarItem(placement: .cancellationAction) {
-            Button("Close") {
-                dismiss()
-            }
-            .keyboardShortcut(.cancelAction)
-            .controlSize(.large)
+            Button("Close") { dismiss() }
         }
         #endif
     }

@@ -183,7 +183,7 @@ public struct BackgroundPicker: View {
 
     private var addPhotoCell: some View {
         Color.secondary.opacity(0.15)
-            .aspectRatio(1, contentMode: .fill)
+            .aspectRatio(1, contentMode: .fit)
             .clipShape(RoundedRectangle(cornerRadius: .small, style: .continuous))
             .padding(4)
             .overlay {
@@ -209,10 +209,13 @@ public struct BackgroundPicker: View {
             return false
         }()
 
-        return Image(uiImage: image)
-            .resizable()
-            .scaledToFill()
-            .aspectRatio(1, contentMode: .fill)
+        return Color.clear
+            .aspectRatio(1, contentMode: .fit)
+            .overlay {
+                Image(uiImage: image)
+                    .resizable()
+                    .scaledToFill()
+            }
             .clipShape(RoundedRectangle(cornerRadius: .small, style: .continuous))
             .padding(4)
             .overlay {

@@ -169,7 +169,9 @@ public extension LauncherViewModel {
             firstRunAction?()
         } else if appStateService.lastRunVersion != Info.App.version?.stringValue {
             appUpdateAction?()
-            await fetchAndShowWhatsNew()
+            if Info.App.version?.isMajor == true || Info.App.version?.isMinor == true {
+                await fetchAndShowWhatsNew()
+            }
         }
 
         appStateService.appRun()
@@ -239,15 +241,12 @@ public extension LauncherViewModel {
         isPremium = premiumStatus
         log("\(premiumStatus ? "👑 [INFO] Premium status" : "🆓 [INFO] Free status")")
 
-        guard let subscriptionStatus = status.1 else {
-            logWarning("Could not fetch subscription status")
-            return
+        if let subscriptionStatus = status.1 {
+            if #available(iOS 15.4, macOS 12.3, *) {
+                logInfo("Subscription: \(subscriptionStatus.localizedDescription)")
+            }
+            subscriptionsState = subscriptionStatus
         }
-
-        if #available(iOS 15.4, macOS 12.3, *) {
-            logInfo("Subscription: \(subscriptionStatus.localizedDescription)")
-        }
-        subscriptionsState = subscriptionStatus
     }
 
     func fetchAndSetSpecialOffer() async {

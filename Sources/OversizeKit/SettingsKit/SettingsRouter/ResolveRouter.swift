@@ -48,7 +48,11 @@ extension SettingsDestinations: NavigationDestination {
         case let .offer(event: event):
             StoreSpecialOfferView(event: event)
         case let .webView(url: url):
+            #if canImport(WebKit)
             WebView(url: url)
+            #else
+            EmptyView()
+            #endif
         case let .sendMail(to: to, subject: subject, content: content):
             #if os(iOS)
             MailView(
