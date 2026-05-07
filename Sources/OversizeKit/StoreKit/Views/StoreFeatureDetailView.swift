@@ -132,14 +132,12 @@ public struct StoreFeatureDetailView: View {
                         .resizable()
                         .scaledToFill()
                         .frame(width: 75 + (geometry.size.height * 0.02), height: 75 + (geometry.size.height * 0.02))
-
                 } placeholder: {
                     Circle()
                         .fillSurfaceSecondary()
                         .frame(width: 100, height: 100)
                 }
                 .padding(.bottom, geometry.size.height * 0.07)
-
             } else if let iconUrlString = feature.iconUrl, let illustrationUrl = URL(string: iconUrlString) {
                 CachedAsyncImage(url: illustrationUrl, urlCache: .imageCache) { image in
                     image
@@ -153,14 +151,12 @@ public struct StoreFeatureDetailView: View {
                                 .fill(backgroundColor(feature: feature).opacity(0.2))
                         }
                         .padding(.bottom, geometry.size.height * 0.07)
-
                 } placeholder: {
                     Circle()
                         .fillSurfaceSecondary()
                         .frame(width: 100, height: 100)
                 }
                 .padding(.bottom, geometry.size.height * 0.07)
-
             } else {
                 Image.Base.Check.square
                     .resizable()

@@ -33,7 +33,6 @@ public struct Launcher<Content: View, Onboarding: View>: View {
 
     public var body: some View {
         contentView
-            .task(viewModel.onAppear)
             .appLaunchCover(item: $viewModel.activeFullScreenSheet) {
                 fullScreenCover(sheet: $0)
                     .coreServices()
@@ -49,6 +48,7 @@ public struct Launcher<Content: View, Onboarding: View>: View {
             }
             .presentationHUDRoot()
             .coreServices()
+            .task(viewModel.onAppear)
     }
 
     @ViewBuilder
