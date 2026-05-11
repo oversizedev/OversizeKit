@@ -3,7 +3,6 @@
 // AppUpdateView.swift, created on 04.03.2026
 //
 
-import CachedAsyncImage
 import OversizeArchitecture
 import OversizeComponents
 import OversizeNavigation

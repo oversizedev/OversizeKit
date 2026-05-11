@@ -1,6 +1,6 @@
 //
 // Copyright © 2026 Alexander Romanov
-// NoteViewerView.swift
+// NoteViewer.swift
 //
 
 import OversizeUI

@@ -5,8 +5,7 @@ import Foundation
 import PackageDescription
 
 let commonDependencies: [PackageDescription.Package.Dependency] = [
-    .package(url: "https://github.com/lorenzofiamingo/swiftui-cached-async-image.git", .upToNextMajor(from: "2.1.1")),
-    .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "2.5.0")),
+    .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "3.0.2")),
     .package(url: "https://github.com/hmlongco/Navigator.git", .upToNextMajor(from: "2.0.2")),
 ]
 
@@ -76,7 +75,6 @@ let package = Package(
                 .product(name: "OversizeNetwork", package: "OversizeNetwork"),
                 .product(name: "OversizeRouter", package: "OversizeRouter"),
                 .product(name: "FactoryKit", package: "Factory"),
-                .product(name: "CachedAsyncImage", package: "swiftui-cached-async-image"),
                 .product(name: "NavigatorUI", package: "Navigator"),
                 .product(name: "OversizeNavigation", package: "OversizeNavigation"),
                 .product(name: "OversizeArchitecture", package: "OversizeArchitecture"),
@@ -157,6 +155,7 @@ let package = Package(
             name: "OversizeEditorKit",
             dependencies: [
                 .product(name: "OversizeUI", package: "OversizeUI"),
+                .product(name: "OversizeResources", package: "OversizeResources"),
             ]
         ),
         .target(

@@ -18,7 +18,7 @@ extension SettingsDestinations: NavigationDestination {
         case .appearance:
             AppearanceSettingView()
         case .sync:
-            iCloudSettingsView()
+            SyncSettingsView()
         case let .premiumFeature(feature: feature):
             StoreFeatureDetailView(selection: feature)
         case .about:
