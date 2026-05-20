@@ -63,8 +63,8 @@ struct StoreFeaturesView: View {
                             .onPrimary()
                             .iconOnSurface(surfaceSolor: backgroundColor(feature: feature))
                         }
-                        .rowArrow()
                         .rowIconBackgroundColor(backgroundColor(feature: feature))
+                        .navigatable()
                     }
                 case let .error(appError):
                     OversizeUI.ErrorView(error: appError)
@@ -105,7 +105,7 @@ struct StoreFeaturesView: View {
                         .fillSurfaceSecondary()
                         .frame(width: 24, height: 24)
                 }
-                .rowArrow()
+                .navigatable()
                 .redacted(reason: .placeholder)
                 .disabled(true)
             }

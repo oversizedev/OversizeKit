@@ -61,7 +61,7 @@ public final class LauncherViewModel: ObservableObject {
                 appBundleId: Info.App.bundleId,
                 acceptLanguage: Info.App.localeIdentifier,
                 appStoreId: Info.App.appStoreId,
-                appVersion: Info.App.version?.stringValue
+                appVersion: Info.App.version?.description
             ))
         }
     }
@@ -103,11 +103,11 @@ public extension LauncherViewModel {
             if self.pinCodeField == self.settingsService.getPINCode() {
                 self.authState = .unlocked
                 self.activeFullScreenSheet = nil
-                logSecurity("Unlocked by PIN")
+                Log.notice("Unlocked by PIN")
             } else {
                 self.authState = .error
                 self.pinCodeField = ""
-                logError("PIN unlock failed")
+                Log.error("PIN unlock failed")
             }
         }
     }
@@ -118,9 +118,9 @@ public extension LauncherViewModel {
         if authenticate {
             authState = .unlocked
             activeFullScreenSheet = nil
-            logSecurity("Unlocked by biometric")
+            Log.notice("Unlocked by biometric")
         } else {
-            logError("Biometric unlock failed")
+            Log.error("Biometric unlock failed")
             authState = .error
         }
     }
@@ -128,7 +128,7 @@ public extension LauncherViewModel {
     func checkOnboarding() async {
         if !appStateService.isCompletedOnboarding {
             contentType = .onboarding
-            logNotice("Onboarding shown")
+            Log.notice("Onboarding shown")
         }
     }
 
@@ -137,7 +137,7 @@ public extension LauncherViewModel {
         delay(time: 0.2) {
             Task { @MainActor in
                 self.activeFullScreenSheet = .payWall
-                logNotice("Paywall shown")
+                Log.notice("Paywall shown")
             }
         }
     }
@@ -145,7 +145,7 @@ public extension LauncherViewModel {
     func checkAppRate() async {
         if await reviewService.isShowReviewSheet, activeFullScreenSheet == nil {
             activeFullScreenSheet = .rate
-            logNotice("App rate shown")
+            Log.notice("App rate shown")
         }
     }
 
@@ -167,7 +167,7 @@ public extension LauncherViewModel {
         isShowSplashScreen = false
         if appStateService.appRunCount == 0 {
             firstRunAction?()
-        } else if appStateService.lastRunVersion != Info.App.version?.stringValue {
+        } else if appStateService.lastRunVersion != Info.App.version?.description {
             appUpdateAction?()
             if Info.App.version?.isMajor == true || Info.App.version?.isMinor == true {
                 await fetchAndShowWhatsNew()
@@ -182,27 +182,27 @@ public extension LauncherViewModel {
     func fetchAndShowWhatsNew() async {
         guard let appStoreID = Info.App.appStoreId,
               let currentVersion = Info.App.version else { return }
-        let result = await networkService.fetchAppUpdate(appId: appStoreID, version: currentVersion.stringValue)
+        let result = await networkService.fetchAppUpdate(appId: appStoreID, version: currentVersion.description)
         switch result {
         case let .success(version):
             activeFullScreenSheet = .whatsNew(version: version)
-            logNotice("App update screen shown")
+            Log.notice("App update screen shown")
         case let .failure(error):
-            logError("Loading app update failed", error: error)
+            Log.error("Loading app update failed", error: error)
         }
     }
 
     func onScenePhaseChange(_ scenePhase: ScenePhase) {
         switch scenePhase {
         case .inactive:
-            log("⏸️ [STATE] App inactive")
+            Log.debug("⏸️ [STATE] App inactive")
         case .background:
-            log("⏹️ [STATE] App background")
+            Log.debug("⏹️ [STATE] App background")
             appBackgroundDate = Date()
             pinCodeField = ""
             isNeedAuthCheking = true
         case .active:
-            log("▶️ [STATE] App active")
+            Log.debug("▶️ [STATE] App active")
             if isNeedAuthCheking, appBackgroundDate.addingTimeInterval(settingsService.appLockTimeout) < Date() {
                 authState = .locked
                 isNeedAuthCheking = false
@@ -221,29 +221,29 @@ public extension LauncherViewModel {
 
     func checkPremium() async {
         guard let appStoreID = Info.App.appStoreId else {
-            logError("Not found App Store ID in AppConfig.plist")
+            Log.error("Not found App Store ID in AppConfig.plist")
             return
         }
         let productIdsResult = await networkService.fetchAppStoreProductIds(appId: appStoreID)
 
         guard let productIds = productIdsResult.successResult else {
-            logError("Not loaded product IDs")
+            Log.error("Not loaded product IDs")
             return
         }
 
         let status = await storeKitService.fetchPremiumAndSubscriptionsStatus(productIds: productIds)
 
         guard let premiumStatus = status.0 else {
-            logWarning("Could not fetch premium status")
+            Log.warning("Could not fetch premium status")
             return
         }
 
         isPremium = premiumStatus
-        log("\(premiumStatus ? "👑 [INFO] Premium status" : "🆓 [INFO] Free status")")
+        Log.debug("\(premiumStatus ? "👑 [INFO] Premium status" : "🆓 [INFO] Free status")")
 
         if let subscriptionStatus = status.1 {
             if #available(iOS 15.4, macOS 12.3, *) {
-                logInfo("Subscription: \(subscriptionStatus.localizedDescription)")
+                Log.info("Subscription: \(subscriptionStatus.localizedDescription)")
             }
             subscriptionsState = subscriptionStatus
         }
@@ -253,15 +253,15 @@ public extension LauncherViewModel {
         let result = await networkService.fetchSpecialOffers()
         switch result {
         case let .success(offers):
-            logSuccess("Offers loaded")
+            Log.info("Offers loaded")
             if let offer = offers.first(where: { checkDateInSelectedPeriod(startDate: $0.startDate, endDate: $0.endDate) }) {
                 if offer.id != lastClosedSpecialOffer {
                     activeFullScreenSheet = .specialOffer(event: offer)
-                    logNotice("Offer shown")
+                    Log.notice("Offer shown")
                 }
             }
         case let .failure(error):
-            logError("Loading special offers failed", error: error)
+            Log.error("Loading special offers failed", error: error)
         }
     }
 }

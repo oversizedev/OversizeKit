@@ -216,13 +216,13 @@ extension StoreViewModel {
         case let .success(features):
             featuresState = .result(features)
         case let .failure(error):
-            logError("Error fetching features", error: error)
+            Log.error("Error fetching features", error: error)
         }
         switch resultProducts {
         case let .success(products):
             productsState = .result(products)
         case let .failure(error):
-            logError("Error fetching resultProducts", error: error)
+            Log.error("Error fetching resultProducts", error: error)
         }
     }
 
@@ -248,7 +248,7 @@ extension StoreViewModel {
                     await transaction.finish()
                 } catch {
                     // StoreKit has a transaction that fails verification. Don't deliver content to the user.
-                    logError("Transaction failed verification", error: error)
+                    Log.error("Transaction failed verification", error: error)
                 }
             }
         }
@@ -312,7 +312,7 @@ extension StoreViewModel {
                 isPremium = false
             }
         } catch {
-            logError("Could not update subscription status", error: error)
+            Log.error("Could not update subscription status", error: error)
         }
     }
 
@@ -336,7 +336,7 @@ extension StoreViewModel {
             return false
         } catch {
             isBuyLoading = false
-            log("Failed purchase for \(product.id): \(error)")
+            Log.debug("Failed purchase for \(product.id): \(error)")
             return false
         }
     }
@@ -403,15 +403,15 @@ extension StoreViewModel {
                     isPremium = false
                 }
                 await updateSubscriptionStatus(products: finalProducts)
-                logSuccess("StoreKit products fetched")
+                Log.info("StoreKit products fetched")
                 if finalProducts.autoRenewable.isEmpty {
-                    logError("No autoRenewable products")
+                    Log.error("No autoRenewable products")
                 } else {
-                    logInfo("\(finalProducts.autoRenewable.count) autoRenewable products")
+                    Log.info("\(finalProducts.autoRenewable.count) autoRenewable products")
                 }
             case let .failure(error):
                 state = .error(error)
-                logError("StoreKit Products not fetched", error: error)
+                Log.error("StoreKit Products not fetched", error: error)
             }
 
         case let .failure(error):

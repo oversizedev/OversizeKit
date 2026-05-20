@@ -77,10 +77,10 @@ extension AddressPickerViewModel {
             let currentPosition = try? await locationService.currentLocation()
             guard let newLocation = currentPosition else { return }
             currentLocation = newLocation
-            log("📍 [LOCATION] latitude: \(newLocation.latitude), longitude:\(newLocation.longitude)")
+            Log.debug("📍 [LOCATION] latitude: \(newLocation.latitude), longitude:\(newLocation.longitude)")
             isFetchUpdatePositon = false
         case let .failure(error):
-            logError("Update current", error: error)
+            Log.error("Update current", error: error)
             appError = error as? LocationError ?? .unknown(error)
         }
     }

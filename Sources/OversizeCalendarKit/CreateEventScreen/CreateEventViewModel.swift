@@ -96,19 +96,19 @@ public class CreateEventViewModel: ObservableObject {
         let calendarsResult = await calendarService.fetchCalendars()
         switch calendarsResult {
         case let .success(data):
-            log("✅ EKCalendars fetched")
+            Log.debug("✅ EKCalendars fetched")
             calendars = data
         case let .failure(error):
-            log("❌ EKCalendars not fetched (\(error.localizedDescription))")
+            Log.debug("❌ EKCalendars not fetched (\(error.localizedDescription))")
             state = .error(error as? CalendarError ?? .unknown(error))
         }
         let soursesResult = await calendarService.fetchSourses()
         switch soursesResult {
         case let .success(data):
-            log("✅ EKSource fetched")
+            Log.debug("✅ EKSource fetched")
             sourses = data
         case let .failure(error):
-            log("❌ EKSource not fetched (\(error.localizedDescription))")
+            Log.debug("❌ EKSource not fetched (\(error.localizedDescription))")
             state = .error(error as? CalendarError ?? .unknown(error))
         }
         let needsDefaultCalendar: Bool = switch type {
@@ -121,7 +121,7 @@ public class CreateEventViewModel: ObservableObject {
             case let .success(calendar):
                 self.calendar = calendar
             case let .failure(error):
-                log("❌ Default calendar not fetched (\(error.localizedDescription))")
+                Log.debug("❌ Default calendar not fetched (\(error.localizedDescription))")
             }
         }
     }
@@ -155,10 +155,10 @@ public class CreateEventViewModel: ObservableObject {
         )
         switch result {
         case let .success(event):
-            log("✅ EKEvent saved")
+            Log.debug("✅ EKEvent saved")
             return .success(event)
         case let .failure(error):
-            log("❌ EKEvent not saved (\(error.localizedDescription))")
+            Log.debug("❌ EKEvent not saved (\(error.localizedDescription))")
             return .failure(error)
         }
     }
@@ -180,7 +180,7 @@ public class CreateEventViewModel: ObservableObject {
         let currentPosition = try await locationService.currentLocation()
         guard let newLocation = currentPosition else { return }
         location = newLocation
-        log("📍 Location: \(newLocation.latitude), \(newLocation.longitude)")
+        Log.debug("📍 Location: \(newLocation.latitude), \(newLocation.longitude)")
         isFetchUpdatePositon = false
     }
 }

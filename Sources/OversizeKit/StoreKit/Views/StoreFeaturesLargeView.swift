@@ -160,7 +160,7 @@ struct StoreFeaturesLargeView: View {
                         .fillSurfaceSecondary()
                         .frame(width: 24, height: 24)
                 }
-                .rowArrow()
+                .navigatable()
                 .redacted(reason: .placeholder)
                 .disabled(true)
             }

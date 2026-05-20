@@ -286,7 +286,7 @@ public struct AboutView: View {
                     Row("Our open resources") {
                         navigator.navigate(to: SettingsDestinations.ourResources)
                     }
-                    .rowArrow()
+                    .navigatable()
 
                     if let privacyUrl = Info.App.privacyPolicyUrl {
                         Row(L10n.Store.privacyPolicy) {
@@ -481,7 +481,7 @@ public struct AboutView: View {
                 if let authorLink = Info.Company.websiteUrl {
                     Link(destination: authorLink) {
                         if let developerName = Info.Developer.name,
-                           let appVersion = Info.App.version?.stringValue,
+                           let appVersion = Info.App.version?.description,
                            let appName = Info.App.name,
                            let appBuild = Info.App.build
                         {

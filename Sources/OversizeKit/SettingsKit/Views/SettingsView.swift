@@ -87,7 +87,7 @@ extension SettingsView {
                     } leading: {
                         appearanceSettingsIcon.icon()
                     }
-                    .rowArrow()
+                    .navigatable()
                 }
 
                 if FeatureFlags.app.сloudKit.valueOrFalse || FeatureFlags.app.healthKit.valueOrFalse {
@@ -96,7 +96,7 @@ extension SettingsView {
                     } leading: {
                         cloudKitIcon.icon()
                     }
-                    .rowArrow()
+                    .navigatable()
                 }
 
                 if FeatureFlags.secure.faceID.valueOrFalse || FeatureFlags.secure.lookscreen.valueOrFalse || FeatureFlags.secure.blurMinimize.valueOrFalse {
@@ -106,7 +106,7 @@ extension SettingsView {
                     } leading: {
                         securityIcon.icon()
                     }
-                    .rowArrow()
+                    .navigatable()
                 }
 
                 if FeatureFlags.app.sounds.valueOrFalse || FeatureFlags.app.vibration.valueOrFalse {
@@ -116,7 +116,7 @@ extension SettingsView {
                     } leading: {
                         FeatureFlags.app.sounds.valueOrFalse ? soundIcon.icon() : vibrationIcon.icon()
                     }
-                    .rowArrow()
+                    .navigatable()
                 }
 
                 if FeatureFlags.app.notifications.valueOrFalse {
@@ -126,7 +126,7 @@ extension SettingsView {
                     } leading: {
                         notificationsIcon.icon()
                     }
-                    .rowArrow()
+                    .navigatable()
                 }
 
                 appSection
@@ -217,7 +217,7 @@ extension SettingsView {
                 } leading: {
                     helpIcon.icon()
                 }
-                .rowArrow()
+                .navigatable()
                 .buttonStyle(.row)
 
                 Row("Send feedback") {
@@ -228,7 +228,7 @@ extension SettingsView {
                 } leading: {
                     chatIcon.icon()
                 }
-                .rowArrow()
+                .navigatable()
                 .buttonStyle(.row)
 
                 if Info.App.version?.isFirstVersion == false {
@@ -237,7 +237,7 @@ extension SettingsView {
                     } leading: {
                         updatesIcon.icon()
                     }
-                    .rowArrow()
+                    .navigatable()
                     .buttonStyle(.row)
                 }
             }
@@ -356,14 +356,14 @@ extension SettingsView {
                 } leading: {
                     debugIcon.icon()
                 }
-                .rowArrow()
+                .navigatable()
 
                 Row("Information") {
                     navigator.navigate(to: SettingsDestinations.debugInfo)
                 } leading: {
                     debugInfoIcon.icon()
                 }
-                .rowArrow()
+                .navigatable()
             }
             .buttonStyle(.row)
         }
@@ -378,7 +378,7 @@ extension SettingsView {
                 } leading: {
                     infoIcon.icon()
                 }
-                .rowArrow()
+                .navigatable()
             }
             .buttonStyle(.row)
         }

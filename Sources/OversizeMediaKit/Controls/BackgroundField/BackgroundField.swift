@@ -34,8 +34,7 @@ public struct BackgroundField: View {
         } label: {
             HStack {
                 Text(selectionLabel)
-
-                Spacer()
+                    .frame(maxWidth: .infinity, alignment: .leading)
 
                 thumbnail
                     .frame(width: 24, height: 24)

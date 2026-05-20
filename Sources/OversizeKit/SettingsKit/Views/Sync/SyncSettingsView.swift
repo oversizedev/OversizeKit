@@ -87,7 +87,7 @@ public struct SyncSettingsView: View {
             Icon("icloud")
                 .font(.system(size: 16, weight: .semibold))
         case .syncing:
-            if #available(iOS 18.0, *) {
+            if #available(iOS 18.0, macOS 15.0, tvOS 18.0, watchOS 11.0, visionOS 2.0, *) {
                 Icon("arrow.triangle.2.circlepath")
                     .symbolEffect(.rotate)
             } else {

@@ -29,10 +29,10 @@ class EmailPickerViewModel: ObservableObject {
             let result = await contactsService.fetchContacts(keysToFetch: keys as [CNKeyDescriptor])
             switch result {
             case let .success(data):
-                log("✅ CNContact fetched")
+                Log.debug("✅ CNContact fetched")
                 state = .result(data)
             case let .failure(error):
-                log("❌ CNContact not fetched (\(error.localizedDescription))")
+                Log.debug("❌ CNContact not fetched (\(error.localizedDescription))")
                 state = .error(error as? ContactsError ?? .unknown(error))
             }
 

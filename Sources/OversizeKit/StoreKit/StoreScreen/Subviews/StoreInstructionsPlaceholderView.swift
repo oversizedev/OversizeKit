@@ -64,7 +64,7 @@ struct StoreInstructionsPlaceholderView: View {
                         .fillSurfaceSecondary()
                         .frame(width: 44, height: 44)
                 }
-                .rowArrow()
+                .navigatable()
             }
         }
         .redacted(reason: .placeholder)

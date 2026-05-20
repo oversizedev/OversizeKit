@@ -86,7 +86,7 @@ extension SecuritySettingsView {
                         Row(L10n.Security.changePINCode) {
                             navigator.navigate(to: SettingsDestinations.updatePINCode)
                         }
-                        .rowArrow()
+                        .navigatable()
                     }
                 }
             }
@@ -161,7 +161,7 @@ extension SecuritySettingsView {
                         .labelsHidden()
                         .clipped()
                     })
-                    .rowArrow()
+                    .navigatable()
                 }
 
 //                    if FeatureFlags.secure.lockscreen.valueOrFalse {

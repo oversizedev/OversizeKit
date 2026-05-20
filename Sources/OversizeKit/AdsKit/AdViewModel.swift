@@ -29,10 +29,10 @@ public final class AdViewModel {
         switch result {
         case let .success(ad):
             state = .result(ad)
-            logSuccess("Ads loaded")
+            Log.info("Ads loaded")
         case let .failure(error):
             state = .error(error)
-            logError("Not load Ads", error: error)
+            Log.error("Not load Ads", error: error)
         }
     }
 }

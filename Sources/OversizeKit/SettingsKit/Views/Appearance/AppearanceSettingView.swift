@@ -143,9 +143,9 @@ public struct AppearanceSettingView: View {
                                     iconNameSelection = iconName
                                     UIApplication.shared.setAlternateIconName(iconName) { error in
                                         if let error {
-                                            logError("App icon change failed", error: error)
+                                            Log.error("App icon change failed", error: error)
                                         } else {
-                                            logSuccess("App icon changed")
+                                            Log.info("App icon changed")
                                         }
                                     }
                                 } else {
@@ -169,8 +169,8 @@ public struct AppearanceSettingView: View {
                 } leading: {
                     textIcon.icon()
                 }
-                .rowArrow()
                 .premium()
+                .navigatable()
                 .onPremiumTap()
 
                 Switch(isOn: theme.$borderApp) {
@@ -196,8 +196,8 @@ public struct AppearanceSettingView: View {
                 } leading: {
                     radiusIcon.icon()
                 }
-                .rowArrow()
                 .premium()
+                .navigatable()
                 .onPremiumTap()
             }
         }

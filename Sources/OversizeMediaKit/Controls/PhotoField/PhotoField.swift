@@ -32,12 +32,22 @@ public struct PhotoField: View {
             isShowSelector.toggle()
         } label: {
             HStack {
-                Text("Add photo")
+                Text(selection == nil ? "Add photo" : "Change photo")
+                    .frame(maxWidth: .infinity, alignment: .leading)
 
-                Spacer()
-
-                Image.Base.camera
-                    .icon()
+                if let selection {
+                    Image(uiImage: selection)
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 24, height: 24)
+                        .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+                        .overlay {
+                            RoundedRectangle(cornerRadius: 6, style: .continuous)
+                                .strokeBorder(Color.border, lineWidth: 0.5)
+                        }
+                } else {
+                    Icon(Image.Base.camera)
+                }
             }
         }
         .buttonStyle(.field)

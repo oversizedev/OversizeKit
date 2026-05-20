@@ -305,7 +305,7 @@ public struct LockscreenView: View {
         state = .locked
 
         if pinCode.count > (maxCount - 1) {
-            log("return")
+            Log.debug("return")
             return
         }
 
@@ -324,7 +324,7 @@ public struct LockscreenView: View {
             // isDisabledNumpad = false
         }
         pinCode.removeLast()
-        log(pinCode)
+        Log.debug(pinCode)
     }
 
     func enterAction() {

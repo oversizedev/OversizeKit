@@ -41,11 +41,11 @@ public struct PhotoOptionsView<A: View>: View {
     }
 
     public var body: some View {
-        LayoutView(
+        ListLayoutView(
             "Photo",
-            content: { content },
-            background: { Color.backgroundSecondary }
+            content: { content }
         )
+        .listLayoutStyle(.insetGrouped)
         .toolbarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
@@ -66,43 +66,34 @@ public struct PhotoOptionsView<A: View>: View {
         }
     }
 
+    @ViewBuilder
     private var content: some View {
-        VStack(spacing: .medium) {
-            SectionView {
-                VStack {
-                    #if !os(tvOS)
-                    if #available(iOS 16.0, *) {
-                        ShareLink(
-                            item: photo,
-                            preview: SharePreview(
-                                "Photo",
-                                image: photo.image
-                            )
-                        ) {
-                            Row("Share") {
-                                Image.Base.upload
-                            }
-                        }
-                    }
-                    #endif
-                    actions
+        ListSection {
+            #if !os(tvOS)
+            if #available(iOS 16.0, *) {
+                ShareLink(
+                    item: photo,
+                    preview: SharePreview(
+                        "Photo",
+                        image: photo.image
+                    )
+                ) {
+                    ListRow("Share", leading: {
+                        Icon(Image.Base.upload)
+                    })
                 }
-                .buttonStyle(.row)
             }
-            .surfaceContentRowMargins()
+            #endif
+            actions
+        }
 
-            if deleteAction != nil {
-                SectionView {
-                    VStack {
-                        RowButton("Delete", style: .delete, action: {
-                            isShowAlert.toggle()
-                        })
-                        .multilineTextAlignment(.center)
-                    }
+        if deleteAction != nil {
+            ListSection {
+                ListButton("Delete", role: .destructive) {
+                    isShowAlert.toggle()
                 }
-                .surfaceContentRowMargins()
+                .multilineTextAlignment(.center)
             }
         }
-        .padding(.top, -16)
     }
 }
