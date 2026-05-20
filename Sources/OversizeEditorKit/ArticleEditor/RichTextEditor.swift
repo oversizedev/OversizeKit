@@ -3,6 +3,7 @@
 // NoteEditor.swift, created on 03.03.2024
 //
 
+import OversizeCore
 import OversizeResources
 import OversizeUI
 import SwiftUI
@@ -27,6 +28,9 @@ public struct RichTextEditor: View {
     @State private var textSelection: AttributedTextSelection = .init()
     @State private var selectedDesign: Font.Design = .default
     @State private var selectedIsItalic: Bool = false
+    @State private var selectedTextStyle: Font.TextStyle = .body
+    @State private var isFontPickerPresented: Bool = false
+    @State private var selectedFontName: String? = nil
 
     @State private var isFontStyleSelection: Bool = false
     @State private var isLinkAlertPresented: Bool = false
@@ -79,11 +83,9 @@ public struct RichTextEditor: View {
         }
         .toolbarTitleDisplayMode(.inline)
         .scrollDismissesKeyboard(.interactively)
-        .safeAreaInset(edge: .bottom, content: {
-            // if #available(iOS 26.0, *) {
+        .safeAreaInset(edge: .bottom) {
             glassBottomBar
-            // }
-        })
+        }
         .onChange(of: text) { _, _ in
             if isFontStyleSelection {
                 withAnimation(.interactiveSpring) {
@@ -95,6 +97,18 @@ public struct RichTextEditor: View {
             isFocus = true
         }
         .animation(.default, value: isFocus)
+        #if os(iOS)
+        .sheet(isPresented: $isFontPickerPresented) {
+            NavigationStack {
+                FontPicker(selectedFontName: $selectedFontName)
+            }
+            .presentationDetents([.medium, .large])
+            .navigationTransition(.zoom(sourceID: "fontPicker", in: unionNamespace))
+        }
+        .onChange(of: selectedFontName) { _, name in
+            if let name { applyCustomFont(name) }
+        }
+        #endif
         .alert("Link", isPresented: $isLinkAlertPresented) {
             TextField("https://", text: $linkURLString)
                 .autocorrectionDisabled()
@@ -121,6 +135,11 @@ public struct RichTextEditor: View {
                     }
                 }
                 .scrollIndicators(.hidden)
+                
+                Separator(.vertical)
+                    .lineWidth(3)
+                    .frame(height: .regular)
+
 
                 Button {
                     isFocus.toggle()
@@ -128,11 +147,6 @@ public struct RichTextEditor: View {
                     Icon(isFocus ? Image.ComputerAndTV.keyboardCloseDown : Image.ComputerAndTV.keyboardOpenUp)
                         .padding(.xSmall)
                         .padding(.trailing, .xxxSmall)
-//                        .background {
-//                            Capsule()
-//                                .fill(Color.surfacePrimary)
-//
-//                        }
                 }
 
                 .glassEffectUnion(id: "bar", namespace: unionNamespace)
@@ -157,23 +171,20 @@ public struct RichTextEditor: View {
                 .padding(.xSmall)
                 .padding(.leading, .xxxSmall)
         }
-        // .glassEffect()
-        .glassEffectUnion(id: "bar", namespace: unionNamespace)
+        .barItem(namespace: unionNamespace)
 
         Button {} label: {
             Icon(Image.Base.picture2)
                 .padding(.xSmall)
                 .padding(.leading, .xxxSmall)
         }
-        // .glassEffect()
-        .glassEffectUnion(id: "bar", namespace: unionNamespace)
+        .barItem(namespace: unionNamespace)
 
         Button {} label: {
             Icon(Image.Base.link)
                 .padding(.xSmall)
         }
-        // .glassEffect()
-        .glassEffectUnion(id: "bar", namespace: unionNamespace)
+        .barItem(namespace: unionNamespace)
     }
 
     @ViewBuilder
@@ -188,9 +199,40 @@ public struct RichTextEditor: View {
                     .padding(.xSmall)
                     .padding(.leading, .xxxSmall)
             }
-            // .glassEffect()
             .glassEffectUnion(id: "bar", namespace: unionNamespace)
+            .scrollTransition(.interactive) { content, phase in
+            let t = max(0, phase.value)
+            return content
+                .opacity(1.0 - min(1.0, t * 2.5))
+                .scaleEffect(1.0 - min(0.25, t * 0.6))
+                .blur(radius: max(0, t - 0.8) * 8)
+                .offset(x: -t * 10)
         }
+            
+        }
+
+        // MARK: - Size
+
+        Menu {
+            Picker("Style", selection: $selectedTextStyle) {
+                ForEach(Font.TextStyle.allCases, id: \.self) { style in
+                    Text(style.displayName).tag(style)
+                }
+            }
+            .onChange(of: selectedTextStyle) { _, style in
+                applyTextStyle(style)
+            }
+        } label: {
+            Text(selectedTextStyle.displayName)
+                .headline(.bold)
+                .foregroundStyle(Color.onSurfacePrimary)
+                .padding(.horizontal, .xSmall)
+        }
+        .barItem(namespace: unionNamespace)
+
+        Separator(.vertical)
+            .lineWidth(3)
+            .frame(height: .regular)
 
         // MARK: - Bold
 
@@ -202,8 +244,7 @@ public struct RichTextEditor: View {
                 .background(Circle().fillSurfaceSecondary().opacity(isSelectionBold ? 1 : 0))
                 .padding(.xxxSmall)
         }
-        // .glassEffect()
-        .glassEffectUnion(id: "bar", namespace: unionNamespace)
+        .barItem(namespace: unionNamespace)
 
         // MARK: - Italic
 
@@ -217,8 +258,16 @@ public struct RichTextEditor: View {
                     .padding(.xxxSmall)
             }
             .disabled(!isItalicSupported)
-            // .glassEffect()
             .glassEffectUnion(id: "bar", namespace: unionNamespace)
+            .scrollTransition(.interactive) { content, phase in
+            let t = max(0, phase.value)
+            return content
+                .opacity(1.0 - min(1.0, t * 2.5))
+                .scaleEffect(1.0 - min(0.25, t * 0.6))
+                .blur(radius: max(0, t - 0.8) * 8)
+                .offset(x: -t * 10)
+        }
+            .modifier(BarItemScrollHapticModifier())
         }
 
         // MARK: - Underline
@@ -231,8 +280,7 @@ public struct RichTextEditor: View {
                 .background(Circle().fillSurfaceSecondary().opacity(isSelectionUnderlined ? 1 : 0))
                 .padding(.xxxSmall)
         }
-        // .glassEffect()
-        .glassEffectUnion(id: "bar", namespace: unionNamespace)
+        .barItem(namespace: unionNamespace)
 
         // MARK: - Strikethrough
 
@@ -244,46 +292,18 @@ public struct RichTextEditor: View {
                 .background(Circle().fillSurfaceSecondary().opacity(isSelectionStrikethrough ? 1 : 0))
                 .padding(.xxxSmall)
         }
-        // .glassEffect()
-        .glassEffectUnion(id: "bar", namespace: unionNamespace)
+        .barItem(namespace: unionNamespace)
 
-        // MARK: - Size
+        // MARK: - Font Family
 
-        Menu {
-            Picker("Size", selection: Binding(
-                get: { Int(selectionFontSize) },
-                set: { applySize(CGFloat($0)) }
-            )) {
-                ForEach([12, 14, 16, 17, 18, 20, 24, 28, 32, 40, 48, 64], id: \.self) {
-                    Text("\($0)").tag($0)
-                        .font(.headline)
-                }
-            }
+        Button {
+            isFontPickerPresented = true
         } label: {
-            Icon(Image.Editor.uppercase)
+            Icon(Image.Editor.searchFont)
                 .padding(.xSmall)
         }
-        // .glassEffect()
-        .glassEffectUnion(id: "bar", namespace: unionNamespace)
-
-        // MARK: - Design
-
-        Menu {
-            Picker("Design", selection: Binding(
-                get: { selectionFontDesign },
-                set: { applyDesign($0) }
-            )) {
-                Text("Default").tag(Font.Design.default)
-                Text("Serif").fontDesign(.serif).tag(Font.Design.serif)
-                Text("Monospaced").fontDesign(.monospaced).tag(Font.Design.monospaced)
-                Text("Rounded").fontDesign(.rounded).tag(Font.Design.rounded)
-            }
-        } label: {
-            Icon(Image.Editor.font)
-                .padding(.xSmall)
-        }
-        // .glassEffect()
-        .glassEffectUnion(id: "bar", namespace: unionNamespace)
+        .matchedTransitionSource(id: "fontPicker", in: unionNamespace)
+        .barItem(namespace: unionNamespace)
 
         // MARK: - Color
 
@@ -294,8 +314,15 @@ public struct RichTextEditor: View {
           ), supportsOpacity: false)
           .labelsHidden()
           .padding(.xSmall)
-         // .glassEffect()
           .glassEffectUnion(id: "bar", namespace: unionNamespace)
+          .scrollTransition(.interactive) { content, phase in
+            let t = max(0, phase.value)
+            return content
+                .opacity(1.0 - min(1.0, t * 2.5))
+                .scaleEffect(1.0 - min(0.25, t * 0.6))
+                .blur(radius: max(0, t - 0.8) * 8)
+                .offset(x: -t * 10)
+        }
           */
 
         // MARK: - Link
@@ -309,8 +336,7 @@ public struct RichTextEditor: View {
                 .background(Circle().fillSurfaceSecondary().opacity(hasSelectionLink ? 1 : 0))
                 .padding(.xxxSmall)
         }
-        // .glassEffect()
-        .glassEffectUnion(id: "bar", namespace: unionNamespace)
+        .barItem(namespace: unionNamespace)
     }
 
     private var hasSelection: Bool {
@@ -416,6 +442,37 @@ public struct RichTextEditor: View {
         }
     }
 
+    private func applyTextStyle(_ style: Font.TextStyle) {
+        guard case let .ranges(ranges) = textSelection.indices(in: text) else { return }
+        let italic = selectedIsItalic
+        let design = selectedDesign
+        text.transform(updating: &textSelection) { mutableText in
+            for range in ranges.ranges {
+                let runs = mutableText[range].runs.map { (run: $0.range, font: $0.font ?? .body) }
+                for item in runs {
+                    let resolved = item.font.resolve(in: fontResolutionContext)
+                    let base = Font.system(style, design: design, weight: resolved.isBold ? .bold : .regular)
+                    mutableText[item.run].font = italic ? base.italic() : base
+                }
+            }
+        }
+    }
+
+    private func applyCustomFont(_ fontName: String) {
+        guard case let .ranges(ranges) = textSelection.indices(in: text) else { return }
+        let italic = selectedIsItalic
+        text.transform(updating: &textSelection) { mutableText in
+            for range in ranges.ranges {
+                let runs = mutableText[range].runs.map { (run: $0.range, font: $0.font ?? .body) }
+                for item in runs {
+                    let resolved = item.font.resolve(in: fontResolutionContext)
+                    let base = Font.custom(fontName, size: resolved.pointSize)
+                    mutableText[item.run].font = italic ? base.italic() : base
+                }
+            }
+        }
+    }
+
     private func applyDesign(_ design: Font.Design) {
         guard case let .ranges(ranges) = textSelection.indices(in: text) else { return }
         selectedDesign = design
@@ -481,6 +538,35 @@ public struct RichTextEditor: View {
                 mutableText[range].link = url
             }
         }
+    }
+}
+
+@available(iOS 26.0, macOS 15.0, tvOS 18.0, watchOS 11.0, visionOS 2.0, *)
+private struct BarItemScrollHapticModifier: ViewModifier {
+    @State private var isVisible = true
+
+    func body(content: Content) -> some View {
+        content
+            .onScrollVisibilityChange(threshold: 0.5) { visible in
+                isVisible = visible
+            }
+            .sensoryFeedback(.selection, trigger: isVisible) { _, newValue in !newValue }
+    }
+}
+
+@available(iOS 26.0, macOS 15.0, tvOS 18.0, watchOS 11.0, visionOS 2.0, *)
+private extension View {
+    func barItem(namespace: Namespace.ID) -> some View {
+        glassEffectUnion(id: "bar", namespace: namespace)
+            .scrollTransition(.interactive) { content, phase in
+                let t = max(0, phase.value)
+                return content
+                    .opacity(1.0 - min(1.0, t * 2.5))
+                    .scaleEffect(1.0 - min(0.25, t * 0.6))
+                    .blur(radius: max(0, t - 0.8) * 8)
+                    .offset(x: -t * 10)
+            }
+            .modifier(BarItemScrollHapticModifier())
     }
 }
 
