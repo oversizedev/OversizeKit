@@ -23,18 +23,5 @@ struct RichTextTextActionsView: View {
                 .padding(.leading, .xxxSmall)
         }
         .barItem(namespace: namespace)
-
-        Button {} label: {
-            Icon(Image.Base.picture2)
-                .padding(.xSmall)
-                .padding(.leading, .xxxSmall)
-        }
-        .barItem(namespace: namespace)
-
-        Button {} label: {
-            Icon(Image.Base.link)
-                .padding(.xSmall)
-        }
-        .barItem(namespace: namespace)
     }
 }
