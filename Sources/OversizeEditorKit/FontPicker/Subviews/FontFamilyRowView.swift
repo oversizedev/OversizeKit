@@ -1,13 +1,13 @@
 //
 // Copyright © 2024 Alexander Romanov
-// FontFamilyCellView.swift, created on 20.05.2026
+// FontFamilyRowView.swift, created on 20.05.2026
 //
 
 import OversizeUI
 import SwiftUI
 
 @available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
-struct FontFamilyCellView: View {
+struct FontFamilyRowView: View {
     @Binding var selectedFontName: String?
     let family: String
     let fonts: [String]
@@ -39,13 +39,13 @@ struct FontFamilyCellView: View {
     @Previewable @State var font: String? = nil
     NavigationStack {
         List {
-            FontFamilyCellView(
+            FontFamilyRowView(
                 selectedFontName: $font,
                 family: "Georgia",
                 fonts: ["Georgia", "Georgia-Bold"],
                 onSelect: {}
             )
-            FontFamilyCellView(
+            FontFamilyRowView(
                 selectedFontName: $font,
                 family: "Courier New",
                 fonts: ["CourierNewPSMT"],

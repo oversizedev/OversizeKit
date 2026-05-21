@@ -41,10 +41,8 @@ public struct URLEditor<Action: View>: View {
                     return
                 }
                 commitURL()
-            }, onCommit: {
-                commitURL()
-            })
-            .focused($isFocused)
+            }, onCommit: commitURL)
+                .focused($isFocused)
             #if os(iOS)
                 .keyboardType(.URL)
                 .textInputAutocapitalization(.never)
