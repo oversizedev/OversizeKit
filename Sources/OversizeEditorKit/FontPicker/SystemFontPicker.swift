@@ -33,7 +33,6 @@ public struct SystemFontPicker: View {
 
     public var body: some View {
         ListLayoutView("Font") {
-
             // MARK: - System
 
             ListSection {
@@ -103,21 +102,21 @@ public struct SystemFontPicker: View {
         }
         .scrollIndicators(.hidden)
         #if os(iOS) || os(macOS)
-        .sheet(isPresented: $isFontPickerPresented) {
-            NavigationStack {
-                FontPicker(
-                    selectedFontName: $selectedFontName,
-                    onApply: { name in
-                        onApply?(name)
-                        dismiss()
-                    }
-                )
+            .sheet(isPresented: $isFontPickerPresented) {
+                NavigationStack {
+                    FontPicker(
+                        selectedFontName: $selectedFontName,
+                        onApply: { name in
+                            onApply?(name)
+                            dismiss()
+                        }
+                    )
+                }
+                #if os(iOS)
+                .presentationDetents([.large])
+                .navigationTransitionZoom(sourceID: "allFonts", in: namespace)
+                #endif
             }
-            #if os(iOS)
-            .presentationDetents([.large])
-            .navigationTransitionZoom(sourceID: "allFonts", in: namespace)
-            #endif
-        }
         #endif
     }
 }

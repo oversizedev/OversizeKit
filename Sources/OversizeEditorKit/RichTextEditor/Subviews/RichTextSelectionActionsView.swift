@@ -191,16 +191,15 @@ struct RichTextSelectionActionsView: View {
     private func resolveSystemFont(size: CGFloat, bold: Bool, italic: Bool, design: Font.Design) -> Font {
         let weight: UIFont.Weight = bold ? .bold : .regular
         let baseDescriptor = UIFont.systemFont(ofSize: size, weight: weight).fontDescriptor
-        let designedDescriptor: UIFontDescriptor
-        switch design {
+        let designedDescriptor: UIFontDescriptor = switch design {
         case .serif:
-            designedDescriptor = baseDescriptor.withDesign(.serif) ?? baseDescriptor
+            baseDescriptor.withDesign(.serif) ?? baseDescriptor
         case .rounded:
-            designedDescriptor = baseDescriptor.withDesign(.rounded) ?? baseDescriptor
+            baseDescriptor.withDesign(.rounded) ?? baseDescriptor
         case .monospaced:
-            designedDescriptor = baseDescriptor.withDesign(.monospaced) ?? baseDescriptor
+            baseDescriptor.withDesign(.monospaced) ?? baseDescriptor
         default:
-            designedDescriptor = baseDescriptor
+            baseDescriptor
         }
         var traits = designedDescriptor.symbolicTraits
         if italic { traits.insert(.traitItalic) }
@@ -222,20 +221,20 @@ struct RichTextSelectionActionsView: View {
         }
         return fallbackCustomFont(name: name, size: size, bold: bold, italic: italic)
     }
+
     #elseif os(macOS)
     private func resolveSystemFont(size: CGFloat, bold: Bool, italic: Bool, design: Font.Design) -> Font {
         let weight: NSFont.Weight = bold ? .bold : .regular
         let baseDescriptor = NSFont.systemFont(ofSize: size, weight: weight).fontDescriptor
-        let designedDescriptor: NSFontDescriptor
-        switch design {
+        let designedDescriptor: NSFontDescriptor = switch design {
         case .serif:
-            designedDescriptor = baseDescriptor.withDesign(.serif) ?? baseDescriptor
+            baseDescriptor.withDesign(.serif) ?? baseDescriptor
         case .rounded:
-            designedDescriptor = baseDescriptor.withDesign(.rounded) ?? baseDescriptor
+            baseDescriptor.withDesign(.rounded) ?? baseDescriptor
         case .monospaced:
-            designedDescriptor = baseDescriptor.withDesign(.monospaced) ?? baseDescriptor
+            baseDescriptor.withDesign(.monospaced) ?? baseDescriptor
         default:
-            designedDescriptor = baseDescriptor
+            baseDescriptor
         }
         var traits = designedDescriptor.symbolicTraits
         if italic { traits.insert(.italic) }

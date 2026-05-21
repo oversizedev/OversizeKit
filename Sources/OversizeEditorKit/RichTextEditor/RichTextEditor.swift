@@ -33,51 +33,51 @@ public struct RichTextEditor: View {
             .writingToolsBehavior(.complete)
             .contentMargins(.horizontal, .regular, for: .scrollContent)
             .textEditorStyle(.plain)
-        .toolbar {
-            if let title {
-                ToolbarItem(placement: .principal) {
-                    Text(title)
-                        .font(.headline)
+            .toolbar {
+                if let title {
+                    ToolbarItem(placement: .principal) {
+                        Text(title)
+                            .font(.headline)
+                    }
+                }
+                ToolbarItem(placement: .primaryAction) {
+                    Toggle(isOn: $viewModel.findNavigatorIsPresented) {
+                        Label("Find and replace", systemImage: "magnifyingglass")
+                    }
+                }
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Close", systemImage: "xmark", role: .cancel) {
+                        dismiss()
+                    }
+                    .labelStyle(.toolbar)
+                    .buttonStyle(.toolbarSecondary)
+                    #if !os(tvOS)
+                        .keyboardShortcut(.cancelAction)
+                    #endif
                 }
             }
-            ToolbarItem(placement: .primaryAction) {
-                Toggle(isOn: $viewModel.findNavigatorIsPresented) {
-                    Label("Find and replace", systemImage: "magnifyingglass")
+            .toolbarTitleDisplayMode(.inline)
+            .scrollDismissesKeyboard(.interactively)
+            .safeAreaInset(edge: .bottom) {
+                RichTextBottomBar(
+                    text: $text,
+                    viewModel: viewModel,
+                    namespace: unionNamespace,
+                    isFocus: $isFocus
+                )
+            }
+            .onChange(of: text) { _, _ in
+                if viewModel.isFontStyleSelection {
+                    withAnimation(.interactiveSpring) {
+                        viewModel.isFontStyleSelection = false
+                    }
                 }
             }
-            ToolbarItem(placement: .cancellationAction) {
-                Button("Close", systemImage: "xmark", role: .cancel) {
-                    dismiss()
-                }
-                .labelStyle(.toolbar)
-                .buttonStyle(.toolbarSecondary)
-                #if !os(tvOS)
-                    .keyboardShortcut(.cancelAction)
-                #endif
+            .onAppear {
+                isFocus = true
             }
-        }
-        .toolbarTitleDisplayMode(.inline)
-        .scrollDismissesKeyboard(.interactively)
-        .safeAreaInset(edge: .bottom) {
-            RichTextBottomBar(
-                text: $text,
-                viewModel: viewModel,
-                namespace: unionNamespace,
-                isFocus: $isFocus
-            )
-        }
-        .onChange(of: text) { _, _ in
-            if viewModel.isFontStyleSelection {
-                withAnimation(.interactiveSpring) {
-                    viewModel.isFontStyleSelection = false
-                }
-            }
-        }
-        .onAppear {
-            isFocus = true
-        }
-        // .animation(.default, value: isFocus)
-        .sheet(item: $viewModel.sheet) { resolveSheet(sheet: $0) }
+            // .animation(.default, value: isFocus)
+            .sheet(item: $viewModel.sheet) { resolveSheet(sheet: $0) }
         #if os(iOS) || os(macOS)
             .onChange(of: viewModel.selectedTextStyle) { _, style in
                 guard case let .ranges(ranges) = viewModel.textSelection.indices(in: text) else { return }

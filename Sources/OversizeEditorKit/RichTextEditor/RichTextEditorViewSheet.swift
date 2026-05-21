@@ -58,7 +58,7 @@ extension RichTextEditor {
                                     let runs = mt[range].runs.map { (run: $0.range, font: $0.font ?? .body) }
                                     for item in runs {
                                         let resolved = item.font.resolve(in: fontResolutionContext)
-                                        let base: Font = if let fontName {
+                                        let base = if let fontName {
                                             Font.custom(fontName, size: resolved.pointSize)
                                         } else {
                                             Font.system(size: resolved.pointSize, weight: resolved.isBold ? .bold : .regular, design: design)
