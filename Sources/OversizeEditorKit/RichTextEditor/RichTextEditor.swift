@@ -27,15 +27,12 @@ public struct RichTextEditor: View {
     }
 
     public var body: some View {
-        ScrollView {
-            TextEditor(text: $text, selection: $viewModel.textSelection)
-                .focused($isFocus)
-                .findNavigator(isPresented: $viewModel.findNavigatorIsPresented)
-                .writingToolsBehavior(.complete)
-                .contentMargins(.horizontal, .regular, for: .scrollContent)
-                .textEditorStyle(.plain)
-        }
-        .background(Color.backgroundPrimary)
+        TextEditor(text: $text, selection: $viewModel.textSelection)
+            .focused($isFocus)
+            .findNavigator(isPresented: $viewModel.findNavigatorIsPresented)
+            .writingToolsBehavior(.complete)
+            .contentMargins(.horizontal, .regular, for: .scrollContent)
+            .textEditorStyle(.plain)
         .toolbar {
             if let title {
                 ToolbarItem(placement: .principal) {

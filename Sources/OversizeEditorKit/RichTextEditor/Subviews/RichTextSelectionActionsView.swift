@@ -153,12 +153,11 @@ struct RichTextSelectionActionsView: View {
                 let runs = mt[range].runs.map { (run: $0.range, font: $0.font ?? .body) }
                 for item in runs {
                     let resolved = item.font.resolve(in: fontResolutionContext)
-                    let base: Font = if let fontName {
+                    mt[item.run].font = if let fontName {
                         resolveCustomFont(name: fontName, size: resolved.pointSize, bold: newBold, italic: italic)
                     } else {
-                        Font.system(size: resolved.pointSize, weight: newBold ? .bold : .regular, design: design)
+                        resolveSystemFont(size: resolved.pointSize, bold: newBold, italic: italic, design: design)
                     }
-                    mt[item.run].font = fontName != nil ? base : (italic ? base.italic() : base)
                 }
             }
         }
@@ -177,12 +176,11 @@ struct RichTextSelectionActionsView: View {
                 let runs = mt[range].runs.map { (run: $0.range, font: $0.font ?? .body) }
                 for item in runs {
                     let resolved = item.font.resolve(in: fontResolutionContext)
-                    let base: Font = if let fontName {
+                    mt[item.run].font = if let fontName {
                         resolveCustomFont(name: fontName, size: resolved.pointSize, bold: resolved.isBold, italic: newItalic)
                     } else {
-                        Font.system(size: resolved.pointSize, weight: resolved.isBold ? .bold : .regular, design: design)
+                        resolveSystemFont(size: resolved.pointSize, bold: resolved.isBold, italic: newItalic, design: design)
                     }
-                    mt[item.run].font = fontName != nil ? base : (newItalic ? base.italic() : base)
                 }
             }
         }
@@ -190,6 +188,28 @@ struct RichTextSelectionActionsView: View {
     }
 
     #if os(iOS)
+    private func resolveSystemFont(size: CGFloat, bold: Bool, italic: Bool, design: Font.Design) -> Font {
+        let weight: UIFont.Weight = bold ? .bold : .regular
+        let baseDescriptor = UIFont.systemFont(ofSize: size, weight: weight).fontDescriptor
+        let designedDescriptor: UIFontDescriptor
+        switch design {
+        case .serif:
+            designedDescriptor = baseDescriptor.withDesign(.serif) ?? baseDescriptor
+        case .rounded:
+            designedDescriptor = baseDescriptor.withDesign(.rounded) ?? baseDescriptor
+        case .monospaced:
+            designedDescriptor = baseDescriptor.withDesign(.monospaced) ?? baseDescriptor
+        default:
+            designedDescriptor = baseDescriptor
+        }
+        var traits = designedDescriptor.symbolicTraits
+        if italic { traits.insert(.traitItalic) }
+        if let finalDescriptor = designedDescriptor.withSymbolicTraits(traits) {
+            return Font(UIFont(descriptor: finalDescriptor, size: size))
+        }
+        return Font(UIFont(descriptor: designedDescriptor, size: size))
+    }
+
     private func resolveCustomFont(name: String, size: CGFloat, bold: Bool, italic: Bool) -> Font {
         guard let uiFont = UIFont(name: name, size: size) else {
             return fallbackCustomFont(name: name, size: size, bold: bold, italic: italic)
@@ -203,6 +223,29 @@ struct RichTextSelectionActionsView: View {
         return fallbackCustomFont(name: name, size: size, bold: bold, italic: italic)
     }
     #elseif os(macOS)
+    private func resolveSystemFont(size: CGFloat, bold: Bool, italic: Bool, design: Font.Design) -> Font {
+        let weight: NSFont.Weight = bold ? .bold : .regular
+        let baseDescriptor = NSFont.systemFont(ofSize: size, weight: weight).fontDescriptor
+        let designedDescriptor: NSFontDescriptor
+        switch design {
+        case .serif:
+            designedDescriptor = baseDescriptor.withDesign(.serif) ?? baseDescriptor
+        case .rounded:
+            designedDescriptor = baseDescriptor.withDesign(.rounded) ?? baseDescriptor
+        case .monospaced:
+            designedDescriptor = baseDescriptor.withDesign(.monospaced) ?? baseDescriptor
+        default:
+            designedDescriptor = baseDescriptor
+        }
+        var traits = designedDescriptor.symbolicTraits
+        if italic { traits.insert(.italic) }
+        let finalDescriptor = designedDescriptor.withSymbolicTraits(traits)
+        if let nsFont = NSFont(descriptor: finalDescriptor, size: size) {
+            return Font(nsFont)
+        }
+        return Font(NSFont(descriptor: designedDescriptor, size: size) ?? NSFont.systemFont(ofSize: size, weight: weight))
+    }
+
     private func resolveCustomFont(name: String, size: CGFloat, bold: Bool, italic: Bool) -> Font {
         guard let nsFont = NSFont(name: name, size: size) else {
             return fallbackCustomFont(name: name, size: size, bold: bold, italic: italic)
@@ -218,6 +261,12 @@ struct RichTextSelectionActionsView: View {
         return Font(result)
     }
     #else
+    private func resolveSystemFont(size: CGFloat, bold: Bool, italic: Bool, design: Font.Design) -> Font {
+        var font = Font.system(size: size, weight: bold ? .bold : .regular, design: design)
+        if italic { font = font.italic() }
+        return font
+    }
+
     private func resolveCustomFont(name: String, size: CGFloat, bold: Bool, italic: Bool) -> Font {
         fallbackCustomFont(name: name, size: size, bold: bold, italic: italic)
     }
