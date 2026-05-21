@@ -105,23 +105,6 @@ public struct RichTextEditor: View {
                 }
                 text = mutableText
             }
-            .onChange(of: viewModel.selectedFontName) { _, name in
-                guard let name else { return }
-                guard case let .ranges(ranges) = viewModel.textSelection.indices(in: text) else { return }
-                let italic = viewModel.selectedIsItalic
-                var mutableText = text
-                mutableText.transform(updating: &viewModel.textSelection) { mt in
-                    for range in ranges.ranges {
-                        let runs = mt[range].runs.map { (run: $0.range, font: $0.font ?? .body) }
-                        for item in runs {
-                            let resolved = item.font.resolve(in: fontResolutionContext)
-                            let base = Font.custom(name, size: resolved.pointSize)
-                            mt[item.run].font = italic ? base.italic() : base
-                        }
-                    }
-                }
-                text = mutableText
-            }
         #endif
     }
 }

@@ -12,8 +12,16 @@ public struct FontPicker: View {
     @Environment(\.dismiss) private var dismiss
     @State private var viewModel = FontPickerViewModel()
 
-    public init(selectedFontName: Binding<String?>) {
+    var onApply: ((String) -> Void)?
+
+    public init(selectedFontName: Binding<String?>, onApply: ((String) -> Void)? = nil) {
         _selectedFontName = selectedFontName
+        self.onApply = onApply
+    }
+
+    private func onSelectFont() {
+        if let name = selectedFontName { onApply?(name) }
+        dismiss()
     }
 
     public var body: some View {
@@ -22,7 +30,7 @@ public struct FontPicker: View {
                 RecentFontsSectionView(
                     selectedFontName: $selectedFontName,
                     recentFonts: viewModel.recentFonts,
-                    onSelect: { dismiss() }
+                    onSelect: onSelectFont
                 )
             }
 
@@ -33,7 +41,7 @@ public struct FontPicker: View {
                             selectedFontName: $selectedFontName,
                             familyName: "System Fonts",
                             fonts: viewModel.systemFonts,
-                            onSelect: { dismiss() }
+                            onSelect: onSelectFont
                         )
                     }
                 }
@@ -52,7 +60,7 @@ public struct FontPicker: View {
                                         selectedFontName: $selectedFontName,
                                         family: family,
                                         fonts: fonts,
-                                        onSelect: { dismiss() }
+                                        onSelect: onSelectFont
                                     )
                                 }
                             }
@@ -68,7 +76,7 @@ public struct FontPicker: View {
                                         selectedFontName: $selectedFontName,
                                         family: family,
                                         fonts: fonts,
-                                        onSelect: { dismiss() }
+                                        onSelect: onSelectFont
                                     )
                                 }
                             }

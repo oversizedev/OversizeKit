@@ -147,13 +147,18 @@ struct RichTextSelectionActionsView: View {
         let newBold = !isSelectionBold
         let italic = viewModel.selectedIsItalic
         let design = viewModel.selectedDesign
+        let fontName = viewModel.selectedFontName
         mutableText.transform(updating: &viewModel.textSelection) { mt in
             for range in ranges.ranges {
                 let runs = mt[range].runs.map { (run: $0.range, font: $0.font ?? .body) }
                 for item in runs {
                     let resolved = item.font.resolve(in: fontResolutionContext)
-                    let base = Font.system(size: resolved.pointSize, weight: newBold ? .bold : .regular, design: design)
-                    mt[item.run].font = italic ? base.italic() : base
+                    let base: Font = if let fontName {
+                        resolveCustomFont(name: fontName, size: resolved.pointSize, bold: newBold, italic: italic)
+                    } else {
+                        Font.system(size: resolved.pointSize, weight: newBold ? .bold : .regular, design: design)
+                    }
+                    mt[item.run].font = fontName != nil ? base : (italic ? base.italic() : base)
                 }
             }
         }
@@ -166,17 +171,63 @@ struct RichTextSelectionActionsView: View {
         let newItalic = !viewModel.selectedIsItalic
         viewModel.selectedIsItalic = newItalic
         let design = viewModel.selectedDesign
+        let fontName = viewModel.selectedFontName
         mutableText.transform(updating: &viewModel.textSelection) { mt in
             for range in ranges.ranges {
                 let runs = mt[range].runs.map { (run: $0.range, font: $0.font ?? .body) }
                 for item in runs {
                     let resolved = item.font.resolve(in: fontResolutionContext)
-                    let base = Font.system(size: resolved.pointSize, weight: resolved.isBold ? .bold : .regular, design: design)
-                    mt[item.run].font = newItalic ? base.italic() : base
+                    let base: Font = if let fontName {
+                        resolveCustomFont(name: fontName, size: resolved.pointSize, bold: resolved.isBold, italic: newItalic)
+                    } else {
+                        Font.system(size: resolved.pointSize, weight: resolved.isBold ? .bold : .regular, design: design)
+                    }
+                    mt[item.run].font = fontName != nil ? base : (newItalic ? base.italic() : base)
                 }
             }
         }
         return mutableText
+    }
+
+    #if os(iOS)
+    private func resolveCustomFont(name: String, size: CGFloat, bold: Bool, italic: Bool) -> Font {
+        guard let uiFont = UIFont(name: name, size: size) else {
+            return fallbackCustomFont(name: name, size: size, bold: bold, italic: italic)
+        }
+        var traits: UIFontDescriptor.SymbolicTraits = []
+        if bold { traits.insert(.traitBold) }
+        if italic { traits.insert(.traitItalic) }
+        if let descriptor = uiFont.fontDescriptor.withSymbolicTraits(traits) {
+            return Font(UIFont(descriptor: descriptor, size: size))
+        }
+        return fallbackCustomFont(name: name, size: size, bold: bold, italic: italic)
+    }
+    #elseif os(macOS)
+    private func resolveCustomFont(name: String, size: CGFloat, bold: Bool, italic: Bool) -> Font {
+        guard let nsFont = NSFont(name: name, size: size) else {
+            return fallbackCustomFont(name: name, size: size, bold: bold, italic: italic)
+        }
+        let manager = NSFontManager.shared
+        var result = nsFont
+        result = bold
+            ? manager.convert(result, toHaveTrait: .boldFontMask)
+            : manager.convert(result, toNotHaveTrait: .boldFontMask)
+        result = italic
+            ? manager.convert(result, toHaveTrait: .italicFontMask)
+            : manager.convert(result, toNotHaveTrait: .italicFontMask)
+        return Font(result)
+    }
+    #else
+    private func resolveCustomFont(name: String, size: CGFloat, bold: Bool, italic: Bool) -> Font {
+        fallbackCustomFont(name: name, size: size, bold: bold, italic: italic)
+    }
+    #endif
+
+    private func fallbackCustomFont(name: String, size: CGFloat, bold: Bool, italic: Bool) -> Font {
+        var font = Font.custom(name, size: size)
+        if bold { font = font.bold() }
+        if italic { font = font.italic() }
+        return font
     }
 }
 

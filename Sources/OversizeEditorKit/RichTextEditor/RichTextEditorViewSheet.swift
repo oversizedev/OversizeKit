@@ -45,7 +45,31 @@ extension RichTextEditor {
             case .fontPicker:
                 #if os(iOS) || os(macOS)
                 NavigationStack {
-                    FontPicker(selectedFontName: Bindable(viewModel).selectedFontName)
+                    SystemFontPicker(
+                        selectedDesign: Bindable(viewModel).selectedDesign,
+                        selectedFontName: Bindable(viewModel).selectedFontName,
+                        onApply: { fontName in
+                            guard case let .ranges(ranges) = viewModel.textSelection.indices(in: text) else { return }
+                            let italic = viewModel.selectedIsItalic
+                            let design = viewModel.selectedDesign
+                            var mutableText = text
+                            mutableText.transform(updating: &viewModel.textSelection) { mt in
+                                for range in ranges.ranges {
+                                    let runs = mt[range].runs.map { (run: $0.range, font: $0.font ?? .body) }
+                                    for item in runs {
+                                        let resolved = item.font.resolve(in: fontResolutionContext)
+                                        let base: Font = if let fontName {
+                                            Font.custom(fontName, size: resolved.pointSize)
+                                        } else {
+                                            Font.system(size: resolved.pointSize, weight: resolved.isBold ? .bold : .regular, design: design)
+                                        }
+                                        mt[item.run].font = italic ? base.italic() : base
+                                    }
+                                }
+                            }
+                            text = mutableText
+                        }
+                    )
                 }
                 #if os(iOS)
                 .presentationDetents([.medium, .large])

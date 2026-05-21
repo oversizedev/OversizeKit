@@ -33,7 +33,7 @@ final class RichTextEditorViewModel {
     }
 
     var isItalicSupported: Bool {
-        selectedDesign != .rounded
+        selectedFontName != nil || selectedDesign != .rounded
     }
 
     func isSelectionUnderlined(in text: AttributedString) -> Bool {
