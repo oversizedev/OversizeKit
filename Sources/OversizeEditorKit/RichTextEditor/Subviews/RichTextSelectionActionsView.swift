@@ -132,6 +132,12 @@ struct RichTextSelectionActionsView: View {
         }
         .barItem(namespace: namespace)
         #endif
+
+        // MARK: - Highlight
+
+        #if os(iOS) || os(macOS)
+        RichTextHighlightMenuView(text: $text, viewModel: viewModel, namespace: namespace)
+        #endif
     }
 
     // MARK: - Font Helpers

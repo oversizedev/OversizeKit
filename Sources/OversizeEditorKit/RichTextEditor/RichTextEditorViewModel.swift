@@ -85,6 +85,28 @@ final class RichTextEditorViewModel {
         }
     }
 
+    func applyHighlight(_ color: Color, text: inout AttributedString) {
+        guard case let .ranges(ranges) = textSelection.indices(in: text) else { return }
+        text.transform(updating: &textSelection) { mutableText in
+            for range in ranges.ranges {
+                mutableText[range].backgroundColor = color
+            }
+        }
+    }
+
+    func removeHighlight(text: inout AttributedString) {
+        guard case let .ranges(ranges) = textSelection.indices(in: text) else { return }
+        text.transform(updating: &textSelection) { mutableText in
+            for range in ranges.ranges {
+                mutableText[range].backgroundColor = nil
+            }
+        }
+    }
+
+    func selectionHighlightColor(in text: AttributedString) -> Color? {
+        textSelection.typingAttributes(in: text).backgroundColor
+    }
+
     func applyLink(_ urlString: String, text: inout AttributedString) {
         guard case let .ranges(ranges) = textSelection.indices(in: text) else { return }
         let url: URL?
