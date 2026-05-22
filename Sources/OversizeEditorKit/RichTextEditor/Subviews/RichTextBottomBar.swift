@@ -23,6 +23,7 @@ struct RichTextBottomBar: View {
         case openLinkSheet
         case toggleFontStyleSelection
         case toggleFocus
+        case openAIWritingSheet
     }
 
     private let hasSelection: Bool
@@ -119,6 +120,7 @@ struct RichTextBottomBar: View {
                                 case .undo: onAction(.undo)
                                 case .redo: onAction(.redo)
                                 case .toggleFontStyleSelection: onAction(.toggleFontStyleSelection)
+                                case .openAIWritingSheet: onAction(.openAIWritingSheet)
                                 }
                             }
                         }

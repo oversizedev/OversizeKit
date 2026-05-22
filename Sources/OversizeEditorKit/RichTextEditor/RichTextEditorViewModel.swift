@@ -58,7 +58,7 @@ final class RichTextEditorViewModel {
     var typingFontActive: Bool = false
     private(set) var isApplyingOverrides: Bool = false
 
-    private var undoObservations: [NSObjectProtocol] = []
+    @ObservationIgnored nonisolated(unsafe) private var undoObservations: [NSObjectProtocol] = []
 
     init(_ text: AttributedString) {
         self.text = text
@@ -89,6 +89,7 @@ extension RichTextEditorViewModel {
         case toggleFontStyleSelection
         case applyTypingOverrides(oldText: AttributedString, newText: AttributedString)
         case openLinkSheet
+        case openAIWritingSheet
     }
 
     func syncText(_ newValue: AttributedString) {
@@ -133,6 +134,20 @@ extension RichTextEditorViewModel {
         case .openLinkSheet:
             linkURLString = selectionCurrentLink?.absoluteString ?? ""
             present(.link)
+        case .openAIWritingSheet:
+            present(.aiWriting)
+        }
+    }
+
+    func insertGeneratedText(_ inputText: String) {
+        let attributed = AttributedString(inputText)
+        switch textSelection.indices(in: text) {
+        case .insertionPoint(let cursor):
+            text.insert(attributed, at: cursor)
+        case .ranges(let ranges):
+            if let range = ranges.ranges.first {
+                text.replaceSubrange(range, with: attributed)
+            }
         }
     }
 }

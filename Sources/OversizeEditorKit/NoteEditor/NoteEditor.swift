@@ -47,7 +47,6 @@ public struct NoteEditor: View {
                     #endif
                 }
             }
-
             .toolbarTitleDisplayMode(.inline)
             .onAppear {
                 isFocus = true

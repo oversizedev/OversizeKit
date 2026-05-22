@@ -157,6 +157,8 @@ let package = Package(
                 .product(name: "OversizeUI", package: "OversizeUI"),
                 .product(name: "OversizeCore", package: "OversizeCore"),
                 .product(name: "OversizeResources", package: "OversizeResources"),
+                .product(name: "OversizeIntelligenceService", package: "OversizeServices"),
+                .product(name: "FactoryKit", package: "Factory"),
             ]
         ),
         .target(

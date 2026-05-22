@@ -90,6 +90,7 @@ public struct RichTextEditor: View {
                     case .openTextStylePicker: viewModel.present(.textStylePicker)
                     case .openLinkSheet: viewModel.send(.openLinkSheet)
                     case .toggleFontStyleSelection: viewModel.send(.toggleFontStyleSelection)
+                    case .openAIWritingSheet: viewModel.send(.openAIWritingSheet)
                     case .toggleFocus: isFocus.toggle()
                     }
                 }

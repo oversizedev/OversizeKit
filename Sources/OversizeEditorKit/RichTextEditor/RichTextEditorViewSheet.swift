@@ -23,6 +23,7 @@ extension RichTextEditorViewModel {
         case fontPicker
         case textStylePicker
         case link
+        case aiWriting
     }
 }
 
@@ -33,6 +34,7 @@ extension RichTextEditorViewModel.Sheet: Identifiable {
         case .fontPicker: "fontPicker"
         case .textStylePicker: "textStylePicker"
         case .link: "link"
+        case .aiWriting: "aiWriting"
         }
     }
 }
@@ -69,6 +71,22 @@ extension RichTextEditor {
                 #if os(iOS)
                 .presentationDetents([.medium, .large])
                 .navigationTransition(.zoom(sourceID: "textStylePicker", in: unionNamespace))
+                #endif
+                #else
+                EmptyView()
+                #endif
+
+            case .aiWriting:
+                #if os(iOS) || os(macOS)
+                NavigationStack {
+                    AIWritingView { generatedText in
+                        viewModel.insertGeneratedText(generatedText)
+                        viewModel.close()
+                    }
+                }
+                #if os(iOS)
+                .presentationDetents([.medium, .large])
+                .navigationTransition(.zoom(sourceID: "aiWriting", in: unionNamespace))
                 #endif
                 #else
                 EmptyView()

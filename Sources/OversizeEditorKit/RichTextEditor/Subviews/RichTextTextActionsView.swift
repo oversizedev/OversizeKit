@@ -13,6 +13,7 @@ struct RichTextTextActionsView: View {
         case undo
         case redo
         case toggleFontStyleSelection
+        case openAIWritingSheet
     }
 
     private let canUndo: Bool
@@ -38,7 +39,7 @@ struct RichTextTextActionsView: View {
         Button {
             onAction(.undo)
         } label: {
-            Icon(Image(systemName: "arrow.uturn.backward"))
+            Icon(Image.Arrow.reverseLeft)
                 .padding(.xSmall)
                 .padding(.leading, .xxxSmall)
         }
@@ -48,7 +49,7 @@ struct RichTextTextActionsView: View {
         Button {
             onAction(.redo)
         } label: {
-            Icon(Image(systemName: "arrow.uturn.forward"))
+            Icon(Image.Arrow.reverseRight)
                 .padding(.xSmall)
         }
         .disabled(!canRedo)
@@ -65,15 +66,34 @@ struct RichTextTextActionsView: View {
                 .padding(.xSmall)
         }
         .barItem(namespace: namespace)
+
+        Separator(.vertical)
+            .lineWidth(3)
+            .frame(height: .regular)
+
+        Button {
+            onAction(.openAIWritingSheet)
+        } label: {
+            Icon(Image.Ai.sparksAi)
+                .padding(.xSmall)
+        }
+        #if os(iOS)
+        .matchedTransitionSource(id: "aiWriting", in: namespace)
+        #endif
+        .barItem(namespace: namespace)
     }
 }
 
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
 #Preview {
     @Previewable @Namespace var namespace
-    RichTextTextActionsView(
-        canUndo: true,
-        canRedo: false,
-        namespace: namespace
-    ) { _ in }
+    ScrollView(.horizontal) {
+        HStack(spacing: .zero) {
+            RichTextTextActionsView(
+                canUndo: true,
+                canRedo: false,
+                namespace: namespace
+            ) { _ in }
+        }
+    }
 }
