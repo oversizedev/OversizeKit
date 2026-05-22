@@ -22,11 +22,18 @@ struct RichTextSelectionActionsView: View {
                 }
             } label: {
                 Icon(Image.Base.chevronLeft)
-                    .padding(.xSmall)
-                    .padding(.leading, .xxxSmall)
+                    .padding(
+                        .init(
+                            top: .xSmall,
+                            leading: .xSmall,
+                            bottom: .xSmall,
+                            trailing: .zero
+                        )
+                    )
             }
             .barItem(namespace: namespace)
         }
+        
 
         // MARK: - Style
 
@@ -37,7 +44,9 @@ struct RichTextSelectionActionsView: View {
             Text(viewModel.selectedTextStyle.displayName)
                 .headline(.bold)
                 .foregroundStyle(Color.onSurfacePrimary)
-                .padding(.horizontal, .xSmall)
+                .padding(.leading, viewModel.hasSelection(in: text) ? .medium : .xxSmall)
+                .padding(.trailing, .small)
+            
         }
         #if os(iOS)
         .matchedTransitionSource(id: "textStylePicker", in: namespace)
