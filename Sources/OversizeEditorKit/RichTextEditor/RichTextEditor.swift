@@ -11,23 +11,25 @@ import SwiftUI
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
 public struct RichTextEditor: View {
     @Environment(\.fontResolutionContext) var fontResolutionContext
+    @Environment(\.undoManager) private var undoManager
     @Environment(\.dismiss) private var dismiss
 
     @Namespace var unionNamespace
     @FocusState var isFocus: Bool
 
     @Binding var text: AttributedString
-    @State var viewModel = RichTextEditorViewModel()
+    @State var viewModel: RichTextEditorViewModel
 
     private let title: String?
 
     public init(_ title: String? = nil, text: Binding<AttributedString>) {
         self.title = title
         _text = text
+        _viewModel = State(wrappedValue: RichTextEditorViewModel(text.wrappedValue))
     }
 
     public var body: some View {
-        TextEditor(text: $text, selection: $viewModel.textSelection)
+        TextEditor(text: $viewModel.text, selection: $viewModel.textSelection)
             .focused($isFocus)
             .findNavigator(isPresented: $viewModel.findNavigatorIsPresented)
             .writingToolsBehavior(.complete)
@@ -60,23 +62,45 @@ public struct RichTextEditor: View {
             .scrollDismissesKeyboard(.interactively)
             .safeAreaInset(edge: .bottom) {
                 RichTextBottomBar(
-                    text: $text,
-                    viewModel: viewModel,
-                    namespace: unionNamespace,
-                    isFocus: $isFocus
-                )
+                    hasSelection: viewModel.hasSelection,
+                    isFontStyleSelection: viewModel.isFontStyleSelection,
+                    isFocus: isFocus,
+                    canUndo: viewModel.canUndo,
+                    canRedo: viewModel.canRedo,
+                    isSelectionBold: viewModel.isSelectionBold,
+                    isEffectiveItalic: viewModel.isEffectiveItalic,
+                    isSelectionUnderlined: viewModel.isSelectionUnderlined,
+                    isSelectionStrikethrough: viewModel.isSelectionStrikethrough,
+                    isItalicSupported: viewModel.isItalicSupported,
+                    selectedTextStyleName: viewModel.selectedTextStyle.displayName,
+                    hasSelectionLink: viewModel.hasSelectionLink,
+                    selectionHighlightColor: viewModel.selectionHighlightColor,
+                    namespace: unionNamespace
+                ) { action in
+                    switch action {
+                    case .undo: viewModel.send(.undo)
+                    case .redo: viewModel.send(.redo)
+                    case .toggleBold: viewModel.send(.toggleBold)
+                    case .toggleItalic: viewModel.send(.toggleItalic)
+                    case .toggleUnderline: viewModel.send(.toggleUnderline)
+                    case .toggleStrikethrough: viewModel.send(.toggleStrikethrough)
+                    case let .applyHighlight(color): viewModel.send(.applyHighlight(color))
+                    case .removeHighlight: viewModel.send(.removeHighlight)
+                    case .openFontPicker: viewModel.present(.fontPicker)
+                    case .openTextStylePicker: viewModel.present(.textStylePicker)
+                    case .openLinkSheet: viewModel.send(.openLinkSheet)
+                    case .toggleFontStyleSelection: viewModel.send(.toggleFontStyleSelection)
+                    case .toggleFocus: isFocus.toggle()
+                    }
+                }
             }
-            .onChange(of: text) { oldText, newText in
+            .onChange(of: viewModel.text) { oldText, newText in
                 guard !viewModel.isApplyingOverrides else { return }
+                text = newText
                 let addedCount = newText.characters.count - oldText.characters.count
-                if viewModel.hasTypingOverrides, addedCount > 0,
-                   case .insertionPoint(let cursor) = viewModel.textSelection.indices(in: newText)
-                {
-                    var modified = newText
-                    applyTypingOverrides(to: &modified, addedCount: addedCount, cursorIdx: cursor)
-                    viewModel.isApplyingOverrides = true
-                    text = modified
-                    viewModel.isApplyingOverrides = false
+                if viewModel.hasTypingOverrides, addedCount > 0 {
+                    viewModel.send(.applyTypingOverrides(oldText: oldText, newText: newText))
+                    text = viewModel.text
                     return
                 }
                 if viewModel.isFontStyleSelection, !viewModel.hasTypingOverrides {
@@ -85,100 +109,26 @@ public struct RichTextEditor: View {
                     }
                 }
             }
+            .onChange(of: text) { _, newText in
+                viewModel.syncText(newText)
+            }
             .onChange(of: viewModel.textSelection) { _, newSelection in
-                if case .ranges = newSelection.indices(in: text) {
+                if case .ranges = newSelection.indices(in: viewModel.text) {
                     viewModel.clearTypingOverrides()
                 }
             }
             .onAppear {
                 isFocus = true
+                viewModel.undoManager = undoManager
+                viewModel.fontResolutionContext = fontResolutionContext
             }
-            // .animation(.default, value: isFocus)
+            .onChange(of: undoManager) { _, newValue in
+                viewModel.undoManager = newValue
+            }
+            .onChange(of: fontResolutionContext) { _, newValue in
+                viewModel.fontResolutionContext = newValue
+            }
             .sheet(item: $viewModel.sheet) { resolveSheet(sheet: $0) }
-        #if os(iOS) || os(macOS)
-            .onChange(of: viewModel.selectedTextStyle) { _, style in
-                switch viewModel.textSelection.indices(in: text) {
-                case .insertionPoint:
-                    viewModel.typingTextStyleOverride = style
-                case let .ranges(ranges):
-                    let italic = viewModel.selectedIsItalic
-                    let design = viewModel.selectedDesign
-                    let customFontName = viewModel.selectedFontName
-                    let stylePointSize = Font.system(style).resolve(in: fontResolutionContext).pointSize
-                    var mutableText = text
-                    mutableText.transform(updating: &viewModel.textSelection) { mt in
-                        for range in ranges.ranges {
-                            let runs = mt[range].runs.map { (run: $0.range, font: $0.font ?? .body) }
-                            for item in runs {
-                                let isBold = item.font.resolve(in: fontResolutionContext).isBold
-                                let base: Font = if let fontName = customFontName {
-                                    isBold ? Font.custom(fontName, size: stylePointSize).bold() : Font.custom(fontName, size: stylePointSize)
-                                } else {
-                                    Font.system(style, design: design, weight: isBold ? .bold : .regular)
-                                }
-                                mt[item.run].font = italic ? base.italic() : base
-                            }
-                        }
-                    }
-                    text = mutableText
-                }
-            }
-        #endif
-    }
-}
-
-@available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
-extension RichTextEditor {
-    private func applyTypingOverrides(to text: inout AttributedString, addedCount: Int, cursorIdx: AttributedString.Index) {
-        var startIdx = cursorIdx
-        for _ in 0 ..< addedCount {
-            startIdx = text.characters.index(before: startIdx)
-        }
-        let range = startIdx ..< cursorIdx
-
-        let needsFontOverride = viewModel.typingBoldOverride != nil || viewModel.typingItalicOverride != nil ||
-            viewModel.typingTextStyleOverride != nil || viewModel.typingFontActive
-        if needsFontOverride {
-            let boldOverride = viewModel.typingBoldOverride
-            let italic = viewModel.typingItalicOverride ?? viewModel.selectedIsItalic
-            let design = viewModel.selectedDesign
-            let fontName = viewModel.selectedFontName
-            let styleOverride = viewModel.typingTextStyleOverride
-            let hasFontTraitOverride = viewModel.typingBoldOverride != nil || viewModel.typingItalicOverride != nil
-            let runs = text[range].runs.map { (run: $0.range, font: $0.font ?? .body) }
-            for item in runs {
-                let resolved = item.font.resolve(in: fontResolutionContext)
-                let bold = boldOverride ?? resolved.isBold
-                let size: CGFloat = if let styleOverride {
-                    Font.system(styleOverride).resolve(in: fontResolutionContext).pointSize
-                } else {
-                    resolved.pointSize
-                }
-                text[item.run].font = if let fontName {
-                    if hasFontTraitOverride {
-                        RichTextEditorViewModel.resolveCustomFont(name: fontName, size: size, bold: bold, italic: italic)
-                    } else {
-                        italic ? Font.custom(fontName, size: size).italic() : Font.custom(fontName, size: size)
-                    }
-                } else {
-                    RichTextEditorViewModel.resolveSystemFont(size: size, bold: bold, italic: italic, design: design)
-                }
-            }
-        }
-        if let underlineOverride = viewModel.typingUnderlineOverride {
-            text[range].underlineStyle = underlineOverride ? .init(pattern: .solid) : nil
-        }
-        if let strikethroughOverride = viewModel.typingStrikethroughOverride {
-            text[range].strikethroughStyle = strikethroughOverride ? .init(pattern: .solid) : nil
-        }
-        if let color = viewModel.typingColorOverride {
-            text[range].foregroundColor = color
-        }
-        if let highlight = viewModel.typingHighlightOverride {
-            text[range].backgroundColor = highlight
-        } else if viewModel.typingRemoveHighlightOverride {
-            text[range].backgroundColor = nil
-        }
     }
 }
 

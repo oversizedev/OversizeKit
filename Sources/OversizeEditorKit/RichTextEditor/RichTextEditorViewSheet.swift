@@ -49,29 +49,7 @@ extension RichTextEditor {
                         selectedDesign: Bindable(viewModel).selectedDesign,
                         selectedFontName: Bindable(viewModel).selectedFontName,
                         onApply: { fontName in
-                            switch viewModel.textSelection.indices(in: text) {
-                            case .insertionPoint:
-                                viewModel.typingFontActive = true
-                            case let .ranges(ranges):
-                                let italic = viewModel.selectedIsItalic
-                                let design = viewModel.selectedDesign
-                                var mutableText = text
-                                mutableText.transform(updating: &viewModel.textSelection) { mt in
-                                    for range in ranges.ranges {
-                                        let runs = mt[range].runs.map { (run: $0.range, font: $0.font ?? .body) }
-                                        for item in runs {
-                                            let resolved = item.font.resolve(in: fontResolutionContext)
-                                            let base = if let fontName {
-                                                Font.custom(fontName, size: resolved.pointSize)
-                                            } else {
-                                                Font.system(size: resolved.pointSize, weight: resolved.isBold ? .bold : .regular, design: design)
-                                            }
-                                            mt[item.run].font = italic ? base.italic() : base
-                                        }
-                                    }
-                                }
-                                text = mutableText
-                            }
+                            viewModel.send(.applyFont(name: fontName, design: viewModel.selectedDesign))
                         }
                     )
                 }
@@ -82,6 +60,7 @@ extension RichTextEditor {
                 #else
                 EmptyView()
                 #endif
+
             case .textStylePicker:
                 #if os(iOS) || os(macOS)
                 NavigationStack {
@@ -94,6 +73,7 @@ extension RichTextEditor {
                 #else
                 EmptyView()
                 #endif
+
             case .link:
                 #if os(iOS) || os(macOS)
                 NavigationStack {
@@ -104,11 +84,9 @@ extension RichTextEditor {
                             .textInputAutocapitalization(.never)
                             .keyboardType(.URL)
                         #endif
-                        if viewModel.hasSelectionLink(in: text) {
+                        if viewModel.hasSelectionLink {
                             Button("Remove link", role: .destructive) {
-                                var mutableText = text
-                                viewModel.applyLink("", text: &mutableText)
-                                text = mutableText
+                                viewModel.send(.applyLink(""))
                                 viewModel.close()
                             }
                         }
@@ -125,9 +103,7 @@ extension RichTextEditor {
                         }
                         ToolbarItem(placement: .confirmationAction) {
                             Button("Apply") {
-                                var mutableText = text
-                                viewModel.applyLink(viewModel.linkURLString, text: &mutableText)
-                                text = mutableText
+                                viewModel.send(.applyLink(viewModel.linkURLString))
                                 viewModel.close()
                             }
                         }

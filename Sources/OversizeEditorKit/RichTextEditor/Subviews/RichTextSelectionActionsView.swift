@@ -9,44 +9,78 @@ import SwiftUI
 
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
 struct RichTextSelectionActionsView: View {
-    @Binding var text: AttributedString
-    var viewModel: RichTextEditorViewModel
-    var namespace: Namespace.ID
-    @Environment(\.fontResolutionContext) var fontResolutionContext
+    enum Action {
+        case toggleBold
+        case toggleItalic
+        case toggleUnderline
+        case toggleStrikethrough
+        case openFontPicker
+        case openTextStylePicker
+        case openLinkSheet
+        case toggleFontStyleSelection
+        case highlight(RichTextHighlightMenuView.Action)
+    }
+
+    private let hasSelection: Bool
+    private let isSelectionBold: Bool
+    private let isEffectiveItalic: Bool
+    private let isSelectionUnderlined: Bool
+    private let isSelectionStrikethrough: Bool
+    private let isItalicSupported: Bool
+    private let selectedTextStyleName: String
+    private let hasSelectionLink: Bool
+    private let selectionHighlightColor: Color?
+    private let namespace: Namespace.ID
+    private let onAction: (Action) -> Void
+
+    init(
+        hasSelection: Bool,
+        isSelectionBold: Bool,
+        isEffectiveItalic: Bool,
+        isSelectionUnderlined: Bool,
+        isSelectionStrikethrough: Bool,
+        isItalicSupported: Bool,
+        selectedTextStyleName: String,
+        hasSelectionLink: Bool,
+        selectionHighlightColor: Color?,
+        namespace: Namespace.ID,
+        onAction: @escaping (Action) -> Void
+    ) {
+        self.hasSelection = hasSelection
+        self.isSelectionBold = isSelectionBold
+        self.isEffectiveItalic = isEffectiveItalic
+        self.isSelectionUnderlined = isSelectionUnderlined
+        self.isSelectionStrikethrough = isSelectionStrikethrough
+        self.isItalicSupported = isItalicSupported
+        self.selectedTextStyleName = selectedTextStyleName
+        self.hasSelectionLink = hasSelectionLink
+        self.selectionHighlightColor = selectionHighlightColor
+        self.namespace = namespace
+        self.onAction = onAction
+    }
 
     var body: some View {
-        if !viewModel.hasSelection(in: text) {
+        if !hasSelection {
             Button {
-                withAnimation(.interactiveSpring) {
-                    viewModel.isFontStyleSelection.toggle()
-                }
+                onAction(.toggleFontStyleSelection)
             } label: {
                 Icon(Image.Base.chevronLeft)
-                    .padding(
-                        .init(
-                            top: .xSmall,
-                            leading: .xSmall,
-                            bottom: .xSmall,
-                            trailing: .zero
-                        )
-                    )
+                    .padding(.init(top: .xSmall, leading: .xSmall, bottom: .xSmall, trailing: .zero))
             }
             .barItem(namespace: namespace)
         }
-        
 
         // MARK: - Style
 
         #if os(iOS) || os(macOS)
         Button {
-            viewModel.present(.textStylePicker)
+            onAction(.openTextStylePicker)
         } label: {
-            Text(viewModel.selectedTextStyle.displayName)
+            Text(selectedTextStyleName)
                 .headline(.bold)
                 .foregroundStyle(Color.onSurfacePrimary)
-                .padding(.leading, viewModel.hasSelection(in: text) ? .medium : .xxSmall)
+                .padding(.leading, hasSelection ? .medium : .xxSmall)
                 .padding(.trailing, .small)
-            
         }
         #if os(iOS)
         .matchedTransitionSource(id: "textStylePicker", in: namespace)
@@ -61,7 +95,7 @@ struct RichTextSelectionActionsView: View {
         // MARK: - Bold
 
         Button {
-            text = applyingBoldToggle(to: text)
+            onAction(.toggleBold)
         } label: {
             Icon(Image.Editor.boldType)
                 .padding(.xxSmall)
@@ -72,9 +106,9 @@ struct RichTextSelectionActionsView: View {
 
         // MARK: - Italic
 
-        if viewModel.isItalicSupported {
+        if isItalicSupported {
             Button {
-                text = applyingItalicToggle(to: text)
+                onAction(.toggleItalic)
             } label: {
                 Icon(Image.Editor.italic)
                     .padding(.xxSmall)
@@ -87,13 +121,11 @@ struct RichTextSelectionActionsView: View {
         // MARK: - Underline
 
         Button {
-            var mutableText = text
-            viewModel.toggleUnderline(text: &mutableText)
-            text = mutableText
+            onAction(.toggleUnderline)
         } label: {
             Icon(Image.Editor.underline)
                 .padding(.xxSmall)
-                .background(Circle().fillSurfaceSecondary().opacity(viewModel.isSelectionUnderlined(in: text) ? 1 : 0))
+                .background(Circle().fillSurfaceSecondary().opacity(isSelectionUnderlined ? 1 : 0))
                 .padding(.xxxSmall)
         }
         .barItem(namespace: namespace)
@@ -101,13 +133,11 @@ struct RichTextSelectionActionsView: View {
         // MARK: - Strikethrough
 
         Button {
-            var mutableText = text
-            viewModel.toggleStrikethrough(text: &mutableText)
-            text = mutableText
+            onAction(.toggleStrikethrough)
         } label: {
             Icon(Image.Editor.strikethrough)
                 .padding(.xxSmall)
-                .background(Circle().fillSurfaceSecondary().opacity(viewModel.isSelectionStrikethrough(in: text) ? 1 : 0))
+                .background(Circle().fillSurfaceSecondary().opacity(isSelectionStrikethrough ? 1 : 0))
                 .padding(.xxxSmall)
         }
         .barItem(namespace: namespace)
@@ -116,7 +146,7 @@ struct RichTextSelectionActionsView: View {
 
         #if os(iOS) || os(macOS)
         Button {
-            viewModel.present(.fontPicker)
+            onAction(.openFontPicker)
         } label: {
             Icon(Image.Editor.searchFont)
                 .padding(.xSmall)
@@ -125,112 +155,46 @@ struct RichTextSelectionActionsView: View {
         .matchedTransitionSource(id: "fontPicker", in: namespace)
         #endif
         .barItem(namespace: namespace)
-        #endif
-        
-#if os(iOS) || os(macOS)
-RichTextHighlightMenuView(text: $text, viewModel: viewModel, namespace: namespace)
-#endif
+
+        // MARK: - Highlight
+
+        RichTextHighlightMenuView(
+            currentHighlightColor: selectionHighlightColor,
+            namespace: namespace
+        ) { action in
+            onAction(.highlight(action))
+        }
 
         // MARK: - Link
 
-        #if os(iOS) || os(macOS)
         Button {
-            viewModel.linkURLString = viewModel.selectionCurrentLink(in: text)?.absoluteString ?? ""
-            viewModel.present(.link)
+            onAction(.openLinkSheet)
         } label: {
             Icon(Image.Base.link)
                 .padding(.xxSmall)
-                .background(Circle().fillSurfaceSecondary().opacity(viewModel.hasSelectionLink(in: text) ? 1 : 0))
+                .background(Circle().fillSurfaceSecondary().opacity(hasSelectionLink ? 1 : 0))
                 .padding(.xxxSmall)
         }
         .barItem(namespace: namespace)
         #endif
-
-        // MARK: - Highlight
-
-
     }
-
-    // MARK: - Font Helpers
-
-    private var isSelectionBold: Bool {
-        if case .insertionPoint = viewModel.textSelection.indices(in: text),
-           let override = viewModel.typingBoldOverride { return override }
-        let font = viewModel.textSelection.typingAttributes(in: text).font
-        return (font ?? .default).resolve(in: fontResolutionContext).isBold
-    }
-
-    private var isEffectiveItalic: Bool {
-        if case .insertionPoint = viewModel.textSelection.indices(in: text) {
-            return viewModel.typingItalicOverride ?? viewModel.selectedIsItalic
-        }
-        return viewModel.selectedIsItalic
-    }
-
-    private func applyingBoldToggle(to text: AttributedString) -> AttributedString {
-        switch viewModel.textSelection.indices(in: text) {
-        case .insertionPoint:
-            viewModel.toggleTypingBold(currentBold: isSelectionBold)
-            return text
-        case let .ranges(ranges):
-            var mutableText = text
-            let newBold = !isSelectionBold
-            let italic = viewModel.selectedIsItalic
-            let design = viewModel.selectedDesign
-            let fontName = viewModel.selectedFontName
-            mutableText.transform(updating: &viewModel.textSelection) { mt in
-                for range in ranges.ranges {
-                    let runs = mt[range].runs.map { (run: $0.range, font: $0.font ?? .body) }
-                    for item in runs {
-                        let resolved = item.font.resolve(in: fontResolutionContext)
-                        mt[item.run].font = if let fontName {
-                            RichTextEditorViewModel.resolveCustomFont(name: fontName, size: resolved.pointSize, bold: newBold, italic: italic)
-                        } else {
-                            RichTextEditorViewModel.resolveSystemFont(size: resolved.pointSize, bold: newBold, italic: italic, design: design)
-                        }
-                    }
-                }
-            }
-            return mutableText
-        }
-    }
-
-    private func applyingItalicToggle(to text: AttributedString) -> AttributedString {
-        switch viewModel.textSelection.indices(in: text) {
-        case .insertionPoint:
-            viewModel.toggleTypingItalic()
-            return text
-        case let .ranges(ranges):
-            var mutableText = text
-            let newItalic = !viewModel.selectedIsItalic
-            viewModel.selectedIsItalic = newItalic
-            let design = viewModel.selectedDesign
-            let fontName = viewModel.selectedFontName
-            mutableText.transform(updating: &viewModel.textSelection) { mt in
-                for range in ranges.ranges {
-                    let runs = mt[range].runs.map { (run: $0.range, font: $0.font ?? .body) }
-                    for item in runs {
-                        let resolved = item.font.resolve(in: fontResolutionContext)
-                        mt[item.run].font = if let fontName {
-                            RichTextEditorViewModel.resolveCustomFont(name: fontName, size: resolved.pointSize, bold: resolved.isBold, italic: newItalic)
-                        } else {
-                            RichTextEditorViewModel.resolveSystemFont(size: resolved.pointSize, bold: resolved.isBold, italic: newItalic, design: design)
-                        }
-                    }
-                }
-            }
-            return mutableText
-        }
-    }
-
 }
 
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
 #Preview {
-    @Previewable @State var text: AttributedString = .init("Sample text for selection")
     @Previewable @Namespace var namespace
-    let viewModel = RichTextEditorViewModel()
     NavigationStack {
-        RichTextSelectionActionsView(text: $text, viewModel: viewModel, namespace: namespace)
+        RichTextSelectionActionsView(
+            hasSelection: true,
+            isSelectionBold: false,
+            isEffectiveItalic: false,
+            isSelectionUnderlined: false,
+            isSelectionStrikethrough: false,
+            isItalicSupported: true,
+            selectedTextStyleName: "Body",
+            hasSelectionLink: false,
+            selectionHighlightColor: nil,
+            namespace: namespace
+        ) { _ in }
     }
 }

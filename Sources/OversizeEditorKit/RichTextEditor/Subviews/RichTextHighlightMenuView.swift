@@ -3,9 +3,9 @@
 // RichTextHighlightMenuView.swift, created on 21.05.2026
 //
 
+import OversizeResources
 import OversizeUI
 import SwiftUI
-import OversizeResources
 
 enum HighlightColor: CaseIterable {
     case yellow, orange, red, green, blue, purple
@@ -20,15 +20,11 @@ enum HighlightColor: CaseIterable {
         case .purple: Color(red: 0.85, green: 0.4, blue: 1.0)
         }
     }
-    
+
     var onColor: Color {
         switch self {
-        case .yellow: .black
-        case .orange: .black
-        case .red: .white
-        case .green: .black
-        case .blue: .white
-        case .purple: .white
+        case .yellow, .orange, .green: .black
+        case .red, .blue, .purple: .white
         }
     }
 
@@ -46,21 +42,30 @@ enum HighlightColor: CaseIterable {
 
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
 struct RichTextHighlightMenuView: View {
-    @Binding var text: AttributedString
-    var viewModel: RichTextEditorViewModel
-    var namespace: Namespace.ID
+    enum Action {
+        case applyHighlight(Color)
+        case removeHighlight
+    }
 
-    private var currentHighlightColor: Color? {
-        viewModel.selectionHighlightColor(in: text)
+    private let currentHighlightColor: Color?
+    private let namespace: Namespace.ID
+    private let onAction: (Action) -> Void
+
+    init(
+        currentHighlightColor: Color?,
+        namespace: Namespace.ID,
+        onAction: @escaping (Action) -> Void
+    ) {
+        self.currentHighlightColor = currentHighlightColor
+        self.namespace = namespace
+        self.onAction = onAction
     }
 
     var body: some View {
         Menu {
             ForEach(HighlightColor.allCases, id: \.self) { highlight in
                 Button {
-                    var mutableText = text
-                    viewModel.applyHighlight(highlight.color, text: &mutableText)
-                    text = mutableText
+                    onAction(.applyHighlight(highlight.color))
                 } label: {
                     Label(highlight.title, systemImage: "circle.fill")
                 }
@@ -68,9 +73,7 @@ struct RichTextHighlightMenuView: View {
             }
             Divider()
             Button {
-                var mutableText = text
-                viewModel.removeHighlight(text: &mutableText)
-                text = mutableText
+                onAction(.removeHighlight)
             } label: {
                 Label {
                     Text("Remove")
@@ -92,11 +95,9 @@ struct RichTextHighlightMenuView: View {
 
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
 #Preview {
-    @Previewable @State var text: AttributedString = .init("Sample highlighted text")
     @Previewable @Namespace var namespace
-    let viewModel = RichTextEditorViewModel()
     HStack {
-        RichTextHighlightMenuView(text: $text, viewModel: viewModel, namespace: namespace)
+        RichTextHighlightMenuView(currentHighlightColor: nil, namespace: namespace) { _ in }
     }
     .padding()
 }

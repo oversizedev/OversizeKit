@@ -9,27 +9,118 @@ import SwiftUI
 
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
 struct RichTextBottomBar: View {
-    @Binding var text: AttributedString
-    var viewModel: RichTextEditorViewModel
-    var namespace: Namespace.ID
-    @FocusState.Binding var isFocus: Bool
+    enum Action {
+        case undo
+        case redo
+        case toggleBold
+        case toggleItalic
+        case toggleUnderline
+        case toggleStrikethrough
+        case applyHighlight(Color)
+        case removeHighlight
+        case openFontPicker
+        case openTextStylePicker
+        case openLinkSheet
+        case toggleFontStyleSelection
+        case toggleFocus
+    }
+
+    private let hasSelection: Bool
+    private let isFontStyleSelection: Bool
+    private let isFocus: Bool
+    private let canUndo: Bool
+    private let canRedo: Bool
+    private let isSelectionBold: Bool
+    private let isEffectiveItalic: Bool
+    private let isSelectionUnderlined: Bool
+    private let isSelectionStrikethrough: Bool
+    private let isItalicSupported: Bool
+    private let selectedTextStyleName: String
+    private let hasSelectionLink: Bool
+    private let selectionHighlightColor: Color?
+    private let namespace: Namespace.ID
+    private let onAction: (Action) -> Void
+
+    init(
+        hasSelection: Bool,
+        isFontStyleSelection: Bool,
+        isFocus: Bool,
+        canUndo: Bool,
+        canRedo: Bool,
+        isSelectionBold: Bool,
+        isEffectiveItalic: Bool,
+        isSelectionUnderlined: Bool,
+        isSelectionStrikethrough: Bool,
+        isItalicSupported: Bool,
+        selectedTextStyleName: String,
+        hasSelectionLink: Bool,
+        selectionHighlightColor: Color?,
+        namespace: Namespace.ID,
+        onAction: @escaping (Action) -> Void
+    ) {
+        self.hasSelection = hasSelection
+        self.isFontStyleSelection = isFontStyleSelection
+        self.isFocus = isFocus
+        self.canUndo = canUndo
+        self.canRedo = canRedo
+        self.isSelectionBold = isSelectionBold
+        self.isEffectiveItalic = isEffectiveItalic
+        self.isSelectionUnderlined = isSelectionUnderlined
+        self.isSelectionStrikethrough = isSelectionStrikethrough
+        self.isItalicSupported = isItalicSupported
+        self.selectedTextStyleName = selectedTextStyleName
+        self.hasSelectionLink = hasSelectionLink
+        self.selectionHighlightColor = selectionHighlightColor
+        self.namespace = namespace
+        self.onAction = onAction
+    }
 
     var body: some View {
         GlassEffectContainer(spacing: .zero) {
             HStack(spacing: .zero) {
                 ScrollView(.horizontal) {
                     HStack(spacing: .zero) {
-                        if viewModel.hasSelection(in: text) || viewModel.isFontStyleSelection {
+                        if hasSelection || isFontStyleSelection {
                             RichTextSelectionActionsView(
-                                text: $text,
-                                viewModel: viewModel,
+                                hasSelection: hasSelection,
+                                isSelectionBold: isSelectionBold,
+                                isEffectiveItalic: isEffectiveItalic,
+                                isSelectionUnderlined: isSelectionUnderlined,
+                                isSelectionStrikethrough: isSelectionStrikethrough,
+                                isItalicSupported: isItalicSupported,
+                                selectedTextStyleName: selectedTextStyleName,
+                                hasSelectionLink: hasSelectionLink,
+                                selectionHighlightColor: selectionHighlightColor,
                                 namespace: namespace
-                            )
+                            ) { action in
+                                switch action {
+                                case .toggleBold: onAction(.toggleBold)
+                                case .toggleItalic: onAction(.toggleItalic)
+                                case .toggleUnderline: onAction(.toggleUnderline)
+                                case .toggleStrikethrough: onAction(.toggleStrikethrough)
+                                case .openFontPicker: onAction(.openFontPicker)
+                                case .openTextStylePicker: onAction(.openTextStylePicker)
+                                case .openLinkSheet: onAction(.openLinkSheet)
+                                case .toggleFontStyleSelection: onAction(.toggleFontStyleSelection)
+                                case let .highlight(highlightAction):
+                                    switch highlightAction {
+                                    case let .applyHighlight(color): onAction(.applyHighlight(color))
+                                    case .removeHighlight: onAction(.removeHighlight)
+                                    }
+                                }
+                            }
                         } else {
                             RichTextTextActionsView(
-                                viewModel: viewModel,
+                                canUndo: canUndo,
+                                canRedo: canRedo,
                                 namespace: namespace
-                            )
+                            ) { action in
+                                switch action {
+                                case .undo: onAction(.undo)
+                                case .redo: onAction(.redo)
+                                case .toggleFontStyleSelection: onAction(.toggleFontStyleSelection)
+                                }
+                            }
                         }
                     }
                 }
@@ -40,7 +131,7 @@ struct RichTextBottomBar: View {
                     .frame(height: .regular)
 
                 Button {
-                    isFocus.toggle()
+                    onAction(.toggleFocus)
                 } label: {
                     Icon(isFocus ? Image.ComputerAndTV.keyboardCloseDown : Image.ComputerAndTV.keyboardOpenUp)
                         .padding(.xSmall)
@@ -54,15 +145,27 @@ struct RichTextBottomBar: View {
         .padding(.vertical, .xSmall)
         .controlSize(.regular)
         .buttonStyle(.scale)
-        .animation(.default, value: viewModel.textSelection)
+        .animation(.default, value: hasSelection || isFontStyleSelection)
     }
 }
 
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
 #Preview {
-    @Previewable @State var text: AttributedString = .init("Sample text")
-    @Previewable @FocusState var isFocus: Bool
     @Previewable @Namespace var namespace
-    let viewModel = RichTextEditorViewModel()
-    RichTextBottomBar(text: $text, viewModel: viewModel, namespace: namespace, isFocus: $isFocus)
+    RichTextBottomBar(
+        hasSelection: false,
+        isFontStyleSelection: false,
+        isFocus: true,
+        canUndo: false,
+        canRedo: false,
+        isSelectionBold: false,
+        isEffectiveItalic: false,
+        isSelectionUnderlined: false,
+        isSelectionStrikethrough: false,
+        isItalicSupported: true,
+        selectedTextStyleName: "Body",
+        hasSelectionLink: false,
+        selectionHighlightColor: nil,
+        namespace: namespace
+    ) { _ in }
 }
