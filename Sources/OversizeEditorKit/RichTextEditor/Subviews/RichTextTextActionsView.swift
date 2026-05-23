@@ -36,22 +36,17 @@ struct RichTextTextActionsView: View {
     var body: some View {
         // MARK: - Undo / Redo
 
-        Button {
-            onAction(.undo)
-        } label: {
+        Button { onAction(.undo) } label: {
             Icon(Image.Arrow.reverseLeft)
-                .padding(.xSmall)
-                .padding(.leading, .xxxSmall)
         }
+        .buttonStyle(.bar)
         .disabled(!canUndo)
         .barItem(namespace: namespace)
 
-        Button {
-            onAction(.redo)
-        } label: {
+        Button { onAction(.redo) } label: {
             Icon(Image.Arrow.reverseRight)
-                .padding(.xSmall)
         }
+        .buttonStyle(.bar)
         .disabled(!canRedo)
         .barItem(namespace: namespace)
 
@@ -59,27 +54,23 @@ struct RichTextTextActionsView: View {
             .lineWidth(3)
             .frame(height: .regular)
 
-        Button {
-            onAction(.toggleFontStyleSelection)
-        } label: {
+        Button { onAction(.toggleFontStyleSelection) } label: {
             Icon(Image.Editor.titleCase)
-                .padding(.xSmall)
         }
+        .buttonStyle(.bar)
         .barItem(namespace: namespace)
 
         Separator(.vertical)
             .lineWidth(3)
             .frame(height: .regular)
 
-        Button {
-            onAction(.openAIWritingSheet)
-        } label: {
+        Button { onAction(.openAIWritingSheet) } label: {
             Icon(Image.Ai.sparksAi)
-                .padding(.xSmall)
         }
         #if os(iOS)
         .matchedTransitionSource(id: "aiWriting", in: namespace)
         #endif
+        .buttonStyle(.bar)
         .barItem(namespace: namespace)
     }
 }

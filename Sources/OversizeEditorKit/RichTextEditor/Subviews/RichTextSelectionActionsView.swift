@@ -61,12 +61,10 @@ struct RichTextSelectionActionsView: View {
 
     var body: some View {
         if !hasSelection {
-            Button {
-                onAction(.toggleFontStyleSelection)
-            } label: {
+            Button { onAction(.toggleFontStyleSelection) } label: {
                 Icon(Image.Base.chevronLeft)
-                    .padding(.init(top: .xSmall, leading: .xSmall, bottom: .xSmall, trailing: .zero))
             }
+            .buttonStyle(.bar)
             .barItem(namespace: namespace)
         }
 
@@ -94,66 +92,48 @@ struct RichTextSelectionActionsView: View {
 
         // MARK: - Bold
 
-        Button {
-            onAction(.toggleBold)
-        } label: {
+        Button { onAction(.toggleBold) } label: {
             Icon(Image.Editor.boldType)
-                .padding(.xxSmall)
-                .background(Circle().fillSurfaceSecondary().opacity(isSelectionBold ? 1 : 0))
-                .padding(.xxxSmall)
         }
+        .buttonStyle(.barToggle(isOn: isSelectionBold))
         .barItem(namespace: namespace)
 
         // MARK: - Italic
 
         if isItalicSupported {
-            Button {
-                onAction(.toggleItalic)
-            } label: {
+            Button { onAction(.toggleItalic) } label: {
                 Icon(Image.Editor.italic)
-                    .padding(.xxSmall)
-                    .background(Circle().fillSurfaceSecondary().opacity(isEffectiveItalic ? 1 : 0))
-                    .padding(.xxxSmall)
             }
+            .buttonStyle(.barToggle(isOn: isEffectiveItalic))
             .barItem(namespace: namespace)
         }
 
         // MARK: - Underline
 
-        Button {
-            onAction(.toggleUnderline)
-        } label: {
+        Button { onAction(.toggleUnderline) } label: {
             Icon(Image.Editor.underline)
-                .padding(.xxSmall)
-                .background(Circle().fillSurfaceSecondary().opacity(isSelectionUnderlined ? 1 : 0))
-                .padding(.xxxSmall)
         }
+        .buttonStyle(.barToggle(isOn: isSelectionUnderlined))
         .barItem(namespace: namespace)
 
         // MARK: - Strikethrough
 
-        Button {
-            onAction(.toggleStrikethrough)
-        } label: {
+        Button { onAction(.toggleStrikethrough) } label: {
             Icon(Image.Editor.strikethrough)
-                .padding(.xxSmall)
-                .background(Circle().fillSurfaceSecondary().opacity(isSelectionStrikethrough ? 1 : 0))
-                .padding(.xxxSmall)
         }
+        .buttonStyle(.barToggle(isOn: isSelectionStrikethrough))
         .barItem(namespace: namespace)
 
         // MARK: - Font Family
 
         #if os(iOS) || os(macOS)
-        Button {
-            onAction(.openFontPicker)
-        } label: {
+        Button { onAction(.openFontPicker) } label: {
             Icon(Image.Editor.searchFont)
-                .padding(.xSmall)
         }
         #if os(iOS)
         .matchedTransitionSource(id: "fontPicker", in: namespace)
         #endif
+        .buttonStyle(.bar)
         .barItem(namespace: namespace)
 
         // MARK: - Highlight
@@ -167,14 +147,10 @@ struct RichTextSelectionActionsView: View {
 
         // MARK: - Link
 
-        Button {
-            onAction(.openLinkSheet)
-        } label: {
+        Button { onAction(.openLinkSheet) } label: {
             Icon(Image.Base.link)
-                .padding(.xxSmall)
-                .background(Circle().fillSurfaceSecondary().opacity(hasSelectionLink ? 1 : 0))
-                .padding(.xxxSmall)
         }
+        .buttonStyle(.barToggle(isOn: hasSelectionLink))
         .barItem(namespace: namespace)
         #endif
     }

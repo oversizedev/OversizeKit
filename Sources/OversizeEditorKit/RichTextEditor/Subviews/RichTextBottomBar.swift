@@ -132,13 +132,10 @@ struct RichTextBottomBar: View {
                     .lineWidth(3)
                     .frame(height: .regular)
 
-                Button {
-                    onAction(.toggleFocus)
-                } label: {
+                Button { onAction(.toggleFocus) } label: {
                     Icon(isFocus ? Image.ComputerAndTV.keyboardCloseDown : Image.ComputerAndTV.keyboardOpenUp)
-                        .padding(.xSmall)
-                        .padding(.trailing, .xxxSmall)
                 }
+                .buttonStyle(.bar)
                 .glassEffectUnion(id: "bar", namespace: namespace)
             }
         }
