@@ -36,23 +36,27 @@ struct RichTextTextActionsView: View {
     var body: some View {
         // MARK: - Undo / Redo
 
-        Button { onAction(.undo) } label: {
-            Icon(Image.Arrow.reverseLeft)
+        if canUndo {
+            RepeatingButton(action: { onAction(.undo) }) {
+                Icon(Image.Arrow.reverseLeft)
+            }
+            .buttonStyle(.bar)
+            .barItem(namespace: namespace)
         }
-        .buttonStyle(.bar)
-        .disabled(!canUndo)
-        .barItem(namespace: namespace)
 
-        Button { onAction(.redo) } label: {
-            Icon(Image.Arrow.reverseRight)
+        if canRedo {
+            RepeatingButton(action: { onAction(.redo) }) {
+                Icon(Image.Arrow.reverseRight)
+            }
+            .buttonStyle(.bar)
+            .barItem(namespace: namespace)
         }
-        .buttonStyle(.bar)
-        .disabled(!canRedo)
-        .barItem(namespace: namespace)
 
-        Separator(.vertical)
-            .lineWidth(3)
-            .frame(height: .regular)
+        if canUndo || canRedo {
+            Separator(.vertical)
+                .lineWidth(3)
+                .frame(height: .regular)
+        }
 
         Button { onAction(.toggleFontStyleSelection) } label: {
             Icon(Image.Editor.titleCase)
