@@ -105,9 +105,10 @@ public struct URLEditor<Action: View>: View {
     // MARK: - Private
 
     private func validatedURL(_ trimmed: String) -> URL? {
-        guard !trimmed.isEmpty,
-              let url = URL(string: trimmed),
-              url.scheme != nil
+        guard !trimmed.isEmpty else { return nil }
+        if let url = URL(string: trimmed), url.scheme != nil { return url }
+        guard let url = URL(string: "https://\(trimmed)"),
+              let host = url.host, !host.isEmpty
         else { return nil }
         return url
     }

@@ -42,7 +42,7 @@ final class RichTextEditorViewModel {
     var findNavigatorIsPresented: Bool = false
     var sheet: Sheet?
     var selectedFontName: String?
-    var linkURLString: String = ""
+    var linkURL: URL?
     var fontResolutionContext: Font.Context?
 
     // MARK: - Typing Overrides
@@ -56,7 +56,9 @@ final class RichTextEditorViewModel {
     var typingRemoveHighlightOverride: Bool = false
     var typingTextStyleOverride: Font.TextStyle?
     var typingFontActive: Bool = false
+    var typingLinkReset: Bool = false
     private(set) var isApplyingOverrides: Bool = false
+    private var isInsertingLink: Bool = false
 
     @ObservationIgnored nonisolated(unsafe) private var undoObservations: [NSObjectProtocol] = []
 
@@ -83,7 +85,7 @@ extension RichTextEditorViewModel {
         case applyColor(Color)
         case applyHighlight(Color)
         case removeHighlight
-        case applyLink(String)
+        case applyLink(URL?)
         case applyFont(name: String?, design: Font.Design)
         case activateTypingFont
         case toggleFontStyleSelection
@@ -119,8 +121,8 @@ extension RichTextEditorViewModel {
             performApplyHighlight(color)
         case .removeHighlight:
             performRemoveHighlight()
-        case let .applyLink(urlString):
-            performApplyLink(urlString)
+        case let .applyLink(url):
+            performApplyLink(url)
         case let .applyFont(name, design):
             performApplyFont(fontName: name, design: design)
         case .activateTypingFont:
@@ -132,7 +134,7 @@ extension RichTextEditorViewModel {
         case let .applyTypingOverrides(oldText, newText):
             performApplyTypingOverrides(oldText: oldText, newText: newText)
         case .openLinkSheet:
-            linkURLString = selectionCurrentLink?.absoluteString ?? ""
+            linkURL = selectionCurrentLink
             present(.link)
         case .openAIWritingSheet:
             present(.aiWriting)
@@ -161,7 +163,7 @@ extension RichTextEditorViewModel {
             typingUnderlineOverride != nil || typingStrikethroughOverride != nil ||
             typingColorOverride != nil || typingHighlightOverride != nil ||
             typingRemoveHighlightOverride || typingTextStyleOverride != nil ||
-            typingFontActive
+            typingFontActive || typingLinkReset
     }
 
     var hasSelection: Bool {
@@ -224,6 +226,8 @@ extension RichTextEditorViewModel {
         typingRemoveHighlightOverride = false
         typingTextStyleOverride = nil
         typingFontActive = false
+        typingLinkReset = false
+        isInsertingLink = false
     }
 }
 
@@ -379,17 +383,25 @@ private extension RichTextEditorViewModel {
         }
     }
 
-    func performApplyLink(_ urlString: String) {
-        guard case let .ranges(ranges) = textSelection.indices(in: text) else { return }
-        let url: URL? = if urlString.isEmpty {
-            nil
-        } else {
-            URL(string: urlString.hasPrefix("http") ? urlString : "https://\(urlString)")
-        }
-        text.transform(updating: &textSelection) { mt in
-            for range in ranges.ranges {
-                mt[range].link = url
+    func performApplyLink(_ url: URL?) {
+        switch textSelection.indices(in: text) {
+        case .insertionPoint(let cursor):
+            guard let url, selectionCurrentLink == nil else { return }
+            var linked = AttributedString(url.absoluteString)
+            linked.link = url
+            if hasTypingOverrides {
+                applyTypingOverridesToRange(in: &linked, addedCount: linked.characters.count, cursorIdx: linked.endIndex, preservingLink: true)
             }
+            isInsertingLink = true
+            typingLinkReset = true
+            text.insert(linked, at: cursor)
+        case let .ranges(ranges):
+            text.transform(updating: &textSelection) { mt in
+                for range in ranges.ranges {
+                    mt[range].link = url
+                }
+            }
+            typingLinkReset = true
         }
     }
 
@@ -444,7 +456,9 @@ private extension RichTextEditorViewModel {
 
     func performApplyTypingOverrides(oldText: AttributedString, newText: AttributedString) {
         let addedCount = newText.characters.count - oldText.characters.count
-        guard hasTypingOverrides, addedCount > 0,
+        let preservingLink = isInsertingLink
+        isInsertingLink = false
+        guard hasTypingOverrides, addedCount > 0, !preservingLink,
               case let .insertionPoint(cursor) = textSelection.indices(in: newText) else { return }
         var modified = newText
         applyTypingOverridesToRange(in: &modified, addedCount: addedCount, cursorIdx: cursor)
@@ -453,7 +467,7 @@ private extension RichTextEditorViewModel {
         isApplyingOverrides = false
     }
 
-    func applyTypingOverridesToRange(in text: inout AttributedString, addedCount: Int, cursorIdx: AttributedString.Index) {
+    func applyTypingOverridesToRange(in text: inout AttributedString, addedCount: Int, cursorIdx: AttributedString.Index, preservingLink: Bool = false) {
         var startIdx = cursorIdx
         for _ in 0 ..< addedCount {
             startIdx = text.characters.index(before: startIdx)
@@ -499,6 +513,10 @@ private extension RichTextEditorViewModel {
             text[range].backgroundColor = highlight
         } else if typingRemoveHighlightOverride {
             text[range].backgroundColor = nil
+        }
+        if typingLinkReset, !preservingLink {
+            text[range].link = nil
+            typingLinkReset = false
         }
     }
 }

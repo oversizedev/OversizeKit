@@ -3,6 +3,7 @@
 // RichTextEditorViewSheet.swift, created on 21.05.2026
 //
 
+import OversizeKit
 import OversizeUI
 import SwiftUI
 
@@ -95,34 +96,19 @@ extension RichTextEditor {
             case .link:
                 #if os(iOS) || os(macOS)
                 NavigationStack {
-                    Form {
-                        TextField("https://example.com", text: Bindable(viewModel).linkURLString)
-                            .autocorrectionDisabled()
-                        #if os(iOS)
-                            .textInputAutocapitalization(.never)
-                            .keyboardType(.URL)
-                        #endif
-                        if viewModel.hasSelectionLink {
-                            Button("Remove link", role: .destructive) {
-                                viewModel.send(.applyLink(""))
-                                viewModel.close()
-                            }
+                    URLEditor("Link", url: Bindable(viewModel).linkURL) {
+                        Button("Apply") {
+                            viewModel.send(.applyLink(viewModel.linkURL))
+                            viewModel.close()
                         }
                     }
-                    .navigationTitle("Link")
-                    .toolbarTitleDisplayMode(.inline)
                     .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button("Cancel", systemImage: "xmark", role: .cancel) {
-                                viewModel.close()
-                            }
-                            .labelStyle(.toolbar)
-                            .buttonStyle(.toolbarSecondary)
-                        }
-                        ToolbarItem(placement: .confirmationAction) {
-                            Button("Apply") {
-                                viewModel.send(.applyLink(viewModel.linkURLString))
-                                viewModel.close()
+                        if viewModel.hasSelectionLink {
+                            ToolbarItem(placement: .destructiveAction) {
+                                Button("Remove link", role: .destructive) {
+                                    viewModel.send(.applyLink(nil))
+                                    viewModel.close()
+                                }
                             }
                         }
                     }
