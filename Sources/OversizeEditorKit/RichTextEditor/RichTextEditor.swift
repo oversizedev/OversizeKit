@@ -8,8 +8,26 @@ import OversizeResources
 import OversizeUI
 import SwiftUI
 
-@available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
 public struct RichTextEditor: View {
+    @Binding private var text: AttributedString
+    private let title: String?
+
+    public init(_ title: String? = nil, text: Binding<AttributedString>) {
+        self.title = title
+        _text = text
+    }
+
+    public var body: some View {
+        if #available(iOS 26, macOS 26, tvOS 26, watchOS 26, visionOS 26, *) {
+            RichTextEditor26(title, text: $text)
+        } else {
+            RichTextEditorFallback(title, text: $text)
+        }
+    }
+}
+
+@available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
+struct RichTextEditor26: View {
     @Environment(\.fontResolutionContext) var fontResolutionContext
     @Environment(\.undoManager) private var undoManager
     @Environment(\.dismiss) private var dismiss
@@ -22,13 +40,13 @@ public struct RichTextEditor: View {
 
     private let title: String?
 
-    public init(_ title: String? = nil, text: Binding<AttributedString>) {
+    init(_ title: String? = nil, text: Binding<AttributedString>) {
         self.title = title
         _text = text
         _viewModel = State(wrappedValue: RichTextEditorViewModel(text.wrappedValue))
     }
 
-    public var body: some View {
+    var body: some View {
         TextEditor(text: $viewModel.text, selection: $viewModel.textSelection)
             .focused($isFocus)
             .findNavigator(isPresented: $viewModel.findNavigatorIsPresented)
@@ -133,9 +151,81 @@ public struct RichTextEditor: View {
     }
 }
 
+private struct RichTextEditorFallback: View {
+    @Environment(\.dismiss) private var dismiss
+    @Binding private var text: AttributedString
+    @FocusState private var isFocus: Bool
+    @State private var showFormattingAlert = false
+    private let title: String?
+
+    private var hasAttributes: Bool {
+        text != AttributedString(String(text.characters))
+    }
+
+    private var stringBinding: Binding<String> {
+        Binding<String>(
+            get: { String(text.characters) },
+            set: { text = AttributedString($0) }
+        )
+    }
+
+    init(_ title: String? = nil, text: Binding<AttributedString>) {
+        self.title = title
+        _text = text
+    }
+
+    var body: some View {
+        ScrollView {
+            TextEditor(text: stringBinding)
+                .focused($isFocus)
+                .textEditorStyle(.plain)
+                .padding(.horizontal)
+        }
+        .background(Color.backgroundPrimary)
+        .toolbar {
+            if let title {
+                ToolbarItem(placement: .principal) {
+                    Text(title).font(.headline)
+                }
+            }
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Close", systemImage: "xmark", role: .cancel) { dismiss() }
+                    .labelStyle(.toolbar)
+                    .buttonStyle(.toolbarSecondary)
+                    #if !os(tvOS)
+                    .keyboardShortcut(.cancelAction)
+                    #endif
+            }
+        }
+        .toolbarTitleDisplayMode(.inline)
+        .scrollDismissesKeyboard(.interactively)
+        .onAppear {
+            if hasAttributes {
+                showFormattingAlert = true
+            } else {
+                isFocus = true
+            }
+        }
+        .animation(.default, value: isFocus)
+        .alert("Formatting Not Supported", isPresented: $showFormattingAlert) {
+            Button("Edit Anyway", role: .destructive) { isFocus = true }
+            Button("Close", role: .cancel) { dismiss() }
+        } message: {
+            Text("Rich text editing is not supported on this OS version. All formatting will be removed when you edit.")
+        }
+    }
+}
+
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
 #Preview {
     @Previewable @State var text: AttributedString = .init("Pack sunscreen, water, and snacks for the hike. Check weather forecast the day before departure.")
+    NavigationStack {
+        RichTextEditor("New Article", text: $text)
+    }
+}
+
+#Preview("Fallback") {
+    @Previewable @State var text: AttributedString = .init("Hello world")
     NavigationStack {
         RichTextEditor("New Article", text: $text)
     }

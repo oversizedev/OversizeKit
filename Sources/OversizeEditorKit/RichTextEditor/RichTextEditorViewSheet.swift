@@ -41,7 +41,7 @@ extension RichTextEditorViewModel.Sheet: Identifiable {
 }
 
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
-extension RichTextEditor {
+extension RichTextEditor26 {
     func resolveSheet(sheet: RichTextEditorViewModel.Sheet) -> some View {
         Group {
             switch sheet {
