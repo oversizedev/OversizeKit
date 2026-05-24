@@ -1,6 +1,6 @@
 //
 // Copyright © 2024 Alexander Romanov
-// ArticleListEditorViewModel.swift, created on 03.03.2024
+// ArticleEditorViewModel.swift, created on 03.03.2024
 //
 
 import OversizeCore
@@ -12,7 +12,7 @@ import UIKit
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
 @MainActor
 @Observable
-final class ArticleListEditorViewModel {
+final class ArticleEditorViewModel {
     // MARK: - State
 
     var blocks: [ArticleBlock] = [.init()]
@@ -143,10 +143,35 @@ final class ArticleListEditorViewModel {
     }
 }
 
+// MARK: - Event Handlers
+
+@available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
+extension ArticleEditorViewModel {
+    func onFocusedBlockTextChanged(from oldText: AttributedString, to newText: AttributedString) {
+        guard !isApplyingOverrides, let id = focusedId else { return }
+        if newText.characters.contains("\n") {
+            send(.splitBlock(blockId: id, text: newText, continuationType: focusedBlockContinuationType))
+            return
+        }
+        let addedCount = newText.characters.count - oldText.characters.count
+        if hasTypingOverrides, addedCount > 0 {
+            send(.applyTypingOverrides(blockId: id, oldText: oldText, newText: newText))
+        } else if isFontStyleSelection, !hasTypingOverrides {
+            isFontStyleSelection = false
+        }
+    }
+
+    func onTextSelectionChanged(_ newSelection: AttributedTextSelection) {
+        if case .ranges = newSelection.indices(in: focusedBlockText) {
+            clearTypingOverrides()
+        }
+    }
+}
+
 // MARK: - Sheet
 
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
-extension ArticleListEditorViewModel {
+extension ArticleEditorViewModel {
     enum Sheet: Identifiable {
         case textStylePicker, fontPicker, link, photoPicker
 
@@ -164,7 +189,7 @@ extension ArticleListEditorViewModel {
 // MARK: - Computed State
 
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
-extension ArticleListEditorViewModel {
+extension ArticleEditorViewModel {
     var hasSelection: Bool {
         guard let idx = focusedBlockIndex else { return false }
         switch textSelection.indices(in: blocks[idx].text) {
@@ -249,6 +274,11 @@ extension ArticleListEditorViewModel {
         true
     }
 
+    var focusedBlockContinuationType: BlockType {
+        guard let idx = focusedBlockIndex else { return .text }
+        return blocks[idx].type == .list ? .list : .text
+    }
+
     var selectionCurrentLink: URL? {
         guard let idx = focusedBlockIndex else { return nil }
         return textSelection.typingAttributes(in: blocks[idx].text).link
@@ -266,7 +296,7 @@ extension ArticleListEditorViewModel {
 // MARK: - Private Block Operations
 
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
-private extension ArticleListEditorViewModel {
+private extension ArticleEditorViewModel {
     func performSplitBlock(blockId: UUID, text: AttributedString, continuationType: BlockType) {
         let chars = text.characters
         guard let nlCharIdx = chars.firstIndex(of: "\n"),
@@ -312,7 +342,7 @@ private extension ArticleListEditorViewModel {
 // MARK: - Private Formatting
 
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
-private extension ArticleListEditorViewModel {
+private extension ArticleEditorViewModel {
     func performToggleBold() {
         guard let idx = focusedBlockIndex, let context = fontResolutionContext else { return }
         let isBold = isSelectionBold

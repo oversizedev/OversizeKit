@@ -229,6 +229,28 @@ extension RichTextEditorViewModel {
     }
 }
 
+// MARK: - Event Handlers
+
+@available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
+extension RichTextEditorViewModel {
+    func applyTypingChangesIfNeeded(from oldText: AttributedString, to newText: AttributedString) {
+        let addedCount = newText.characters.count - oldText.characters.count
+        if hasTypingOverrides, addedCount > 0 {
+            send(.applyTypingOverrides(oldText: oldText, newText: newText))
+            return
+        }
+        if isFontStyleSelection, !hasTypingOverrides {
+            isFontStyleSelection = false
+        }
+    }
+
+    func onTextSelectionChanged(_ newSelection: AttributedTextSelection) {
+        if case .ranges = newSelection.indices(in: text) {
+            clearTypingOverrides()
+        }
+    }
+}
+
 // MARK: - Private Implementations
 
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)

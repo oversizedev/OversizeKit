@@ -1,6 +1,6 @@
 //
 // Copyright © 2024 Alexander Romanov
-// ArticleListEditor.swift, created on 03.03.2024
+// ArticleEditor.swift, created on 03.03.2024
 //
 
 import OversizeKit
@@ -10,13 +10,13 @@ import OversizeUI
 import SwiftUI
 
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
-public struct ArticleListEditor: View {
+public struct ArticleEditor: View {
     @Namespace private var unionNamespace
     @Environment(\.dismiss) private var dismiss
     @Environment(\.fontResolutionContext) private var fontResolutionContext
     @Environment(\.undoManager) private var undoManager
 
-    @State private var viewModel = ArticleListEditorViewModel()
+    @State private var viewModel = ArticleEditorViewModel()
     @FocusState private var focusedId: UUID?
     @State private var isFocus: Bool = false
 
@@ -25,25 +25,13 @@ public struct ArticleListEditor: View {
     public var body: some View {
         ListLayoutView("Editor") {
             ForEach($viewModel.blocks) { $block in
-                let continuationType: BlockType = block.type == .list ? .list : .text
-                let textBinding = Binding<AttributedString>(
-                    get: { block.text },
-                    set: { newValue in
-                        guard !viewModel.isApplyingOverrides else { return }
-                        if newValue.characters.contains("\n") {
-                            viewModel.send(.splitBlock(blockId: block.id, text: newValue, continuationType: continuationType))
-                        } else {
-                            block.text = newValue
-                        }
-                    }
-                )
                 Group {
                     switch block.type {
-                    case .text: textBlockView(block: $block, textBinding: textBinding)
+                    case .text: textBlockView(block: $block)
                     case .image: imageBlockView(block: $block)
                     case .separator: separatorBlockView
-                    case .quote: quoteBlockView(block: $block, textBinding: textBinding)
-                    case .list: listBlockView(block: $block, textBinding: textBinding)
+                    case .quote: quoteBlockView(block: $block)
+                    case .list: listBlockView(block: $block)
                     }
                 }
                 .listRowSeparator(.hidden)
@@ -105,41 +93,18 @@ public struct ArticleListEditor: View {
             .onChange(of: fontResolutionContext) { _, value in
                 viewModel.fontResolutionContext = value
             }
-            .onChange(of: focusedId) { oldValue, newValue in
-                isFocus = newValue != nil
-                if oldValue != newValue {
-                    viewModel.clearTypingOverrides()
-                }
-                if let newValue {
-                    viewModel.focusedId = newValue
-                }
-            }
-            .onChange(of: viewModel.focusedId) { _, newValue in
-                guard focusedId != newValue else { return }
-                focusedId = newValue
-            }
-            .onChange(of: viewModel.focusedBlockText) { oldText, newText in
-                guard !viewModel.isApplyingOverrides else { return }
-                let addedCount = newText.characters.count - oldText.characters.count
-                if viewModel.hasTypingOverrides, addedCount > 0, let focusedId = viewModel.focusedId {
-                    viewModel.send(.applyTypingOverrides(blockId: focusedId, oldText: oldText, newText: newText))
-                } else if viewModel.isFontStyleSelection, !viewModel.hasTypingOverrides {
-                    viewModel.isFontStyleSelection = false
-                }
-            }
-            .onChange(of: viewModel.textSelection) { _, newSelection in
-                if case .ranges = newSelection.indices(in: viewModel.focusedBlockText) {
-                    viewModel.clearTypingOverrides()
-                }
-            }
+            .onChange(of: focusedId) { old, new in handleFocusedIdChange(from: old, to: new) }
+            .onChange(of: viewModel.focusedId) { _, newValue in handleViewModelFocusedIdChange(newValue) }
+            .onChange(of: viewModel.focusedBlockText) { old, new in viewModel.onFocusedBlockTextChanged(from: old, to: new) }
+            .onChange(of: viewModel.textSelection) { _, new in viewModel.onTextSelectionChanged(new) }
     }
 
     // MARK: - Block Views
 
     @ViewBuilder
-    private func textBlockView(block: Binding<ArticleBlock>, textBinding: Binding<AttributedString>) -> some View {
+    private func textBlockView(block: Binding<ArticleBlock>) -> some View {
         let blockId = block.wrappedValue.id
-        TextEditor(text: textBinding, selection: $viewModel.textSelection)
+        TextEditor(text: block.text, selection: $viewModel.textSelection)
             .frame(minHeight: 44)
             .focused($focusedId, equals: blockId)
             .overlay(alignment: .trailing) {
@@ -155,14 +120,14 @@ public struct ArticleListEditor: View {
     }
 
     @ViewBuilder
-    private func quoteBlockView(block: Binding<ArticleBlock>, textBinding: Binding<AttributedString>) -> some View {
+    private func quoteBlockView(block: Binding<ArticleBlock>) -> some View {
         let blockId = block.wrappedValue.id
         HStack(alignment: .top, spacing: .xSmall) {
             RoundedRectangle(cornerRadius: 2)
                 .fill(.tint.opacity(0.7))
                 .frame(width: 3)
                 .padding(.vertical, .xxSmall)
-            TextEditor(text: textBinding, selection: $viewModel.textSelection)
+            TextEditor(text: block.text, selection: $viewModel.textSelection)
                 .frame(minHeight: 44)
                 .italic()
                 .foregroundStyle(.secondary)
@@ -181,13 +146,13 @@ public struct ArticleListEditor: View {
     }
 
     @ViewBuilder
-    private func listBlockView(block: Binding<ArticleBlock>, textBinding: Binding<AttributedString>) -> some View {
+    private func listBlockView(block: Binding<ArticleBlock>) -> some View {
         let blockId = block.wrappedValue.id
         HStack(alignment: .top, spacing: .xSmall) {
             Text("•")
                 .foregroundStyle(.primary)
                 .padding(.top, 4)
-            TextEditor(text: textBinding, selection: $viewModel.textSelection)
+            TextEditor(text: block.text, selection: $viewModel.textSelection)
                 .frame(minHeight: 44)
                 .focused($focusedId, equals: blockId)
                 .onKeyPress(.delete) { viewModel.handleDeleteKey(blockId: blockId) }
@@ -235,7 +200,7 @@ public struct ArticleListEditor: View {
     // MARK: - Sheet
 
     @ViewBuilder
-    private func resolveSheet(_ sheet: ArticleListEditorViewModel.Sheet) -> some View {
+    private func resolveSheet(_ sheet: ArticleEditorViewModel.Sheet) -> some View {
         switch sheet {
         case .textStylePicker:
             #if os(iOS) || os(macOS)
@@ -305,11 +270,31 @@ public struct ArticleListEditor: View {
     }
 }
 
+// MARK: - Handlers
+
+@available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
+extension ArticleEditor {
+    private func handleViewModelFocusedIdChange(_ newValue: UUID?) {
+        guard focusedId != newValue else { return }
+        focusedId = newValue
+    }
+
+    private func handleFocusedIdChange(from oldValue: UUID?, to newValue: UUID?) {
+        isFocus = newValue != nil
+        if oldValue != newValue {
+            viewModel.clearTypingOverrides()
+        }
+        if let newValue {
+            viewModel.focusedId = newValue
+        }
+    }
+}
+
 // MARK: - Preview
 
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
 #Preview {
     NavigationStack {
-        ArticleListEditor()
+        ArticleEditor()
     }
 }

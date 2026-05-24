@@ -113,39 +113,33 @@ struct RichTextEditor26: View {
                     }
                 }
             }
-            .onChange(of: viewModel.text) { oldText, newText in
-                guard !viewModel.isApplyingOverrides else { return }
-                text = newText
-                let addedCount = newText.characters.count - oldText.characters.count
-                if viewModel.hasTypingOverrides, addedCount > 0 {
-                    viewModel.send(.applyTypingOverrides(oldText: oldText, newText: newText))
-                    text = viewModel.text
-                    return
-                }
-                if viewModel.isFontStyleSelection, !viewModel.hasTypingOverrides {
-                    viewModel.isFontStyleSelection = false
-                }
-            }
-            .onChange(of: text) { _, newText in
-                viewModel.syncText(newText)
-            }
-            .onChange(of: viewModel.textSelection) { _, newSelection in
-                if case .ranges = newSelection.indices(in: viewModel.text) {
-                    viewModel.clearTypingOverrides()
-                }
-            }
-            .onAppear {
-                isFocus = true
-                viewModel.undoManager = undoManager
-                viewModel.fontResolutionContext = fontResolutionContext
-            }
+            .onChange(of: viewModel.text) { old, new in handleViewModelTextChange(from: old, to: new) }
+            .onChange(of: text) { _, newText in viewModel.syncText(newText) }
+            .onChange(of: viewModel.textSelection) { _, new in viewModel.onTextSelectionChanged(new) }
             .onChange(of: undoManager) { _, newValue in
                 viewModel.undoManager = newValue
             }
             .onChange(of: fontResolutionContext) { _, newValue in
                 viewModel.fontResolutionContext = newValue
             }
+            .onAppear {
+                isFocus = true
+                viewModel.undoManager = undoManager
+                viewModel.fontResolutionContext = fontResolutionContext
+            }
             .sheet(item: $viewModel.sheet) { resolveSheet(sheet: $0) }
+    }
+}
+
+// MARK: - Handlers
+
+@available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
+extension RichTextEditor26 {
+    func handleViewModelTextChange(from oldText: AttributedString, to newText: AttributedString) {
+        guard !viewModel.isApplyingOverrides else { return }
+        text = newText
+        viewModel.applyTypingChangesIfNeeded(from: oldText, to: newText)
+        text = viewModel.text
     }
 }
 
