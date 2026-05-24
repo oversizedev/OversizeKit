@@ -3,126 +3,143 @@
 // ArticleListEditor.swift, created on 03.03.2024
 //
 
+import OversizeKit
+import OversizeMediaKit
 import OversizeResources
 import OversizeUI
-import PhotosUI
 import SwiftUI
 
-// MARK: - Models
-
-enum BlockType { case text, image, separator, quote, list }
-
-struct ArticleBlock: Identifiable {
-    let id: UUID
-    var type: BlockType
-    var text: String
-    var imageData: Data?
-
-    init(text: String = "") {
-        id = UUID(); type = .text; self.text = text
-    }
-
-    init(imageData: Data) {
-        id = UUID(); type = .image; text = ""; self.imageData = imageData
-    }
-
-    init(type: BlockType, text: String = "") {
-        id = UUID(); self.type = type; self.text = text
-    }
-}
-
-// MARK: - ArticleListEditor
-
-@available(iOS 26.0, macOS 15.0, tvOS 18.0, watchOS 11.0, visionOS 2.0, *)
+@available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
 public struct ArticleListEditor: View {
     @Namespace private var unionNamespace
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.fontResolutionContext) private var fontResolutionContext
+    @Environment(\.undoManager) private var undoManager
 
-    @State private var blocks: [ArticleBlock] = [.init()]
+    @State private var viewModel = ArticleListEditorViewModel()
     @FocusState private var focusedId: UUID?
-    @State private var imagePickerPresented = false
-    @State private var selectedImage: PhotosPickerItem?
+    @State private var isFocus: Bool = false
 
     public init() {}
 
     public var body: some View {
-        List {
-            ForEach($blocks) { $block in
+        ListLayoutView("Editor") {
+            ForEach($viewModel.blocks) { $block in
+                let continuationType: BlockType = block.type == .list ? .list : .text
+                let textBinding = Binding<AttributedString>(
+                    get: { block.text },
+                    set: { newValue in
+                        guard !viewModel.isApplyingOverrides else { return }
+                        if newValue.characters.contains("\n") {
+                            viewModel.send(.splitBlock(blockId: block.id, text: newValue, continuationType: continuationType))
+                        } else {
+                            block.text = newValue
+                        }
+                    }
+                )
                 Group {
                     switch block.type {
-                    case .text: textBlockView(block: $block)
+                    case .text: textBlockView(block: $block, textBinding: textBinding)
                     case .image: imageBlockView(block: $block)
                     case .separator: separatorBlockView
-                    case .quote: quoteBlockView(block: $block)
-                    case .list: listBlockView(block: $block)
+                    case .quote: quoteBlockView(block: $block, textBinding: textBinding)
+                    case .list: listBlockView(block: $block, textBinding: textBinding)
                     }
                 }
                 .listRowSeparator(.hidden)
                 .listRowInsets(.init(top: 0, leading: .medium, bottom: 0, trailing: .medium))
             }
-            .onMove { blocks.move(fromOffsets: $0, toOffset: $1) }
-            .onDelete { blocks.remove(atOffsets: $0) }
+            .onMove { viewModel.send(.moveBlocks(fromOffsets: $0, toOffset: $1)) }
+            .onDelete { viewModel.send(.deleteOffsets($0)) }
         }
         .listStyle(.plain)
         .safeAreaInset(edge: .bottom) {
-            glassBottomBar
+            ArticleBottomBar(
+                hasSelection: viewModel.hasSelection,
+                isFontStyleSelection: viewModel.isFontStyleSelection,
+                isFocus: isFocus,
+                isSelectionBold: viewModel.isSelectionBold,
+                isEffectiveItalic: viewModel.isEffectiveItalic,
+                isSelectionUnderlined: viewModel.isSelectionUnderlined,
+                isSelectionStrikethrough: viewModel.isSelectionStrikethrough,
+                isItalicSupported: viewModel.isItalicSupported,
+                selectedTextStyleName: viewModel.selectedTextStyleName,
+                hasSelectionLink: viewModel.hasSelectionLink,
+                selectionHighlightColor: viewModel.selectionHighlightColor,
+                namespace: unionNamespace
+            ) { action in
+                switch action {
+                case .insertImage: viewModel.send(.insertImage)
+                case .insertQuote: viewModel.send(.insertBlock(ArticleBlock(type: .quote)))
+                case .insertList: viewModel.send(.insertBlock(ArticleBlock(type: .list)))
+                case .insertSeparator: viewModel.send(.insertBlock(ArticleBlock(type: .separator)))
+                case .insertLink: break
+                case .toggleBold: viewModel.send(.toggleBold)
+                case .toggleItalic: viewModel.send(.toggleItalic)
+                case .toggleUnderline: viewModel.send(.toggleUnderline)
+                case .toggleStrikethrough: viewModel.send(.toggleStrikethrough)
+                case let .applyHighlight(color): viewModel.send(.applyHighlight(color))
+                case .removeHighlight: viewModel.send(.removeHighlight)
+                case .openFontPicker: viewModel.send(.openFontPicker)
+                case .openTextStylePicker: viewModel.send(.openTextStylePicker)
+                case .openLinkSheet: viewModel.send(.openLinkSheet)
+                case .toggleFontStyleSelection: viewModel.send(.toggleFontStyleSelection)
+                case .toggleFocus:
+                    if isFocus { focusedId = nil } else { focusedId = viewModel.focusedId }
+                }
+            }
         }
         .toolbarTitleDisplayMode(.inline)
         .scrollDismissesKeyboard(.interactively)
-        .onAppear {
-            focusedId = blocks.first?.id
-        }
-    }
-
-    // MARK: - Helpers
-
-    private func makeTextBinding(for blockId: UUID) -> Binding<String> {
-        Binding<String>(
-            get: { blocks.first(where: { $0.id == blockId })?.text ?? "" },
-            set: { newValue in
-                guard let idx = blocks.firstIndex(where: { $0.id == blockId }) else { return }
-                if let nl = newValue.firstIndex(of: "\n") {
-                    let before = String(newValue[..<nl])
-                    let afterStart = newValue.index(after: nl)
-                    let after = afterStart < newValue.endIndex ? String(newValue[afterStart...]) : ""
-                    blocks[idx].text = before
-                    let newBlock = ArticleBlock(text: after)
-                    blocks.insert(newBlock, at: idx + 1)
-                    focusedId = newBlock.id
-                } else {
-                    blocks[idx].text = newValue
+        #if canImport(UIKit)
+            .onChange(of: viewModel.pickerSelectedImage) { _, image in
+                viewModel.send(.imageSelected(image))
+            }
+        #endif
+            .sheet(item: $viewModel.sheet) { resolveSheet($0) }
+            .onAppear {
+                viewModel.fontResolutionContext = fontResolutionContext
+                focusedId = viewModel.blocks.first?.id
+                viewModel.focusedId = focusedId
+            }
+            .onChange(of: fontResolutionContext) { _, value in
+                viewModel.fontResolutionContext = value
+            }
+            .onChange(of: focusedId) { oldValue, newValue in
+                isFocus = newValue != nil
+                if oldValue != newValue {
+                    viewModel.clearTypingOverrides()
+                }
+                if let newValue {
+                    viewModel.focusedId = newValue
                 }
             }
-        )
-    }
-
-    private func insertBlock(_ newBlock: ArticleBlock) {
-        if let idx = blocks.firstIndex(where: { $0.id == focusedId }) {
-            blocks.insert(newBlock, at: idx + 1)
-        } else {
-            blocks.append(newBlock)
-        }
-        if newBlock.type == .text || newBlock.type == .quote || newBlock.type == .list {
-            focusedId = newBlock.id
-        }
-    }
-
-    private func deleteKeyHandler(blockId: UUID) -> KeyPress.Result {
-        guard let idx = blocks.firstIndex(where: { $0.id == blockId }),
-              blocks[idx].text.isEmpty,
-              idx > 0
-        else { return .ignored }
-        blocks.remove(at: idx)
-        focusedId = blocks[..<idx].last(where: { $0.type == .text || $0.type == .quote || $0.type == .list })?.id
-        return .handled
+            .onChange(of: viewModel.focusedId) { _, newValue in
+                guard focusedId != newValue else { return }
+                focusedId = newValue
+            }
+            .onChange(of: viewModel.focusedBlockText) { oldText, newText in
+                guard !viewModel.isApplyingOverrides else { return }
+                let addedCount = newText.characters.count - oldText.characters.count
+                if viewModel.hasTypingOverrides, addedCount > 0, let focusedId = viewModel.focusedId {
+                    viewModel.send(.applyTypingOverrides(blockId: focusedId, oldText: oldText, newText: newText))
+                } else if viewModel.isFontStyleSelection, !viewModel.hasTypingOverrides {
+                    viewModel.isFontStyleSelection = false
+                }
+            }
+            .onChange(of: viewModel.textSelection) { _, newSelection in
+                if case .ranges = newSelection.indices(in: viewModel.focusedBlockText) {
+                    viewModel.clearTypingOverrides()
+                }
+            }
     }
 
     // MARK: - Block Views
 
     @ViewBuilder
-    private func textBlockView(block: Binding<ArticleBlock>) -> some View {
-        let blockId = block.id
-        TextEditor(text: makeTextBinding(for: blockId))
+    private func textBlockView(block: Binding<ArticleBlock>, textBinding: Binding<AttributedString>) -> some View {
+        let blockId = block.wrappedValue.id
+        TextEditor(text: textBinding, selection: $viewModel.textSelection)
             .frame(minHeight: 44)
             .focused($focusedId, equals: blockId)
             .overlay(alignment: .trailing) {
@@ -134,23 +151,23 @@ public struct ArticleListEditor: View {
                 }
             }
             .animation(.default, value: focusedId)
-            .onKeyPress(.delete) { deleteKeyHandler(blockId: blockId) }
+            .onKeyPress(.delete) { viewModel.handleDeleteKey(blockId: blockId) }
     }
 
     @ViewBuilder
-    private func quoteBlockView(block: Binding<ArticleBlock>) -> some View {
-        let blockId = block.id
+    private func quoteBlockView(block: Binding<ArticleBlock>, textBinding: Binding<AttributedString>) -> some View {
+        let blockId = block.wrappedValue.id
         HStack(alignment: .top, spacing: .xSmall) {
             RoundedRectangle(cornerRadius: 2)
                 .fill(.tint.opacity(0.7))
                 .frame(width: 3)
                 .padding(.vertical, .xxSmall)
-            TextEditor(text: makeTextBinding(for: blockId))
+            TextEditor(text: textBinding, selection: $viewModel.textSelection)
                 .frame(minHeight: 44)
                 .italic()
                 .foregroundStyle(.secondary)
                 .focused($focusedId, equals: blockId)
-                .onKeyPress(.delete) { deleteKeyHandler(blockId: blockId) }
+                .onKeyPress(.delete) { viewModel.handleDeleteKey(blockId: blockId) }
         }
         .overlay(alignment: .trailing) {
             if focusedId == blockId {
@@ -163,37 +180,17 @@ public struct ArticleListEditor: View {
         .animation(.default, value: focusedId)
     }
 
-    private func makeListTextBinding(for blockId: UUID) -> Binding<String> {
-        Binding<String>(
-            get: { blocks.first(where: { $0.id == blockId })?.text ?? "" },
-            set: { newValue in
-                guard let idx = blocks.firstIndex(where: { $0.id == blockId }) else { return }
-                if let nl = newValue.firstIndex(of: "\n") {
-                    let before = String(newValue[..<nl])
-                    let afterStart = newValue.index(after: nl)
-                    let after = afterStart < newValue.endIndex ? String(newValue[afterStart...]) : ""
-                    blocks[idx].text = before
-                    let newBlock = ArticleBlock(type: .list, text: after)
-                    blocks.insert(newBlock, at: idx + 1)
-                    focusedId = newBlock.id
-                } else {
-                    blocks[idx].text = newValue
-                }
-            }
-        )
-    }
-
     @ViewBuilder
-    private func listBlockView(block: Binding<ArticleBlock>) -> some View {
-        let blockId = block.id
+    private func listBlockView(block: Binding<ArticleBlock>, textBinding: Binding<AttributedString>) -> some View {
+        let blockId = block.wrappedValue.id
         HStack(alignment: .top, spacing: .xSmall) {
             Text("•")
                 .foregroundStyle(.primary)
                 .padding(.top, 4)
-            TextEditor(text: makeListTextBinding(for: blockId))
+            TextEditor(text: textBinding, selection: $viewModel.textSelection)
                 .frame(minHeight: 44)
                 .focused($focusedId, equals: blockId)
-                .onKeyPress(.delete) { deleteKeyHandler(blockId: blockId) }
+                .onKeyPress(.delete) { viewModel.handleDeleteKey(blockId: blockId) }
         }
         .overlay(alignment: .trailing) {
             if focusedId == blockId {
@@ -213,6 +210,7 @@ public struct ArticleListEditor: View {
 
     @ViewBuilder
     private func imageBlockView(block: Binding<ArticleBlock>) -> some View {
+        let blockId = block.wrappedValue.id
         if let data = block.imageData.wrappedValue, let uiImage = UIImage(data: data) {
             Image(uiImage: uiImage)
                 .resizable()
@@ -222,7 +220,7 @@ public struct ArticleListEditor: View {
                 .padding(.vertical, .xSmall)
                 .overlay(alignment: .topTrailing) {
                     Button {
-                        blocks.removeAll(where: { $0.id == block.id })
+                        viewModel.send(.removeBlock(blockId: blockId))
                     } label: {
                         Image(systemName: "xmark.circle.fill")
                             .symbolRenderingMode(.palette)
@@ -234,71 +232,82 @@ public struct ArticleListEditor: View {
         }
     }
 
-    // MARK: - Bottom Bar
+    // MARK: - Sheet
 
-    var glassBottomBar: some View {
-        GlassEffectContainer(spacing: .zero) {
-            HStack(spacing: .zero) {
-                Button { imagePickerPresented = true } label: {
-                    Icon(Image.Base.picture2)
-                        .padding(.xSmall)
-                        .padding(.leading, .xxxSmall)
+    @ViewBuilder
+    private func resolveSheet(_ sheet: ArticleListEditorViewModel.Sheet) -> some View {
+        switch sheet {
+        case .textStylePicker:
+            #if os(iOS) || os(macOS)
+            NavigationStack {
+                TextStylePicker(selectedStyle: Bindable(viewModel).selectedTextStyle)
+            }
+            #if os(iOS)
+            .presentationDetents([.medium, .large])
+            .navigationTransition(.zoom(sourceID: "textStylePicker", in: unionNamespace))
+            #endif
+            #else
+            EmptyView()
+            #endif
+
+        case .fontPicker:
+            #if os(iOS) || os(macOS)
+            NavigationStack {
+                SystemFontPicker(
+                    selectedDesign: Bindable(viewModel).selectedDesign,
+                    selectedFontName: Bindable(viewModel).selectedFontName,
+                    onApply: { fontName in
+                        viewModel.send(.applyFont(name: fontName, design: viewModel.selectedDesign))
+                    }
+                )
+            }
+            #if os(iOS)
+            .presentationDetents([.medium, .large])
+            .navigationTransition(.zoom(sourceID: "fontPicker", in: unionNamespace))
+            #endif
+            #else
+            EmptyView()
+            #endif
+
+        case .link:
+            #if os(iOS) || os(macOS)
+            NavigationStack {
+                URLEditor("Link", url: Bindable(viewModel).linkURL) {
+                    Button("Apply") {
+                        viewModel.send(.applyLink(viewModel.linkURL))
+                    }
                 }
-                .glassEffect()
-                .glassEffectUnion(id: "bar", namespace: unionNamespace)
-                .photosPicker(isPresented: $imagePickerPresented, selection: $selectedImage, matching: .images)
-                .onChange(of: selectedImage) { _, item in
-                    Task {
-                        guard let data = try? await item?.loadTransferable(type: Data.self) else { return }
-                        let newBlock = ArticleBlock(imageData: data)
-                        await MainActor.run {
-                            insertBlock(newBlock)
-                            selectedImage = nil
+                .toolbar {
+                    if viewModel.hasSelectionLink {
+                        ToolbarItem(placement: .destructiveAction) {
+                            Button("Remove link", role: .destructive) {
+                                viewModel.send(.applyLink(nil))
+                            }
                         }
                     }
                 }
-
-                Button { insertBlock(ArticleBlock(type: .quote)) } label: {
-                    Icon(Image(systemName: "text.quote"))
-                        .padding(.xSmall)
-                }
-                .glassEffect()
-                .glassEffectUnion(id: "bar", namespace: unionNamespace)
-
-                Button { insertBlock(ArticleBlock(type: .list)) } label: {
-                    Icon(Image(systemName: "list.bullet"))
-                        .padding(.xSmall)
-                }
-                .glassEffect()
-                .glassEffectUnion(id: "bar", namespace: unionNamespace)
-
-                Button { insertBlock(ArticleBlock(type: .separator)) } label: {
-                    Icon(Image.Base.attach)
-                        .padding(.xSmall)
-                }
-                .glassEffect()
-                .glassEffectUnion(id: "bar", namespace: unionNamespace)
-
-                Button {} label: {
-                    Icon(Image.Base.link)
-                        .padding(.xSmall)
-                }
-                .glassEffect()
-                .glassEffectUnion(id: "bar", namespace: unionNamespace)
-
-                Spacer()
             }
+            .presentationDetents([.medium])
+            #else
+            EmptyView()
+            #endif
+
+        case .photoPicker:
+            #if os(iOS)
+            NavigationStack {
+                PhotoLibraryPicker(selection: Bindable(viewModel).pickerSelectedImage)
+                    .hideCamera()
+            }
+            #else
+            EmptyView()
+            #endif
         }
-        .padding(.horizontal, .small)
-        .padding(.vertical, .xSmall)
-        .controlSize(.regular)
-        .buttonStyle(.scale)
     }
 }
 
 // MARK: - Preview
 
-@available(iOS 26.0, macOS 15.0, tvOS 18.0, watchOS 11.0, visionOS 2.0, *)
+@available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
 #Preview {
     NavigationStack {
         ArticleListEditor()
