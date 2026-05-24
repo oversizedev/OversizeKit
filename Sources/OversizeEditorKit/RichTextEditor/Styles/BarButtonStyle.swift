@@ -20,5 +20,7 @@ struct BarButtonStyle: ButtonStyle {
 
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
 extension ButtonStyle where Self == BarButtonStyle {
-    static var bar: BarButtonStyle { BarButtonStyle() }
+    static var bar: BarButtonStyle {
+        BarButtonStyle()
+    }
 }

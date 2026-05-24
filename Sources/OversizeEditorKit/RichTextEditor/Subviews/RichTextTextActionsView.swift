@@ -71,9 +71,7 @@ struct RichTextTextActionsView: View {
         Button { onAction(.openAIWritingSheet) } label: {
             Icon(Image.Ai.sparksAi)
         }
-        #if os(iOS)
         .matchedTransitionSource(id: "aiWriting", in: namespace)
-        #endif
         .buttonStyle(.bar)
         .barItem(namespace: namespace)
     }

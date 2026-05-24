@@ -123,9 +123,7 @@ struct RichTextEditor26: View {
                     return
                 }
                 if viewModel.isFontStyleSelection, !viewModel.hasTypingOverrides {
-                    withAnimation(.interactiveSpring) {
-                        viewModel.isFontStyleSelection = false
-                    }
+                    viewModel.isFontStyleSelection = false
                 }
             }
             .onChange(of: text) { _, newText in
@@ -192,9 +190,9 @@ private struct RichTextEditorFallback: View {
                 Button("Close", systemImage: "xmark", role: .cancel) { dismiss() }
                     .labelStyle(.toolbar)
                     .buttonStyle(.toolbarSecondary)
-                    #if !os(tvOS)
+                #if !os(tvOS)
                     .keyboardShortcut(.cancelAction)
-                    #endif
+                #endif
             }
         }
         .toolbarTitleDisplayMode(.inline)

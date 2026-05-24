@@ -16,7 +16,9 @@ final class AIWritingViewModel {
     var prompt: String = ""
     var state: LoadingState<String> = .idle
 
-    var canGenerate: Bool { !prompt.isEmpty && state != .loading }
+    var canGenerate: Bool {
+        !prompt.isEmpty && state != .loading
+    }
 
     func generate() async {
         guard canGenerate else { return }

@@ -6,16 +6,23 @@
 import OversizeUI
 import SwiftUI
 
+extension EnvironmentValues {
+    @Entry var barScrollInteracting: Bool = false
+}
+
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
 struct BarItemScrollHapticModifier: ViewModifier {
-    @State private var isVisible = true
+    @Environment(\.barScrollInteracting) private var isScrollInteracting
+    @State private var isVisible = false
 
     func body(content: Content) -> some View {
         content
             .onScrollVisibilityChange(threshold: 0.5) { visible in
                 isVisible = visible
             }
-            .sensoryFeedback(.selection, trigger: isVisible) { _, newValue in !newValue }
+            .sensoryFeedback(.selection, trigger: isVisible) { _, newValue in
+                !newValue && isScrollInteracting
+            }
     }
 }
 
@@ -23,6 +30,9 @@ struct BarItemScrollHapticModifier: ViewModifier {
 extension View {
     func barItem(namespace: Namespace.ID) -> some View {
         glassEffectUnion(id: "bar", namespace: namespace)
+        #if os(iOS)
+            .glassEffectTransition(.identity)
+        #endif
             .scrollTransition(.interactive) { content, phase in
                 let t = max(0, phase.value)
                 return content

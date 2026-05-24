@@ -76,6 +76,8 @@ struct RichTextBottomBar: View {
         self.onAction = onAction
     }
 
+    @State private var isScrollInteracting = false
+
     var body: some View {
         GlassEffectContainer(spacing: .zero) {
             HStack(spacing: .zero) {
@@ -110,6 +112,7 @@ struct RichTextBottomBar: View {
                                     }
                                 }
                             }
+                            .transition(.scale(scale: 0.01, anchor: UnitPoint(x: 0.25, y: 0.5)).combined(with: .opacity))
                         } else {
                             RichTextTextActionsView(
                                 canUndo: canUndo,
@@ -123,10 +126,13 @@ struct RichTextBottomBar: View {
                                 case .openAIWritingSheet: onAction(.openAIWritingSheet)
                                 }
                             }
+                            .transition(.scale(scale: 0.01, anchor: UnitPoint(x: 0.25, y: 0.5)).combined(with: .opacity))
                         }
                     }
                 }
                 .scrollIndicators(.hidden)
+                .onScrollPhaseChange { _, newPhase in isScrollInteracting = newPhase.isScrolling }
+                .environment(\.barScrollInteracting, isScrollInteracting)
 
                 Separator(.vertical)
                     .lineWidth(3)
@@ -144,7 +150,7 @@ struct RichTextBottomBar: View {
         .padding(.vertical, .xSmall)
         .controlSize(.regular)
         .buttonStyle(.scale)
-        .animation(.default, value: hasSelection || isFontStyleSelection)
+        .animation(.spring(response: 0.4, dampingFraction: 0.75), value: hasSelection || isFontStyleSelection)
     }
 }
 

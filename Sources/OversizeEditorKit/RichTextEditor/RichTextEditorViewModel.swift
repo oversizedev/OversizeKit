@@ -60,7 +60,7 @@ final class RichTextEditorViewModel {
     private(set) var isApplyingOverrides: Bool = false
     private var isInsertingLink: Bool = false
 
-    @ObservationIgnored nonisolated(unsafe) private var undoObservations: [NSObjectProtocol] = []
+    @ObservationIgnored private nonisolated(unsafe) var undoObservations: [NSObjectProtocol] = []
 
     init(_ text: AttributedString) {
         self.text = text
@@ -128,9 +128,7 @@ extension RichTextEditorViewModel {
         case .activateTypingFont:
             typingFontActive = true
         case .toggleFontStyleSelection:
-            withAnimation(.interactiveSpring) {
-                isFontStyleSelection.toggle()
-            }
+            isFontStyleSelection.toggle()
         case let .applyTypingOverrides(oldText, newText):
             performApplyTypingOverrides(oldText: oldText, newText: newText)
         case .openLinkSheet:
@@ -144,9 +142,9 @@ extension RichTextEditorViewModel {
     func insertGeneratedText(_ inputText: String) {
         let attributed = AttributedString(inputText)
         switch textSelection.indices(in: text) {
-        case .insertionPoint(let cursor):
+        case let .insertionPoint(cursor):
             text.insert(attributed, at: cursor)
-        case .ranges(let ranges):
+        case let .ranges(ranges):
             if let range = ranges.ranges.first {
                 text.replaceSubrange(range, with: attributed)
             }
@@ -385,7 +383,7 @@ private extension RichTextEditorViewModel {
 
     func performApplyLink(_ url: URL?) {
         switch textSelection.indices(in: text) {
-        case .insertionPoint(let cursor):
+        case let .insertionPoint(cursor):
             guard let url, selectionCurrentLink == nil else { return }
             var linked = AttributedString(url.absoluteString)
             linked.link = url

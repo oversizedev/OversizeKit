@@ -80,9 +80,7 @@ struct RichTextSelectionActionsView: View {
                 .padding(.leading, hasSelection ? .medium : .xxSmall)
                 .padding(.trailing, .small)
         }
-        #if os(iOS)
         .matchedTransitionSource(id: "textStylePicker", in: namespace)
-        #endif
         .barItem(namespace: namespace)
 
         Separator(.vertical)
@@ -130,9 +128,7 @@ struct RichTextSelectionActionsView: View {
         Button { onAction(.openFontPicker) } label: {
             Icon(Image.Editor.searchFont)
         }
-        #if os(iOS)
         .matchedTransitionSource(id: "fontPicker", in: namespace)
-        #endif
         .buttonStyle(.bar)
         .barItem(namespace: namespace)
 
