@@ -9,28 +9,28 @@ public enum BlockType: Sendable {
     case text, image, separator, quote, list
 }
 
-public struct ArticleBlock: Identifiable, Sendable {
+public struct ArticleBlock: Identifiable, @unchecked Sendable {
     public let id: UUID
     public var type: BlockType
-    public var text: AttributedString
+    public var text: NSAttributedString
     public var imageData: Data?
 
     public init(text: String = "") {
         id = UUID()
         type = .text
-        self.text = AttributedString(text)
+        self.text = NSAttributedString(string: text)
     }
 
     public init(imageData: Data) {
         id = UUID()
         type = .image
-        text = AttributedString()
+        text = NSAttributedString()
         self.imageData = imageData
     }
 
     public init(type: BlockType, text: String = "") {
         id = UUID()
         self.type = type
-        self.text = AttributedString(text)
+        self.text = NSAttributedString(string: text)
     }
 }

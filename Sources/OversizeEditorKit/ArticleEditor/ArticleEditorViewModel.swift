@@ -19,18 +19,26 @@ final class ArticleEditorViewModel {
     var focusedId: UUID?
     #if canImport(UIKit)
     var pickerSelectedImage: UIImage?
+    weak var focusedTextView: UITextView?
+    private var lastFocusedId: UUID?
+    #endif
+
+    // MARK: - Selection State
+
+    #if canImport(UIKit)
+    var currentSelectedRange: NSRange = .init(location: 0, length: 0)
+    var currentTypingAttributes: [NSAttributedString.Key: Any] = [:]
     #endif
 
     // MARK: - Formatting State
 
-    var textSelection: AttributedTextSelection = .init()
-    var fontResolutionContext: Font.Context?
-    var selectedIsItalic: Bool = false
     var isFontStyleSelection: Bool = false
     var selectedTextStyle: Font.TextStyle = .body {
         didSet {
             guard oldValue != selectedTextStyle else { return }
+            #if canImport(UIKit)
             performApplyTextStyle(selectedTextStyle)
+            #endif
         }
     }
 
@@ -39,24 +47,9 @@ final class ArticleEditorViewModel {
     var linkURL: URL?
     var sheet: Sheet?
 
-    // MARK: - Typing Overrides
-
-    var typingBoldOverride: Bool?
-    var typingItalicOverride: Bool?
-    var typingUnderlineOverride: Bool?
-    var typingStrikethroughOverride: Bool?
-    var typingHighlightColor: Color?
-    var typingRemoveHighlight: Bool = false
-    var typingLinkURL: URL?
-    var typingRemoveLink: Bool = false
-    var typingTextStyleOverride: Font.TextStyle?
-    var typingFontActive: Bool = false
-    private(set) var isApplyingOverrides: Bool = false
-
     // MARK: - Action
 
     enum Action {
-        case splitBlock(blockId: UUID, text: AttributedString, continuationType: BlockType)
         case insertBlock(ArticleBlock)
         case removeBlock(blockId: UUID)
         case moveBlocks(fromOffsets: IndexSet, toOffset: Int)
@@ -77,13 +70,10 @@ final class ArticleEditorViewModel {
         case openLinkSheet
         case applyLink(URL?)
         case applyFont(name: String?, design: Font.Design)
-        case applyTypingOverrides(blockId: UUID, oldText: AttributedString, newText: AttributedString)
     }
 
     func send(_ action: Action) {
         switch action {
-        case let .splitBlock(blockId, text, continuationType):
-            performSplitBlock(blockId: blockId, text: text, continuationType: continuationType)
         case let .insertBlock(block):
             performInsertBlock(block)
         case let .removeBlock(blockId):
@@ -101,17 +91,31 @@ final class ArticleEditorViewModel {
             performImageSelected(image)
         #endif
         case .toggleBold:
+            #if canImport(UIKit)
             performToggleBold()
+            #endif
         case .toggleItalic:
+            #if canImport(UIKit)
             performToggleItalic()
+            #endif
         case .toggleUnderline:
+            #if canImport(UIKit)
             performToggleUnderline()
+            #endif
         case .toggleStrikethrough:
+            #if canImport(UIKit)
             performToggleStrikethrough()
+            #endif
         case let .applyHighlight(color):
+            #if canImport(UIKit)
             performApplyHighlight(color)
+            #else
+            _ = color
+            #endif
         case .removeHighlight:
+            #if canImport(UIKit)
             performRemoveHighlight()
+            #endif
         case .toggleFontStyleSelection:
             isFontStyleSelection.toggle()
         case .openTextStylePicker:
@@ -119,27 +123,37 @@ final class ArticleEditorViewModel {
         case .openFontPicker:
             sheet = .fontPicker
         case .openLinkSheet:
-            linkURL = selectionCurrentLink
+            #if canImport(UIKit)
+            linkURL = currentTypingAttributes[.link] as? URL
+            #endif
             sheet = .link
         case let .applyLink(url):
+            #if canImport(UIKit)
             performApplyLink(url)
+            #else
+            _ = url
+            #endif
             sheet = nil
         case let .applyFont(name, design):
+            #if canImport(UIKit)
             performApplyFont(fontName: name, design: design)
-        case let .applyTypingOverrides(blockId, oldText, newText):
-            performApplyTypingOverrides(blockId: blockId, oldText: oldText, newText: newText)
+            #else
+            selectedFontName = name
+            selectedDesign = design
+            #endif
         }
     }
 
-    func handleDeleteKey(blockId: UUID) -> KeyPress.Result {
-        guard let idx = blocks.firstIndex(where: { $0.id == blockId }),
-              blocks[idx].text.characters.isEmpty,
-              idx > 0
-        else { return .ignored }
-        blocks.remove(at: idx)
-        focusedId = blocks[..<idx]
-            .last(where: { $0.type == .text || $0.type == .quote || $0.type == .list })?.id
-        return .handled
+    // MARK: - Focus
+
+    func toggleFocus() {
+        #if canImport(UIKit)
+        if focusedId != nil {
+            focusedId = nil
+        } else {
+            focusedId = lastFocusedId ?? blocks.first?.id
+        }
+        #endif
     }
 }
 
@@ -147,25 +161,69 @@ final class ArticleEditorViewModel {
 
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
 extension ArticleEditorViewModel {
-    func onFocusedBlockTextChanged(from oldText: AttributedString, to newText: AttributedString) {
-        guard !isApplyingOverrides, let id = focusedId else { return }
-        if newText.characters.contains("\n") {
-            send(.splitBlock(blockId: id, text: newText, continuationType: focusedBlockContinuationType))
-            return
-        }
-        let addedCount = newText.characters.count - oldText.characters.count
-        if hasTypingOverrides, addedCount > 0 {
-            send(.applyTypingOverrides(blockId: id, oldText: oldText, newText: newText))
-        } else if isFontStyleSelection, !hasTypingOverrides {
+    #if canImport(UIKit)
+    func onTextChanged(_ text: NSAttributedString, blockId: UUID) {
+        guard let idx = blocks.firstIndex(where: { $0.id == blockId }) else { return }
+        blocks[idx].text = text
+    }
+
+    func onSelectionChanged(_ range: NSRange, typingAttributes: [NSAttributedString.Key: Any]) {
+        currentSelectedRange = range
+        currentTypingAttributes = typingAttributes
+        if range.length > 0 {
             isFontStyleSelection = false
         }
     }
 
-    func onTextSelectionChanged(_ newSelection: AttributedTextSelection) {
-        if case .ranges = newSelection.indices(in: focusedBlockText) {
-            clearTypingOverrides()
-        }
+    func onReturn(blockId: UUID) {
+        guard let idx = blocks.firstIndex(where: { $0.id == blockId }),
+              let textView = focusedTextView else { return }
+        let selectedRange = textView.selectedRange
+        let fullText = textView.attributedText ?? NSAttributedString()
+        let totalLength = fullText.length
+        let cursorPosition = selectedRange.location
+
+        let beforeText = cursorPosition > 0
+            ? fullText.attributedSubstring(from: NSRange(location: 0, length: cursorPosition))
+            : NSAttributedString()
+        let afterStart = selectedRange.location + selectedRange.length
+        let afterText = afterStart < totalLength
+            ? fullText.attributedSubstring(from: NSRange(location: afterStart, length: totalLength - afterStart))
+            : NSAttributedString()
+
+        blocks[idx].text = beforeText
+
+        var newBlock = ArticleBlock(type: focusedBlockContinuationType)
+        newBlock.text = afterText
+        blocks.insert(newBlock, at: idx + 1)
+        focusedId = newBlock.id
     }
+
+    func onDeleteWhenEmpty(blockId: UUID) {
+        guard let idx = blocks.firstIndex(where: { $0.id == blockId }),
+              idx > 0 else { return }
+        blocks.remove(at: idx)
+        focusedId = blocks[..<idx]
+            .last(where: { $0.type == .text || $0.type == .quote || $0.type == .list })?.id
+    }
+
+    func onFocused(blockId: UUID, textView: UITextView) {
+        focusedId = blockId
+        lastFocusedId = blockId
+        focusedTextView = textView
+        currentTypingAttributes = textView.typingAttributes
+        currentSelectedRange = textView.selectedRange
+    }
+
+    func onBlurred(from textView: UITextView, blockId: UUID) {
+        guard sheet == nil else { return }
+        guard blockId == focusedId, textView === focusedTextView else { return }
+        focusedId = nil
+        focusedTextView = nil
+        currentSelectedRange = NSRange(location: 0, length: 0)
+        currentTypingAttributes = [:]
+    }
+    #endif
 }
 
 // MARK: - Sheet
@@ -191,79 +249,62 @@ extension ArticleEditorViewModel {
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
 extension ArticleEditorViewModel {
     var hasSelection: Bool {
-        guard let idx = focusedBlockIndex else { return false }
-        switch textSelection.indices(in: blocks[idx].text) {
-        case .insertionPoint: return false
-        case let .ranges(ranges): return !ranges.isEmpty
-        }
-    }
-
-    var hasTypingOverrides: Bool {
-        typingBoldOverride != nil || typingItalicOverride != nil ||
-            typingUnderlineOverride != nil || typingStrikethroughOverride != nil ||
-            typingHighlightColor != nil || typingRemoveHighlight ||
-            typingLinkURL != nil || typingRemoveLink ||
-            typingTextStyleOverride != nil || typingFontActive
-    }
-
-    func clearTypingOverrides() {
-        typingBoldOverride = nil
-        typingItalicOverride = nil
-        typingUnderlineOverride = nil
-        typingStrikethroughOverride = nil
-        typingHighlightColor = nil
-        typingRemoveHighlight = false
-        typingLinkURL = nil
-        typingRemoveLink = false
-        typingTextStyleOverride = nil
-        typingFontActive = false
+        #if canImport(UIKit)
+        currentSelectedRange.length > 0
+        #else
+        false
+        #endif
     }
 
     var isSelectionBold: Bool {
-        if case .insertionPoint = textSelection.indices(in: focusedBlockText),
-           let override = typingBoldOverride { return override }
-        guard let idx = focusedBlockIndex, let context = fontResolutionContext else { return false }
-        let font = textSelection.typingAttributes(in: blocks[idx].text).font
-        return (font ?? .default).resolve(in: context).isBold
+        #if canImport(UIKit)
+        (currentTypingAttributes[.font] as? UIFont)?.isBold ?? false
+        #else
+        false
+        #endif
     }
 
     var isEffectiveItalic: Bool {
-        if case .insertionPoint = textSelection.indices(in: focusedBlockText) {
-            return typingItalicOverride ?? selectedIsItalic
-        }
-        return selectedIsItalic
+        #if canImport(UIKit)
+        (currentTypingAttributes[.font] as? UIFont)?.isItalic ?? false
+        #else
+        false
+        #endif
     }
 
     var isSelectionUnderlined: Bool {
-        if case .insertionPoint = textSelection.indices(in: focusedBlockText),
-           let override = typingUnderlineOverride { return override }
-        guard let idx = focusedBlockIndex else { return false }
-        return textSelection.typingAttributes(in: blocks[idx].text).underlineStyle != nil
+        #if canImport(UIKit)
+        guard let value = currentTypingAttributes[.underlineStyle] as? Int else { return false }
+        return value != 0
+        #else
+        false
+        #endif
     }
 
     var isSelectionStrikethrough: Bool {
-        if case .insertionPoint = textSelection.indices(in: focusedBlockText),
-           let override = typingStrikethroughOverride { return override }
-        guard let idx = focusedBlockIndex else { return false }
-        return textSelection.typingAttributes(in: blocks[idx].text).strikethroughStyle != nil
+        #if canImport(UIKit)
+        guard let value = currentTypingAttributes[.strikethroughStyle] as? Int else { return false }
+        return value != 0
+        #else
+        false
+        #endif
     }
 
     var hasSelectionLink: Bool {
-        if case .insertionPoint = textSelection.indices(in: focusedBlockText) {
-            if typingRemoveLink { return false }
-            if typingLinkURL != nil { return true }
-        }
-        guard let idx = focusedBlockIndex else { return false }
-        return textSelection.typingAttributes(in: blocks[idx].text).link != nil
+        #if canImport(UIKit)
+        currentTypingAttributes[.link] != nil
+        #else
+        false
+        #endif
     }
 
     var selectionHighlightColor: Color? {
-        if case .insertionPoint = textSelection.indices(in: focusedBlockText) {
-            if typingRemoveHighlight { return nil }
-            if let color = typingHighlightColor { return color }
-        }
-        guard let idx = focusedBlockIndex else { return nil }
-        return textSelection.typingAttributes(in: blocks[idx].text).backgroundColor
+        #if canImport(UIKit)
+        guard let uiColor = currentTypingAttributes[.backgroundColor] as? UIColor else { return nil }
+        return Color(uiColor: uiColor)
+        #else
+        nil
+        #endif
     }
 
     var selectedTextStyleName: String {
@@ -279,17 +320,8 @@ extension ArticleEditorViewModel {
         return blocks[idx].type == .list ? .list : .text
     }
 
-    var selectionCurrentLink: URL? {
-        guard let idx = focusedBlockIndex else { return nil }
-        return textSelection.typingAttributes(in: blocks[idx].text).link
-    }
-
     private var focusedBlockIndex: Int? {
         blocks.firstIndex(where: { $0.id == focusedId })
-    }
-
-    var focusedBlockText: AttributedString {
-        focusedBlockIndex.map { blocks[$0].text } ?? .init()
     }
 }
 
@@ -297,27 +329,6 @@ extension ArticleEditorViewModel {
 
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
 private extension ArticleEditorViewModel {
-    func performSplitBlock(blockId: UUID, text: AttributedString, continuationType: BlockType) {
-        let chars = text.characters
-        guard let nlCharIdx = chars.firstIndex(of: "\n"),
-              let idx = blocks.firstIndex(where: { $0.id == blockId })
-        else { return }
-
-        let nlOffset = chars.distance(from: chars.startIndex, to: nlCharIdx)
-        let nlAttrIdx = text.index(text.startIndex, offsetByCharacters: nlOffset)
-        blocks[idx].text = AttributedString(text[..<nlAttrIdx])
-
-        let nextCharIdx = chars.index(after: nlCharIdx)
-        let after: AttributedString = nextCharIdx < chars.endIndex
-            ? AttributedString(text[text.index(text.startIndex, offsetByCharacters: chars.distance(from: chars.startIndex, to: nextCharIdx))...])
-            : .init()
-
-        var newBlock = ArticleBlock(type: continuationType)
-        newBlock.text = after
-        blocks.insert(newBlock, at: idx + 1)
-        focusedId = newBlock.id
-    }
-
     func performInsertBlock(_ newBlock: ArticleBlock) {
         if let idx = blocks.firstIndex(where: { $0.id == focusedId }) {
             blocks.insert(newBlock, at: idx + 1)
@@ -343,245 +354,270 @@ private extension ArticleEditorViewModel {
 
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
 private extension ArticleEditorViewModel {
+    #if canImport(UIKit)
     func performToggleBold() {
-        guard let idx = focusedBlockIndex, let context = fontResolutionContext else { return }
+        guard let textView = focusedTextView, let idx = focusedBlockIndex else { return }
         let isBold = isSelectionBold
-        switch textSelection.indices(in: blocks[idx].text) {
-        case .insertionPoint:
-            typingBoldOverride = !isBold
-        case let .ranges(ranges):
-            let newBold = !isBold
-            let italic = selectedIsItalic
-            let design = selectedDesign
-            let fontName = selectedFontName
-            blocks[idx].text.transform(updating: &textSelection) { mt in
-                for range in ranges.ranges {
-                    for item in mt[range].runs.map({ (run: $0.range, font: $0.font ?? .body) }) {
-                        let resolved = item.font.resolve(in: context)
-                        mt[item.run].font = fontName != nil
-                            ? RichTextEditorViewModel.resolveCustomFont(name: fontName!, size: resolved.pointSize, bold: newBold, italic: italic)
-                            : RichTextEditorViewModel.resolveSystemFont(size: resolved.pointSize, bold: newBold, italic: italic, design: design)
-                    }
-                }
+
+        if currentSelectedRange.length == 0 {
+            var attrs = textView.typingAttributes
+            let current = (attrs[.font] as? UIFont) ?? .preferredFont(forTextStyle: .body)
+            attrs[.font] = isBold ? current.withoutTrait(.traitBold) : current.withTrait(.traitBold)
+            textView.typingAttributes = attrs
+            currentTypingAttributes = attrs
+        } else {
+            let mutable = NSMutableAttributedString(attributedString: textView.attributedText)
+            mutable.enumerateAttribute(.font, in: currentSelectedRange) { value, range, _ in
+                let font = (value as? UIFont) ?? .preferredFont(forTextStyle: .body)
+                mutable.addAttribute(.font, value: isBold ? font.withoutTrait(.traitBold) : font.withTrait(.traitBold), range: range)
             }
+            applyMutable(mutable, to: textView, blockIndex: idx)
         }
     }
 
     func performToggleItalic() {
-        guard let idx = focusedBlockIndex, let context = fontResolutionContext else { return }
-        switch textSelection.indices(in: blocks[idx].text) {
-        case .insertionPoint:
-            let current = typingItalicOverride ?? selectedIsItalic
-            typingItalicOverride = !current
-            selectedIsItalic = !current
-        case let .ranges(ranges):
-            let newItalic = !selectedIsItalic
-            selectedIsItalic = newItalic
-            let design = selectedDesign
-            let fontName = selectedFontName
-            blocks[idx].text.transform(updating: &textSelection) { mt in
-                for range in ranges.ranges {
-                    for item in mt[range].runs.map({ (run: $0.range, font: $0.font ?? .body) }) {
-                        let resolved = item.font.resolve(in: context)
-                        mt[item.run].font = fontName != nil
-                            ? RichTextEditorViewModel.resolveCustomFont(name: fontName!, size: resolved.pointSize, bold: resolved.isBold, italic: newItalic)
-                            : RichTextEditorViewModel.resolveSystemFont(size: resolved.pointSize, bold: resolved.isBold, italic: newItalic, design: design)
-                    }
-                }
+        guard let textView = focusedTextView, let idx = focusedBlockIndex else { return }
+        let isItalic = isEffectiveItalic
+
+        if currentSelectedRange.length == 0 {
+            var attrs = textView.typingAttributes
+            let current = (attrs[.font] as? UIFont) ?? .preferredFont(forTextStyle: .body)
+            attrs[.font] = isItalic ? current.withoutTrait(.traitItalic) : current.withTrait(.traitItalic)
+            textView.typingAttributes = attrs
+            currentTypingAttributes = attrs
+        } else {
+            let mutable = NSMutableAttributedString(attributedString: textView.attributedText)
+            mutable.enumerateAttribute(.font, in: currentSelectedRange) { value, range, _ in
+                let font = (value as? UIFont) ?? .preferredFont(forTextStyle: .body)
+                mutable.addAttribute(.font, value: isItalic ? font.withoutTrait(.traitItalic) : font.withTrait(.traitItalic), range: range)
             }
+            applyMutable(mutable, to: textView, blockIndex: idx)
         }
     }
 
     func performToggleUnderline() {
-        guard let idx = focusedBlockIndex else { return }
-        switch textSelection.indices(in: blocks[idx].text) {
-        case .insertionPoint:
-            typingUnderlineOverride = !isSelectionUnderlined
-        case let .ranges(ranges):
-            let newStyle: Text.LineStyle? = isSelectionUnderlined ? nil : .init(pattern: .solid)
-            blocks[idx].text.transform(updating: &textSelection) { mt in
-                for range in ranges.ranges {
-                    mt[range].underlineStyle = newStyle
-                }
-            }
+        guard let textView = focusedTextView, let idx = focusedBlockIndex else { return }
+        let isUnderlined = isSelectionUnderlined
+
+        if currentSelectedRange.length == 0 {
+            var attrs = textView.typingAttributes
+            attrs[.underlineStyle] = isUnderlined ? 0 : NSUnderlineStyle.single.rawValue
+            textView.typingAttributes = attrs
+            currentTypingAttributes = attrs
+        } else {
+            let mutable = NSMutableAttributedString(attributedString: textView.attributedText)
+            mutable.addAttribute(.underlineStyle, value: isUnderlined ? 0 : NSUnderlineStyle.single.rawValue, range: currentSelectedRange)
+            applyMutable(mutable, to: textView, blockIndex: idx)
         }
     }
 
     func performToggleStrikethrough() {
-        guard let idx = focusedBlockIndex else { return }
-        switch textSelection.indices(in: blocks[idx].text) {
-        case .insertionPoint:
-            typingStrikethroughOverride = !isSelectionStrikethrough
-        case let .ranges(ranges):
-            let newStyle: Text.LineStyle? = isSelectionStrikethrough ? nil : .init(pattern: .solid)
-            blocks[idx].text.transform(updating: &textSelection) { mt in
-                for range in ranges.ranges {
-                    mt[range].strikethroughStyle = newStyle
-                }
-            }
+        guard let textView = focusedTextView, let idx = focusedBlockIndex else { return }
+        let isStrikethrough = isSelectionStrikethrough
+
+        if currentSelectedRange.length == 0 {
+            var attrs = textView.typingAttributes
+            attrs[.strikethroughStyle] = isStrikethrough ? 0 : NSUnderlineStyle.single.rawValue
+            textView.typingAttributes = attrs
+            currentTypingAttributes = attrs
+        } else {
+            let mutable = NSMutableAttributedString(attributedString: textView.attributedText)
+            mutable.addAttribute(.strikethroughStyle, value: isStrikethrough ? 0 : NSUnderlineStyle.single.rawValue, range: currentSelectedRange)
+            applyMutable(mutable, to: textView, blockIndex: idx)
         }
     }
 
     func performApplyHighlight(_ color: Color) {
-        guard let idx = focusedBlockIndex else { return }
-        switch textSelection.indices(in: blocks[idx].text) {
-        case .insertionPoint:
-            typingHighlightColor = color
-            typingRemoveHighlight = false
-        case let .ranges(ranges):
-            blocks[idx].text.transform(updating: &textSelection) { mt in
-                for range in ranges.ranges {
-                    mt[range].backgroundColor = color
-                }
-            }
+        guard let textView = focusedTextView, let idx = focusedBlockIndex else { return }
+        let uiColor = UIColor(color)
+
+        if currentSelectedRange.length == 0 {
+            var attrs = textView.typingAttributes
+            attrs[.backgroundColor] = uiColor
+            textView.typingAttributes = attrs
+            currentTypingAttributes = attrs
+        } else {
+            let mutable = NSMutableAttributedString(attributedString: textView.attributedText)
+            mutable.addAttribute(.backgroundColor, value: uiColor, range: currentSelectedRange)
+            applyMutable(mutable, to: textView, blockIndex: idx)
         }
     }
 
     func performRemoveHighlight() {
-        guard let idx = focusedBlockIndex else { return }
-        switch textSelection.indices(in: blocks[idx].text) {
-        case .insertionPoint:
-            typingHighlightColor = nil
-            typingRemoveHighlight = true
-        case let .ranges(ranges):
-            blocks[idx].text.transform(updating: &textSelection) { mt in
-                for range in ranges.ranges {
-                    mt[range].backgroundColor = nil
-                }
-            }
+        guard let textView = focusedTextView, let idx = focusedBlockIndex else { return }
+
+        if currentSelectedRange.length == 0 {
+            var attrs = textView.typingAttributes
+            attrs.removeValue(forKey: .backgroundColor)
+            textView.typingAttributes = attrs
+            currentTypingAttributes = attrs
+        } else {
+            let mutable = NSMutableAttributedString(attributedString: textView.attributedText)
+            mutable.removeAttribute(.backgroundColor, range: currentSelectedRange)
+            applyMutable(mutable, to: textView, blockIndex: idx)
         }
     }
 
     func performApplyTextStyle(_ style: Font.TextStyle) {
-        guard let idx = focusedBlockIndex, let context = fontResolutionContext else { return }
-        switch textSelection.indices(in: blocks[idx].text) {
-        case .insertionPoint:
-            typingTextStyleOverride = style
-        case let .ranges(ranges):
-            let italic = selectedIsItalic
-            let design = selectedDesign
-            let customFontName = selectedFontName
-            let stylePointSize = Font.system(style).resolve(in: context).pointSize
-            blocks[idx].text.transform(updating: &textSelection) { mt in
-                for range in ranges.ranges {
-                    for item in mt[range].runs.map({ (run: $0.range, font: $0.font ?? .body) }) {
-                        let isBold = item.font.resolve(in: context).isBold
-                        let base: Font = if let fontName = customFontName {
-                            isBold ? Font.custom(fontName, size: stylePointSize).bold() : Font.custom(fontName, size: stylePointSize)
-                        } else {
-                            Font.system(style, design: design, weight: isBold ? .bold : .regular)
-                        }
-                        mt[item.run].font = italic ? base.italic() : base
-                    }
-                }
+        guard let textView = focusedTextView, let idx = focusedBlockIndex else { return }
+        let targetUIStyle = uiFontTextStyle(from: style)
+        let baseFont = UIFont.preferredFont(forTextStyle: targetUIStyle)
+
+        if currentSelectedRange.length == 0 {
+            var attrs = textView.typingAttributes
+            let current = (attrs[.font] as? UIFont) ?? .preferredFont(forTextStyle: .body)
+            var newFont = UIFont(descriptor: baseFont.fontDescriptor, size: baseFont.pointSize)
+            if current.isBold { newFont = newFont.withTrait(.traitBold) }
+            if current.isItalic { newFont = newFont.withTrait(.traitItalic) }
+            attrs[.font] = newFont
+            textView.typingAttributes = attrs
+            currentTypingAttributes = attrs
+        } else {
+            let mutable = NSMutableAttributedString(attributedString: textView.attributedText)
+            mutable.enumerateAttribute(.font, in: currentSelectedRange) { value, range, _ in
+                let current = (value as? UIFont) ?? .preferredFont(forTextStyle: .body)
+                var newFont = baseFont
+                if current.isBold { newFont = newFont.withTrait(.traitBold) }
+                if current.isItalic { newFont = newFont.withTrait(.traitItalic) }
+                mutable.addAttribute(.font, value: newFont, range: range)
             }
+            applyMutable(mutable, to: textView, blockIndex: idx)
         }
     }
 
     func performApplyLink(_ url: URL?) {
         guard let idx = focusedBlockIndex else { return }
-        switch textSelection.indices(in: blocks[idx].text) {
-        case .insertionPoint:
-            typingLinkURL = url
-            typingRemoveLink = (url == nil)
-        case let .ranges(ranges):
-            blocks[idx].text.transform(updating: &textSelection) { mt in
-                for range in ranges.ranges {
-                    mt[range].link = url
-                }
-            }
-        }
-    }
 
-    func performApplyTypingOverrides(blockId: UUID, oldText: AttributedString, newText: AttributedString) {
-        guard let idx = blocks.firstIndex(where: { $0.id == blockId }) else { return }
-        let addedCount = newText.characters.count - oldText.characters.count
-        guard hasTypingOverrides, addedCount > 0,
-              case let .insertionPoint(cursor) = textSelection.indices(in: newText)
-        else {
-            isApplyingOverrides = true
-            blocks[idx].text = newText
-            isApplyingOverrides = false
-            return
-        }
-
-        var modified = newText
-        var startIdx = cursor
-        for _ in 0 ..< addedCount {
-            startIdx = modified.characters.index(before: startIdx)
-        }
-        let range = startIdx ..< cursor
-
-        let needsFontOverride = typingBoldOverride != nil || typingItalicOverride != nil
-            || typingTextStyleOverride != nil || typingFontActive
-        if needsFontOverride, let context = fontResolutionContext {
-            let boldOverride = typingBoldOverride
-            let italic = typingItalicOverride ?? selectedIsItalic
-            let design = selectedDesign
-            let fontName = selectedFontName
-            let styleOverride = typingTextStyleOverride
-            let hasFontTraitOverride = typingBoldOverride != nil || typingItalicOverride != nil
-            for item in modified[range].runs.map({ (run: $0.range, font: $0.font ?? .body) }) {
-                let resolved = item.font.resolve(in: context)
-                let bold = boldOverride ?? resolved.isBold
-                let size: CGFloat = if let styleOverride {
-                    Font.system(styleOverride).resolve(in: context).pointSize
+        if let textView = focusedTextView {
+            if currentSelectedRange.length == 0 {
+                var attrs = textView.typingAttributes
+                if let url { attrs[.link] = url } else { attrs.removeValue(forKey: .link) }
+                textView.typingAttributes = attrs
+                currentTypingAttributes = attrs
+            } else {
+                let mutable = NSMutableAttributedString(attributedString: textView.attributedText)
+                if let url {
+                    mutable.addAttribute(.link, value: url, range: currentSelectedRange)
                 } else {
-                    resolved.pointSize
+                    mutable.removeAttribute(.link, range: currentSelectedRange)
                 }
-                modified[item.run].font = if let fontName {
-                    hasFontTraitOverride
-                        ? RichTextEditorViewModel.resolveCustomFont(name: fontName, size: size, bold: bold, italic: italic)
-                        : (italic ? Font.custom(fontName, size: size).italic() : Font.custom(fontName, size: size))
-                } else {
-                    RichTextEditorViewModel.resolveSystemFont(size: size, bold: bold, italic: italic, design: design)
-                }
+                applyMutable(mutable, to: textView, blockIndex: idx)
             }
+        } else if currentSelectedRange.length > 0 {
+            let mutable = NSMutableAttributedString(attributedString: blocks[idx].text)
+            if let url {
+                mutable.addAttribute(.link, value: url, range: currentSelectedRange)
+            } else {
+                mutable.removeAttribute(.link, range: currentSelectedRange)
+            }
+            blocks[idx].text = mutable
         }
-        if let underlineOverride = typingUnderlineOverride {
-            modified[range].underlineStyle = underlineOverride ? .init(pattern: .solid) : nil
-        }
-        if let strikethroughOverride = typingStrikethroughOverride {
-            modified[range].strikethroughStyle = strikethroughOverride ? .init(pattern: .solid) : nil
-        }
-        if let highlightColor = typingHighlightColor {
-            modified[range].backgroundColor = highlightColor
-        } else if typingRemoveHighlight {
-            modified[range].backgroundColor = nil
-        }
-        if let linkURL = typingLinkURL {
-            modified[range].link = linkURL
-        } else if typingRemoveLink {
-            modified[range].link = nil
-        }
-
-        isApplyingOverrides = true
-        blocks[idx].text = modified
-        isApplyingOverrides = false
     }
 
     func performApplyFont(fontName: String?, design: Font.Design) {
-        guard let idx = focusedBlockIndex, let context = fontResolutionContext else { return }
+        guard let textView = focusedTextView, let idx = focusedBlockIndex else { return }
         selectedFontName = fontName
         selectedDesign = design
-        switch textSelection.indices(in: blocks[idx].text) {
-        case .insertionPoint:
-            selectedFontName = fontName
-            selectedDesign = design
-            typingFontActive = true
-        case let .ranges(ranges):
-            let italic = selectedIsItalic
-            blocks[idx].text.transform(updating: &textSelection) { mt in
-                for range in ranges.ranges {
-                    for item in mt[range].runs.map({ (run: $0.range, font: $0.font ?? .body) }) {
-                        let resolved = item.font.resolve(in: context)
-                        let base: Font = fontName != nil
-                            ? Font.custom(fontName!, size: resolved.pointSize)
-                            : Font.system(size: resolved.pointSize, weight: resolved.isBold ? .bold : .regular, design: design)
-                        mt[item.run].font = italic ? base.italic() : base
-                    }
-                }
+
+        if currentSelectedRange.length == 0 {
+            var attrs = textView.typingAttributes
+            let current = (attrs[.font] as? UIFont) ?? .preferredFont(forTextStyle: .body)
+            attrs[.font] = resolvedFont(name: fontName, design: design, size: current.pointSize, bold: current.isBold, italic: current.isItalic)
+            textView.typingAttributes = attrs
+            currentTypingAttributes = attrs
+        } else {
+            let mutable = NSMutableAttributedString(attributedString: textView.attributedText)
+            mutable.enumerateAttribute(.font, in: currentSelectedRange) { value, range, _ in
+                let current = (value as? UIFont) ?? .preferredFont(forTextStyle: .body)
+                mutable.addAttribute(.font, value: resolvedFont(name: fontName, design: design, size: current.pointSize, bold: current.isBold, italic: current.isItalic), range: range)
             }
+            applyMutable(mutable, to: textView, blockIndex: idx)
         }
     }
+
+    func applyMutable(_ mutable: NSMutableAttributedString, to textView: UITextView, blockIndex idx: Int) {
+        let savedRange = textView.selectedRange
+        textView.attributedText = mutable
+        let safeRange = NSRange(location: min(savedRange.location, mutable.length), length: min(savedRange.length, max(0, mutable.length - savedRange.location)))
+        textView.selectedRange = safeRange
+        blocks[idx].text = mutable
+    }
+
+    func resolvedFont(name: String?, design: Font.Design, size: CGFloat, bold: Bool, italic: Bool) -> UIFont {
+        var font: UIFont = if let name {
+            UIFont(name: name, size: size) ?? .systemFont(ofSize: size)
+        } else {
+            applyFontDesign(design, to: .systemFont(ofSize: size))
+        }
+        if bold { font = font.withTrait(.traitBold) }
+        if italic { font = font.withTrait(.traitItalic) }
+        return font
+    }
+
+    func applyFontDesign(_ design: Font.Design, to font: UIFont) -> UIFont {
+        switch design {
+        case .monospaced:
+            let weight: UIFont.Weight = font.isBold ? .bold : .regular
+            let mono = UIFont.monospacedSystemFont(ofSize: font.pointSize, weight: weight)
+            return font.isItalic ? mono.withTrait(.traitItalic) : mono
+        case .rounded:
+            if let descriptor = font.fontDescriptor.withDesign(.rounded) {
+                return UIFont(descriptor: descriptor, size: 0)
+            }
+            return font
+        case .serif:
+            if let descriptor = font.fontDescriptor.withDesign(.serif) {
+                return UIFont(descriptor: descriptor, size: 0)
+            }
+            return font
+        default:
+            return font
+        }
+    }
+
+    func uiFontTextStyle(from textStyle: Font.TextStyle) -> UIFont.TextStyle {
+        switch textStyle {
+        case .largeTitle: return .largeTitle
+        case .title: return .title1
+        case .title2: return .title2
+        case .title3: return .title3
+        case .headline: return .headline
+        case .subheadline: return .subheadline
+        case .body: return .body
+        case .callout: return .callout
+        case .footnote: return .footnote
+        case .caption: return .caption1
+        case .caption2: return .caption2
+        @unknown default: return .body
+        }
+    }
+    #endif
 }
+
+// MARK: - UIFont Helpers
+
+#if canImport(UIKit)
+private extension UIFont {
+    func withTrait(_ trait: UIFontDescriptor.SymbolicTraits) -> UIFont {
+        var traits = fontDescriptor.symbolicTraits
+        traits.insert(trait)
+        guard let descriptor = fontDescriptor.withSymbolicTraits(traits) else { return self }
+        return UIFont(descriptor: descriptor, size: 0)
+    }
+
+    func withoutTrait(_ trait: UIFontDescriptor.SymbolicTraits) -> UIFont {
+        var traits = fontDescriptor.symbolicTraits
+        traits.remove(trait)
+        guard let descriptor = fontDescriptor.withSymbolicTraits(traits) else { return self }
+        return UIFont(descriptor: descriptor, size: 0)
+    }
+
+    var isBold: Bool {
+        fontDescriptor.symbolicTraits.contains(.traitBold)
+    }
+
+    var isItalic: Bool {
+        fontDescriptor.symbolicTraits.contains(.traitItalic)
+    }
+}
+#endif

@@ -8,22 +8,25 @@ import OversizeMediaKit
 import OversizeResources
 import OversizeUI
 import SwiftUI
+#if canImport(UIKit)
+import UIKit
+#endif
 
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
 public struct ArticleEditor: View {
     @Namespace private var unionNamespace
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.fontResolutionContext) private var fontResolutionContext
-    @Environment(\.undoManager) private var undoManager
 
     @State private var viewModel = ArticleEditorViewModel()
-    @FocusState private var focusedId: UUID?
-    @State private var isFocus: Bool = false
+
+    private var isFocus: Bool {
+        viewModel.focusedId != nil
+    }
 
     public init() {}
 
     public var body: some View {
-        ListLayoutView("Editor") {
+        List {
             ForEach($viewModel.blocks) { $block in
                 Group {
                     switch block.type {
@@ -34,13 +37,17 @@ public struct ArticleEditor: View {
                     case .list: listBlockView(block: $block)
                     }
                 }
+                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
                 .listRowSeparator(.hidden)
-                .listRowInsets(.init(top: 0, leading: .medium, bottom: 0, trailing: .medium))
             }
             .onMove { viewModel.send(.moveBlocks(fromOffsets: $0, toOffset: $1)) }
             .onDelete { viewModel.send(.deleteOffsets($0)) }
+            #if os(iOS)
+                .listRowSpacing(0)
+            #endif
         }
         .listStyle(.plain)
+        .environment(\.defaultMinListRowHeight, 0)
         .safeAreaInset(edge: .bottom) {
             ArticleBottomBar(
                 hasSelection: viewModel.hasSelection,
@@ -72,8 +79,7 @@ public struct ArticleEditor: View {
                 case .openTextStylePicker: viewModel.send(.openTextStylePicker)
                 case .openLinkSheet: viewModel.send(.openLinkSheet)
                 case .toggleFontStyleSelection: viewModel.send(.toggleFontStyleSelection)
-                case .toggleFocus:
-                    if isFocus { focusedId = nil } else { focusedId = viewModel.focusedId }
+                case .toggleFocus: viewModel.toggleFocus()
                 }
             }
         }
@@ -86,17 +92,8 @@ public struct ArticleEditor: View {
         #endif
             .sheet(item: $viewModel.sheet) { resolveSheet($0) }
             .onAppear {
-                viewModel.fontResolutionContext = fontResolutionContext
-                focusedId = viewModel.blocks.first?.id
-                viewModel.focusedId = focusedId
+                viewModel.focusedId = viewModel.blocks.first?.id
             }
-            .onChange(of: fontResolutionContext) { _, value in
-                viewModel.fontResolutionContext = value
-            }
-            .onChange(of: focusedId) { old, new in handleFocusedIdChange(from: old, to: new) }
-            .onChange(of: viewModel.focusedId) { _, newValue in handleViewModelFocusedIdChange(newValue) }
-            .onChange(of: viewModel.focusedBlockText) { old, new in viewModel.onFocusedBlockTextChanged(from: old, to: new) }
-            .onChange(of: viewModel.textSelection) { _, new in viewModel.onTextSelectionChanged(new) }
     }
 
     // MARK: - Block Views
@@ -104,19 +101,26 @@ public struct ArticleEditor: View {
     @ViewBuilder
     private func textBlockView(block: Binding<ArticleBlock>) -> some View {
         let blockId = block.wrappedValue.id
-        TextEditor(text: block.text, selection: $viewModel.textSelection)
-            .frame(minHeight: 44)
-            .focused($focusedId, equals: blockId)
-            .overlay(alignment: .trailing) {
-                if focusedId == blockId {
-                    Image(systemName: "line.3.horizontal")
-                        .foregroundStyle(.tertiary)
-                        .allowsHitTesting(false)
-                        .transition(.opacity)
-                }
-            }
-            .animation(.default, value: focusedId)
-            .onKeyPress(.delete) { viewModel.handleDeleteKey(blockId: blockId) }
+        #if canImport(UIKit)
+        ArticleTextView(
+            text: block.wrappedValue.text,
+            isFocused: viewModel.focusedId == blockId,
+            onTextChange: { viewModel.onTextChanged($0, blockId: blockId) },
+            onSelectionChange: { viewModel.onSelectionChanged($0, typingAttributes: $1) },
+            onReturn: { viewModel.onReturn(blockId: blockId) },
+            onDeleteWhenEmpty: { viewModel.onDeleteWhenEmpty(blockId: blockId) },
+            onFocus: { viewModel.onFocused(blockId: blockId, textView: $0) },
+            onBlur: { viewModel.onBlurred(from: $0, blockId: blockId) }
+        )
+        .fixedSize(horizontal: false, vertical: true)
+        .frame(minHeight: 0)
+        #else
+        TextEditor(text: Binding(
+            get: { AttributedString(block.wrappedValue.text) },
+            set: { block.wrappedValue.text = NSAttributedString($0) }
+        ))
+        .fixedSize(horizontal: false, vertical: true)
+        #endif
     }
 
     @ViewBuilder
@@ -127,22 +131,40 @@ public struct ArticleEditor: View {
                 .fill(.tint.opacity(0.7))
                 .frame(width: 3)
                 .padding(.vertical, .xxSmall)
-            TextEditor(text: block.text, selection: $viewModel.textSelection)
-                .frame(minHeight: 44)
-                .italic()
-                .foregroundStyle(.secondary)
-                .focused($focusedId, equals: blockId)
-                .onKeyPress(.delete) { viewModel.handleDeleteKey(blockId: blockId) }
+            #if canImport(UIKit)
+            ArticleTextView(
+                text: block.wrappedValue.text,
+                isFocused: viewModel.focusedId == blockId,
+                defaultFont: .italicSystemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize),
+                defaultTextColor: .secondaryLabel,
+                onTextChange: { viewModel.onTextChanged($0, blockId: blockId) },
+                onSelectionChange: { viewModel.onSelectionChanged($0, typingAttributes: $1) },
+                onReturn: { viewModel.onReturn(blockId: blockId) },
+                onDeleteWhenEmpty: { viewModel.onDeleteWhenEmpty(blockId: blockId) },
+                onFocus: { viewModel.onFocused(blockId: blockId, textView: $0) },
+                onBlur: { viewModel.onBlurred(from: $0, blockId: blockId) }
+            )
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(minHeight: 0)
+            #else
+            TextEditor(text: Binding(
+                get: { AttributedString(block.wrappedValue.text) },
+                set: { block.wrappedValue.text = NSAttributedString($0) }
+            ))
+            .italic()
+            .foregroundStyle(.secondary)
+            .fixedSize(horizontal: false, vertical: true)
+            #endif
         }
         .overlay(alignment: .trailing) {
-            if focusedId == blockId {
+            if viewModel.focusedId == blockId {
                 Image(systemName: "line.3.horizontal")
                     .foregroundStyle(.tertiary)
                     .allowsHitTesting(false)
                     .transition(.opacity)
             }
         }
-        .animation(.default, value: focusedId)
+        .animation(.default, value: viewModel.focusedId)
     }
 
     @ViewBuilder
@@ -152,20 +174,36 @@ public struct ArticleEditor: View {
             Text("•")
                 .foregroundStyle(.primary)
                 .padding(.top, 4)
-            TextEditor(text: block.text, selection: $viewModel.textSelection)
-                .frame(minHeight: 44)
-                .focused($focusedId, equals: blockId)
-                .onKeyPress(.delete) { viewModel.handleDeleteKey(blockId: blockId) }
+            #if canImport(UIKit)
+            ArticleTextView(
+                text: block.wrappedValue.text,
+                isFocused: viewModel.focusedId == blockId,
+                onTextChange: { viewModel.onTextChanged($0, blockId: blockId) },
+                onSelectionChange: { viewModel.onSelectionChanged($0, typingAttributes: $1) },
+                onReturn: { viewModel.onReturn(blockId: blockId) },
+                onDeleteWhenEmpty: { viewModel.onDeleteWhenEmpty(blockId: blockId) },
+                onFocus: { viewModel.onFocused(blockId: blockId, textView: $0) },
+                onBlur: { viewModel.onBlurred(from: $0, blockId: blockId) }
+            )
+            .fixedSize(horizontal: false, vertical: true)
+            .frame(minHeight: 0)
+            #else
+            TextEditor(text: Binding(
+                get: { AttributedString(block.wrappedValue.text) },
+                set: { block.wrappedValue.text = NSAttributedString($0) }
+            ))
+            .fixedSize(horizontal: false, vertical: true)
+            #endif
         }
         .overlay(alignment: .trailing) {
-            if focusedId == blockId {
+            if viewModel.focusedId == blockId {
                 Image(systemName: "line.3.horizontal")
                     .foregroundStyle(.tertiary)
                     .allowsHitTesting(false)
                     .transition(.opacity)
             }
         }
-        .animation(.default, value: focusedId)
+        .animation(.default, value: viewModel.focusedId)
     }
 
     private var separatorBlockView: some View {
@@ -176,6 +214,7 @@ public struct ArticleEditor: View {
     @ViewBuilder
     private func imageBlockView(block: Binding<ArticleBlock>) -> some View {
         let blockId = block.wrappedValue.id
+        #if canImport(UIKit)
         if let data = block.imageData.wrappedValue, let uiImage = UIImage(data: data) {
             Image(uiImage: uiImage)
                 .resizable()
@@ -195,6 +234,7 @@ public struct ArticleEditor: View {
                     .padding(.xSmall)
                 }
         }
+        #endif
     }
 
     // MARK: - Sheet
@@ -266,26 +306,6 @@ public struct ArticleEditor: View {
             #else
             EmptyView()
             #endif
-        }
-    }
-}
-
-// MARK: - Handlers
-
-@available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
-extension ArticleEditor {
-    private func handleViewModelFocusedIdChange(_ newValue: UUID?) {
-        guard focusedId != newValue else { return }
-        focusedId = newValue
-    }
-
-    private func handleFocusedIdChange(from oldValue: UUID?, to newValue: UUID?) {
-        isFocus = newValue != nil
-        if oldValue != newValue {
-            viewModel.clearTypingOverrides()
-        }
-        if let newValue {
-            viewModel.focusedId = newValue
         }
     }
 }

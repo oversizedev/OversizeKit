@@ -23,7 +23,7 @@ public struct NoteViewer: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .paddingContent()
         }
-        .navigationBarTitleDisplayMode(.inline)
+        .toolbarTitleDisplayMode(.inline)
     }
 }
 
