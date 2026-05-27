@@ -6,7 +6,7 @@
 import Foundation
 
 public enum BlockType: Sendable {
-    case text, image, separator, quote, list
+    case text, image, separator, quote, list, numberedList
 }
 
 public struct ArticleBlock: Identifiable, @unchecked Sendable {

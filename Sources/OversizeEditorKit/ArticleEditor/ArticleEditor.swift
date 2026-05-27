@@ -18,6 +18,7 @@ public struct ArticleEditor: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var viewModel = ArticleEditorViewModel()
+    @State private var selectedEmoji = ""
 
     private var isFocus: Bool {
         viewModel.focusedId != nil
@@ -35,13 +36,19 @@ public struct ArticleEditor: View {
                     case .separator: separatorBlockView
                     case .quote: quoteBlockView(block: $block)
                     case .list: listBlockView(block: $block)
+                    case .numberedList: numberedListBlockView(block: $block)
                     }
                 }
-                .listRowInsets(.init(top: 0, leading: 0, bottom: 0, trailing: 0))
                 .listRowSeparator(.hidden)
+                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                    Button(role: .destructive) {
+                        viewModel.send(.removeBlock(blockId: block.id))
+                    } label: {
+                        Label("Delete", systemImage: "trash.fill")
+                    }
+                }
             }
             .onMove { viewModel.send(.moveBlocks(fromOffsets: $0, toOffset: $1)) }
-            .onDelete { viewModel.send(.deleteOffsets($0)) }
             #if os(iOS)
                 .listRowSpacing(0)
             #endif
@@ -67,8 +74,11 @@ public struct ArticleEditor: View {
                 case .insertImage: viewModel.send(.insertImage)
                 case .insertQuote: viewModel.send(.insertBlock(ArticleBlock(type: .quote)))
                 case .insertList: viewModel.send(.insertBlock(ArticleBlock(type: .list)))
+                case .insertNumberedList: viewModel.send(.insertBlock(ArticleBlock(type: .numberedList)))
                 case .insertSeparator: viewModel.send(.insertBlock(ArticleBlock(type: .separator)))
                 case .insertLink: break
+                case .pasteText: viewModel.send(.pasteText)
+                case .openEmojiPicker: viewModel.send(.openEmojiPicker)
                 case .toggleBold: viewModel.send(.toggleBold)
                 case .toggleItalic: viewModel.send(.toggleItalic)
                 case .toggleUnderline: viewModel.send(.toggleUnderline)
@@ -112,8 +122,21 @@ public struct ArticleEditor: View {
             onFocus: { viewModel.onFocused(blockId: blockId, textView: $0) },
             onBlur: { viewModel.onBlurred(from: $0, blockId: blockId) }
         )
-        .fixedSize(horizontal: false, vertical: true)
-        .frame(minHeight: 0)
+        .overlay(alignment: .trailing) {
+            if viewModel.focusedId == blockId {
+                Icon(Image.Editor.dragMenu)
+                    .iconColor(Color.onBackgroundTertiary)
+                    .offset(x: 12)
+            }
+        }
+        .listRowInsets(
+            .init(
+                top: .xxSmall,
+                leading: .regular,
+                bottom: .xxSmall,
+                trailing: .regular
+            )
+        )
         #else
         TextEditor(text: Binding(
             get: { AttributedString(block.wrappedValue.text) },
@@ -126,16 +149,16 @@ public struct ArticleEditor: View {
     @ViewBuilder
     private func quoteBlockView(block: Binding<ArticleBlock>) -> some View {
         let blockId = block.wrappedValue.id
-        HStack(alignment: .top, spacing: .xSmall) {
+        HStack(alignment: .top, spacing: .regular) {
             RoundedRectangle(cornerRadius: 2)
                 .fill(.tint.opacity(0.7))
                 .frame(width: 3)
-                .padding(.vertical, .xxSmall)
+                //.padding(.vertical, .xxSmall)
             #if canImport(UIKit)
             ArticleTextView(
                 text: block.wrappedValue.text,
                 isFocused: viewModel.focusedId == blockId,
-                defaultFont: .italicSystemFont(ofSize: UIFont.preferredFont(forTextStyle: .body).pointSize),
+                defaultFont: .italicSystemFont(ofSize: UIFont.preferredFont(forTextStyle: .title1).pointSize),
                 defaultTextColor: .secondaryLabel,
                 onTextChange: { viewModel.onTextChanged($0, blockId: blockId) },
                 onSelectionChange: { viewModel.onSelectionChanged($0, typingAttributes: $1) },
@@ -144,8 +167,7 @@ public struct ArticleEditor: View {
                 onFocus: { viewModel.onFocused(blockId: blockId, textView: $0) },
                 onBlur: { viewModel.onBlurred(from: $0, blockId: blockId) }
             )
-            .fixedSize(horizontal: false, vertical: true)
-            .frame(minHeight: 0)
+            .padding(.vertical, .xxSmall)
             #else
             TextEditor(text: Binding(
                 get: { AttributedString(block.wrappedValue.text) },
@@ -158,13 +180,19 @@ public struct ArticleEditor: View {
         }
         .overlay(alignment: .trailing) {
             if viewModel.focusedId == blockId {
-                Image(systemName: "line.3.horizontal")
-                    .foregroundStyle(.tertiary)
-                    .allowsHitTesting(false)
-                    .transition(.opacity)
+                Icon(Image.Editor.dragMenu)
+                    .iconColor(Color.border)
             }
         }
-        .animation(.default, value: viewModel.focusedId)
+        .listRowInsets(
+            .init(
+                top: .xxxSmall,
+                leading: .zero,
+                bottom: .xxxSmall,
+                trailing: .regular
+            )
+        )
+        //.animation(.default, value: viewModel.focusedId)
     }
 
     @ViewBuilder
@@ -173,7 +201,6 @@ public struct ArticleEditor: View {
         HStack(alignment: .top, spacing: .xSmall) {
             Text("•")
                 .foregroundStyle(.primary)
-                .padding(.top, 4)
             #if canImport(UIKit)
             ArticleTextView(
                 text: block.wrappedValue.text,
@@ -185,8 +212,6 @@ public struct ArticleEditor: View {
                 onFocus: { viewModel.onFocused(blockId: blockId, textView: $0) },
                 onBlur: { viewModel.onBlurred(from: $0, blockId: blockId) }
             )
-            .fixedSize(horizontal: false, vertical: true)
-            .frame(minHeight: 0)
             #else
             TextEditor(text: Binding(
                 get: { AttributedString(block.wrappedValue.text) },
@@ -197,18 +222,71 @@ public struct ArticleEditor: View {
         }
         .overlay(alignment: .trailing) {
             if viewModel.focusedId == blockId {
-                Image(systemName: "line.3.horizontal")
-                    .foregroundStyle(.tertiary)
-                    .allowsHitTesting(false)
-                    .transition(.opacity)
+                Icon(Image.Editor.dragMenu)
+                    .iconColor(Color.border)
             }
         }
-        .animation(.default, value: viewModel.focusedId)
+       // .animation(.default, value: viewModel.focusedId)
+    }
+
+    @ViewBuilder
+    private func numberedListBlockView(block: Binding<ArticleBlock>) -> some View {
+        let blockId = block.wrappedValue.id
+        HStack(alignment: .top, spacing: .xSmall) {
+            Text("\(numberedIndex(for: blockId)).")
+                .foregroundStyle(.primary)
+                .monospacedDigit()
+            #if canImport(UIKit)
+            ArticleTextView(
+                text: block.wrappedValue.text,
+                isFocused: viewModel.focusedId == blockId,
+                onTextChange: { viewModel.onTextChanged($0, blockId: blockId) },
+                onSelectionChange: { viewModel.onSelectionChanged($0, typingAttributes: $1) },
+                onReturn: { viewModel.onReturn(blockId: blockId) },
+                onDeleteWhenEmpty: { viewModel.onDeleteWhenEmpty(blockId: blockId) },
+                onFocus: { viewModel.onFocused(blockId: blockId, textView: $0) },
+                onBlur: { viewModel.onBlurred(from: $0, blockId: blockId) }
+            )
+            #else
+            TextEditor(text: Binding(
+                get: { AttributedString(block.wrappedValue.text) },
+                set: { block.wrappedValue.text = NSAttributedString($0) }
+            ))
+            .fixedSize(horizontal: false, vertical: true)
+            #endif
+        }
+        .overlay(alignment: .trailing) {
+            if viewModel.focusedId == blockId {
+                Icon(Image.Editor.dragMenu)
+                    .iconColor(Color.border)
+            }
+        }
+    }
+
+    private func numberedIndex(for blockId: UUID) -> Int {
+        var count = 0
+        for block in viewModel.blocks {
+            if block.type == .numberedList {
+                count += 1
+            } else {
+                count = 0
+            }
+            if block.id == blockId { return count }
+        }
+        return 0
     }
 
     private var separatorBlockView: some View {
-        Divider()
-            .padding(.vertical, .small)
+        Separator()
+            .frame(maxWidth: .infinity, alignment: .center)
+            .listRowInsets(
+                .init(
+                    top: .medium,
+                    leading: .xxxLarge,
+                    bottom: .medium,
+                    trailing: .xxxLarge
+                )
+            )
     }
 
     @ViewBuilder
@@ -221,18 +299,28 @@ public struct ArticleEditor: View {
                 .scaledToFit()
                 .frame(maxWidth: .infinity)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
-                .padding(.vertical, .xSmall)
                 .overlay(alignment: .topTrailing) {
                     Button {
                         viewModel.send(.removeBlock(blockId: blockId))
                     } label: {
-                        Image(systemName: "xmark.circle.fill")
-                            .symbolRenderingMode(.palette)
-                            .foregroundStyle(.white, .black.opacity(0.5))
-                            .font(.title3)
+                        Icon(Image.Base.Close.mini)
+                            .iconColor(Color.onPrimary)
+                            .padding(.xxxSmall)
+                            .background {
+                                Circle()
+                                    .fillOnSurfacePrimary()
+                            }
                     }
                     .padding(.xSmall)
                 }
+                .listRowInsets(
+                    .init(
+                        top: .xxxSmall,
+                        leading: .xxSmall,
+                        bottom: .xxxSmall,
+                        trailing: .xxSmall
+                    )
+                )
         }
         #endif
     }
@@ -306,6 +394,28 @@ public struct ArticleEditor: View {
             #else
             EmptyView()
             #endif
+
+        case .emojiPicker:
+            NavigationStack {
+                LayoutView("Emoji") {
+                    EmojiPicker(selection: $selectedEmoji)
+                        .onChange(of: selectedEmoji) { _, emoji in
+                            guard !emoji.isEmpty else { return }
+                            viewModel.send(.insertEmoji(emoji))
+                            selectedEmoji = ""
+                            viewModel.sheet = nil
+                        }
+                }
+                .toolbarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button { viewModel.sheet = nil } label: {
+                            Image.Base.close.icon()
+                        }
+                    }
+                }
+            }
+            .presentationDetents([.medium, .large])
         }
     }
 }

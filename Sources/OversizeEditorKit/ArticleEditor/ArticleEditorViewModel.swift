@@ -58,6 +58,8 @@ final class ArticleEditorViewModel {
         #if canImport(UIKit)
         case imageSelected(UIImage?)
         #endif
+        case pasteText
+        case insertEmoji(String)
         case toggleBold
         case toggleItalic
         case toggleUnderline
@@ -68,6 +70,7 @@ final class ArticleEditorViewModel {
         case openTextStylePicker
         case openFontPicker
         case openLinkSheet
+        case openEmojiPicker
         case applyLink(URL?)
         case applyFont(name: String?, design: Font.Design)
     }
@@ -90,6 +93,14 @@ final class ArticleEditorViewModel {
         case let .imageSelected(image):
             performImageSelected(image)
         #endif
+        case .pasteText:
+            #if canImport(UIKit)
+            performPasteText()
+            #endif
+        case let .insertEmoji(emoji):
+            #if canImport(UIKit)
+            performInsertEmoji(emoji)
+            #endif
         case .toggleBold:
             #if canImport(UIKit)
             performToggleBold()
@@ -127,6 +138,8 @@ final class ArticleEditorViewModel {
             linkURL = currentTypingAttributes[.link] as? URL
             #endif
             sheet = .link
+        case .openEmojiPicker:
+            sheet = .emojiPicker
         case let .applyLink(url):
             #if canImport(UIKit)
             performApplyLink(url)
@@ -195,7 +208,9 @@ extension ArticleEditorViewModel {
 
         var newBlock = ArticleBlock(type: focusedBlockContinuationType)
         newBlock.text = afterText
-        blocks.insert(newBlock, at: idx + 1)
+        withAnimation {
+            blocks.insert(newBlock, at: idx + 1)
+        }
         focusedId = newBlock.id
     }
 
@@ -204,7 +219,7 @@ extension ArticleEditorViewModel {
               idx > 0 else { return }
         blocks.remove(at: idx)
         focusedId = blocks[..<idx]
-            .last(where: { $0.type == .text || $0.type == .quote || $0.type == .list })?.id
+            .last(where: { $0.type == .text || $0.type == .quote || $0.type == .list || $0.type == .numberedList })?.id
     }
 
     func onFocused(blockId: UUID, textView: UITextView) {
@@ -231,7 +246,7 @@ extension ArticleEditorViewModel {
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
 extension ArticleEditorViewModel {
     enum Sheet: Identifiable {
-        case textStylePicker, fontPicker, link, photoPicker
+        case textStylePicker, fontPicker, link, photoPicker, emojiPicker
 
         var id: String {
             switch self {
@@ -239,6 +254,7 @@ extension ArticleEditorViewModel {
             case .fontPicker: "fontPicker"
             case .link: "link"
             case .photoPicker: "photoPicker"
+            case .emojiPicker: "emojiPicker"
             }
         }
     }
@@ -317,7 +333,11 @@ extension ArticleEditorViewModel {
 
     var focusedBlockContinuationType: BlockType {
         guard let idx = focusedBlockIndex else { return .text }
-        return blocks[idx].type == .list ? .list : .text
+        switch blocks[idx].type {
+        case .list: return .list
+        case .numberedList: return .numberedList
+        default: return .text
+        }
     }
 
     private var focusedBlockIndex: Int? {
@@ -335,7 +355,7 @@ private extension ArticleEditorViewModel {
         } else {
             blocks.append(newBlock)
         }
-        if newBlock.type == .text || newBlock.type == .quote || newBlock.type == .list {
+        if newBlock.type == .text || newBlock.type == .quote || newBlock.type == .list || newBlock.type == .numberedList {
             focusedId = newBlock.id
         }
     }
@@ -346,6 +366,33 @@ private extension ArticleEditorViewModel {
         let newBlock = ArticleBlock(imageData: data)
         performInsertBlock(newBlock)
         pickerSelectedImage = nil
+    }
+
+    func performPasteText() {
+        guard let textView = focusedTextView,
+              let pasteString = UIPasteboard.general.string,
+              !pasteString.isEmpty,
+              let idx = focusedBlockIndex else { return }
+        let mutable = NSMutableAttributedString(attributedString: textView.attributedText ?? NSAttributedString())
+        let pastedAttr = NSAttributedString(string: pasteString, attributes: textView.typingAttributes)
+        mutable.replaceCharacters(in: currentSelectedRange, with: pastedAttr)
+        let newLocation = currentSelectedRange.location + (pasteString as NSString).length
+        applyMutable(mutable, to: textView, blockIndex: idx)
+        let safeLocation = min(newLocation, mutable.length)
+        textView.selectedRange = NSRange(location: safeLocation, length: 0)
+        currentSelectedRange = textView.selectedRange
+    }
+
+    func performInsertEmoji(_ emoji: String) {
+        guard let textView = focusedTextView,
+              let idx = focusedBlockIndex else { return }
+        let mutable = NSMutableAttributedString(attributedString: textView.attributedText ?? NSAttributedString())
+        let emojiAttr = NSAttributedString(string: emoji, attributes: textView.typingAttributes)
+        mutable.replaceCharacters(in: currentSelectedRange, with: emojiAttr)
+        let newLocation = currentSelectedRange.location + (emoji as NSString).length
+        applyMutable(mutable, to: textView, blockIndex: idx)
+        textView.selectedRange = NSRange(location: min(newLocation, mutable.length), length: 0)
+        currentSelectedRange = textView.selectedRange
     }
     #endif
 }

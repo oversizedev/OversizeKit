@@ -13,8 +13,11 @@ struct ArticleBottomBar: View {
         case insertImage
         case insertQuote
         case insertList
+        case insertNumberedList
         case insertSeparator
         case insertLink
+        case pasteText
+        case openEmojiPicker
         case toggleBold
         case toggleItalic
         case toggleUnderline
@@ -140,6 +143,13 @@ struct ArticleBottomBar: View {
 
     @ViewBuilder
     private var insertionActions: some View {
+        
+        Button { onAction(.toggleFontStyleSelection) } label: {
+            Icon(Image.Editor.titleCase)
+        }
+        .buttonStyle(.bar)
+        .barItem(namespace: namespace)
+        
         #if os(iOS)
         Button { onAction(.insertImage) } label: {
             Icon(Image.Base.picture2)
@@ -149,30 +159,45 @@ struct ArticleBottomBar: View {
         .barItem(namespace: namespace)
         #endif
 
+        Button { onAction(.openEmojiPicker) } label: {
+            Icon(Image(systemName: "face.smiling"))
+        }
+        .buttonStyle(.bar)
+        .barItem(namespace: namespace)
+
         Button { onAction(.insertQuote) } label: {
-            Icon(Image(systemName: "text.quote"))
+            Icon(Image.Editor.creativeQuoteClose)
         }
         .buttonStyle(.bar)
         .barItem(namespace: namespace)
-
-        Button { onAction(.insertList) } label: {
-            Icon(Image(systemName: "list.bullet"))
+        
+        Menu {
+            Button { onAction(.insertSeparator) } label: {
+                Label("Separator", systemImage: "minus")
+            }
+            .tint(Color.onSurfacePrimary)
+            Button { onAction(.insertNumberedList) } label: {
+                Label("Numbered List", systemImage: "list.number")
+            }
+            .tint(Color.onSurfacePrimary)
+            
+            Button { onAction(.insertList) } label: {
+                Label("Bulleted List", systemImage: "list.bullet")
+            }
+            .tint(Color.onSurfacePrimary)
+        } label: {
+            Icon(Image.Base.more)
+                .iconColor(Color.onSurfacePrimary)
         }
         .buttonStyle(.bar)
         .barItem(namespace: namespace)
-
-        Button { onAction(.insertSeparator) } label: {
-            Icon(Image.Base.attach)
-        }
-        .buttonStyle(.bar)
-        .barItem(namespace: namespace)
-
+        
         Separator(.vertical)
             .lineWidth(3)
             .frame(height: .regular)
 
-        Button { onAction(.toggleFontStyleSelection) } label: {
-            Icon(Image.Editor.titleCase)
+        Button { onAction(.pasteText) } label: {
+            Icon(Image.Documentation.clipboard)
         }
         .buttonStyle(.bar)
         .barItem(namespace: namespace)
