@@ -10,6 +10,7 @@ import UIKit
 struct ArticleTextView: UIViewRepresentable {
     var text: NSAttributedString
     var isFocused: Bool
+    var isFocusTransferring: Bool = false
     var defaultFont: UIFont = .preferredFont(forTextStyle: .body)
     var defaultTextColor: UIColor = .label
     var onTextChange: (NSAttributedString) -> Void
@@ -18,6 +19,7 @@ struct ArticleTextView: UIViewRepresentable {
     var onDeleteWhenEmpty: () -> Void
     var onFocus: (UITextView) -> Void
     var onBlur: (UITextView) -> Void
+    var onRegister: (UITextView) -> Void = { _ in }
 
     func makeUIView(context: Context) -> UITextView {
         let textView = UITextView()
@@ -29,6 +31,7 @@ struct ArticleTextView: UIViewRepresentable {
         textView.font = defaultFont
         textView.textColor = defaultTextColor
         textView.attributedText = text
+        onRegister(textView)
         return textView
     }
 
@@ -49,7 +52,7 @@ struct ArticleTextView: UIViewRepresentable {
             DispatchQueue.main.async {
                 textView.becomeFirstResponder()
             }
-        } else if !isFocused, textView.isFirstResponder {
+        } else if !isFocused, textView.isFirstResponder, !isFocusTransferring {
             textView.resignFirstResponder()
         }
     }

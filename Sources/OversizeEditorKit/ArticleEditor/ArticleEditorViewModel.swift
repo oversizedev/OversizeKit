@@ -17,10 +17,12 @@ final class ArticleEditorViewModel {
 
     var blocks: [ArticleBlock] = [.init()]
     var focusedId: UUID?
+    var isFocusTransferring: Bool = false
     #if canImport(UIKit)
     var pickerSelectedImage: UIImage?
     weak var focusedTextView: UITextView?
     private var lastFocusedId: UUID?
+    @ObservationIgnored private var textViewRegistry: [UUID: UITextView] = [:]
     #endif
 
     // MARK: - Selection State
@@ -189,6 +191,7 @@ extension ArticleEditorViewModel {
     }
 
     func onReturn(blockId: UUID) {
+        isFocusTransferring = true
         guard let idx = blocks.firstIndex(where: { $0.id == blockId }),
               let textView = focusedTextView else { return }
         let selectedRange = textView.selectedRange
@@ -217,12 +220,23 @@ extension ArticleEditorViewModel {
     func onDeleteWhenEmpty(blockId: UUID) {
         guard let idx = blocks.firstIndex(where: { $0.id == blockId }),
               idx > 0 else { return }
-        blocks.remove(at: idx)
-        focusedId = blocks[..<idx]
+        let previousId = blocks[..<idx]
             .last(where: { $0.type == .text || $0.type == .quote || $0.type == .list || $0.type == .numberedList })?.id
+        if let prevId = previousId, let prevTextView = textViewRegistry[prevId] {
+            isFocusTransferring = true
+            prevTextView.becomeFirstResponder()
+        }
+        blocks.remove(at: idx)
+        textViewRegistry.removeValue(forKey: blockId)
+        focusedId = previousId
+    }
+
+    func registerTextView(_ textView: UITextView, for blockId: UUID) {
+        textViewRegistry[blockId] = textView
     }
 
     func onFocused(blockId: UUID, textView: UITextView) {
+        isFocusTransferring = false
         focusedId = blockId
         lastFocusedId = blockId
         focusedTextView = textView

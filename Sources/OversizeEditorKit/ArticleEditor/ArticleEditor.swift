@@ -115,12 +115,14 @@ public struct ArticleEditor: View {
         ArticleTextView(
             text: block.wrappedValue.text,
             isFocused: viewModel.focusedId == blockId,
+            isFocusTransferring: viewModel.isFocusTransferring,
             onTextChange: { viewModel.onTextChanged($0, blockId: blockId) },
             onSelectionChange: { viewModel.onSelectionChanged($0, typingAttributes: $1) },
             onReturn: { viewModel.onReturn(blockId: blockId) },
             onDeleteWhenEmpty: { viewModel.onDeleteWhenEmpty(blockId: blockId) },
             onFocus: { viewModel.onFocused(blockId: blockId, textView: $0) },
-            onBlur: { viewModel.onBlurred(from: $0, blockId: blockId) }
+            onBlur: { viewModel.onBlurred(from: $0, blockId: blockId) },
+            onRegister: { viewModel.registerTextView($0, for: blockId) }
         )
         .overlay(alignment: .trailing) {
             if viewModel.focusedId == blockId {
@@ -158,6 +160,7 @@ public struct ArticleEditor: View {
             ArticleTextView(
                 text: block.wrappedValue.text,
                 isFocused: viewModel.focusedId == blockId,
+                isFocusTransferring: viewModel.isFocusTransferring,
                 defaultFont: .italicSystemFont(ofSize: UIFont.preferredFont(forTextStyle: .title1).pointSize),
                 defaultTextColor: .secondaryLabel,
                 onTextChange: { viewModel.onTextChanged($0, blockId: blockId) },
@@ -205,6 +208,7 @@ public struct ArticleEditor: View {
             ArticleTextView(
                 text: block.wrappedValue.text,
                 isFocused: viewModel.focusedId == blockId,
+                isFocusTransferring: viewModel.isFocusTransferring,
                 onTextChange: { viewModel.onTextChanged($0, blockId: blockId) },
                 onSelectionChange: { viewModel.onSelectionChanged($0, typingAttributes: $1) },
                 onReturn: { viewModel.onReturn(blockId: blockId) },
@@ -240,6 +244,7 @@ public struct ArticleEditor: View {
             ArticleTextView(
                 text: block.wrappedValue.text,
                 isFocused: viewModel.focusedId == blockId,
+                isFocusTransferring: viewModel.isFocusTransferring,
                 onTextChange: { viewModel.onTextChanged($0, blockId: blockId) },
                 onSelectionChange: { viewModel.onSelectionChanged($0, typingAttributes: $1) },
                 onReturn: { viewModel.onReturn(blockId: blockId) },
