@@ -402,7 +402,7 @@ public struct ArticleEditor: View {
 
         case .emojiPicker:
             NavigationStack {
-                LayoutView("Emoji") {
+               
                     EmojiPicker(selection: $selectedEmoji)
                         .onChange(of: selectedEmoji) { _, emoji in
                             guard !emoji.isEmpty else { return }
@@ -410,8 +410,7 @@ public struct ArticleEditor: View {
                             selectedEmoji = ""
                             viewModel.sheet = nil
                         }
-                }
-                .toolbarTitleDisplayMode(.inline)
+                
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {
                         Button { viewModel.sheet = nil } label: {
