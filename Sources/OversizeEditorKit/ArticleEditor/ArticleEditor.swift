@@ -40,12 +40,18 @@ public struct ArticleEditor: View {
                     }
                 }
                 .listRowSeparator(.hidden)
-                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                .swipeActions(edge: .trailing, allowsFullSwipe: false) {
                     Button(role: .destructive) {
                         viewModel.send(.removeBlock(blockId: block.id))
                     } label: {
-                        Label("Delete", systemImage: "trash.fill")
+                        Label {
+                            Text("Delete")
+                        } icon: {
+                            Image.Base.Delete.fill
+                        }
+                        .labelStyle(.iconOnly)
                     }
+                    .tint(Color.error)
                 }
             }
             .onMove { viewModel.send(.moveBlocks(fromOffsets: $0, toOffset: $1)) }
@@ -155,7 +161,7 @@ public struct ArticleEditor: View {
             RoundedRectangle(cornerRadius: 2)
                 .fill(.tint.opacity(0.7))
                 .frame(width: 3)
-                //.padding(.vertical, .xxSmall)
+            // .padding(.vertical, .xxSmall)
             #if canImport(UIKit)
             ArticleTextView(
                 text: block.wrappedValue.text,
@@ -195,7 +201,7 @@ public struct ArticleEditor: View {
                 trailing: .regular
             )
         )
-        //.animation(.default, value: viewModel.focusedId)
+        // .animation(.default, value: viewModel.focusedId)
     }
 
     @ViewBuilder
@@ -230,7 +236,7 @@ public struct ArticleEditor: View {
                     .iconColor(Color.border)
             }
         }
-       // .animation(.default, value: viewModel.focusedId)
+        // .animation(.default, value: viewModel.focusedId)
     }
 
     @ViewBuilder
@@ -402,22 +408,21 @@ public struct ArticleEditor: View {
 
         case .emojiPicker:
             NavigationStack {
-               
-                    EmojiPicker(selection: $selectedEmoji)
-                        .onChange(of: selectedEmoji) { _, emoji in
-                            guard !emoji.isEmpty else { return }
-                            viewModel.send(.insertEmoji(emoji))
-                            selectedEmoji = ""
-                            viewModel.sheet = nil
-                        }
-                
-                .toolbar {
-                    ToolbarItem(placement: .cancellationAction) {
-                        Button { viewModel.sheet = nil } label: {
-                            Image.Base.close.icon()
+                EmojiPicker(selection: $selectedEmoji)
+                    .onChange(of: selectedEmoji) { _, emoji in
+                        guard !emoji.isEmpty else { return }
+                        viewModel.send(.insertEmoji(emoji))
+                        selectedEmoji = ""
+                        viewModel.sheet = nil
+                    }
+
+                    .toolbar {
+                        ToolbarItem(placement: .cancellationAction) {
+                            Button { viewModel.sheet = nil } label: {
+                                Image.Base.close.icon()
+                            }
                         }
                     }
-                }
             }
             .presentationDetents([.medium, .large])
         }

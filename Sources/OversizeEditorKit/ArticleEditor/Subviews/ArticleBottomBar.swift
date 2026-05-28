@@ -143,13 +143,13 @@ struct ArticleBottomBar: View {
 
     @ViewBuilder
     private var insertionActions: some View {
-        
         Button { onAction(.toggleFontStyleSelection) } label: {
             Icon(Image.Editor.titleCase)
         }
         .buttonStyle(.bar)
         .barItem(namespace: namespace)
-        
+        .padding(.leading, .xxSmall)
+
         #if os(iOS)
         Button { onAction(.insertImage) } label: {
             Icon(Image.Base.picture2)
@@ -159,39 +159,40 @@ struct ArticleBottomBar: View {
         .barItem(namespace: namespace)
         #endif
 
-        Button { onAction(.openEmojiPicker) } label: {
-            Icon(Image(systemName: "face.smiling"))
-        }
-        .buttonStyle(.bar)
-        .barItem(namespace: namespace)
-
         Button { onAction(.insertQuote) } label: {
             Icon(Image.Editor.creativeQuoteClose)
         }
         .buttonStyle(.bar)
         .barItem(namespace: namespace)
-        
+
         Menu {
             Button { onAction(.insertSeparator) } label: {
                 Label("Separator", systemImage: "minus")
             }
             .tint(Color.onSurfacePrimary)
+
             Button { onAction(.insertNumberedList) } label: {
                 Label("Numbered List", systemImage: "list.number")
             }
             .tint(Color.onSurfacePrimary)
-            
+
             Button { onAction(.insertList) } label: {
                 Label("Bulleted List", systemImage: "list.bullet")
             }
             .tint(Color.onSurfacePrimary)
+
+            Button { onAction(.openEmojiPicker) } label: {
+                Label("Emoji", systemImage: "face.smiling")
+            }
+            .tint(Color.onSurfacePrimary)
+
         } label: {
             Icon(Image.Base.more)
                 .iconColor(Color.onSurfacePrimary)
         }
         .buttonStyle(.bar)
         .barItem(namespace: namespace)
-        
+
         Separator(.vertical)
             .lineWidth(3)
             .frame(height: .regular)

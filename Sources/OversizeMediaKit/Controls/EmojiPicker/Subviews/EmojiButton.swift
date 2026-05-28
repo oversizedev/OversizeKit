@@ -29,7 +29,6 @@ struct EmojiButton: View {
                         )
                 )
                 .contentShape(Rectangle())
-            
         }
         .buttonStyle(.scale)
     }

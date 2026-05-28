@@ -13,28 +13,37 @@ struct EmojiTabBar: View {
     let proxy: ScrollViewProxy
 
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: .xSmall) {
-                ForEach(groups) { group in
-                    Button {
-                        scrolledGroup = group
-                        withAnimation {
-                            proxy.scrollTo(group, anchor: .top)
+        ScrollViewReader { tabProxy in
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: .xSmall) {
+                    ForEach(groups) { group in
+                        Button {
+                            scrolledGroup = group
+                            withAnimation {
+                                proxy.scrollTo(group, anchor: .top)
+                            }
+                        } label: {
+                            Icon(group.sfSymbol)
+                                .iconColor(Color.onSurfaceSecondary)
+                                .padding(.xxSmall)
+                                .background(
+                                    Capsule()
+                                        .fill(scrolledGroup == group ? Color.surfaceSecondary : Color.clear)
+                                )
                         }
-                    } label: {
-                        Icon(group.sfSymbol)
-                            .iconColor(Color.onSurfaceSecondary)
-                            .padding(.xxSmall)
-                            .background(
-                                Capsule()
-                                    .fill(scrolledGroup == group ? Color.surfaceSecondary : Color.clear)
-                            )
+                        .buttonStyle(.scale)
+                        .id(group)
                     }
-                    .buttonStyle(.scale)
+                }
+                .padding(.horizontal, .medium)
+                .padding(.vertical, .xSmall)
+            }
+            .onChange(of: scrolledGroup) { _, newGroup in
+                guard let newGroup else { return }
+                withAnimation {
+                    tabProxy.scrollTo(newGroup, anchor: .center)
                 }
             }
-            .padding(.horizontal, .medium)
-            .padding(.vertical, .xSmall)
         }
         .background {
             Color.surfacePrimary

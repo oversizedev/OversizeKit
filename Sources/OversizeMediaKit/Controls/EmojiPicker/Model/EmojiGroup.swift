@@ -14,7 +14,9 @@ public enum EmojiGroup: Identifiable, Hashable, Sendable, CaseIterable {
     case symbols
     case flags
 
-    public var id: Self { self }
+    public var id: Self {
+        self
+    }
 
     public var title: String {
         switch self {
