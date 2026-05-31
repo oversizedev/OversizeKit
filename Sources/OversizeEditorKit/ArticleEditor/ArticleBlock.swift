@@ -33,4 +33,10 @@ public struct ArticleBlock: Identifiable, @unchecked Sendable {
         self.type = type
         self.text = NSAttributedString(string: text)
     }
+
+    init(id: UUID, type: BlockType, text: NSAttributedString) {
+        self.id = id
+        self.type = type
+        self.text = text
+    }
 }

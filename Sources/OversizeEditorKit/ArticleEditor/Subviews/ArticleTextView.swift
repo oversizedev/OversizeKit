@@ -7,10 +7,16 @@
 import SwiftUI
 import UIKit
 
+final class SharedUndoTextView: UITextView {
+    weak var sharedUndoManager: UndoManager?
+    override var undoManager: UndoManager? { sharedUndoManager ?? super.undoManager }
+}
+
 struct ArticleTextView: UIViewRepresentable {
     var text: NSAttributedString
     var isFocused: Bool
     var isFocusTransferring: Bool = false
+    var sharedUndoManager: UndoManager?
     var defaultFont: UIFont = .preferredFont(forTextStyle: .body)
     var defaultTextColor: UIColor = .label
     var onTextChange: (NSAttributedString) -> Void
@@ -22,7 +28,8 @@ struct ArticleTextView: UIViewRepresentable {
     var onRegister: (UITextView) -> Void = { _ in }
 
     func makeUIView(context: Context) -> UITextView {
-        let textView = UITextView()
+        let textView = SharedUndoTextView()
+        textView.sharedUndoManager = sharedUndoManager
         textView.delegate = context.coordinator
         textView.isScrollEnabled = false
         textView.backgroundColor = .clear
@@ -36,6 +43,9 @@ struct ArticleTextView: UIViewRepresentable {
     }
 
     func updateUIView(_ textView: UITextView, context _: Context) {
+        if let sharedView = textView as? SharedUndoTextView {
+            sharedView.sharedUndoManager = sharedUndoManager
+        }
         textView.textContainerInset = .zero
         textView.textContainer.lineFragmentPadding = 0
 

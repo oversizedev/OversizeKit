@@ -10,6 +10,8 @@ import SwiftUI
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
 struct ArticleBottomBar: View {
     enum Action {
+        case undo
+        case redo
         case insertImage
         case insertQuote
         case insertList
@@ -34,6 +36,8 @@ struct ArticleBottomBar: View {
     private let hasSelection: Bool
     private let isFontStyleSelection: Bool
     private let isFocus: Bool
+    private let canUndo: Bool
+    private let canRedo: Bool
     private let isSelectionBold: Bool
     private let isEffectiveItalic: Bool
     private let isSelectionUnderlined: Bool
@@ -51,6 +55,8 @@ struct ArticleBottomBar: View {
         hasSelection: Bool,
         isFontStyleSelection: Bool,
         isFocus: Bool,
+        canUndo: Bool,
+        canRedo: Bool,
         isSelectionBold: Bool,
         isEffectiveItalic: Bool,
         isSelectionUnderlined: Bool,
@@ -65,6 +71,8 @@ struct ArticleBottomBar: View {
         self.hasSelection = hasSelection
         self.isFontStyleSelection = isFontStyleSelection
         self.isFocus = isFocus
+        self.canUndo = canUndo
+        self.canRedo = canRedo
         self.isSelectionBold = isSelectionBold
         self.isEffectiveItalic = isEffectiveItalic
         self.isSelectionUnderlined = isSelectionUnderlined
@@ -143,12 +151,36 @@ struct ArticleBottomBar: View {
 
     @ViewBuilder
     private var insertionActions: some View {
+        if canUndo {
+            RepeatingButton(action: { onAction(.undo) }) {
+                Icon(Image.Arrow.reverseLeft)
+            }
+            .buttonStyle(.bar)
+            .barItem(namespace: namespace)
+            .padding(.leading, .xxSmall)
+        }
+
+        if canRedo {
+            RepeatingButton(action: { onAction(.redo) }) {
+                Icon(Image.Arrow.reverseRight)
+            }
+            .buttonStyle(.bar)
+            .barItem(namespace: namespace)
+            .padding(.leading, canUndo ? 0 : .xxSmall)
+        }
+
+        if canUndo || canRedo {
+            Separator(.vertical)
+                .lineWidth(3)
+                .frame(height: .regular)
+        }
+
         Button { onAction(.toggleFontStyleSelection) } label: {
             Icon(Image.Editor.titleCase)
         }
         .buttonStyle(.bar)
         .barItem(namespace: namespace)
-        .padding(.leading, .xxSmall)
+        .padding(.leading, canUndo || canRedo ? 0 : .xxSmall)
 
         #if os(iOS)
         Button { onAction(.insertImage) } label: {
@@ -212,6 +244,8 @@ struct ArticleBottomBar: View {
         hasSelection: false,
         isFontStyleSelection: false,
         isFocus: true,
+        canUndo: false,
+        canRedo: false,
         isSelectionBold: false,
         isEffectiveItalic: false,
         isSelectionUnderlined: false,

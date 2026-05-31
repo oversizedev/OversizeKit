@@ -8,19 +8,17 @@ import SwiftUI
 
 @available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
 public struct IconField: View {
-    @Environment(\.theme) private var theme: ThemeSettings
 
     private let label: String
     private let icons: [Image]
     @Binding private var selection: Image?
     @State private var showModal = false
-    @State private var selectedIndex: Int?
 
     var style: IconPickerStyle = .field
 
     public init(
         _ label: String,
-        icons: [Image],
+        icons: [Image] = IconPickerIcons.defaultIcons,
         selection: Binding<Image?>
     ) {
         self.label = label
@@ -37,28 +35,9 @@ public struct IconField: View {
                 IconCircleView(selection: $selection, showModal: $showModal)
             }
         }
-        .sheet(isPresented: $showModal, onDismiss: { selectedIndex = nil }) {
+        .sheet(isPresented: $showModal) {
             NavigationStack {
-                IconPicker(icons: icons, selectedIndex: $selectedIndex)
-                    .navigationTitle(label)
-                    .toolbarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button("Cancel") {
-                                selectedIndex = nil
-                                showModal = false
-                            }
-                        }
-                        ToolbarItem(placement: .confirmationAction) {
-                            Button("Save") {
-                                if let index = selectedIndex, icons.indices.contains(index) {
-                                    selection = icons[index]
-                                }
-                                selectedIndex = nil
-                                showModal = false
-                            }
-                        }
-                    }
+                IconPicker(label, icons: icons, selection: $selection)
             }
             .presentationDetents([.medium, .large])
         }
@@ -76,11 +55,6 @@ public extension IconField {
 
 @available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
 #Preview {
-    let icons: [Image] = [
-        Image(systemName: "star.fill"),
-        Image(systemName: "heart.fill"),
-        Image(systemName: "bolt.fill"),
-    ]
-    IconField("Choose icon", icons: icons, selection: .constant(nil))
+    IconField("Choose icon", selection: .constant(nil))
         .padding()
 }

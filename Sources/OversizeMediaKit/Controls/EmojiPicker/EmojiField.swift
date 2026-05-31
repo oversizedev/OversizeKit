@@ -18,7 +18,7 @@ public struct EmojiField: View {
     var style: IconPickerStyle = .field
 
     public init(
-        _ label: String,
+        _ label: String = "Emoji",
         emojis: [String],
         selection: Binding<String>
     ) {
@@ -58,16 +58,7 @@ public struct EmojiField: View {
         }
         .sheet(isPresented: $showModal) {
             NavigationStack {
-                EmojiPicker(emojis: emojis, selection: dismissingSelection)
-                    .navigationTitle(label)
-                    .toolbarTitleDisplayMode(.inline)
-                    .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button(action: { showModal = false }) {
-                                Image.Base.close.icon()
-                            }
-                        }
-                    }
+                EmojiPicker(label, emojis: emojis, selection: dismissingSelection)
             }
             .presentationDetents([.medium, .large])
         }

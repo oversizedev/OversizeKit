@@ -15,7 +15,7 @@ struct EmojiGrid: View {
 
     private var gridMinSize: CGFloat {
         switch horizontalSizeClass {
-        case .compact, .none: 52
+        case .compact, .none: 56
         default: 72
         }
     }

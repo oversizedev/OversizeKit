@@ -16,6 +16,7 @@ import UIKit
 public struct ArticleEditor: View {
     @Namespace private var unionNamespace
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.undoManager) private var undoManager
 
     @State private var viewModel = ArticleEditorViewModel()
     @State private var selectedEmoji = ""
@@ -66,6 +67,8 @@ public struct ArticleEditor: View {
                 hasSelection: viewModel.hasSelection,
                 isFontStyleSelection: viewModel.isFontStyleSelection,
                 isFocus: isFocus,
+                canUndo: viewModel.canUndo,
+                canRedo: viewModel.canRedo,
                 isSelectionBold: viewModel.isSelectionBold,
                 isEffectiveItalic: viewModel.isEffectiveItalic,
                 isSelectionUnderlined: viewModel.isSelectionUnderlined,
@@ -77,6 +80,8 @@ public struct ArticleEditor: View {
                 namespace: unionNamespace
             ) { action in
                 switch action {
+                case .undo: viewModel.send(.undo)
+                case .redo: viewModel.send(.redo)
                 case .insertImage: viewModel.send(.insertImage)
                 case .insertQuote: viewModel.send(.insertBlock(ArticleBlock(type: .quote)))
                 case .insertList: viewModel.send(.insertBlock(ArticleBlock(type: .list)))
@@ -108,7 +113,11 @@ public struct ArticleEditor: View {
         #endif
             .sheet(item: $viewModel.sheet) { resolveSheet($0) }
             .onAppear {
+                viewModel.undoManager = undoManager
                 viewModel.focusedId = viewModel.blocks.first?.id
+            }
+            .onChange(of: undoManager) { _, newValue in
+                viewModel.undoManager = newValue
             }
     }
 
@@ -122,6 +131,7 @@ public struct ArticleEditor: View {
             text: block.wrappedValue.text,
             isFocused: viewModel.focusedId == blockId,
             isFocusTransferring: viewModel.isFocusTransferring,
+            sharedUndoManager: viewModel.undoManager,
             onTextChange: { viewModel.onTextChanged($0, blockId: blockId) },
             onSelectionChange: { viewModel.onSelectionChanged($0, typingAttributes: $1) },
             onReturn: { viewModel.onReturn(blockId: blockId) },
@@ -167,6 +177,7 @@ public struct ArticleEditor: View {
                 text: block.wrappedValue.text,
                 isFocused: viewModel.focusedId == blockId,
                 isFocusTransferring: viewModel.isFocusTransferring,
+                sharedUndoManager: viewModel.undoManager,
                 defaultFont: .italicSystemFont(ofSize: UIFont.preferredFont(forTextStyle: .title1).pointSize),
                 defaultTextColor: .secondaryLabel,
                 onTextChange: { viewModel.onTextChanged($0, blockId: blockId) },
@@ -174,7 +185,8 @@ public struct ArticleEditor: View {
                 onReturn: { viewModel.onReturn(blockId: blockId) },
                 onDeleteWhenEmpty: { viewModel.onDeleteWhenEmpty(blockId: blockId) },
                 onFocus: { viewModel.onFocused(blockId: blockId, textView: $0) },
-                onBlur: { viewModel.onBlurred(from: $0, blockId: blockId) }
+                onBlur: { viewModel.onBlurred(from: $0, blockId: blockId) },
+                onRegister: { viewModel.registerTextView($0, for: blockId) }
             )
             .padding(.vertical, .xxSmall)
             #else
@@ -215,12 +227,14 @@ public struct ArticleEditor: View {
                 text: block.wrappedValue.text,
                 isFocused: viewModel.focusedId == blockId,
                 isFocusTransferring: viewModel.isFocusTransferring,
+                sharedUndoManager: viewModel.undoManager,
                 onTextChange: { viewModel.onTextChanged($0, blockId: blockId) },
                 onSelectionChange: { viewModel.onSelectionChanged($0, typingAttributes: $1) },
                 onReturn: { viewModel.onReturn(blockId: blockId) },
                 onDeleteWhenEmpty: { viewModel.onDeleteWhenEmpty(blockId: blockId) },
                 onFocus: { viewModel.onFocused(blockId: blockId, textView: $0) },
-                onBlur: { viewModel.onBlurred(from: $0, blockId: blockId) }
+                onBlur: { viewModel.onBlurred(from: $0, blockId: blockId) },
+                onRegister: { viewModel.registerTextView($0, for: blockId) }
             )
             #else
             TextEditor(text: Binding(
@@ -251,12 +265,14 @@ public struct ArticleEditor: View {
                 text: block.wrappedValue.text,
                 isFocused: viewModel.focusedId == blockId,
                 isFocusTransferring: viewModel.isFocusTransferring,
+                sharedUndoManager: viewModel.undoManager,
                 onTextChange: { viewModel.onTextChanged($0, blockId: blockId) },
                 onSelectionChange: { viewModel.onSelectionChanged($0, typingAttributes: $1) },
                 onReturn: { viewModel.onReturn(blockId: blockId) },
                 onDeleteWhenEmpty: { viewModel.onDeleteWhenEmpty(blockId: blockId) },
                 onFocus: { viewModel.onFocused(blockId: blockId, textView: $0) },
-                onBlur: { viewModel.onBlurred(from: $0, blockId: blockId) }
+                onBlur: { viewModel.onBlurred(from: $0, blockId: blockId) },
+                onRegister: { viewModel.registerTextView($0, for: blockId) }
             )
             #else
             TextEditor(text: Binding(

@@ -16,21 +16,40 @@ struct EmojiButton: View {
         Button(action: action) {
             Text(emoji)
                 .font(.system(size: 28))
-                .frame(width: 56, height: 56)
+                .frame(width: 48, height: 48)
                 .background(
-                    RoundedRectangle(cornerRadius: .xSmall, style: .continuous)
-                        .fill(isSelected ? Color.primary.opacity(0.08) : Color.clear)
+                    Circle()
+                        .fill(isSelected ? Color.surfaceSecondary : Color.clear)
                 )
-                .overlay(
-                    RoundedRectangle(cornerRadius: .xSmall, style: .continuous)
+                .padding(5)
+                .background(
+                    Circle()
                         .strokeBorder(
                             isSelected ? Color.accentColor : Color.clear,
-                            lineWidth: 2
+                            lineWidth: isSelected ? 2.5 : 0
                         )
                 )
-                .contentShape(Rectangle())
         }
         .buttonStyle(.scale)
+        
+        
+//        Button(action: action) {
+//            Icon(icon)
+//                .padding(.xSmall)
+//                .background(
+//                    Circle()
+//                        .fill(Color.surfaceSecondary)
+//                )
+//                .padding(5)
+//                .background(
+//                    Circle()
+//                        .strokeBorder(
+//                            isSelected ? Color.accentColor : Color.clear,
+//                            lineWidth: isSelected ? 2.5 : 0
+//                        )
+//                )
+//        }
+//        .buttonStyle(.scale)
     }
 }
 

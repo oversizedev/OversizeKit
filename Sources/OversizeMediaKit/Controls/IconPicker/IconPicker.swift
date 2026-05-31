@@ -12,67 +12,76 @@ public enum IconPickerStyle {
 
 @available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
 public struct IconPicker: View {
-    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
+    @Environment(\.dismiss) private var dismiss
 
+    private let label: String
     private let icons: [Image]
-    @Binding private var selectedIndex: Int?
+    @Binding private var selection: Image?
+    @State private var pendingIndex: Int?
 
-    private var gridPadding: CGFloat {
-        guard let sizeClass = horizontalSizeClass else { return 40 }
-        switch sizeClass {
-        case .compact:
-            return 60
-        default:
-            return 72
-        }
-    }
-
-    public init(icons: [Image], selectedIndex: Binding<Int?>) {
+    public init(_ label: String = "Icon", icons: [Image] = IconPickerIcons.defaultIcons, selection: Binding<Image?>) {
+        self.label = label
         self.icons = icons
-        _selectedIndex = selectedIndex
+        _selection = selection
     }
 
     public var body: some View {
-        ScrollView {
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: gridPadding))]) {
-                ForEach(icons.indices, id: \.self) { index in
-                    Button(
-                        action: { selectedIndex = index },
-                        label: {
-                            Group {
-                                icons[index]
-                                    .resizable()
-                                    .frame(width: 24, height: 24, alignment: .center)
+        LayoutView(label) {
+            SectionView {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 58))]) {
+                    ForEach(icons.indices, id: \.self) { index in
+                        IconPickerButton(
+                            icon: icons[index],
+                            isSelected: pendingIndex == index,
+                            action: {
+                                withAnimation(.interactiveSpring) {
+                                    pendingIndex = index
+                                }
                             }
-                            .overlay(
-                                RoundedRectangle(cornerRadius: .xxxSmall, style: .continuous)
-                                    .strokeBorder(
-                                        selectedIndex == index ? Color.accentColor : Color.border,
-                                        lineWidth: selectedIndex == index ? 2 : 1
-                                    )
-                                    .frame(width: 48, height: 48, alignment: .center)
-                            )
-                            .padding(.vertical, horizontalSizeClass == .compact ? 12 : 20)
-                        }
-                    )
+                        )
+                    }
                 }
             }
-            .padding(.top, .medium)
-            .paddingContent(.horizontal)
-            .paddingContent(.bottom)
+            .surfaceContentMargins(.small)
+            .surfaceRadius(.regular)
+            .sectionViewStyle(.smallIndent)
+        } background: {
+            Color.backgroundSecondary
+        }
+        .navigationTitle(label)
+        .toolbarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Cancel", systemImage: "xmark", role: .cancel) {
+                    pendingIndex = nil
+                    dismiss()
+                }
+                .labelStyle(.toolbar)
+                .buttonStyle(.toolbarSecondary)
+            }
+            ToolbarItem(placement: .confirmationAction) {
+                Button("Save", systemImage: "checkmark") {
+                    if let index = pendingIndex, icons.indices.contains(index) {
+                        selection = icons[index]
+                    }
+                    pendingIndex = nil
+                    dismiss()
+                }
+                .labelStyle(.toolbar)
+                .buttonStyle(.toolbarPrimary)
+            }
         }
     }
 }
 
 @available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
 #Preview {
-    let icons: [Image] = [
-        Image(systemName: "star.fill"),
-        Image(systemName: "heart.fill"),
-        Image(systemName: "bolt.fill"),
-        Image(systemName: "flame.fill"),
-        Image(systemName: "moon.fill"),
-        Image(systemName: "sun.max.fill"),
-    ]
-    IconPicker(icons: icons, selectedIndex: .constant(0))
+    
+    @Previewable @State var selection: Image?
+    
+    NavigationStack {
+        
+        IconPicker(selection: $selection)
+    }
 }

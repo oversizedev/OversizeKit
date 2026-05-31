@@ -195,14 +195,14 @@ public extension LauncherViewModel {
     func onScenePhaseChange(_ scenePhase: ScenePhase) {
         switch scenePhase {
         case .inactive:
-            Log.debug("⏸️ [STATE] App inactive")
+            Log.debug("App inactive")
         case .background:
-            Log.debug("⏹️ [STATE] App background")
+            Log.debug("App background")
             appBackgroundDate = Date()
             pinCodeField = ""
             isNeedAuthCheking = true
         case .active:
-            Log.debug("▶️ [STATE] App active")
+            Log.debug("App active")
             if isNeedAuthCheking, appBackgroundDate.addingTimeInterval(settingsService.appLockTimeout) < Date() {
                 authState = .locked
                 isNeedAuthCheking = false
@@ -221,7 +221,7 @@ public extension LauncherViewModel {
 
     func checkPremium() async {
         guard let appStoreID = Info.App.appStoreId else {
-            Log.error("Not found App Store ID in AppConfig.plist")
+            Log.critical("Not found App Store ID in AppConfig.plist")
             return
         }
         let productIdsResult = await networkService.fetchAppStoreProductIds(appId: appStoreID)
@@ -239,7 +239,7 @@ public extension LauncherViewModel {
         }
 
         isPremium = premiumStatus
-        Log.debug("\(premiumStatus ? "👑 [INFO] Premium status" : "🆓 [INFO] Free status")")
+        Log.debug("\(premiumStatus ? "User Premium status" : "User Free status")")
 
         if let subscriptionStatus = status.1 {
             if #available(iOS 15.4, macOS 12.3, *) {

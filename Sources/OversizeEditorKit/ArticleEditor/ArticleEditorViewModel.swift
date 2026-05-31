@@ -25,6 +25,24 @@ final class ArticleEditorViewModel {
     @ObservationIgnored private var textViewRegistry: [UUID: UITextView] = [:]
     #endif
 
+    // MARK: - Undo/Redo State
+
+    var canUndo: Bool = false
+    var canRedo: Bool = false
+
+    weak var undoManager: UndoManager? {
+        didSet {
+            observeUndoManager()
+            #if canImport(UIKit)
+            for textView in textViewRegistry.values {
+                (textView as? SharedUndoTextView)?.sharedUndoManager = undoManager
+            }
+            #endif
+        }
+    }
+
+    @ObservationIgnored private nonisolated(unsafe) var undoObservations: [NSObjectProtocol] = []
+
     // MARK: - Selection State
 
     #if canImport(UIKit)
@@ -52,6 +70,8 @@ final class ArticleEditorViewModel {
     // MARK: - Action
 
     enum Action {
+        case undo
+        case redo
         case insertBlock(ArticleBlock)
         case removeBlock(blockId: UUID)
         case moveBlocks(fromOffsets: IndexSet, toOffset: Int)
@@ -79,12 +99,33 @@ final class ArticleEditorViewModel {
 
     func send(_ action: Action) {
         switch action {
+        case .undo:
+            undoManager?.undo()
+            updateUndoRedoState()
+        case .redo:
+            undoManager?.redo()
+            updateUndoRedoState()
         case let .insertBlock(block):
             performInsertBlock(block)
         case let .removeBlock(blockId):
-            blocks.removeAll { $0.id == blockId }
+            if let idx = blocks.firstIndex(where: { $0.id == blockId }) {
+                let block = blocks[idx]
+                blocks.remove(at: idx)
+                registerUndoForRemove(block, originalIdx: idx)
+            }
         case let .moveBlocks(from, to):
+            let snapshot = blocks
             blocks.move(fromOffsets: from, toOffset: to)
+            let movedBlocks = blocks
+            undoManager?.registerUndo(withTarget: self) { target in
+                let current = target.blocks
+                target.blocks = snapshot
+                target.undoManager?.registerUndo(withTarget: target) { inner in
+                    inner.blocks = movedBlocks
+                }
+                _ = current
+            }
+            updateUndoRedoState()
         case let .deleteOffsets(offsets):
             blocks.remove(atOffsets: offsets)
         case .insertImage:
@@ -170,6 +211,10 @@ final class ArticleEditorViewModel {
         }
         #endif
     }
+
+    deinit {
+        undoObservations.forEach { NotificationCenter.default.removeObserver($0) }
+    }
 }
 
 // MARK: - Event Handlers
@@ -180,6 +225,7 @@ extension ArticleEditorViewModel {
     func onTextChanged(_ text: NSAttributedString, blockId: UUID) {
         guard let idx = blocks.firstIndex(where: { $0.id == blockId }) else { return }
         blocks[idx].text = text
+        updateUndoRedoState()
     }
 
     func onSelectionChanged(_ range: NSRange, typingAttributes: [NSAttributedString.Key: Any]) {
@@ -207,19 +253,24 @@ extension ArticleEditorViewModel {
             ? fullText.attributedSubstring(from: NSRange(location: afterStart, length: totalLength - afterStart))
             : NSAttributedString()
 
-        blocks[idx].text = beforeText
-
-        var newBlock = ArticleBlock(type: focusedBlockContinuationType)
+        let newBlockType = focusedBlockContinuationType
+        var newBlock = ArticleBlock(type: newBlockType)
         newBlock.text = afterText
+        let newBlockId = newBlock.id
+
+        registerUndoForSplit(blockId: blockId, originalText: fullText, beforeText: beforeText, newBlockId: newBlockId, newBlockType: newBlockType)
+
+        blocks[idx].text = beforeText
         withAnimation {
             blocks.insert(newBlock, at: idx + 1)
         }
-        focusedId = newBlock.id
+        focusedId = newBlockId
     }
 
     func onDeleteWhenEmpty(blockId: UUID) {
         guard let idx = blocks.firstIndex(where: { $0.id == blockId }),
               idx > 0 else { return }
+        let block = blocks[idx]
         let previousId = blocks[..<idx]
             .last(where: { $0.type == .text || $0.type == .quote || $0.type == .list || $0.type == .numberedList })?.id
         if let prevId = previousId, let prevTextView = textViewRegistry[prevId] {
@@ -229,10 +280,12 @@ extension ArticleEditorViewModel {
         blocks.remove(at: idx)
         textViewRegistry.removeValue(forKey: blockId)
         focusedId = previousId
+        registerUndoForRemove(block, originalIdx: idx)
     }
 
     func registerTextView(_ textView: UITextView, for blockId: UUID) {
         textViewRegistry[blockId] = textView
+        (textView as? SharedUndoTextView)?.sharedUndoManager = undoManager
     }
 
     func onFocused(blockId: UUID, textView: UITextView) {
@@ -242,6 +295,7 @@ extension ArticleEditorViewModel {
         focusedTextView = textView
         currentTypingAttributes = textView.typingAttributes
         currentSelectedRange = textView.selectedRange
+        updateUndoRedoState()
     }
 
     func onBlurred(from textView: UITextView, blockId: UUID) {
@@ -251,6 +305,7 @@ extension ArticleEditorViewModel {
         focusedTextView = nil
         currentSelectedRange = NSRange(location: 0, length: 0)
         currentTypingAttributes = [:]
+        updateUndoRedoState()
     }
     #endif
 }
@@ -359,18 +414,111 @@ extension ArticleEditorViewModel {
     }
 }
 
+// MARK: - Undo Manager
+
+@available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
+private extension ArticleEditorViewModel {
+    func updateUndoRedoState() {
+        canUndo = undoManager?.canUndo ?? false
+        canRedo = undoManager?.canRedo ?? false
+    }
+
+    func observeUndoManager() {
+        undoObservations.forEach { NotificationCenter.default.removeObserver($0) }
+        guard let um = undoManager else {
+            canUndo = false
+            canRedo = false
+            return
+        }
+        canUndo = um.canUndo
+        canRedo = um.canRedo
+        let names: [NSNotification.Name] = [
+            .NSUndoManagerDidUndoChange,
+            .NSUndoManagerDidRedoChange,
+            .NSUndoManagerDidCloseUndoGroup,
+        ]
+        undoObservations = names.map { name in
+            NotificationCenter.default.addObserver(forName: name, object: um, queue: .main) { [weak self] _ in
+                MainActor.assumeIsolated {
+                    self?.canUndo = um.canUndo
+                    self?.canRedo = um.canRedo
+                }
+            }
+        }
+    }
+}
+
 // MARK: - Private Block Operations
 
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
 private extension ArticleEditorViewModel {
     func performInsertBlock(_ newBlock: ArticleBlock) {
+        let insertIdx: Int
         if let idx = blocks.firstIndex(where: { $0.id == focusedId }) {
-            blocks.insert(newBlock, at: idx + 1)
+            insertIdx = idx + 1
+            blocks.insert(newBlock, at: insertIdx)
         } else {
+            insertIdx = blocks.count
             blocks.append(newBlock)
         }
         if newBlock.type == .text || newBlock.type == .quote || newBlock.type == .list || newBlock.type == .numberedList {
             focusedId = newBlock.id
+        }
+        registerUndoForInsert(newBlock, at: insertIdx)
+    }
+
+    func registerUndoForSplit(blockId: UUID, originalText: NSAttributedString, beforeText: NSAttributedString, newBlockId: UUID, newBlockType: BlockType) {
+        undoManager?.registerUndo(withTarget: self) { target in
+            let afterText: NSAttributedString
+            if let newIdx = target.blocks.firstIndex(where: { $0.id == newBlockId }) {
+                afterText = target.blocks[newIdx].text
+                target.blocks.remove(at: newIdx)
+            } else {
+                afterText = NSAttributedString()
+            }
+            if let currentIdx = target.blocks.firstIndex(where: { $0.id == blockId }) {
+                target.blocks[currentIdx].text = originalText
+                #if canImport(UIKit)
+                target.focusedTextView?.attributedText = originalText
+                #endif
+            }
+            target.focusedId = blockId
+            target.registerUndoForMergeThenSplit(blockId: blockId, originalNewBlockId: newBlockId, originalText: originalText, beforeText: beforeText, afterText: afterText, newBlockType: newBlockType)
+        }
+    }
+
+    func registerUndoForMergeThenSplit(blockId: UUID, originalNewBlockId: UUID, originalText: NSAttributedString, beforeText: NSAttributedString, afterText: NSAttributedString, newBlockType: BlockType) {
+        undoManager?.registerUndo(withTarget: self) { target in
+            guard let currentIdx = target.blocks.firstIndex(where: { $0.id == blockId }) else { return }
+            let newBlock = ArticleBlock(id: originalNewBlockId, type: newBlockType, text: afterText)
+            target.blocks[currentIdx].text = beforeText
+            target.blocks.insert(newBlock, at: currentIdx + 1)
+            target.focusedId = originalNewBlockId
+            target.registerUndoForSplit(blockId: blockId, originalText: originalText, beforeText: beforeText, newBlockId: originalNewBlockId, newBlockType: newBlockType)
+        }
+    }
+
+    func registerUndoForInsert(_ block: ArticleBlock, at idx: Int) {
+        undoManager?.registerUndo(withTarget: self) { target in
+            if let currentIdx = target.blocks.firstIndex(where: { $0.id == block.id }) {
+                let currentBlock = target.blocks[currentIdx]
+                if target.focusedId == block.id {
+                    target.focusedId = nil
+                }
+                target.blocks.remove(at: currentIdx)
+                target.registerUndoForRemove(currentBlock, originalIdx: currentIdx)
+            }
+        }
+    }
+
+    func registerUndoForRemove(_ block: ArticleBlock, originalIdx: Int) {
+        undoManager?.registerUndo(withTarget: self) { target in
+            let safeIdx = min(originalIdx, target.blocks.count)
+            target.blocks.insert(block, at: safeIdx)
+            if block.type == .text || block.type == .quote || block.type == .list || block.type == .numberedList {
+                target.focusedId = block.id
+            }
+            target.registerUndoForInsert(block, at: safeIdx)
         }
     }
 
@@ -598,10 +746,26 @@ private extension ArticleEditorViewModel {
 
     func applyMutable(_ mutable: NSMutableAttributedString, to textView: UITextView, blockIndex idx: Int) {
         let savedRange = textView.selectedRange
+        let previousText = NSAttributedString(attributedString: textView.attributedText ?? NSAttributedString())
+        let blockId = blocks[idx].id
         textView.attributedText = mutable
         let safeRange = NSRange(location: min(savedRange.location, mutable.length), length: min(savedRange.length, max(0, mutable.length - savedRange.location)))
         textView.selectedRange = safeRange
         blocks[idx].text = mutable
+        registerUndoForTextMutation(blockId: blockId, restoreText: previousText)
+    }
+
+    func registerUndoForTextMutation(blockId: UUID, restoreText: NSAttributedString) {
+        undoManager?.registerUndo(withTarget: self) { target in
+            guard let currentIdx = target.blocks.firstIndex(where: { $0.id == blockId }),
+                  let textView = target.textViewRegistry[blockId] else { return }
+            let currentText = NSAttributedString(attributedString: textView.attributedText ?? NSAttributedString())
+            let currentRange = textView.selectedRange
+            textView.attributedText = restoreText
+            textView.selectedRange = NSRange(location: min(currentRange.location, restoreText.length), length: 0)
+            target.blocks[currentIdx].text = restoreText
+            target.registerUndoForTextMutation(blockId: blockId, restoreText: currentText)
+        }
     }
 
     func resolvedFont(name: String?, design: Font.Design, size: CGFloat, bold: Bool, italic: Bool) -> UIFont {
