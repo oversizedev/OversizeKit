@@ -6,25 +6,46 @@
 import OversizeUI
 import SwiftUI
 
+#if canImport(UIKit) && !os(watchOS)
+import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
+
 public enum IconPickerStyle {
     case field, circle
 }
 
-@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
+#if (canImport(UIKit) && !os(watchOS)) || canImport(AppKit)
+@available(iOS 17.0, macOS 14.0, tvOS 17.0, *)
 public struct IconPicker: View {
     @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @Environment(\.dismiss) private var dismiss
 
     private let label: String
-    private let icons: [Image]
-    @Binding private var selection: Image?
+    #if canImport(UIKit) && !os(watchOS)
+    private let icons: [UIImage]
+    @Binding private var selection: UIImage?
+    #elseif canImport(AppKit)
+    private let icons: [NSImage]
+    @Binding private var selection: NSImage?
+    #endif
     @State private var pendingIndex: Int?
 
-    public init(_ label: String = "Icon", icons: [Image] = IconPickerIcons.defaultIcons, selection: Binding<Image?>) {
+    #if canImport(UIKit) && !os(watchOS)
+    public init(_ label: String = "Icon", icons: [UIImage] = IconPickerIcons.defaultIcons, selection: Binding<UIImage?>) {
         self.label = label
         self.icons = icons
         _selection = selection
     }
+
+    #elseif canImport(AppKit)
+    public init(_ label: String = "Icon", icons: [NSImage] = IconPickerIcons.defaultIcons, selection: Binding<NSImage?>) {
+        self.label = label
+        self.icons = icons
+        _selection = selection
+    }
+    #endif
 
     public var body: some View {
         LayoutView(label) {
@@ -75,13 +96,12 @@ public struct IconPicker: View {
     }
 }
 
-@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
+@available(iOS 17.0, macOS 14.0, tvOS 17.0, *)
 #Preview {
-    
-    @Previewable @State var selection: Image?
-    
+    #if canImport(UIKit) && !os(watchOS)
     NavigationStack {
-        
-        IconPicker(selection: $selection)
+        IconPicker(selection: .constant(nil))
     }
+    #endif
 }
+#endif

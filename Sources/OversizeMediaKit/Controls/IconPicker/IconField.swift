@@ -6,25 +6,49 @@
 import OversizeUI
 import SwiftUI
 
-@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
-public struct IconField: View {
+#if canImport(UIKit) && !os(watchOS)
+import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
 
+#if (canImport(UIKit) && !os(watchOS)) || canImport(AppKit)
+@available(iOS 17.0, macOS 14.0, tvOS 17.0, *)
+public struct IconField: View {
     private let label: String
-    private let icons: [Image]
-    @Binding private var selection: Image?
+    #if canImport(UIKit) && !os(watchOS)
+    private let icons: [UIImage]
+    @Binding private var selection: UIImage?
+    #elseif canImport(AppKit)
+    private let icons: [NSImage]
+    @Binding private var selection: NSImage?
+    #endif
     @State private var showModal = false
 
     var style: IconPickerStyle = .field
 
+    #if canImport(UIKit) && !os(watchOS)
     public init(
         _ label: String,
-        icons: [Image] = IconPickerIcons.defaultIcons,
-        selection: Binding<Image?>
+        icons: [UIImage] = IconPickerIcons.defaultIcons,
+        selection: Binding<UIImage?>
     ) {
         self.label = label
         self.icons = icons
         _selection = selection
     }
+
+    #elseif canImport(AppKit)
+    public init(
+        _ label: String,
+        icons: [NSImage] = IconPickerIcons.defaultIcons,
+        selection: Binding<NSImage?>
+    ) {
+        self.label = label
+        self.icons = icons
+        _selection = selection
+    }
+    #endif
 
     public var body: some View {
         Group {
@@ -44,7 +68,7 @@ public struct IconField: View {
     }
 }
 
-@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
+@available(iOS 17.0, macOS 14.0, tvOS 17.0, *)
 public extension IconField {
     func iconPickerStyle(_ style: IconPickerStyle) -> Self {
         var control = self
@@ -53,8 +77,11 @@ public extension IconField {
     }
 }
 
-@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
+@available(iOS 17.0, macOS 14.0, tvOS 17.0, *)
 #Preview {
+    #if canImport(UIKit) && !os(watchOS)
     IconField("Choose icon", selection: .constant(nil))
         .padding()
+    #endif
 }
+#endif

@@ -9,7 +9,9 @@ import UIKit
 
 final class SharedUndoTextView: UITextView {
     weak var sharedUndoManager: UndoManager?
-    override var undoManager: UndoManager? { sharedUndoManager ?? super.undoManager }
+    override var undoManager: UndoManager? {
+        sharedUndoManager ?? super.undoManager
+    }
 }
 
 struct ArticleTextView: UIViewRepresentable {

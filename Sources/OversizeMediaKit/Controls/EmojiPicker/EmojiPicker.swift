@@ -60,7 +60,7 @@ public struct EmojiPicker: View {
                         .surfaceContentMargins(.small)
                         .sectionViewStyle(.smallIndent)
                         .surfaceRadius(.regular)
-                       
+
                     } else {
                         ForEach(groups) { group in
                             EmojiGroupSection(group: group, selection: $selection)

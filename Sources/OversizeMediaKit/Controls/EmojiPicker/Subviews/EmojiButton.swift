@@ -31,8 +31,7 @@ struct EmojiButton: View {
                 )
         }
         .buttonStyle(.scale)
-        
-        
+
 //        Button(action: action) {
 //            Icon(icon)
 //                .padding(.xSmall)

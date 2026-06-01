@@ -498,7 +498,7 @@ private extension ArticleEditorViewModel {
         }
     }
 
-    func registerUndoForInsert(_ block: ArticleBlock, at idx: Int) {
+    func registerUndoForInsert(_ block: ArticleBlock, at _: Int) {
         undoManager?.registerUndo(withTarget: self) { target in
             if let currentIdx = target.blocks.firstIndex(where: { $0.id == block.id }) {
                 let currentBlock = target.blocks[currentIdx]

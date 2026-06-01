@@ -7,63 +7,149 @@ import OversizeResources
 import OversizeUI
 import SwiftUI
 
+#if canImport(UIKit) && !os(watchOS)
+import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
+
 public enum IconPickerIcons {
-    public static var defaultIcons: [Image] {
+    #if canImport(UIKit) && !os(watchOS)
+    public static var defaultIcons: [UIImage] {
+        baseIcons + extendedIcons
+    }
+
+    private static var baseIcons: [UIImage] {
         [
-            Image.Base.Activity.fill,
-            Image.Base.Calendar.fill,
-            Image.Base.Camera.fill,
-            Image.Base.Category.fill,
-            Image.Base.Chart.fill,
-            Image.Base.Chat.fill,
-            Image.Base.Clock.fill,
-            Image.Base.Document.fill,
-            Image.Base.Edit.fill,
-            Image.Base.Folder.fill,
-            Image.Base.Game.fill,
-            Image.Base.Heart.fill,
-            Image.Base.Home.fill,
-            Image.Base.Location.fill,
-            Image.Base.Lock.fill,
-            Image.Base.Message.fill,
-            Image.Base.Notification.fill,
-            Image.Base.Phone.fill,
-            Image.Base.Picture.fill,
-            Image.Base.Profile.fill,
-            Image.Base.Search.fill,
-            Image.Base.Setting.fill,
-            Image.Base.ShieldDone.fill,
-            Image.Base.Star.fill,
-            Image.Base.Ticket.fill,
-            Image.Base.Upload.fill,
-            Image.Base.Video.fill,
-            Image.Base.Wallet.fill,
-            Image.Base.Work.fill,
-            Image.Alert.Help.Circle.fill,
-            Image.Alert.Info.Circle.fill,
-            Image.Alert.Megaphone.fill,
-            Image.Banking.Card.fill,
-            Image.ChartAndAnalytics.ChartCircle.fill,
-            Image.ComputerAndTV.KeyboardCloseDown.fill,
-            Image.Delivery.Delivery.fill,
-            Image.Design.PaintingPalette.fill,
-            Image.Design.Pencil.fill,
-            Image.Design.Ruler.fill,
-            Image.Documentation.Clipboard.fill,
-            Image.Documentation.Note.fill,
-            Image.Editor.Link.Square.fill,
-            Image.Editor.Marker.fill,
-            Image.Electricity.Flash.fill,
-            Image.Electricity.Lamp.fill,
-            Image.Email.Email.fill,
-            Image.FilterAndSetting.Dashboard1.fill,
-            Image.Food.FoodPlate.fill,
-            Image.Food.HotDrink.fill,
-            Image.FruitVegetables.Carrot.fill,
-            Image.HandGesture.Hand.fill,
-            Image.Mobile.Vibration.fill,
-            Image.TicketAndTag.Tag.fill,
-            Image.Weather.Cloud.fill,
+            UIImage(named: "Base/Activity/Fill",     in: .oversizeUI, compatibleWith: nil),
+            UIImage(named: "Base/Calendar/Fill",     in: .oversizeUI, compatibleWith: nil),
+            UIImage(named: "Base/Camera/Fill",       in: .oversizeUI, compatibleWith: nil),
+            UIImage(named: "Base/Category/Fill",     in: .oversizeUI, compatibleWith: nil),
+            UIImage(named: "Base/Chart/Fill",        in: .oversizeUI, compatibleWith: nil),
+            UIImage(named: "Base/Chat/Fill",         in: .oversizeUI, compatibleWith: nil),
+            UIImage(named: "Base/Clock/Fill",        in: .oversizeUI, compatibleWith: nil),
+            UIImage(named: "Base/Document/Fill",     in: .oversizeUI, compatibleWith: nil),
+            UIImage(named: "Base/Edit/Fill",         in: .oversizeUI, compatibleWith: nil),
+            UIImage(named: "Base/Folder/Fill",       in: .oversizeUI, compatibleWith: nil),
+            UIImage(named: "Base/Game/Fill",         in: .oversizeUI, compatibleWith: nil),
+            UIImage(named: "Base/Heart/Fill",        in: .oversizeUI, compatibleWith: nil),
+            UIImage(named: "Base/Home/Fill",         in: .oversizeUI, compatibleWith: nil),
+            UIImage(named: "Base/Location/Fill",     in: .oversizeUI, compatibleWith: nil),
+            UIImage(named: "Base/Lock/Fill",         in: .oversizeUI, compatibleWith: nil),
+            UIImage(named: "Base/Message/Fill",      in: .oversizeUI, compatibleWith: nil),
+            UIImage(named: "Base/Notification/Fill", in: .oversizeUI, compatibleWith: nil),
+            UIImage(named: "Base/Phone/Fill",        in: .oversizeUI, compatibleWith: nil),
+            UIImage(named: "Base/Picture/Fill",      in: .oversizeUI, compatibleWith: nil),
+            UIImage(named: "Base/Profile/Fill",      in: .oversizeUI, compatibleWith: nil),
+            UIImage(named: "Base/Search/Fill",       in: .oversizeUI, compatibleWith: nil),
+            UIImage(named: "Base/Setting/Fill",      in: .oversizeUI, compatibleWith: nil),
+            UIImage(named: "Base/ShieldDone/Fill",   in: .oversizeUI, compatibleWith: nil),
+            UIImage(named: "Base/Star/Fill",         in: .oversizeUI, compatibleWith: nil),
+            UIImage(named: "Base/Ticket/Fill",       in: .oversizeUI, compatibleWith: nil),
+            UIImage(named: "Base/Upload/Fill",       in: .oversizeUI, compatibleWith: nil),
+            UIImage(named: "Base/Video/Fill",        in: .oversizeUI, compatibleWith: nil),
+            UIImage(named: "Base/Wallet/Fill",       in: .oversizeUI, compatibleWith: nil),
+            UIImage(named: "Base/Work/Fill",         in: .oversizeUI, compatibleWith: nil),
+        ].compactMap { $0 }
+    }
+
+    private static var extendedIcons: [UIImage] {
+        [
+            UIImage.Alert.Help.Circle.fill,
+            UIImage.Alert.Info.Circle.fill,
+            UIImage.Alert.Megaphone.fill,
+            UIImage.Banking.Card.fill,
+            UIImage.ChartAndAnalytics.ChartCircle.fill,
+            UIImage.ComputerAndTV.KeyboardCloseDown.fill,
+            UIImage.Delivery.Delivery.fill,
+            UIImage.Design.PaintingPalette.fill,
+            UIImage.Design.Pencil.fill,
+            UIImage.Design.Ruler.fill,
+            UIImage.Documentation.Clipboard.fill,
+            UIImage.Documentation.Note.fill,
+            UIImage.Editor.Link.Square.fill,
+            UIImage.Editor.Marker.fill,
+            UIImage.Electricity.Flash.fill,
+            UIImage.Electricity.Lamp.fill,
+            UIImage.Email.Email.fill,
+            UIImage.FilterAndSetting.Dashboard1.fill,
+            UIImage.Food.FoodPlate.fill,
+            UIImage.Food.HotDrink.fill,
+            UIImage.FruitVegetables.Carrot.fill,
+            UIImage.HandGesture.Hand.fill,
+            UIImage.Mobile.Vibration.fill,
+            UIImage.TicketAndTag.Tag.fill,
+            UIImage.Weather.Cloud.fill,
         ]
     }
+
+    #elseif canImport(AppKit)
+    public static var defaultIcons: [NSImage] {
+        baseIcons + extendedIcons
+    }
+
+    private static var baseIcons: [NSImage] {
+        [
+            Bundle.oversizeUI.image(forResource: "Base/Activity/Fill"),
+            Bundle.oversizeUI.image(forResource: "Base/Calendar/Fill"),
+            Bundle.oversizeUI.image(forResource: "Base/Camera/Fill"),
+            Bundle.oversizeUI.image(forResource: "Base/Category/Fill"),
+            Bundle.oversizeUI.image(forResource: "Base/Chart/Fill"),
+            Bundle.oversizeUI.image(forResource: "Base/Chat/Fill"),
+            Bundle.oversizeUI.image(forResource: "Base/Clock/Fill"),
+            Bundle.oversizeUI.image(forResource: "Base/Document/Fill"),
+            Bundle.oversizeUI.image(forResource: "Base/Edit/Fill"),
+            Bundle.oversizeUI.image(forResource: "Base/Folder/Fill"),
+            Bundle.oversizeUI.image(forResource: "Base/Game/Fill"),
+            Bundle.oversizeUI.image(forResource: "Base/Heart/Fill"),
+            Bundle.oversizeUI.image(forResource: "Base/Home/Fill"),
+            Bundle.oversizeUI.image(forResource: "Base/Location/Fill"),
+            Bundle.oversizeUI.image(forResource: "Base/Lock/Fill"),
+            Bundle.oversizeUI.image(forResource: "Base/Message/Fill"),
+            Bundle.oversizeUI.image(forResource: "Base/Notification/Fill"),
+            Bundle.oversizeUI.image(forResource: "Base/Phone/Fill"),
+            Bundle.oversizeUI.image(forResource: "Base/Picture/Fill"),
+            Bundle.oversizeUI.image(forResource: "Base/Profile/Fill"),
+            Bundle.oversizeUI.image(forResource: "Base/Search/Fill"),
+            Bundle.oversizeUI.image(forResource: "Base/Setting/Fill"),
+            Bundle.oversizeUI.image(forResource: "Base/ShieldDone/Fill"),
+            Bundle.oversizeUI.image(forResource: "Base/Star/Fill"),
+            Bundle.oversizeUI.image(forResource: "Base/Ticket/Fill"),
+            Bundle.oversizeUI.image(forResource: "Base/Upload/Fill"),
+            Bundle.oversizeUI.image(forResource: "Base/Video/Fill"),
+            Bundle.oversizeUI.image(forResource: "Base/Wallet/Fill"),
+            Bundle.oversizeUI.image(forResource: "Base/Work/Fill"),
+        ].compactMap { $0 }
+    }
+
+    private static var extendedIcons: [NSImage] {
+        [
+            NSImage.Alert.Help.Circle.fill,
+            NSImage.Alert.Info.Circle.fill,
+            NSImage.Alert.Megaphone.fill,
+            NSImage.Banking.Card.fill,
+            NSImage.ChartAndAnalytics.ChartCircle.fill,
+            NSImage.ComputerAndTV.KeyboardCloseDown.fill,
+            NSImage.Delivery.Delivery.fill,
+            NSImage.Design.PaintingPalette.fill,
+            NSImage.Design.Pencil.fill,
+            NSImage.Design.Ruler.fill,
+            NSImage.Documentation.Clipboard.fill,
+            NSImage.Documentation.Note.fill,
+            NSImage.Editor.Link.Square.fill,
+            NSImage.Editor.Marker.fill,
+            NSImage.Electricity.Flash.fill,
+            NSImage.Electricity.Lamp.fill,
+            NSImage.Email.Email.fill,
+            NSImage.FilterAndSetting.Dashboard1.fill,
+            NSImage.Food.FoodPlate.fill,
+            NSImage.Food.HotDrink.fill,
+            NSImage.FruitVegetables.Carrot.fill,
+            NSImage.HandGesture.Hand.fill,
+            NSImage.Mobile.Vibration.fill,
+            NSImage.TicketAndTag.Tag.fill,
+            NSImage.Weather.Cloud.fill,
+        ]
+    }
+    #endif
 }

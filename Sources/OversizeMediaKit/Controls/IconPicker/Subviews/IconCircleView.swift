@@ -6,9 +6,20 @@
 import OversizeUI
 import SwiftUI
 
-@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
+#if canImport(UIKit) && !os(watchOS)
+import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
+
+#if (canImport(UIKit) && !os(watchOS)) || canImport(AppKit)
+@available(iOS 17.0, macOS 14.0, tvOS 17.0, *)
 struct IconCircleView: View {
-    @Binding var selection: Image?
+    #if canImport(UIKit) && !os(watchOS)
+    @Binding var selection: UIImage?
+    #elseif canImport(AppKit)
+    @Binding var selection: NSImage?
+    #endif
     @Binding var showModal: Bool
 
     var body: some View {
@@ -16,8 +27,12 @@ struct IconCircleView: View {
             showModal.toggle()
         } label: {
             Group {
-                if let image = selection {
-                    image
+                if let platformImage = selection {
+                    #if canImport(UIKit) && !os(watchOS)
+                    Image(uiImage: platformImage)
+                    #elseif canImport(AppKit)
+                    Image(nsImage: platformImage)
+                    #endif
                 } else {
                     Image.Base.edit.icon(size: .large)
                 }
@@ -29,7 +44,10 @@ struct IconCircleView: View {
     }
 }
 
-@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
+@available(iOS 17.0, macOS 14.0, tvOS 17.0, *)
 #Preview {
+    #if canImport(UIKit) && !os(watchOS)
     IconCircleView(selection: .constant(nil), showModal: .constant(false))
+    #endif
 }
+#endif

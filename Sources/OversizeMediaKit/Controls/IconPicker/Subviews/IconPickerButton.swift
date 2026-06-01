@@ -6,15 +6,26 @@
 import OversizeUI
 import SwiftUI
 
-@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
+#if canImport(UIKit) && !os(watchOS)
+import UIKit
+#elseif canImport(AppKit)
+import AppKit
+#endif
+
+#if (canImport(UIKit) && !os(watchOS)) || canImport(AppKit)
+@available(iOS 17.0, macOS 14.0, tvOS 17.0, *)
 struct IconPickerButton: View {
-    let icon: Image
+    #if canImport(UIKit) && !os(watchOS)
+    let icon: UIImage
+    #elseif canImport(AppKit)
+    let icon: NSImage
+    #endif
     let isSelected: Bool
     let action: () -> Void
 
     var body: some View {
         Button(action: action) {
-            Icon(icon)
+            iconView
                 .padding(.xSmall)
                 .background(
                     Circle()
@@ -31,13 +42,25 @@ struct IconPickerButton: View {
         }
         .buttonStyle(.scale)
     }
+
+    @ViewBuilder
+    private var iconView: some View {
+        #if canImport(UIKit) && !os(watchOS)
+        Icon(Image(uiImage: icon))
+        #elseif canImport(AppKit)
+        Icon(Image(nsImage: icon))
+        #endif
+    }
 }
 
-@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
+@available(iOS 17.0, macOS 14.0, tvOS 17.0, *)
 #Preview {
     HStack {
-        IconPickerButton(icon: Image(systemName: "star"), isSelected: false, action: {})
-        IconPickerButton(icon: Image(systemName: "star.fill"), isSelected: true, action: {})
+        #if canImport(UIKit) && !os(watchOS)
+        IconPickerButton(icon: UIImage(systemName: "star") ?? UIImage(), isSelected: false, action: {})
+        IconPickerButton(icon: UIImage(systemName: "star.fill") ?? UIImage(), isSelected: true, action: {})
+        #endif
     }
     .padding()
 }
+#endif
