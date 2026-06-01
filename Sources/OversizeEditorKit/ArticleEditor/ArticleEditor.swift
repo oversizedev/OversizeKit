@@ -12,7 +12,7 @@ import SwiftUI
 import UIKit
 #endif
 
-@available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
+@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
 public struct ArticleEditor: View {
     @Namespace private var unionNamespace
     @Environment(\.dismiss) private var dismiss
@@ -359,32 +359,60 @@ public struct ArticleEditor: View {
         switch sheet {
         case .textStylePicker:
             #if os(iOS) || os(macOS)
-            NavigationStack {
-                TextStylePicker(selectedStyle: Bindable(viewModel).selectedTextStyle)
+            Group {
+                if #available(iOS 18.0, *) {
+                    NavigationStack {
+                        TextStylePicker(selectedStyle: Bindable(viewModel).selectedTextStyle)
+                    }
+                    #if os(iOS)
+                    .presentationDetents([.medium, .large])
+                    .navigationTransition(.zoom(sourceID: "textStylePicker", in: unionNamespace))
+                    #endif
+                } else {
+                    NavigationStack {
+                        TextStylePicker(selectedStyle: Bindable(viewModel).selectedTextStyle)
+                    }
+                    #if os(iOS)
+                    .presentationDetents([.medium, .large])
+                    #endif
+                }
             }
-            #if os(iOS)
-            .presentationDetents([.medium, .large])
-            .navigationTransition(.zoom(sourceID: "textStylePicker", in: unionNamespace))
-            #endif
             #else
             EmptyView()
             #endif
 
         case .fontPicker:
             #if os(iOS) || os(macOS)
-            NavigationStack {
-                SystemFontPicker(
-                    selectedDesign: Bindable(viewModel).selectedDesign,
-                    selectedFontName: Bindable(viewModel).selectedFontName,
-                    onApply: { fontName in
-                        viewModel.send(.applyFont(name: fontName, design: viewModel.selectedDesign))
+            Group {
+                if #available(iOS 18.0, *) {
+                    NavigationStack {
+                        SystemFontPicker(
+                            selectedDesign: Bindable(viewModel).selectedDesign,
+                            selectedFontName: Bindable(viewModel).selectedFontName,
+                            onApply: { fontName in
+                                viewModel.send(.applyFont(name: fontName, design: viewModel.selectedDesign))
+                            }
+                        )
                     }
-                )
+                    #if os(iOS)
+                    .presentationDetents([.medium, .large])
+                    .navigationTransition(.zoom(sourceID: "fontPicker", in: unionNamespace))
+                    #endif
+                } else {
+                    NavigationStack {
+                        SystemFontPicker(
+                            selectedDesign: Bindable(viewModel).selectedDesign,
+                            selectedFontName: Bindable(viewModel).selectedFontName,
+                            onApply: { fontName in
+                                viewModel.send(.applyFont(name: fontName, design: viewModel.selectedDesign))
+                            }
+                        )
+                    }
+                    #if os(iOS)
+                    .presentationDetents([.medium, .large])
+                    #endif
+                }
             }
-            #if os(iOS)
-            .presentationDetents([.medium, .large])
-            .navigationTransition(.zoom(sourceID: "fontPicker", in: unionNamespace))
-            #endif
             #else
             EmptyView()
             #endif
@@ -431,14 +459,6 @@ public struct ArticleEditor: View {
                         selectedEmoji = ""
                         viewModel.sheet = nil
                     }
-
-                    .toolbar {
-                        ToolbarItem(placement: .cancellationAction) {
-                            Button { viewModel.sheet = nil } label: {
-                                Image.Base.close.icon()
-                            }
-                        }
-                    }
             }
             .presentationDetents([.medium, .large])
         }
@@ -447,7 +467,7 @@ public struct ArticleEditor: View {
 
 // MARK: - Preview
 
-@available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
+@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
 #Preview {
     NavigationStack {
         ArticleEditor()

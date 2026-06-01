@@ -9,7 +9,7 @@ import SwiftUI
 import UIKit
 #endif
 
-@available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
+@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
 @MainActor
 @Observable
 final class ArticleEditorViewModel {
@@ -219,7 +219,7 @@ final class ArticleEditorViewModel {
 
 // MARK: - Event Handlers
 
-@available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
+@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
 extension ArticleEditorViewModel {
     #if canImport(UIKit)
     func onTextChanged(_ text: NSAttributedString, blockId: UUID) {
@@ -312,7 +312,7 @@ extension ArticleEditorViewModel {
 
 // MARK: - Sheet
 
-@available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
+@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
 extension ArticleEditorViewModel {
     enum Sheet: Identifiable {
         case textStylePicker, fontPicker, link, photoPicker, emojiPicker
@@ -331,7 +331,7 @@ extension ArticleEditorViewModel {
 
 // MARK: - Computed State
 
-@available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
+@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
 extension ArticleEditorViewModel {
     var hasSelection: Bool {
         #if canImport(UIKit)
@@ -416,7 +416,7 @@ extension ArticleEditorViewModel {
 
 // MARK: - Undo Manager
 
-@available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
+@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
 private extension ArticleEditorViewModel {
     func updateUndoRedoState() {
         canUndo = undoManager?.canUndo ?? false
@@ -450,7 +450,7 @@ private extension ArticleEditorViewModel {
 
 // MARK: - Private Block Operations
 
-@available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
+@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
 private extension ArticleEditorViewModel {
     func performInsertBlock(_ newBlock: ArticleBlock) {
         let insertIdx: Int
@@ -561,7 +561,7 @@ private extension ArticleEditorViewModel {
 
 // MARK: - Private Formatting
 
-@available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
+@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
 private extension ArticleEditorViewModel {
     #if canImport(UIKit)
     func performToggleBold() {

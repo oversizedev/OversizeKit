@@ -7,7 +7,7 @@ import OversizeResources
 import OversizeUI
 import SwiftUI
 
-@available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
+@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
 struct ArticleBottomBar: View {
     enum Action {
         case undo
@@ -86,6 +86,15 @@ struct ArticleBottomBar: View {
     }
 
     var body: some View {
+        if #available(iOS 26.0, *) {
+            ios26Body
+        } else {
+            legacyBody
+        }
+    }
+
+    @available(iOS 26.0, *)
+    private var ios26Body: some View {
         GlassEffectContainer(spacing: .zero) {
             HStack(spacing: .zero) {
                 ScrollView(.horizontal) {
@@ -149,6 +158,102 @@ struct ArticleBottomBar: View {
         .animation(.spring(response: 0.4, dampingFraction: 0.75), value: hasSelection || isFontStyleSelection)
     }
 
+    private var legacyBody: some View {
+        HStack(spacing: .zero) {
+            ScrollView(.horizontal) {
+                legacyInsertionActions
+            }
+            .scrollIndicators(.hidden)
+
+            Separator(.vertical)
+                .lineWidth(3)
+                .frame(height: .regular)
+
+            Button { onAction(.toggleFocus) } label: {
+                Icon(isFocus ? Image.ComputerAndTV.keyboardCloseDown : Image.ComputerAndTV.keyboardOpenUp)
+                    .frame(width: 44, height: 44)
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(.horizontal, .small)
+        .padding(.vertical, .xSmall)
+        .background(.bar, in: RoundedRectangle(cornerRadius: 16))
+        .controlSize(.regular)
+        .animation(.spring(response: 0.4, dampingFraction: 0.75), value: hasSelection || isFontStyleSelection)
+    }
+
+    @ViewBuilder
+    private var legacyInsertionActions: some View {
+        HStack(spacing: .zero) {
+            if canUndo {
+                Button { onAction(.undo) } label: {
+                    Icon(Image.Arrow.reverseLeft).frame(width: 44, height: 44)
+                }
+                .buttonStyle(.plain)
+            }
+
+            if canRedo {
+                Button { onAction(.redo) } label: {
+                    Icon(Image.Arrow.reverseRight).frame(width: 44, height: 44)
+                }
+                .buttonStyle(.plain)
+            }
+
+            if canUndo || canRedo {
+                Separator(.vertical)
+                    .lineWidth(3)
+                    .frame(height: .regular)
+            }
+
+            Button { onAction(.toggleFontStyleSelection) } label: {
+                Icon(Image.Editor.titleCase).frame(width: 44, height: 44)
+            }
+            .buttonStyle(.plain)
+
+            #if os(iOS)
+            Button { onAction(.insertImage) } label: {
+                Icon(Image.Base.picture2).frame(width: 44, height: 44)
+            }
+            .buttonStyle(.plain)
+            #endif
+
+            Button { onAction(.insertQuote) } label: {
+                Icon(Image.Editor.creativeQuoteClose).frame(width: 44, height: 44)
+            }
+            .buttonStyle(.plain)
+
+            Menu {
+                Button { onAction(.insertSeparator) } label: {
+                    Label("Separator", systemImage: "minus")
+                }
+                Button { onAction(.insertNumberedList) } label: {
+                    Label("Numbered List", systemImage: "list.number")
+                }
+                Button { onAction(.insertList) } label: {
+                    Label("Bulleted List", systemImage: "list.bullet")
+                }
+                Button { onAction(.openEmojiPicker) } label: {
+                    Label("Emoji", systemImage: "face.smiling")
+                }
+            } label: {
+                Icon(Image.Base.more)
+                    .iconColor(Color.onSurfacePrimary)
+                    .frame(width: 44, height: 44)
+            }
+            .buttonStyle(.plain)
+
+            Separator(.vertical)
+                .lineWidth(3)
+                .frame(height: .regular)
+
+            Button { onAction(.pasteText) } label: {
+                Icon(Image.Documentation.clipboard).frame(width: 44, height: 44)
+            }
+            .buttonStyle(.plain)
+        }
+    }
+
+    @available(iOS 26.0, *)
     @ViewBuilder
     private var insertionActions: some View {
         if canUndo {
@@ -237,7 +342,7 @@ struct ArticleBottomBar: View {
     }
 }
 
-@available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
+@available(iOS 17.0, macOS 14.0, tvOS 17.0, watchOS 10.0, *)
 #Preview {
     @Previewable @Namespace var namespace
     ArticleBottomBar(
