@@ -182,7 +182,6 @@ struct ArticleBottomBar: View {
         .animation(.spring(response: 0.4, dampingFraction: 0.75), value: hasSelection || isFontStyleSelection)
     }
 
-    @ViewBuilder
     private var legacyInsertionActions: some View {
         HStack(spacing: .zero) {
             if canUndo {

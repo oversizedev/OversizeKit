@@ -8,20 +8,34 @@ import SwiftUI
 
 public struct NoteViewer: View {
     private let title: String
-    private let text: String
+    private let text: String?
+    private let content: AttributedString?
 
     public init(_ title: String = "Note", text: String) {
         self.title = title
         self.text = text
+        content = nil
+    }
+
+    public init(_ title: String = "Note", content: AttributedString) {
+        self.title = title
+        self.content = content
+        text = nil
     }
 
     public var body: some View {
         LayoutView(title) {
-            Text(text)
-                .body()
-                .foregroundColor(.onSurfacePrimary)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .paddingContent()
+            Group {
+                if let content {
+                    Text(content)
+                } else if let text {
+                    Text(text)
+                }
+            }
+            .body()
+            .foregroundColor(.onSurfacePrimary)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .paddingContent()
         }
         .toolbarTitleDisplayMode(.inline)
     }
