@@ -6,7 +6,7 @@
 import OversizeUI
 import SwiftUI
 
-extension EnvironmentValues {
+public extension EnvironmentValues {
     @Entry var barScrollInteracting: Bool = false
 }
 
@@ -27,7 +27,7 @@ struct BarItemScrollHapticModifier: ViewModifier {
 }
 
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
-extension View {
+public extension View {
     func barItem(namespace: Namespace.ID) -> some View {
         glassEffectUnion(id: "bar", namespace: namespace)
         #if os(iOS)

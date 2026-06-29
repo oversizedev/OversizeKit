@@ -249,7 +249,7 @@ public struct StoreSpecialOfferView: View {
                         .foregroundColor(.onSurfacePrimary.opacity(0.3))
                         .frame(width: 30)
                         .offset(y: safeAreaHeight - (platform == .macOS ? 200 : 280))
-                        .opacity(1 - (offset * 0.01))
+                    // .opacity(1 - (offset * 0.01))
                 }
 
                 VStack(spacing: .zero) {
@@ -264,7 +264,6 @@ public struct StoreSpecialOfferView: View {
                 }
                 .paddingContent()
                 .environmentObject(viewModel)
-                .opacity(0 + (offset * 0.01))
                 .id(10)
 
                 SubscriptionPrivacyView(

@@ -6,7 +6,7 @@
 import SwiftUI
 
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
-struct RepeatingButton<Label: View>: View {
+public struct RepeatingButton<Label: View>: View {
     private let action: () -> Void
     private let label: () -> Label
 
@@ -14,7 +14,7 @@ struct RepeatingButton<Label: View>: View {
     @State private var isInRepeatMode = false
     @GestureState private var isHolding = false
 
-    init(action: @escaping () -> Void, @ViewBuilder label: @escaping () -> Label) {
+    public init(action: @escaping () -> Void, @ViewBuilder label: @escaping () -> Label) {
         self.action = action
         self.label = label
     }
@@ -28,7 +28,7 @@ struct RepeatingButton<Label: View>: View {
             .onEnded { _ in cancelRepeat() }
     }
 
-    var body: some View {
+    public var body: some View {
         Button {
             guard !isInRepeatMode else {
                 isInRepeatMode = false

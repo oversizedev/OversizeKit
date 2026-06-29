@@ -7,8 +7,8 @@ import OversizeUI
 import SwiftUI
 
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
-struct BarButtonStyle: ButtonStyle {
-    func makeBody(configuration: Configuration) -> some View {
+public struct BarButtonStyle: ButtonStyle {
+    public func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .padding(.xxSmall)
             .background(Circle().fillSurfaceSecondary().opacity(configuration.isPressed ? 1 : 0))
@@ -19,7 +19,7 @@ struct BarButtonStyle: ButtonStyle {
 }
 
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
-extension ButtonStyle where Self == BarButtonStyle {
+public extension ButtonStyle where Self == BarButtonStyle {
     static var bar: BarButtonStyle {
         BarButtonStyle()
     }

@@ -41,8 +41,8 @@ enum HighlightColor: CaseIterable {
 }
 
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
-struct RichTextHighlightMenuView: View {
-    enum Action {
+public struct RichTextHighlightMenuView: View {
+    public enum Action {
         case applyHighlight(Color)
         case removeHighlight
     }
@@ -51,7 +51,7 @@ struct RichTextHighlightMenuView: View {
     private let namespace: Namespace.ID
     private let onAction: (Action) -> Void
 
-    init(
+    public init(
         currentHighlightColor: Color?,
         namespace: Namespace.ID,
         onAction: @escaping (Action) -> Void
@@ -61,7 +61,7 @@ struct RichTextHighlightMenuView: View {
         self.onAction = onAction
     }
 
-    var body: some View {
+    public var body: some View {
         Menu {
             ForEach(HighlightColor.allCases, id: \.self) { highlight in
                 Button {

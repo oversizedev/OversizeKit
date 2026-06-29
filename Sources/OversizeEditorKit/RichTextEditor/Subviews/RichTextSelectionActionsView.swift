@@ -8,8 +8,8 @@ import OversizeUI
 import SwiftUI
 
 @available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
-struct RichTextSelectionActionsView: View {
-    enum Action {
+public struct RichTextSelectionActionsView: View {
+    public enum Action {
         case toggleBold
         case toggleItalic
         case toggleUnderline
@@ -33,7 +33,7 @@ struct RichTextSelectionActionsView: View {
     private let namespace: Namespace.ID
     private let onAction: (Action) -> Void
 
-    init(
+    public init(
         hasSelection: Bool,
         isSelectionBold: Bool,
         isEffectiveItalic: Bool,
@@ -59,7 +59,7 @@ struct RichTextSelectionActionsView: View {
         self.onAction = onAction
     }
 
-    var body: some View {
+    public var body: some View {
         if !hasSelection {
             Button { onAction(.toggleFontStyleSelection) } label: {
                 Icon(Image.Base.chevronLeft)

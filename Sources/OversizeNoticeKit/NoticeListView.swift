@@ -4,7 +4,6 @@
 //
 
 import FactoryKit
-import NavigatorUI
 import OversizeKit
 import OversizeNetwork
 import OversizeServices
@@ -13,28 +12,33 @@ import StoreKit
 import SwiftUI
 
 public struct NoticeListView: View {
-    @Environment(\.navigator) var navigator
     @Environment(\.isPremium) var isPremium: Bool
     @StateObject private var viewModel = NoticeListViewModel()
+    @State private var sheet: Sheet?
 
     public init() {}
 
     public var body: some View {
-        if viewModel.isBannerClosed == false {
-            switch viewModel.noticeType {
-            case let .offer(inAppPurchaseOffer):
-                if !isPremium {
-                    offerView(offer: inAppPurchaseOffer)
+        Group {
+            if viewModel.isBannerClosed == false {
+                switch viewModel.noticeType {
+                case let .offer(inAppPurchaseOffer):
+                    if !isPremium {
+                        offerView(offer: inAppPurchaseOffer)
+                    }
+                case .rate:
+                    rateNoticeView
+                case .firstDay:
+                    if !isPremium {
+                        firstDayOfferView
+                    }
+                case .none:
+                    EmptyView()
                 }
-            case .rate:
-                rateNoticeView
-            case .firstDay:
-                if !isPremium {
-                    firstDayOfferView
-                }
-            case .none:
-                EmptyView()
             }
+        }
+        .sheet(item: $sheet) { sheet in
+            sheetView(sheet)
         }
     }
 
@@ -84,12 +88,7 @@ public struct NoticeListView: View {
             subtitle: "On your first year of \(viewModel.subscriptionName)"
         ) {
             Button {
-                navigator.navigate(
-                    to: SettingsDestinations.premiumInstructions(
-                        specialOfferMode: true
-                    ),
-                    method: .managedSheet
-                )
+                sheet = .premiumInstructions(specialOfferMode: true)
             } label: {
                 Text("Claim Offer")
             }
@@ -108,10 +107,7 @@ public struct NoticeListView: View {
             imageURL: offer.imageUrl?.url
         ) {
             Button {
-                navigator.navigate(
-                    to: SettingsDestinations.offer(event: offer),
-                    method: .managedSheet
-                )
+                sheet = .offer(offer)
             } label: {
                 Text("Accept Offer")
             }
@@ -121,6 +117,36 @@ public struct NoticeListView: View {
             viewModel.lastClosedSpecialOffer = offer.id
             withAnimation {
                 viewModel.isBannerClosed = true
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func sheetView(_ sheet: Sheet) -> some View {
+        switch sheet {
+        case let .offer(offer):
+            NavigationStack {
+                StoreSpecialOfferView(event: offer)
+                    .coreServices()
+            }
+        case let .premiumInstructions(specialOfferMode):
+            NavigationStack {
+                StoreInstructionsView(specialOfferMode: specialOfferMode)
+                    .coreServices()
+            }
+        }
+    }
+}
+
+extension NoticeListView {
+    enum Sheet: Identifiable {
+        case offer(Components.Schemas.InAppPurchaseOffer)
+        case premiumInstructions(specialOfferMode: Bool)
+
+        var id: Int {
+            switch self {
+            case let .offer(offer): offer.id
+            case .premiumInstructions: -1
             }
         }
     }
