@@ -4,6 +4,7 @@
 //
 
 import FactoryKit
+import NavigatorUI
 import OversizeLocalizable
 import OversizeNavigation
 import OversizeRouter

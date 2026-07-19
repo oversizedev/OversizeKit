@@ -6,6 +6,7 @@
 #if canImport(MessageUI)
 import MessageUI
 #endif
+import NavigatorUI
 import OversizeComponents
 import OversizeLocalizable
 import OversizeNavigation

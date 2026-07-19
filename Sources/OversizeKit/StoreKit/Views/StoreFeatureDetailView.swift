@@ -69,13 +69,12 @@ public struct StoreFeatureDetailView: View {
         #endif
     }
 
+    @ViewBuilder
     func fetureItem(_ feature: Components.Schemas.Feature, geometry: GeometryProxy) -> some View {
-        Group {
-            if let _ = feature.screenshots.first {
-                screenFetureItem(feature, geometry: geometry)
-            } else {
-                iconFetureItem(feature, geometry: geometry)
-            }
+        if let _ = feature.screenshots.first {
+            screenFetureItem(feature, geometry: geometry)
+        } else {
+            iconFetureItem(feature, geometry: geometry)
         }
     }
 

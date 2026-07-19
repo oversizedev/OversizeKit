@@ -242,58 +242,56 @@ public struct CreateEventView: View {
     }
     #endif
 
+    @ViewBuilder
     var repitView: some View {
-        Group {
-            if viewModel.repitRule != .never {
-                Surface {
-                    Row(viewModel.repitRule.title, subtitle: repeatSubtitleText) {
-                        viewModel.present(.repeat)
-                    } leading: {
-                        Image.Arrow.update.icon()
-                    }
-                    .rowClearButton(style: .onSurface) {
-                        viewModel.repitRule = .never
-                        viewModel.repitEndRule = .never
-                    }
-                    .rowContentMargins(.init(horizontal: .small, vertical: .small))
+        if viewModel.repitRule != .never {
+            Surface {
+                Row(viewModel.repitRule.title, subtitle: repeatSubtitleText) {
+                    viewModel.present(.repeat)
+                } leading: {
+                    Image.Arrow.update.icon()
                 }
-                .surfaceBorderColor(Color.surfaceSecondary)
-                .surfaceBorderWidth(1)
-                .surfaceContentMargins(.zero)
-                .surfaceRadius(.regular)
+                .rowClearButton(style: .onSurface) {
+                    viewModel.repitRule = .never
+                    viewModel.repitEndRule = .never
+                }
+                .rowContentMargins(.init(horizontal: .small, vertical: .small))
             }
+            .surfaceBorderColor(Color.surfaceSecondary)
+            .surfaceBorderWidth(1)
+            .surfaceContentMargins(.zero)
+            .surfaceRadius(.regular)
         }
     }
 
+    @ViewBuilder
     var membersView: some View {
-        Group {
-            if !viewModel.members.isEmpty {
-                Surface {
-                    VStack(spacing: .zero) {
-                        ForEach(viewModel.members, id: \.self) { email in
-                            Row(email) {
-                                viewModel.present(.invites)
-                            } leading: {
-                                Image.Base.profile.icon()
-                            }
-                            .rowClearButton(style: .onSurface) {
-                                viewModel.members.remove(email)
-                            }
-                            .rowContentMargins(.init(horizontal: .small, vertical: .small))
-                            .overlay(alignment: .bottomLeading) {
-                                Rectangle()
-                                    .fillSurfaceSecondary()
-                                    .padding(.leading, 56)
-                                    .frame(height: 1)
-                            }
+        if !viewModel.members.isEmpty {
+            Surface {
+                VStack(spacing: .zero) {
+                    ForEach(viewModel.members, id: \.self) { email in
+                        Row(email) {
+                            viewModel.present(.invites)
+                        } leading: {
+                            Image.Base.profile.icon()
+                        }
+                        .rowClearButton(style: .onSurface) {
+                            viewModel.members.remove(email)
+                        }
+                        .rowContentMargins(.init(horizontal: .small, vertical: .small))
+                        .overlay(alignment: .bottomLeading) {
+                            Rectangle()
+                                .fillSurfaceSecondary()
+                                .padding(.leading, 56)
+                                .frame(height: 1)
                         }
                     }
                 }
-                .surfaceBorderColor(Color.surfaceSecondary)
-                .surfaceBorderWidth(1)
-                .surfaceContentMargins(.zero)
-                .surfaceRadius(.regular)
             }
+            .surfaceBorderColor(Color.surfaceSecondary)
+            .surfaceBorderWidth(1)
+            .surfaceContentMargins(.zero)
+            .surfaceRadius(.regular)
         }
     }
 

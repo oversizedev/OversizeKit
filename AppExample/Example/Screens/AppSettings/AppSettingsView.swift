@@ -10,16 +10,14 @@ struct AppSettingsView: View {
     @EnvironmentObject var viewModel: AppSettingsViewModel
 
     var body: some View {
-        Group {
-            NavigationLink(destination: AppSettingsPageView()) {
-                Row("Option") {
-                    Image(systemName: "")
-                }
-                .rowArrow()
-                .multilineTextAlignment(.leading)
+        NavigationLink(destination: AppSettingsPageView()) {
+            Row("Option") {
+                Image(systemName: "")
             }
-            .buttonStyle(.row)
+            .rowArrow()
+            .multilineTextAlignment(.leading)
         }
+        .buttonStyle(.row)
     }
 }
 

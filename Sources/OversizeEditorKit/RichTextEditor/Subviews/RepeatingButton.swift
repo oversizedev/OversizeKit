@@ -23,7 +23,9 @@ public struct RepeatingButton<Label: View>: View {
         LongPressGesture(minimumDuration: 0.45)
             .sequenced(before: DragGesture(minimumDistance: 0))
             .updating($isHolding) { value, state, _ in
-                if case .second(true, _) = value { state = true }
+                if case .second(true, _) = value {
+                    state = true
+                }
             }
             .onEnded { _ in cancelRepeat() }
     }

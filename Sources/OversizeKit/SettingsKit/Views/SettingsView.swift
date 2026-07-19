@@ -3,6 +3,7 @@
 // SettingsView.swift
 //
 
+import NavigatorUI
 import OversizeLocalizable
 import OversizeNavigation
 import OversizeResources

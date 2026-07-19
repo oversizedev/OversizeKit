@@ -84,7 +84,11 @@ public struct FilePicker: View {
         ) { result in
             if case let .success(urls) = result, let picked = urls.first {
                 let accessing = picked.startAccessingSecurityScopedResource()
-                defer { if accessing { picked.stopAccessingSecurityScopedResource() } }
+                defer {
+                    if accessing {
+                        picked.stopAccessingSecurityScopedResource()
+                    }
+                }
                 saveRecent(url: picked)
                 url = persistentCopy(of: picked)
             }

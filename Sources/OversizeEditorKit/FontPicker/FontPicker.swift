@@ -20,7 +20,9 @@ public struct FontPicker: View {
     }
 
     private func onSelectFont() {
-        if let name = selectedFontName { onApply?(name) }
+        if let name = selectedFontName {
+            onApply?(name)
+        }
         dismiss()
     }
 

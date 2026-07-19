@@ -6,6 +6,7 @@
 import FactoryKit
 import OversizeResources
 import OversizeServices
+import OversizeStoreService
 import OversizeUI
 import SwiftUI
 

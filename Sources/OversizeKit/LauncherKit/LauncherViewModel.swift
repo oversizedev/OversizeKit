@@ -36,7 +36,7 @@ public final class LauncherViewModel: ObservableObject {
 
     let firstRunAction: (() -> Void)?
 
-    let appUpdateAction: (() -> Void)?
+    let appUpdateAction: ((String, String?) -> Void)?
 
     var isShowLockscreen: Bool {
         if FeatureFlags.secure.lookscreen ?? false {
@@ -52,7 +52,7 @@ public final class LauncherViewModel: ObservableObject {
 
     public init(
         firstRunAction: (() -> Void)? = nil,
-        appUpdateAction: (() -> Void)? = nil
+        appUpdateAction: ((String, String?) -> Void)? = nil
     ) {
         self.firstRunAction = firstRunAction
         self.appUpdateAction = appUpdateAction
@@ -168,7 +168,7 @@ public extension LauncherViewModel {
         if appStateService.appRunCount == 0 {
             firstRunAction?()
         } else if appStateService.lastRunVersion != Info.App.version?.description {
-            appUpdateAction?()
+            appUpdateAction?(appStateService.lastRunVersion, Info.App.version?.description)
             if Info.App.version?.isMajor == true || Info.App.version?.isMinor == true {
                 await fetchAndShowWhatsNew()
             }

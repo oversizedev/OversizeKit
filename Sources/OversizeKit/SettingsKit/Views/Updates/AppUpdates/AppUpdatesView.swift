@@ -3,6 +3,7 @@
 // AppUpdatesView.swift, created on 04.03.2026
 //
 
+import NavigatorUI
 import OversizeArchitecture
 import OversizeNavigation
 import OversizeNetwork

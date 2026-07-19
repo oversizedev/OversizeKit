@@ -178,7 +178,11 @@ public struct MediaPicker<CustomSection: View>: View {
         ) { result in
             if case let .success(urls) = result, let picked = urls.first {
                 let accessing = picked.startAccessingSecurityScopedResource()
-                defer { if accessing { picked.stopAccessingSecurityScopedResource() } }
+                defer {
+                    if accessing {
+                        picked.stopAccessingSecurityScopedResource()
+                    }
+                }
                 selectionURL = persistentCopy(of: picked)
                 dismiss()
             }
@@ -297,7 +301,9 @@ public struct MediaPicker<CustomSection: View>: View {
         option.isSynchronous = true
         var result = UIImage()
         manager.requestImage(for: asset, targetSize: CGSize(width: 200, height: 200), contentMode: .aspectFill, options: option) { img, _ in
-            if let img { result = img }
+            if let img {
+                result = img
+            }
         }
         return result
     }
@@ -310,7 +316,9 @@ public struct MediaPicker<CustomSection: View>: View {
         option.resizeMode = .none
         var result = UIImage()
         manager.requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .default, options: option) { img, _ in
-            if let img { result = img }
+            if let img {
+                result = img
+            }
         }
         return result
     }

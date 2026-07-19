@@ -100,7 +100,9 @@ public struct CloudParticipantsListView: View {
         Binding(
             get: { participantPendingRemoval != nil },
             set: { isPresented in
-                if !isPresented { participantPendingRemoval = nil }
+                if !isPresented {
+                    participantPendingRemoval = nil
+                }
             }
         )
     }

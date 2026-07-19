@@ -3,6 +3,7 @@
 // AppearanceSettingView.swift
 //
 
+import NavigatorUI
 import OversizeCore
 import OversizeLocalizable
 import OversizeNavigation

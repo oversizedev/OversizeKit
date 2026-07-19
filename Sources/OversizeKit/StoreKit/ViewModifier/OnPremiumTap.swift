@@ -3,6 +3,7 @@
 // OnPremiumTap.swift
 //
 
+import NavigatorUI
 import SwiftUI
 
 public struct OnPremiumTap: ViewModifier {

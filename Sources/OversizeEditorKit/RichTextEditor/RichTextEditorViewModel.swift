@@ -177,7 +177,10 @@ extension RichTextEditorViewModel {
 
     var isSelectionBold: Bool {
         if case .insertionPoint = textSelection.indices(in: text),
-           let override = typingBoldOverride { return override }
+           let override = typingBoldOverride
+        {
+            return override
+        }
         guard let context = fontResolutionContext else { return false }
         let font = textSelection.typingAttributes(in: text).font
         return (font ?? .default).resolve(in: context).isBold
@@ -192,13 +195,19 @@ extension RichTextEditorViewModel {
 
     var isSelectionUnderlined: Bool {
         if case .insertionPoint = textSelection.indices(in: text),
-           let override = typingUnderlineOverride { return override }
+           let override = typingUnderlineOverride
+        {
+            return override
+        }
         return textSelection.typingAttributes(in: text).underlineStyle != nil
     }
 
     var isSelectionStrikethrough: Bool {
         if case .insertionPoint = textSelection.indices(in: text),
-           let override = typingStrikethroughOverride { return override }
+           let override = typingStrikethroughOverride
+        {
+            return override
+        }
         return textSelection.typingAttributes(in: text).strikethroughStyle != nil
     }
 
@@ -557,7 +566,9 @@ extension RichTextEditorViewModel {
         default: base
         }
         var traits = designed.symbolicTraits
-        if italic { traits.insert(.traitItalic) }
+        if italic {
+            traits.insert(.traitItalic)
+        }
         if let final = designed.withSymbolicTraits(traits) {
             return Font(UIFont(descriptor: final, size: size))
         }
@@ -570,8 +581,12 @@ extension RichTextEditorViewModel {
             return fallbackCustomFont(name: name, size: size, bold: bold, italic: italic)
         }
         var traits: UIFontDescriptor.SymbolicTraits = []
-        if bold { traits.insert(.traitBold) }
-        if italic { traits.insert(.traitItalic) }
+        if bold {
+            traits.insert(.traitBold)
+        }
+        if italic {
+            traits.insert(.traitItalic)
+        }
         if let descriptor = uiFont.fontDescriptor.withSymbolicTraits(traits) {
             return Font(UIFont(descriptor: descriptor, size: size))
         }
@@ -590,9 +605,13 @@ extension RichTextEditorViewModel {
         default: base
         }
         var traits = designed.symbolicTraits
-        if italic { traits.insert(.italic) }
+        if italic {
+            traits.insert(.italic)
+        }
         let final = designed.withSymbolicTraits(traits)
-        if let nsFont = NSFont(descriptor: final, size: size) { return Font(nsFont) }
+        if let nsFont = NSFont(descriptor: final, size: size) {
+            return Font(nsFont)
+        }
         return Font(NSFont(descriptor: designed, size: size) ?? NSFont.systemFont(ofSize: size, weight: weight))
     }
 
@@ -612,7 +631,9 @@ extension RichTextEditorViewModel {
     @MainActor
     static func resolveSystemFont(size: CGFloat, bold: Bool, italic: Bool, design: Font.Design) -> Font {
         var font = Font.system(size: size, weight: bold ? .bold : .regular, design: design)
-        if italic { font = font.italic() }
+        if italic {
+            font = font.italic()
+        }
         return font
     }
 
@@ -625,8 +646,12 @@ extension RichTextEditorViewModel {
     @MainActor
     private static func fallbackCustomFont(name: String, size: CGFloat, bold: Bool, italic: Bool) -> Font {
         var font = Font.custom(name, size: size)
-        if bold { font = font.bold() }
-        if italic { font = font.italic() }
+        if bold {
+            font = font.bold()
+        }
+        if italic {
+            font = font.italic()
+        }
         return font
     }
 }

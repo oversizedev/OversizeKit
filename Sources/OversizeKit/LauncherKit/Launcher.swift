@@ -22,7 +22,7 @@ public struct Launcher<Content: View, Onboarding: View>: View {
     public init(
         @ViewBuilder content: () -> Content,
         firstRunAction: (() -> Void)? = nil,
-        appUpdateAction: (() -> Void)? = nil
+        appUpdateAction: ((String, String?) -> Void)? = nil
     ) {
         self.content = content()
         _viewModel = StateObject(wrappedValue: LauncherViewModel(
@@ -125,7 +125,7 @@ public extension Launcher where Onboarding == EmptyView {
     init(
         @ViewBuilder content: () -> Content,
         firstRunAction: (() -> Void)? = nil,
-        appUpdateAction: (() -> Void)? = nil
+        appUpdateAction: ((String, String?) -> Void)? = nil
     ) {
         self.content = content()
         _viewModel = StateObject(wrappedValue: LauncherViewModel(
@@ -153,7 +153,7 @@ public extension View {
     func appLaunch(
         @ViewBuilder onboarding: @escaping () -> some View,
         firstRun: (() -> Void)? = nil,
-        appUpdate: (() -> Void)? = nil
+        appUpdate: ((String, String?) -> Void)? = nil
     ) -> some View {
         Launcher(
             content: { self },

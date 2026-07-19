@@ -58,14 +58,18 @@ public class CreateEventViewModel: ObservableObject {
     func setEvent(type: CreateEventType) {
         switch type {
         case let .new(title, date, locationName, location, calendar):
-            if let title { self.title = title }
+            if let title {
+                self.title = title
+            }
             if let date {
                 dateStart = date
                 dateEnd = date.halfHour
             }
             self.locationName = locationName
             self.location = location
-            if let calendar { self.calendar = calendar }
+            if let calendar {
+                self.calendar = calendar
+            }
         case let .update(event):
             title = event.title
             note = event.notes ?? ""

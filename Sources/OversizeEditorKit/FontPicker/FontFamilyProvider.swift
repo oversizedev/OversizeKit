@@ -29,7 +29,9 @@ enum FontFamilyProvider {
     static func displayName(for fontName: String) -> String {
         guard let font = UIFont(name: fontName, size: 16) else { return fontName }
         let family = font.familyName == systemFamilyName ? "System Font" : font.familyName
-        if UIFont.fontNames(forFamilyName: font.familyName).count == 1 { return family }
+        if UIFont.fontNames(forFamilyName: font.familyName).count == 1 {
+            return family
+        }
         return "\(family) \(fontFace(for: fontName))"
     }
 }
@@ -64,7 +66,9 @@ enum FontFamilyProvider {
         guard let font = NSFont(name: fontName, size: 16) else { return fontName }
         let familyName = font.familyName ?? fontName
         let displayFamily = familyName == systemFamilyName ? "System Font" : familyName
-        if fontNames(forFamily: familyName).count == 1 { return displayFamily }
+        if fontNames(forFamily: familyName).count == 1 {
+            return displayFamily
+        }
         return "\(displayFamily) \(fontFace(for: fontName))"
     }
 }

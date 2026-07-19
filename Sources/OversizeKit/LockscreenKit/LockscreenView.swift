@@ -25,8 +25,6 @@ public struct LockscreenView: View {
 
     @State private var shouldAnimate = false
 
-    private let timer = Timer.publish(every: 0.3, on: .main, in: .common).autoconnect()
-
     @State var leftOffset: CGFloat = 0
     @State var rightOffset: CGFloat = 50
 
@@ -285,19 +283,17 @@ public struct LockscreenView: View {
                             : Color.accent)
                         .frame(width: 12, height: 12)
                         .offset(x: leftOffset)
-                        // .animation(Animation.easeInOut(duration: 1).delay(0.2 * Double(number)))
                         .scaleEffect(shouldAnimate ? 0.5 : 1)
                         .animation(
-                            Animation.easeInOut(duration: 0.5)
-                                .repeatForever()
-                                .delay(number == 0 ? 0 : 0.5 * Double(number)),
+                            .easeInOut(duration: 0.5)
+                                .repeatForever(autoreverses: true)
+                                .delay(0.15 * Double(number)),
                             value: shouldAnimate
                         )
                 }
             }
-            .onReceive(timer) { _ in
-                shouldAnimate.toggle()
-            }
+            .onAppear { shouldAnimate = true }
+            .onDisappear { shouldAnimate = false }
         }
     }
 
@@ -345,8 +341,10 @@ public struct NumpadButtonStyle: ButtonStyle {
     }
 }
 
-struct PINCodeView_Previews: PreviewProvider {
-    static var previews: some View {
-        LockscreenView(pinCode: .constant("123"), state: .constant(.locked))
-    }
+#Preview("Locked") {
+    LockscreenView(pinCode: .constant("123"), state: .constant(.locked))
+}
+
+#Preview("Loading") {
+    LockscreenView(pinCode: .constant("1234"), state: .constant(.loading))
 }

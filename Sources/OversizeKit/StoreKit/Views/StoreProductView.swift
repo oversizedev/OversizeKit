@@ -92,15 +92,14 @@ public struct StoreProductView: View {
         }
     }
 
+    @ViewBuilder
     var rowProduct: some View {
-        Group {
-            if product.type == .autoRenewable, let offer = product.subscription?.introductoryOffer {
-                topLabelRow(offer: offer)
-            }
-            label
-                .padding(.horizontal, 2)
-                .padding(.vertical, 2)
+        if product.type == .autoRenewable, let offer = product.subscription?.introductoryOffer {
+            topLabelRow(offer: offer)
         }
+        label
+            .padding(.horizontal, 2)
+            .padding(.vertical, 2)
     }
 
     var topLabelCollumn: some View {
@@ -298,28 +297,27 @@ public struct StoreProductView: View {
         }
     }
 
+    @ViewBuilder
     var labelBackground: some View {
-        Group {
-            #if os(iOS) || os(macOS)
-            if isHaveIntroductoryOffer, type == .row {
-                RoundedRectangle(cornerRadius: platform == .macOS ? 2 : 4, style: .continuous)
-                    .fill(Color.surfacePrimary)
-                    .cornerRadius(platform == .macOS ? 5 : 10, corners: [.bottomLeft, .bottomRight])
-            } else {
-                RoundedRectangle(cornerRadius: platform == .macOS ? 5 : 10, style: .continuous)
-                    .fill(Color.surfacePrimary)
-                    .overlay {
-                        if type == .column, !isSelected {
-                            RoundedRectangle(cornerRadius: platform == .macOS ? 6 : 12, style: .continuous)
-                                .strokeBorder(Color.backgroundTertiary, lineWidth: platform == .macOS ? 1 : 2)
-                                .padding(-2)
-                        }
+        #if os(iOS) || os(macOS)
+        if isHaveIntroductoryOffer, type == .row {
+            RoundedRectangle(cornerRadius: platform == .macOS ? 2 : 4, style: .continuous)
+                .fill(Color.surfacePrimary)
+                .cornerRadius(platform == .macOS ? 5 : 10, corners: [.bottomLeft, .bottomRight])
+        } else {
+            RoundedRectangle(cornerRadius: platform == .macOS ? 5 : 10, style: .continuous)
+                .fill(Color.surfacePrimary)
+                .overlay {
+                    if type == .column, !isSelected {
+                        RoundedRectangle(cornerRadius: platform == .macOS ? 6 : 12, style: .continuous)
+                            .strokeBorder(Color.backgroundTertiary, lineWidth: platform == .macOS ? 1 : 2)
+                            .padding(-2)
                     }
-            }
-            #else
-            EmptyView()
-            #endif
+                }
         }
+        #else
+        EmptyView()
+        #endif
     }
 
     var background: some View {

@@ -84,29 +84,28 @@ public struct StoreSpecialOfferView: View {
         #endif
     }
 
+    @ViewBuilder
     var content: some View {
-        Group {
-            switch viewModel.state {
-            case .idle:
-                VStack {
+        switch viewModel.state {
+        case .idle:
+            VStack {
+                Spacer()
+                HStack {
                     Spacer()
-                    HStack {
-                        Spacer()
-                        ProgressView()
-                        Spacer()
-                    }
+                    ProgressView()
                     Spacer()
                 }
-            case .loading:
-                ProgressView()
-            case let .result(data):
-                content(data: data)
-                    .background {
-                        effectsView
-                    }
-            case let .error(error):
-                ErrorView(error: error)
+                Spacer()
             }
+        case .loading:
+            ProgressView()
+        case let .result(data):
+            content(data: data)
+                .background {
+                    effectsView
+                }
+        case let .error(error):
+            ErrorView(error: error)
         }
     }
 

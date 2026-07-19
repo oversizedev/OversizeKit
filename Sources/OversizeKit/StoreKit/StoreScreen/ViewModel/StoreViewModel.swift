@@ -119,7 +119,9 @@ extension StoreViewModel {
 
     var subscriptionStatusColor: Color {
         guard case let .result(products) = state else { return .gray }
-        if !products.purchasedNonConsumable.isEmpty { return .green }
+        if !products.purchasedNonConsumable.isEmpty {
+            return .green
+        }
         guard let subscriptionStatus = products.subscriptionGroupStatus else { return .red }
         switch subscriptionStatus {
         case .subscribed:
