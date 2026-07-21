@@ -26,14 +26,14 @@ public struct MapCoordinateView: View {
         }
         .ignoresSafeArea()
         .safeAreaInset(edge: .trailing) {
-            if #available(iOS 26.0, *) {
+            if #available(iOS 26.0, macOS 26.0, *) {
                 zoomButtonsGlass.padding(.small)
             } else {
                 zoomButtons.padding(.small)
             }
         }
         .safeAreaInset(edge: .bottom) {
-            if #available(iOS 26.0, *) {
+            if #available(iOS 26.0, macOS 26.0, *) {
                 EmptyView()
             } else {
                 locationButton
@@ -49,6 +49,7 @@ public struct MapCoordinateView: View {
                 .tint(Color.onSurfacePrimary)
             }
 
+            #if os(iOS)
             if #available(iOS 26.0, *) {
                 ToolbarSpacer(.flexible, placement: .bottomBar)
 
@@ -56,6 +57,7 @@ public struct MapCoordinateView: View {
                     locationButtonGlass
                 }
             }
+            #endif
         }
         #if os(iOS)
         .toolbar(.hidden, for: .tabBar)
@@ -69,7 +71,7 @@ public struct MapCoordinateView: View {
         }
     }
 
-    @available(iOS 26.0, *)
+    @available(iOS 26.0, macOS 26.0, *)
     var zoomButtonsGlass: some View {
         GlassEffectContainer {
             VStack {
@@ -128,6 +130,7 @@ public struct MapCoordinateView: View {
         }
     }
 
+    #if os(iOS)
     @available(iOS 26.0, *)
     var locationButtonGlass: some View {
         Button {
@@ -139,6 +142,7 @@ public struct MapCoordinateView: View {
         }
         .buttonStyle(.glassProminent)
     }
+    #endif
 
     var locationButton: some View {
         HStack {

@@ -30,17 +30,18 @@ public struct CloudParticipantPermissionView: View {
                 ForEach(ShareParticipant.Permission.allCases, id: \.self) { permission in
                     ListRow(
                         permission.title,
+                        action: {
+                            if participant.permission != permission {
+                                onUpdatePermission(permission)
+                            }
+                        },
                         trailing: {
                             if participant.permission == permission {
                                 Image.Base.check
                                     .foregroundStyle(Color.accent)
                             }
                         }
-                    ) {
-                        if participant.permission != permission {
-                            onUpdatePermission(permission)
-                        }
-                    }
+                    )
                 }
             }
 
@@ -63,13 +64,14 @@ public struct CloudParticipantPermissionView: View {
             ListSection {
                 ListRow(
                     "Remove Access",
+                    action: {
+                        isShowingRemoveConfirmation = true
+                    },
                     leading: {
                         Icon(Image.Editor.TrashWithLines.fill)
                             .iconColor(Color.error)
                     }
-                ) {
-                    isShowingRemoveConfirmation = true
-                }
+                )
                 .rowTextColor(Color.error)
             }
         }

@@ -6,7 +6,6 @@
 import NavigatorUI
 import OversizeLocalizable
 import OversizeNavigation
-import OversizeRouter
 import OversizeUI
 import SwiftUI
 

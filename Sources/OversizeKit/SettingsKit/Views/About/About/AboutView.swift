@@ -9,7 +9,6 @@ import OversizeCore
 import OversizeLocalizable
 import OversizeNavigation
 import OversizeResources
-import OversizeRouter
 import OversizeServices
 import OversizeUI
 import SwiftUI

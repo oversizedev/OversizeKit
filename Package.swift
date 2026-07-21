@@ -17,8 +17,7 @@ let remoteDependencies: [PackageDescription.Package.Dependency] = commonDependen
     .package(url: "https://github.com/oversizedev/OversizeComponents.git", .upToNextMajor(from: "2.0.0")),
     .package(url: "https://github.com/oversizedev/OversizeResources.git", .upToNextMajor(from: "2.0.0")),
     .package(url: "https://github.com/oversizedev/OversizeNetwork.git", .upToNextMajor(from: "1.0.0")),
-    .package(url: "https://github.com/oversizedev/OversizeRouter.git", .upToNextMajor(from: "0.1.0")),
-    .package(url: "https://github.com/oversizedev/OversizeNavigation.git", .upToNextMajor(from: "0.7.0")),
+    .package(url: "https://github.com/oversizedev/OversizeNavigation.git", .upToNextMajor(from: "0.1.0")),
     .package(url: "https://github.com/oversizedev/OversizeArchitecture.git", .upToNextMajor(from: "0.2.0")),
 ]
 
@@ -30,7 +29,6 @@ let localDependencies: [PackageDescription.Package.Dependency] = commonDependenc
     .package(name: "OversizeComponents", path: "../OversizeComponents"),
     .package(name: "OversizeResources", path: "../OversizeResources"),
     .package(name: "OversizeNetwork", path: "../OversizeNetwork"),
-    .package(name: "OversizeRouter", path: "../OversizeRouter"),
     .package(name: "OversizeNavigation", path: "../OversizeNavigation"),
     .package(name: "OversizeArchitecture", path: "../OversizeArchitecture"),
 ]
@@ -73,7 +71,6 @@ let package = Package(
                 .product(name: "OversizeLocalizable", package: "OversizeLocalizable"),
                 .product(name: "OversizeResources", package: "OversizeResources"),
                 .product(name: "OversizeNetwork", package: "OversizeNetwork"),
-                .product(name: "OversizeRouter", package: "OversizeRouter"),
                 .product(name: "FactoryKit", package: "Factory"),
                 .product(name: "NavigatorUI", package: "Navigator"),
                 .product(name: "OversizeNavigation", package: "OversizeNavigation"),

@@ -32,14 +32,14 @@ public struct CloudParticipantsListView: View {
                 ListRow(
                     participant.displayName,
                     subtitle: participant.permission.title,
+                    action: {
+                        onTapParticipant(participant)
+                    },
                     leading: {
                         participantAvatar(participant)
                     },
                     trailing: {
                         statusBadge(participant)
-                    },
-                    action: {
-                        onTapParticipant(participant)
                     }
                 )
                 .rowContentMargins(

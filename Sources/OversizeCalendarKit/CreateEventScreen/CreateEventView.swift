@@ -33,7 +33,9 @@ public struct CreateEventView: View {
         LayoutView {
             content
         }
+        #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
+        #endif
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Close", systemImage: "xmark", role: .cancel) {
@@ -107,7 +109,7 @@ public struct CreateEventView: View {
             }
         }
         .safeAreaBarBottom {
-            if #available(iOS 26.0, *) {
+            if #available(iOS 26.0, macOS 26.0, *) {
                 glassBottomBar
             } else {
                 bottomBar
@@ -477,7 +479,7 @@ public struct CreateEventView: View {
         }
     }
 
-    @available(iOS 26.0, *)
+    @available(iOS 26.0, macOS 26.0, *)
     var glassBottomBar: some View {
         HStack {
             GlassEffectContainer {

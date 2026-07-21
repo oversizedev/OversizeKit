@@ -4,7 +4,6 @@
 //
 
 import NavigatorUI
-import OversizeRouter
 import SwiftUI
 
 public struct SettingsNavigationStack<AppSection: View, HeadSection: View>: View {
