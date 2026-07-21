@@ -91,7 +91,7 @@ public struct RepeatPicker: View {
                     }
                     .labelStyle(.toolbar)
                     .buttonStyle(.toolbarSecondary)
-                    #if !os(tvOS)
+                    #if !os(tvOS) && !os(watchOS)
                         .keyboardShortcut(.cancelAction)
                     #endif
                 }
@@ -104,7 +104,7 @@ public struct RepeatPicker: View {
                     .labelStyle(.toolbar)
                     .buttonStyle(.toolbarPrimary)
                     .disabled(rule == .never)
-                    #if !os(tvOS)
+                    #if !os(tvOS) && !os(watchOS)
                         .keyboardShortcut(.defaultAction)
                     #endif
                 }

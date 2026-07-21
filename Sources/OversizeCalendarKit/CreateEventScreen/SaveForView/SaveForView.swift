@@ -52,7 +52,7 @@ public struct SaveForView: View {
                 }
                 .labelStyle(.toolbar)
                 .buttonStyle(.toolbarSecondary)
-                #if !os(tvOS)
+                #if !os(tvOS) && !os(watchOS)
                     .keyboardShortcut(.cancelAction)
                 #endif
             }

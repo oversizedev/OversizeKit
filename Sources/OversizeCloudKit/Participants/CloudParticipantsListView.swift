@@ -73,7 +73,9 @@ public struct CloudParticipantsListView: View {
                 }
                 .labelStyle(.toolbar)
                 .buttonStyle(.toolbarPrimary)
-                .keyboardShortcut(.defaultAction)
+                #if !os(tvOS) && !os(watchOS)
+                    .keyboardShortcut(.defaultAction)
+                #endif
             }
         }
         .confirmationDialog(

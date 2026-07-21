@@ -47,7 +47,7 @@ public struct TextStylePicker: View {
                 Button("Close", systemImage: "xmark", role: .cancel) { dismiss() }
                     .labelStyle(.toolbar)
                     .buttonStyle(.toolbarSecondary)
-                #if !os(tvOS)
+                #if !os(tvOS) && !os(watchOS)
                     .keyboardShortcut(.cancelAction)
                 #endif
             }

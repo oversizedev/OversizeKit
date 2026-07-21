@@ -50,7 +50,7 @@ public struct EmailPickerView: View {
                 }
                 .labelStyle(.toolbar)
                 .buttonStyle(.toolbarSecondary)
-                #if !os(tvOS)
+                #if !os(tvOS) && !os(watchOS)
                     .keyboardShortcut(.cancelAction)
                 #endif
             }
@@ -61,7 +61,7 @@ public struct EmailPickerView: View {
                 .labelStyle(.toolbar)
                 .buttonStyle(.toolbarPrimary)
                 .disabled(selectedEmails.isEmpty && !viewModel.searchText.isEmail)
-                #if !os(tvOS)
+                #if !os(tvOS) && !os(watchOS)
                     .keyboardShortcut(.defaultAction)
                 #endif
             }

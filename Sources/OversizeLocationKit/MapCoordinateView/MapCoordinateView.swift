@@ -174,7 +174,9 @@ public struct MapCoordinateView: View {
                     ListRow("Google Maps")
                 }
             }
+            #if !os(tvOS)
             .listRowSeparator(.hidden)
+            #endif
         }
         .listLayoutStyle(.insetGrouped)
         .toolbarTitleDisplayMode(.inline)
@@ -185,7 +187,7 @@ public struct MapCoordinateView: View {
                 }
                 .labelStyle(.toolbar)
                 .buttonStyle(.toolbarSecondary)
-                #if !os(tvOS)
+                #if !os(tvOS) && !os(watchOS)
                     .keyboardShortcut(.cancelAction)
                 #endif
             }
