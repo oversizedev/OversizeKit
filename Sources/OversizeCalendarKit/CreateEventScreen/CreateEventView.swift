@@ -47,6 +47,7 @@ public struct CreateEventView: View {
                     .keyboardShortcut(.cancelAction)
                 #endif
             }
+            #if !os(watchOS)
             ToolbarItem(placement: .principal) {
                 if #available(iOS 26, *) {
                     Button { viewModel.present(.calendar) } label: {
@@ -77,6 +78,7 @@ public struct CreateEventView: View {
                     .controlSize(.mini)
                 }
             }
+            #endif
             ToolbarItem(placement: .primaryAction) {
                 Button(L10n.Button.save, systemImage: "checkmark") {
                     switch viewModel.type {
@@ -109,11 +111,15 @@ public struct CreateEventView: View {
             }
         }
         .safeAreaBarBottom {
+            #if !os(watchOS)
             if #available(iOS 26.0, macOS 26.0, *) {
                 glassBottomBar
             } else {
                 bottomBar
             }
+            #else
+            bottomBar
+            #endif
         }
         .task {
             await viewModel.fetchData()
@@ -479,6 +485,7 @@ public struct CreateEventView: View {
         }
     }
 
+    #if !os(watchOS)
     @available(iOS 26.0, macOS 26.0, *)
     var glassBottomBar: some View {
         HStack {
@@ -530,6 +537,7 @@ public struct CreateEventView: View {
         .padding(.vertical, .xSmall)
         .controlSize(.regular)
     }
+    #endif
 
     var bottomBar: some View {
         HStack(spacing: .medium) {

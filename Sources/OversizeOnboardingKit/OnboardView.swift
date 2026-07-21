@@ -36,7 +36,7 @@ public struct OnboardView<C: View, A: View>: View {
             )
             .safeAreaBarTop(content: topButtons)
             .safeAreaBarBottom(content: bottomButtons)
-        #if !os(macOS)
+        #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
         #endif
     }
