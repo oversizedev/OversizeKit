@@ -33,6 +33,9 @@ public final class MapCoordinateViewModel {
     }
 
     public func zoomIn() {
+        if let currentRegion = cameraPosition.region {
+            region = currentRegion
+        }
         if region.span.longitudeDelta / 2.5 > 0, region.span.latitudeDelta / 2.5 > 0 {
             withAnimation {
                 region.span.latitudeDelta /= 2.5
@@ -48,6 +51,9 @@ public final class MapCoordinateViewModel {
     }
 
     public func zoomOut() {
+        if let currentRegion = cameraPosition.region {
+            region = currentRegion
+        }
         if region.span.longitudeDelta * 2.5 < 134, region.span.latitudeDelta * 2.5 < 130 {
             withAnimation {
                 region.span.latitudeDelta *= 2.5

@@ -35,11 +35,15 @@ struct DocumentScanner: UIViewControllerRepresentable {
 
         func documentCameraViewController(_: VNDocumentCameraViewController, didFinishWith scan: VNDocumentCameraScan) {
             if let pdfData = scan.toPDFData() {
-                let tempURL = FileManager.default.temporaryDirectory
+                let supportDir = FileManager.default
+                    .urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+                    .appendingPathComponent("MediaPickerRecents", isDirectory: true)
+                try? FileManager.default.createDirectory(at: supportDir, withIntermediateDirectories: true)
+                let destinationURL = supportDir
                     .appendingPathComponent(UUID().uuidString)
                     .appendingPathExtension("pdf")
-                try? pdfData.write(to: tempURL)
-                selectedURL = tempURL
+                try? pdfData.write(to: destinationURL)
+                selectedURL = destinationURL
             }
             onDismiss()
         }

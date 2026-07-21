@@ -37,6 +37,17 @@ public struct SyncSettingsView: View {
                         Text("Changes will take effect after restarting the app")
                     }
                 }
+
+                ListSection {
+                    Toggle(isOn: $settingsService.cloudKitCVVEnabled) {
+                        ListRow(
+                            "CVV iCloud sync",
+                            leading: {
+                                Icon("creditcard").iconOnSurface()
+                            }
+                        )
+                    }
+                }
             }
 
             if FeatureFlags.app.healthKit.valueOrFalse {

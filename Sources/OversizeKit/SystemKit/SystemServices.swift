@@ -20,6 +20,7 @@ public struct SystemServicesModifier: ViewModifier {
 
     @State private var blurRadius: CGFloat = 0
     @State private var oppacity: CGFloat = 1
+    @State private var screenSize: ScreenSize = .init(width: 375, height: 667)
 
     private enum FullScreenSheet: Identifiable, Equatable {
         case onboarding
@@ -34,6 +35,16 @@ public struct SystemServicesModifier: ViewModifier {
 
     public func body(content: Content) -> some View {
         content
+            .background {
+                GeometryReader { geometry in
+                    Color.clear
+                        .onAppear { screenSize = ScreenSize(geometry: geometry) }
+                        .onChange(of: geometry.size) { _, _ in
+                            screenSize = ScreenSize(geometry: geometry)
+                        }
+                }
+            }
+            .screenSize(screenSize)
             .blur(radius: blurRadius)
             .preferredColorScheme(theme.appearance.colorScheme)
             .premiumStatus(isPremium)

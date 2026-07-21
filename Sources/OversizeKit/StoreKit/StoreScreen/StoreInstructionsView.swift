@@ -138,15 +138,17 @@ public struct StoreInstructionsView: View {
                         .foregroundColor(.onSurfacePrimary)
                         .padding(.bottom, .xSmall)
 
-                    Group {
-                        Text("Save ")
-                            .foregroundColor(.onSurfaceSecondary)
-                            + Text("\(viewModel.salePercent)%")
-                            .foregroundColor(.accent)
-                            + Text(" on subscription")
-                            .foregroundColor(.onSurfaceSecondary)
+                    if viewModel.isHaveSale {
+                        Group {
+                            Text("Save ")
+                                .foregroundColor(.onSurfaceSecondary)
+                                + Text("\(viewModel.salePercent)%")
+                                .foregroundColor(.accent)
+                                + Text(" on subscription")
+                                .foregroundColor(.onSurfaceSecondary)
+                        }
+                        .body(.semibold)
                     }
-                    .body(.semibold)
                 }
                 .multilineTextAlignment(.center)
 

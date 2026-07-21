@@ -89,15 +89,16 @@ public struct FilePicker: View {
                         picked.stopAccessingSecurityScopedResource()
                     }
                 }
-                saveRecent(url: picked)
-                url = persistentCopy(of: picked)
+                let persistentURL = persistentCopy(of: picked)
+                saveRecent(persistentURL: persistentURL)
+                url = persistentURL
             }
             dismiss()
         }
         .fullScreenCover(isPresented: $isShowScanner) {
             DocumentScanner(selectedURL: $url) {
                 if let scanned = url {
-                    saveRecent(url: scanned)
+                    saveRecent(persistentURL: scanned)
                 }
                 isShowScanner = false
                 dismiss()
@@ -118,8 +119,7 @@ public struct FilePicker: View {
         recentFiles = decoded
     }
 
-    private func saveRecent(url: URL) {
-        let persistentURL = persistentCopy(of: url)
+    private func saveRecent(persistentURL: URL) {
         let entry = RecentFileEntry(
             id: UUID().uuidString,
             name: persistentURL.lastPathComponent,
@@ -141,8 +141,19 @@ public struct FilePicker: View {
             .appendingPathComponent("MediaPickerRecents", isDirectory: true)
         try? FileManager.default.createDirectory(at: supportDir, withIntermediateDirectories: true)
         let destination = supportDir.appendingPathComponent(url.lastPathComponent)
-        if !FileManager.default.fileExists(atPath: destination.path) {
-            try? FileManager.default.copyItem(at: url, to: destination)
+        guard url.standardizedFileURL != destination.standardizedFileURL else {
+            return url
+        }
+        let stagingURL = supportDir.appendingPathComponent(UUID().uuidString)
+        do {
+            try FileManager.default.copyItem(at: url, to: stagingURL)
+            if FileManager.default.fileExists(atPath: destination.path) {
+                _ = try FileManager.default.replaceItemAt(destination, withItemAt: stagingURL)
+            } else {
+                try FileManager.default.moveItem(at: stagingURL, to: destination)
+            }
+        } catch {
+            try? FileManager.default.removeItem(at: stagingURL)
         }
         return destination
     }

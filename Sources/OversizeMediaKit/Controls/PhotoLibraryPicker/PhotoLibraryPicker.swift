@@ -139,12 +139,14 @@ public struct PhotoLibraryPicker: View {
             }
         }
         .fullScreenCover(isPresented: $isShowCamera, onDismiss: {
-            if isMultiMode {
-                appendPhotos([cameraImage], dates: [Date()])
-            } else {
-                selection = cameraImage
+            if cameraImage.size != .zero {
+                if isMultiMode {
+                    appendPhotos([cameraImage], dates: [Date()])
+                } else {
+                    selection = cameraImage
+                }
+                dismiss()
             }
-            dismiss()
         }) {
             ImagePicker(sourceType: .camera, selectedImage: $cameraImage)
                 .ignoresSafeArea(.all)
@@ -295,7 +297,9 @@ public struct PhotoLibraryPicker: View {
         var thumbnail = UIImage()
         option.isSynchronous = true
         manager.requestImage(for: asset, targetSize: CGSize(width: 300, height: 300), contentMode: .aspectFit, options: option) { result, _ in
-            thumbnail = result!
+            if let result {
+                thumbnail = result
+            }
         }
         return thumbnail
     }
@@ -308,7 +312,9 @@ public struct PhotoLibraryPicker: View {
         option.isNetworkAccessAllowed = true
         option.resizeMode = .none
         manager.requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .default, options: option) { result, _ in
-            thumbnail = result!
+            if let result {
+                thumbnail = result
+            }
         }
         incrementImportCounter()
         return thumbnail

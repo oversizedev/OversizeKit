@@ -134,7 +134,7 @@ public struct MapCoordinateView: View {
     @available(iOS 26.0, *)
     var locationButtonGlass: some View {
         Button {
-            viewModel.zoomOut()
+            viewModel.positionInLocation()
         } label: {
             Label("Location", systemImage: "location.fill")
                 .labelStyle(.iconOnly)

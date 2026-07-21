@@ -20,6 +20,7 @@ public struct MediaPicker<CustomSection: View>: View {
     @State private var selectedAssets: [PHAsset] = []
     @State private var cameraImage: UIImage = .init()
     @State private var isShimmering: Bool = false
+    @State private var isGallerySelectionConfirmed: Bool = false
 
     @Binding var selectionPhotos: [UIImage]
     @Binding var selectionPhotosDate: [Date]
@@ -159,14 +160,20 @@ public struct MediaPicker<CustomSection: View>: View {
         }
         .sheet(isPresented: $isShowGallery, onDismiss: {
             selectedAssets = []
-            dismiss()
+            if isGallerySelectionConfirmed {
+                isGallerySelectionConfirmed = false
+                dismiss()
+            }
         }) {
             NavigationStack {
                 PhotoLibraryPicker(
                     selection: $selectionPhotos,
                     dates: $selectionPhotosDate,
                     preselected: selectedAssets,
-                    onSelect: { photos, dates in onPhotosSelected?(photos, dates) }
+                    onSelect: { photos, dates in
+                        isGallerySelectionConfirmed = true
+                        onPhotosSelected?(photos, dates)
+                    }
                 )
                 .hideCamera()
             }

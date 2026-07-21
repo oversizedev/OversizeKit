@@ -92,6 +92,7 @@ extension LauncherViewModel {
 public extension LauncherViewModel {
     func launcherSheetsCheck() async {
         await checkOnboarding()
+        guard contentType != .onboarding else { return }
         await checkAppRate()
         await checkSpecialOffer()
     }

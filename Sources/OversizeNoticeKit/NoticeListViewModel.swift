@@ -27,6 +27,7 @@ public final class NoticeListViewModel: ObservableObject {
     public var trialDaysPeriodText: String = ""
     public var subscriptionName: String = ""
     public var salePercent: Decimal = 0
+    private var hasFirstDayOffer = false
 
     public init() {
         Task {
@@ -52,6 +53,7 @@ public final class NoticeListViewModel: ObservableObject {
                 trialDaysPeriodText = storeKitService.daysLabel(offer.period.value, unit: offer.period.unit)
                 salePercent = storeKitService.salePercent(product: product, products: products)
                 subscriptionName = inAppPurchases.successResult?.banner.badge ?? ""
+                hasFirstDayOffer = true
             }
         case .failure:
             break
@@ -64,9 +66,9 @@ public final class NoticeListViewModel: ObservableObject {
         case let .success(offers):
             let isShowReviewBanner = await reviewService.isShowReviewBanner
             let isFirstDayAfterRun = Date().hours(from: appStateService.firstRunDate) < 24
-            if isFirstDayAfterRun {
+            if isFirstDayAfterRun, hasFirstDayOffer {
                 noticeType = .firstDay
-            } else if let offer = offers.first(where: { checkDateInSelectedPeriod(startDate: $0.startDate, endDate: $0.endDate) }) {
+            } else if let offer = offers.first(where: { $0.id != lastClosedSpecialOffer && checkDateInSelectedPeriod(startDate: $0.startDate, endDate: $0.endDate) }) {
                 noticeType = .offer(offer)
             } else if isShowReviewBanner {
                 noticeType = .rate
