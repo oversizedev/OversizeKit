@@ -205,7 +205,7 @@ public struct MapCoordinateView: View {
     }
 
     func onTapGoogleMaps() {
-        guard let url = URL(string: "comgooglemaps://?saddr=\(viewModel.location.latitude),\(viewModel.location.longitude)") else { return }
+        guard let url = URL(string: "comgooglemaps://?daddr=\(viewModel.location.latitude),\(viewModel.location.longitude)&directionsmode=driving") else { return }
         openURL(url)
     }
 }
