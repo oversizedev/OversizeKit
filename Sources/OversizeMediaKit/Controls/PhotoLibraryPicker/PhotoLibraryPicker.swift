@@ -6,10 +6,10 @@
 import OversizeComponents
 import OversizeLocalizable
 import OversizeUI
-import PhotosUI
 import SwiftUI
 
 #if os(iOS)
+import PhotosUI
 @available(iOS 17.0, *)
 public struct PhotoLibraryPicker: View {
     @Environment(\.dismiss) var dismiss
