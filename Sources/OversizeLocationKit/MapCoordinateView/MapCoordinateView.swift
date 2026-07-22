@@ -26,14 +26,14 @@ public struct MapCoordinateView: View {
         }
         .ignoresSafeArea()
         .safeAreaInset(edge: .trailing) {
-            if #available(iOS 26.0, macOS 26.0, *) {
+            if #available(iOS 26.0, macOS 26.0, tvOS 26.0, *) {
                 zoomButtonsGlass.padding(.small)
             } else {
                 zoomButtons.padding(.small)
             }
         }
         .safeAreaInset(edge: .bottom) {
-            if #available(iOS 26.0, macOS 26.0, *) {
+            if #available(iOS 26.0, macOS 26.0, tvOS 26.0, *) {
                 EmptyView()
             } else {
                 locationButton
@@ -71,7 +71,7 @@ public struct MapCoordinateView: View {
         }
     }
 
-    @available(iOS 26.0, macOS 26.0, *)
+    @available(iOS 26.0, macOS 26.0, tvOS 26.0, *)
     var zoomButtonsGlass: some View {
         GlassEffectContainer {
             VStack {
