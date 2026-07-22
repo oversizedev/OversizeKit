@@ -96,7 +96,7 @@ public extension CreateEventView {
                 CalendarPicker(selection: $viewModel.calendar, calendars: viewModel.calendars, sourses: viewModel.sourses)
                     .presentationDetents([.large])
             case .location:
-                #if !os(watchOS)
+                #if !os(watchOS) && !os(tvOS)
                 AddressPicker(address: $viewModel.locationName, location: $viewModel.location)
                     .interactiveDismissDisabled(true)
                     .presentationDetents([.large])

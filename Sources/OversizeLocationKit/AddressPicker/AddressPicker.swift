@@ -11,7 +11,7 @@ import OversizeLocationService
 import OversizeUI
 import SwiftUI
 
-#if !os(watchOS)
+#if !os(watchOS) && !os(tvOS)
 public struct AddressPicker: View {
     @Environment(\.dismiss) private var dismiss
     @StateObject private var viewModel = AddressPickerViewModel()
