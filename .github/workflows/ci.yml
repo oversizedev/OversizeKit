@@ -82,7 +82,7 @@ jobs:
     with:
       path: AppExample/Example
       scheme: Example
-      destination: platform=iOS Simulator,name=iPhone 16,OS=18.1
+      destination: generic/platform=iOS Simulator
     secrets: inherit
 
 #  tests:
