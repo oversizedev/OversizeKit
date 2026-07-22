@@ -10,7 +10,6 @@ import EventKit
 import OversizeCalendarService
 import OversizeContactsService
 import OversizeCore
-import OversizeKit
 import OversizeLocalizable
 import OversizeUI
 import SwiftUI
@@ -25,7 +24,7 @@ public struct AttendeesView: View {
     }
 
     public var body: some View {
-        PageView("Invitees") {
+        LayoutView("Invitees") {
             Group {
                 switch viewModel.state {
                 case .initial:
@@ -40,13 +39,25 @@ public struct AttendeesView: View {
                 case let .result(data):
                     content(data)
                 case let .error(error):
-                    ErrorView(error)
+                    OversizeUI.ErrorView(error: error)
                 }
             }
+        } background: {
+            Color.backgroundSecondary
         }
-        .leadingBar {
-            BarButton(.close)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Close", systemImage: "xmark", role: .cancel) {
+                    dismiss()
+                }
+                .labelStyle(.toolbar)
+                .buttonStyle(.toolbarSecondary)
+                #if !os(tvOS) && !os(watchOS)
+                    .keyboardShortcut(.cancelAction)
+                #endif
+            }
         }
+        .toolbarTitleDisplayMode(.inline)
     }
 
     @ViewBuilder
@@ -83,7 +94,7 @@ public struct AttendeesView: View {
                             .fillBackgroundPrimary()
                     }
                 Image(systemName: participant.symbolName)
-                    .onPrimaryForeground()
+                    .onPrimary()
                     .font(.system(size: 9, weight: .black))
             }
         }

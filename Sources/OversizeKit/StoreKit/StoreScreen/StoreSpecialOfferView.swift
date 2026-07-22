@@ -3,7 +3,7 @@
 // StoreSpecialOfferView.swift
 //
 
-import CachedAsyncImage
+import NavigatorUI
 import OversizeComponents
 import OversizeCore
 import OversizeLocalizable
@@ -16,6 +16,8 @@ import SwiftUI
 
 public struct StoreSpecialOfferView: View {
     @Environment(\.screenSize) private var screenSize
+    @Environment(\.safeAreaInsets) private var safeAreaInsets
+    @Environment(\.navigator) private var navigator: Navigator
     @Environment(\.dismiss) private var dismiss
     @Environment(\.platform) private var platform
     @Environment(\.isPremium) private var isPremium
@@ -28,6 +30,9 @@ public struct StoreSpecialOfferView: View {
 
     @State var trialDaysPeriodText: String = ""
     @State var salePercent: Decimal = 0
+    private var safeAreaHeight: CGFloat {
+        screenSize.height - safeAreaInsets.top - safeAreaInsets.bottom
+    }
 
     public init(event: Components.Schemas.InAppPurchaseOffer) {
         self.event = event
@@ -36,17 +41,39 @@ public struct StoreSpecialOfferView: View {
 
     public var body: some View {
         #if os(iOS) || os(macOS)
-        Group {
-            if #available(iOS 16.0, macOS 13.0, *) {
-                newPage
-            } else {
-                oldPage
+        LayoutView(badgeText, onScroll: handleOffset) {
+            content
+        } background: {
+            LinearGradient(
+                colors: [
+                    .backgroundPrimary,
+                    .backgroundSecondary,
+                ],
+                startPoint: .top,
+                endPoint: .center
+            )
+        }
+        .toolbarTitleDisplayMode(.inline)
+        .safeAreaBarBottom {
+            VStack(spacing: .small) {
+                productsLust
+                    .padding(.horizontal, .medium)
+                #if os(macOS)
+                    .padding(.bottom, .medium)
+                #endif
+
+                #if os(iOS)
+                StorePaymentButtonBar(showDescription: false)
+                    .environmentObject(viewModel)
+                    .padding(.horizontal, .small)
+
+                #endif
             }
         }
-
+        .toolbar(content: { toolbarContent })
         .onChange(of: isPremium) { _, status in
             if status {
-                dismiss()
+                closeScreen()
             }
         }
         .task {
@@ -57,71 +84,67 @@ public struct StoreSpecialOfferView: View {
         #endif
     }
 
-    @available(iOS 16.0, macOS 13.0, *)
-    var newPage: some View {
-        NavigationStack {
-            Page(badgeText, onScroll: handleOffset) {
-                Group {
-                    switch viewModel.state {
-                    case .idle:
-                        VStack {
-                            Spacer()
-                            HStack {
-                                Spacer()
-                                ProgressView()
-                                Spacer()
-                            }
-                            Spacer()
-                        }
-                    case .loading:
-                        ProgressView()
-                    case let .result(data):
-                        content(data: data)
-                            .background {
-                                effectsView
-                            }
-                    case let .error(error):
-                        ErrorView(error)
-                    }
+    @ViewBuilder
+    var content: some View {
+        switch viewModel.state {
+        case .idle:
+            VStack {
+                Spacer()
+                HStack {
+                    Spacer()
+                    ProgressView()
+                    Spacer()
                 }
+                Spacer()
             }
-            .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
-            .bottomToolbar(style: .gradient) {
-                VStack(spacing: .small) {
-                    productsLust
-                        .padding(.horizontal, .medium)
-                    #if os(macOS)
-                        .padding(.bottom, .medium)
-                    #endif
-
-                    #if os(iOS)
-                    StorePaymentButtonBar(showDescription: false)
-                        .environmentObject(viewModel)
-                        .padding(.horizontal, .small)
-
-                    #endif
+        case .loading:
+            ProgressView()
+        case let .result(data):
+            content(data: data)
+                .background {
+                    effectsView
                 }
-            }
-            .toolbar(content: toolbarContent)
+        case let .error(error):
+            ErrorView(error: error)
         }
     }
 
-    @ToolbarContentBuilder private func toolbarContent() -> some ToolbarContent {
-        #if !os(macOS)
+    @ToolbarContentBuilder
+    private var toolbarContent: some ToolbarContent {
+        #if !os(macOS) && !os(watchOS)
         ToolbarItemGroup(placement: .cancellationAction) {
             Button {
                 lastClosedSpecialOffer = event.id
-                dismiss()
+                closeScreen()
             } label: {
                 Image.Base.close.icon()
             }
         }
 
+        if #available(iOS 26.0, *) {
+            ToolbarItem(placement: .principal) {
+                PremiumLabel(
+                    image: Resource.Store.zap,
+                    text: viewModel.productsState.result?.banner.badge ?? "",
+                    size: .medium
+                )
+            }
+        }
+
+        #elseif os(watchOS)
+        ToolbarItem(placement: .cancellationAction) {
+            Button {
+                lastClosedSpecialOffer = event.id
+                closeScreen()
+            } label: {
+                Image.Base.close.icon()
+            }
+        }
         #else
         ToolbarItem(placement: .cancellationAction) {
             Button("Close") {
                 lastClosedSpecialOffer = event.id
-                dismiss()
+                closeScreen()
             }
             .keyboardShortcut(.cancelAction)
             .controlSize(.large)
@@ -133,7 +156,6 @@ public struct StoreSpecialOfferView: View {
                 .controlSize(.large)
                 .environmentObject(viewModel)
         }
-
         #endif
     }
 
@@ -147,53 +169,15 @@ public struct StoreSpecialOfferView: View {
         }
     }
 
-    var oldPage: some View {
-        PageView { offset = $0 } content: {
-            Group {
-                switch viewModel.state {
-                case .idle:
-                    VStack {
-                        Spacer()
-                        HStack {
-                            Spacer()
-                            ProgressView()
-                            Spacer()
-                        }
-                        Spacer()
-                    }
-                case .loading:
-                    ProgressView()
-                case let .result(data):
-                    content(data: data)
-                case let .error(error):
-                    ErrorView(error)
-                }
-            }
-            .paddingContent(.horizontal)
-        }
-        .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
-//        .titleLabel {
-//            PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: .medium)
-//        }
-        .trailingBar {
-            BarButton(.closeAction {
-                lastClosedSpecialOffer = event.id
-                dismiss()
-            })
-        }
-        .bottomToolbar(style: .none) {
-            VStack(spacing: .zero) {
-                productsLust
-                StorePaymentButtonBar()
-                    .environmentObject(viewModel)
-                    .padding(.horizontal, 8)
-            }
-        }
-    }
-
     func handleOffset(_ scrollOffset: CGPoint, visibleHeaderRatio _: CGFloat) {
         offset = -scrollOffset.y
         // visibleRatio = visibleHeaderRatio
+    }
+
+    private func closeScreen() {
+        if !navigator.dismiss() {
+            dismiss()
+        }
     }
 
     var imageSize: CGFloat {
@@ -210,12 +194,10 @@ public struct StoreSpecialOfferView: View {
         #endif
     }
 
-    @ViewBuilder
     private func content(data: StoreKitProducts) -> some View {
         ScrollViewReader { value in
             VStack(spacing: .medium) {
                 VStack(spacing: .zero) {
-                    // PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: platform == .macOS ? .small : .medium)
                     Text("")
                     #if os(macOS)
                         .padding(.vertical, .medium)
@@ -227,7 +209,7 @@ public struct StoreSpecialOfferView: View {
                         Spacer()
                     }
 
-                    if let imageURLString = event.imageURL, let imageURL = URL(string: imageURLString) {
+                    if let imageURLString = event.imageUrl, let imageURL = URL(string: imageURLString) {
                         CachedAsyncImage(url: imageURL, urlCache: .imageCache) { image in
                             image
                                 .resizable()
@@ -258,21 +240,21 @@ public struct StoreSpecialOfferView: View {
                     Spacer()
                 }
                 #if os(iOS)
-                .frame(height: screenSize.safeAreaHeight - 235)
+                .frame(height: safeAreaHeight - 235)
                 #endif
                 .overlay {
                     ScrollArrow(width: 30, offset: -5 + (offset * 0.05))
                         .stroke(style: StrokeStyle(lineWidth: 5, lineCap: .round))
                         .foregroundColor(.onSurfacePrimary.opacity(0.3))
                         .frame(width: 30)
-                        .offset(y: screenSize.safeAreaHeight - (platform == .macOS ? 200 : 280))
-                        .opacity(1 - (offset * 0.01))
+                        .offset(y: safeAreaHeight - (platform == .macOS ? 200 : 280))
+                    // .opacity(1 - (offset * 0.01))
                 }
 
                 VStack(spacing: .zero) {
                     Text("Additional features in\nthe subscription")
                         .title()
-                        .onBackgroundPrimaryForeground()
+                        .onBackgroundPrimary()
                         .multilineTextAlignment(.center)
                         .fixedSize()
                         .padding(.top, .large)
@@ -281,7 +263,6 @@ public struct StoreSpecialOfferView: View {
                 }
                 .paddingContent()
                 .environmentObject(viewModel)
-                .opacity(0 + (offset * 0.01))
                 .id(10)
 
                 SubscriptionPrivacyView(
@@ -291,7 +272,6 @@ public struct StoreSpecialOfferView: View {
                 .padding(.horizontal, .medium)
                 .padding(.bottom, .large)
             }
-            .padding(.bottom, 180)
             .task {
                 await viewModel.updateSubscriptionStatus(products: data)
             }
@@ -307,7 +287,7 @@ public struct StoreSpecialOfferView: View {
         VStack(spacing: .zero) {
             Text(badgeText.uppercased())
                 .footnote(.semibold)
-                .onBackgroundSecondaryForeground()
+                .onBackgroundSecondary()
                 .padding(.bottom, .xxxSmall)
 
             Text(headline)
@@ -391,7 +371,7 @@ public struct StoreSpecialOfferView: View {
         text
             .replacingOccurrences(of: "<salePercent>", with: salePercent.toString)
             .replacingOccurrences(of: "<freeDays>", with: trialDaysPeriodText)
-        // .replacingOccurrences(of: "<subscriptionName>", with: Info.store.subscriptionsName)
+            .replacingOccurrences(of: "<subscriptionName>", with: viewModel.productsState.result?.banner.badge ?? "")
     }
 
     @ViewBuilder

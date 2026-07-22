@@ -1,0 +1,99 @@
+//
+// Copyright © 2023 Alexander Romanov
+// PhotoOptionsView.swift, created on 08.05.2023
+//
+
+import OversizeUI
+import SwiftUI
+
+private struct SharePhoto: Transferable {
+    @available(iOS 16.0, *)
+    fileprivate static var transferRepresentation: some TransferRepresentation {
+        ProxyRepresentation(exporting: \.image)
+    }
+
+    fileprivate var image: Image
+}
+
+public struct PhotoOptionsView<A: View>: View {
+    @Environment(\.dismiss) private var dismiss: DismissAction
+    private let image: Image
+
+    private let photo: SharePhoto
+
+    private let date: Date?
+    private let actions: Group<A>?
+    private let deleteAction: (() -> Void)?
+
+    @State private var isShowAlert = false
+
+    public init(
+        image: Image,
+        date: Date?,
+        @ViewBuilder actions: @escaping () -> A,
+        deleteAction: (() -> Void)? = nil
+    ) {
+        self.image = image
+        self.date = date
+        photo = SharePhoto(image: image)
+        self.actions = Group { actions() }
+        self.deleteAction = deleteAction
+    }
+
+    public var body: some View {
+        ListLayoutView(
+            "Photo",
+            content: { content }
+        )
+        .listLayoutStyle(.insetGrouped)
+        .toolbarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Close", systemImage: "xmark", role: .cancel) {
+                    dismiss()
+                }
+                .labelStyle(.toolbar)
+                .buttonStyle(.toolbarSecondary)
+                #if !os(tvOS) && !os(watchOS)
+                    .keyboardShortcut(.cancelAction)
+                #endif
+            }
+        }
+        .alert("Are you sure you want to delete?", isPresented: $isShowAlert) {
+            Button("Delete", role: .destructive) {
+                deleteAction?()
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var content: some View {
+        ListSection {
+            #if !os(tvOS)
+            if #available(iOS 16.0, *) {
+                ShareLink(
+                    item: photo,
+                    preview: SharePreview(
+                        "Photo",
+                        image: photo.image
+                    )
+                ) {
+                    ListRow("Share", leading: {
+                        Icon(Image.Base.upload)
+                    })
+                }
+            }
+            #endif
+            actions
+        }
+
+        if deleteAction != nil {
+            ListSection {
+                ListButton("Delete", role: .destructive) {
+                    isShowAlert.toggle()
+                }
+                .multilineTextAlignment(.center)
+            }
+        }
+    }
+}

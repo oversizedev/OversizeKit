@@ -33,69 +33,88 @@ public struct RepeatPicker: View {
 
     public var body: some View {
         ScrollViewReader { scrollView in
-            PageView("Repeat") {
-                SectionView {
-                    VStack(spacing: .zero) {
-                        ForEach(CalendarEventRecurrenceRules.allCases) { rule in
-                            Radio(isOn: self.rule.id == rule.id) {
-                                withAnimation {
-                                    self.rule = rule
-                                }
-                            } label: {
-                                Row(rule.title)
-                            }
-                        }
-                    }
-                }
-
-                if rule != .never {
-                    SectionView("End Repeat") {
+            LayoutView("Repeat") {
+                LeadingVStack {
+                    SectionView {
                         VStack(spacing: .zero) {
-                            ForEach(CalendarEventEndRecurrenceRules.allCases) { rule in
-                                VStack(spacing: .xxSmall) {
-                                    Radio(isOn: endRule.id == rule.id) {
-                                        endRule = rule
-                                        if case .occurrenceCount = endRule {
-                                            isFocusedRepitCount = true
-                                            scrollView.scrollTo(rule.id)
-                                        }
-
-                                        if case .endDate = endRule {
-                                            isFocusedRepitCount = true
-                                            scrollView.scrollTo(rule.id)
-                                        }
-                                    } label: {
-                                        Row(rule.title)
-                                    }
-
-                                    if endRule.id == rule.id {
-                                        repartPicker(rules: rule)
-                                            .padding(.horizontal, .medium)
-                                            .padding(.bottom, .small)
-                                    }
+                            ForEach(CalendarEventRecurrenceRules.allCases) { rule in
+                                Radio(isOn: self.rule.id == rule.id) {
+                                    // withAnimation {
+                                    self.rule = rule
+                                    // }
+                                } label: {
+                                    Row(rule.title)
                                 }
                             }
                         }
                     }
-                    .transition(.move(edge: .top))
+
+                    if rule != .never {
+                        SectionView("End Repeat") {
+                            VStack(spacing: .zero) {
+                                ForEach(CalendarEventEndRecurrenceRules.allCases) { rule in
+                                    VStack(spacing: .xxSmall) {
+                                        Radio(isOn: endRule.id == rule.id) {
+                                            endRule = rule
+                                            if case .occurrenceCount = endRule {
+                                                isFocusedRepitCount = true
+                                                scrollView.scrollTo(rule.id)
+                                            }
+
+                                            if case .endDate = endRule {
+                                                isFocusedRepitCount = true
+                                                scrollView.scrollTo(rule.id)
+                                            }
+                                        } label: {
+                                            Row(rule.title)
+                                        }
+
+                                        if endRule.id == rule.id {
+                                            repartPicker(rules: rule)
+                                                .padding(.horizontal, .medium)
+                                                .padding(.bottom, .small)
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        .transition(.move(edge: .top))
+                    }
+                }
+            } background: {
+                Color.backgroundSecondary
+            }
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Close", systemImage: "xmark", role: .cancel) {
+                        dismiss()
+                    }
+                    .labelStyle(.toolbar)
+                    .buttonStyle(.toolbarSecondary)
+                    #if !os(tvOS) && !os(watchOS)
+                        .keyboardShortcut(.cancelAction)
+                    #endif
+                }
+                ToolbarItem(placement: .primaryAction) {
+                    Button("Done", systemImage: "checkmark") {
+                        selectionRule = rule
+                        selectionEndRule = endRule
+                        dismiss()
+                    }
+                    .labelStyle(.toolbar)
+                    .buttonStyle(.toolbarPrimary)
+                    .disabled(rule == .never)
+                    #if !os(tvOS) && !os(watchOS)
+                        .keyboardShortcut(.defaultAction)
+                    #endif
                 }
             }
-            .backgroundSecondary()
-            .leadingBar {
-                BarButton(.close)
-            }
-            .trailingBar {
-                BarButton(.accent("Done", action: {
-                    selectionRule = rule
-                    selectionEndRule = endRule
-                    dismiss()
-                }))
-                .disabled(rule == .never)
-            }
+            .toolbarTitleDisplayMode(.inline)
             .surfaceContentRowMargins()
         }
         .presentationDetents(rule == .never ? [.height(630), .large] : [.large])
         .presentationDragIndicator(.hidden)
+        .animation(.default, value: rule)
     }
 
     @ViewBuilder

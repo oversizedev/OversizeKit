@@ -3,10 +3,8 @@
 // StoreFeatureDetailView.swift
 //
 
-import CachedAsyncImage
 import OversizeComponents
 import OversizeCore
-import OversizeModels
 import OversizeNetwork
 import OversizeServices
 import OversizeUI
@@ -15,7 +13,6 @@ import SwiftUI
 public struct StoreFeatureDetailView: View {
     @EnvironmentObject var viewModel: StoreViewModel
     @State var selection: Components.Schemas.Feature
-    @Environment(\.screenSize) var screenSize
     @Environment(\.dismiss) var dismiss
     @Environment(\.isPremium) var isPremium
 
@@ -29,34 +26,25 @@ public struct StoreFeatureDetailView: View {
             VStack(spacing: .zero) {
                 #if os(macOS)
                 feature(geometry: geometry)
-
                 #else
                 if let features = viewModel.featuresState.result {
                     tabsFeatures(features, geometry: geometry)
                 }
                 #endif
-
+            }
+            .ignoresSafeArea(edges: .top)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button(action: { dismiss() }) {
+                        Image.Base.close.icon(selection.screenshots.first == nil ? .onSurfacePrimary : .onPrimary)
+                    }
+                }
+            }
+            .safeAreaBarBottom {
                 if !isPremium {
                     StorePaymentButtonBar()
                         .environmentObject(viewModel)
                 }
-            }
-            .overlay(alignment: .topTrailing) {
-                Button {
-                    dismiss()
-                } label: {
-                    IconDeprecated(
-                        .xMini,
-                        color: selection.screenshots.first?.url != nil ? .onPrimary : .onSurfaceTertiary
-                    )
-                    .padding(.xxSmall)
-                    .background {
-                        Circle()
-                            .fill(.ultraThinMaterial)
-                    }
-                    .padding(.small)
-                }
-                .buttonStyle(.plain)
             }
             #endif
         }
@@ -72,7 +60,6 @@ public struct StoreFeatureDetailView: View {
         TabView(selection: $selection) {
             ForEach(features, id: \.id) { feature in
                 fetureItem(feature, geometry: geometry)
-                    .padding(.bottom, isPremium ? .large : .zero)
                     .tag(feature)
             }
         }
@@ -82,13 +69,12 @@ public struct StoreFeatureDetailView: View {
         #endif
     }
 
+    @ViewBuilder
     func fetureItem(_ feature: Components.Schemas.Feature, geometry: GeometryProxy) -> some View {
-        Group {
-            if let _ = feature.screenshots.first {
-                screenFetureItem(feature, geometry: geometry)
-            } else {
-                iconFetureItem(feature, geometry: geometry)
-            }
+        if let _ = feature.screenshots.first {
+            screenFetureItem(feature, geometry: geometry)
+        } else {
+            iconFetureItem(feature, geometry: geometry)
         }
     }
 
@@ -120,6 +106,7 @@ public struct StoreFeatureDetailView: View {
                                 )
                         }
                     }
+                    .animation(.interactiveSpring, value: geometry.size.height)
                 }
                 .clipped()
                 .overlay(alignment: .bottom) {
@@ -131,29 +118,25 @@ public struct StoreFeatureDetailView: View {
 
             TextBox(title: feature.title, subtitle: feature.subtitle, spacing: .xxSmall)
                 .multilineTextAlignment(.center)
-                .paddingContent(.horizontal)
-                .fixedSize(horizontal: false, vertical: true)
-                .padding(.vertical, (geometry.size.height * 0.1) - 20)
+                .paddingContent()
         }
     }
 
     func iconFetureItem(_ feature: Components.Schemas.Feature, geometry: GeometryProxy) -> some View {
         VStack(spacing: .xxxSmall) {
-            if let IllustrationURLPath = feature.iconUrl {
+            if let IllustrationURLPath = feature.illustrationUrl {
                 CachedAsyncImage(url: URL(string: IllustrationURLPath), urlCache: .imageCache) { image in
                     image
                         .resizable()
                         .scaledToFill()
                         .frame(width: 75 + (geometry.size.height * 0.02), height: 75 + (geometry.size.height * 0.02))
-
                 } placeholder: {
                     Circle()
                         .fillSurfaceSecondary()
                         .frame(width: 100, height: 100)
                 }
                 .padding(.bottom, geometry.size.height * 0.07)
-
-            } else if let illustrationUrlString = feature.illustrationUrl, let illustrationUrl = URL(string: illustrationUrlString) {
+            } else if let iconUrlString = feature.iconUrl, let illustrationUrl = URL(string: iconUrlString) {
                 CachedAsyncImage(url: illustrationUrl, urlCache: .imageCache) { image in
                     image
                         .resizable()
@@ -166,14 +149,12 @@ public struct StoreFeatureDetailView: View {
                                 .fill(backgroundColor(feature: feature).opacity(0.2))
                         }
                         .padding(.bottom, geometry.size.height * 0.07)
-
                 } placeholder: {
                     Circle()
                         .fillSurfaceSecondary()
                         .frame(width: 100, height: 100)
                 }
                 .padding(.bottom, geometry.size.height * 0.07)
-
             } else {
                 Image.Base.Check.square
                     .resizable()

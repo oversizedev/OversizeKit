@@ -3,9 +3,7 @@
 // StoreFeaturesView.swift
 //
 
-import CachedAsyncImage
 import OversizeCore
-import OversizeModels
 import OversizeNetwork
 import OversizeServices
 import OversizeUI
@@ -21,7 +19,7 @@ struct StoreFeaturesView: View {
             VStack {
                 switch viewModel.featuresState {
                 case .idle, .loading:
-                    ProgressView()
+                    placeholder
                 case let .result(features):
                     ForEach(features) { feature in
                         Row(feature.title, subtitle: feature.subtitle) {
@@ -29,30 +27,47 @@ struct StoreFeaturesView: View {
                         } leading: {
                             Group {
                                 if let iconUrlString = feature.iconUrl, let iconUrl = URL(string: iconUrlString) {
-                                    CachedAsyncImage(url: iconUrl, urlCache: .imageCache) {
-                                        $0
-                                            .resizable()
-                                            .frame(width: 24, height: 24)
-
-                                    } placeholder: {
-                                        Circle()
-                                            .fillOnPrimaryTertiary()
-                                            .frame(width: 24, height: 24)
+                                    CachedAsyncImage(url: iconUrl) { phase in
+                                        switch phase {
+                                        case .empty:
+                                            Circle()
+                                                .fillOnPrimaryTertiary()
+                                                .frame(width: 24, height: 24)
+                                        case let .success(image):
+                                            image
+                                                .resizable()
+                                                .renderingMode(.template)
+                                                .foregroundColor(Color.onPrimary)
+                                                .frame(width: 24, height: 24)
+                                        case .failure:
+                                            Image.Base.check
+                                                .resizable()
+                                                .renderingMode(.template)
+                                                .foregroundColor(Color.onPrimary)
+                                                .frame(width: 24, height: 24)
+                                        @unknown default:
+                                            Image.Base.Check.square
+                                                .resizable()
+                                                .renderingMode(.template)
+                                                .foregroundColor(Color.accent)
+                                                .frame(width: 24, height: 24)
+                                        }
                                     }
 
                                 } else {
                                     Image.Base.Check.square
                                         .renderingMode(.template)
+                                        .frame(width: 24, height: 24)
                                 }
                             }
-                            .onPrimaryForeground()
+                            .onPrimary()
                             .iconOnSurface(surfaceSolor: backgroundColor(feature: feature))
                         }
-                        .rowArrow()
                         .rowIconBackgroundColor(backgroundColor(feature: feature))
+                        .navigatable()
                     }
                 case let .error(appError):
-                    ErrorView(appError)
+                    OversizeUI.ErrorView(error: appError)
                 }
             }
         }
@@ -66,16 +81,34 @@ struct StoreFeaturesView: View {
             VStack {
                 StoreFeatureDetailView(selection: feature)
                     .environmentObject(viewModel)
-                    .systemServices()
+                    .coreServices()
                     .frame(width: 440, height: 500)
             }
             .frame(width: 440, height: 500, alignment: .center)
             #else
-            StoreFeatureDetailView(selection: feature)
-                .environmentObject(viewModel)
-                .presentationDetents([.medium, .large])
-                .systemServices()
+            NavigationStack {
+                StoreFeatureDetailView(selection: feature)
+                    .environmentObject(viewModel)
+                    .presentationDetents([.medium, .large])
+                    .presentationContentInteraction(.scrolls)
+                    .coreServices()
+            }
             #endif
+        }
+    }
+
+    private var placeholder: some View {
+        VStack(spacing: .zero) {
+            ForEach(0 ..< 3, id: \.self) { _ in
+                Row("Feature", subtitle: "Description") {} leading: {
+                    Circle()
+                        .fillSurfaceSecondary()
+                        .frame(width: 24, height: 24)
+                }
+                .navigatable()
+                .redacted(reason: .placeholder)
+                .disabled(true)
+            }
         }
     }
 

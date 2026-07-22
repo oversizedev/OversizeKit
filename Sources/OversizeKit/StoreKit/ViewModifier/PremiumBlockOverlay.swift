@@ -80,8 +80,10 @@ public struct PremiumBlockOverlay: ViewModifier {
                 .paddingContent()
             }
             .sheet(isPresented: $isShowPremium) {
-                StoreView()
-                    .colorScheme(colorScheme)
+                NavigationStack {
+                    StoreView()
+                }
+                .colorScheme(colorScheme)
             }
         } else {
             content

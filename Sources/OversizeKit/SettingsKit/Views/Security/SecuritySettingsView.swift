@@ -4,9 +4,9 @@
 //
 
 import FactoryKit
+import NavigatorUI
 import OversizeLocalizable
 import OversizeNavigation
-import OversizeRouter
 import OversizeServices
 import OversizeUI
 import SwiftUI
@@ -51,20 +51,19 @@ extension SecuritySettingsView {
                             settingsService.biometricEnabled
                         }, set: {
                             biometricChange(state: $0)
-                        })
-                    ) {
-                        Row(biometricService.biometricType.rawValue) {
-                            Image(systemName: biometricImageName)
-                                .foregroundColor(Color.onBackgroundPrimary)
-                            #if os(macOS)
-                                .font(.system(size: 16, weight: .semibold))
-                                .frame(width: 24, height: 24, alignment: .center)
-                            #else
-                                .font(.system(size: 20, weight: .semibold))
-                                .frame(width: 24, height: 24, alignment: .center)
-                            #endif
+                        })) {
+                            Row(biometricService.biometricType.rawValue) {
+                                Image(systemName: biometricImageName)
+                                    .foregroundColor(Color.onBackgroundPrimary)
+                                #if os(macOS)
+                                    .font(.system(size: 16, weight: .semibold))
+                                    .frame(width: 24, height: 24, alignment: .center)
+                                #else
+                                    .font(.system(size: 20, weight: .semibold))
+                                    .frame(width: 24, height: 24, alignment: .center)
+                                #endif
+                            }
                         }
-                    }
                 }
 
                 if FeatureFlags.secure.lookscreen.valueOrFalse {
@@ -77,18 +76,17 @@ extension SecuritySettingsView {
                             } else {
                                 navigator.navigate(to: SettingsDestinations.setPINCode)
                             }
-                        })
-                    ) {
-                        Row(L10n.Security.pinCode) {
-                            Image.Security.lock.icon()
+                        })) {
+                            Row(L10n.Security.pinCode) {
+                                Image.Security.lock.icon()
+                            }
                         }
-                    }
 
                     if settingsService.isSetPinCode() {
                         Row(L10n.Security.changePINCode) {
                             navigator.navigate(to: SettingsDestinations.updatePINCode)
                         }
-                        .rowArrow()
+                        .navigatable()
                     }
                 }
             }
@@ -163,7 +161,7 @@ extension SecuritySettingsView {
                         .labelsHidden()
                         .clipped()
                     })
-                    .rowArrow()
+                    .navigatable()
                 }
 
 //                    if FeatureFlags.secure.lockscreen.valueOrFalse {

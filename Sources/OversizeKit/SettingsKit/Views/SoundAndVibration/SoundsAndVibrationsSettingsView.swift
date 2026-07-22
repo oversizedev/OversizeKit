@@ -53,7 +53,7 @@ extension SoundsAndVibrationsSettingsView {
                 if FeatureFlags.app.sounds.valueOrFalse {
                     Switch(isOn: $settingsService.soundsEnabled) {
                         Row(L10n.Settings.sounds) {
-                            IconDeprecated(.music)
+                            Icon(Image.Base.volumeUp)
                         }
                     }
                 }

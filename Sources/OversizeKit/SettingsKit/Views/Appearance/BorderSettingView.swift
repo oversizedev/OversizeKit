@@ -38,10 +38,10 @@ public struct BorderSettingView: View {
                         .padding(.vertical, .small)
 
                     if theme.borderApp {
-                        VStack(spacing: Space.small.rawValue) {
+                        VStack(spacing: .small) {
                             #if os(iOS) || os(macOS)
                             Surface {
-                                VStack(spacing: Space.xxSmall.rawValue) {
+                                VStack(spacing: .xxSmall) {
                                     HStack {
                                         Text("Size")
                                             .subheadline()
@@ -60,14 +60,14 @@ public struct BorderSettingView: View {
                             .surfaceStyle(.secondary)
                             .surfaceContentMargins(.small)
                             .padding(.horizontal, Space.medium)
-                            .padding(.bottom, Space.xxSmall)
+                            .padding(.bottom, .xxSmall)
 
                             #endif
 
                             Rectangle()
                                 .frame(height: 1)
                                 .foregroundColor(Color.border)
-                                .padding(.horizontal, theme.borderSurface ? 0 : Space.medium.rawValue)
+                                .padding(.horizontal, theme.borderSurface ? 0 : .medium)
 
                             VStack(spacing: .zero) {
                                 Switch("Surface", isOn: theme.$borderSurface)

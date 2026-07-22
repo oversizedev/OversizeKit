@@ -18,7 +18,7 @@ extension SettingsDestinations: NavigationDestination {
         case .appearance:
             AppearanceSettingView()
         case .sync:
-            iCloudSettingsView()
+            SyncSettingsView()
         case let .premiumFeature(feature: feature):
             StoreFeatureDetailView(selection: feature)
         case .about:
@@ -48,7 +48,11 @@ extension SettingsDestinations: NavigationDestination {
         case let .offer(event: event):
             StoreSpecialOfferView(event: event)
         case let .webView(url: url):
+            #if canImport(WebKit)
             WebView(url: url)
+            #else
+            EmptyView()
+            #endif
         case let .sendMail(to: to, subject: subject, content: content):
             #if os(iOS)
             MailView(
@@ -63,6 +67,12 @@ extension SettingsDestinations: NavigationDestination {
             DebugMenuView()
         case .debugInfo:
             DebugInfoView()
+        case let .premiumInstructions(specialOfferMode):
+            StoreInstructionsView(specialOfferMode: specialOfferMode)
+        case .appUpdates:
+            AppUpdates.buildCached()
+        case let .appUpdate(version):
+            AppUpdate.build(input: .init(version: version))
         }
     }
 

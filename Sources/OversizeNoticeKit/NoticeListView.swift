@@ -3,6 +3,7 @@
 // NoticeListView.swift
 //
 
+import FactoryKit
 import OversizeKit
 import OversizeNetwork
 import OversizeServices
@@ -13,32 +14,38 @@ import SwiftUI
 public struct NoticeListView: View {
     @Environment(\.isPremium) var isPremium: Bool
     @StateObject private var viewModel = NoticeListViewModel()
-
-    @State private var isBannerClosed = false
-    @State private var isShowOfferSheet: Bool = false
+    @State private var sheet: Sheet?
 
     public init() {}
 
     public var body: some View {
-        switch viewModel.state {
-        case let .result(offer: offer, isShowRate: isShowRate) where (offer != nil || isShowRate) && !isBannerClosed && !isPremium:
-            VStack(spacing: .small) {
-                if isShowRate {
+        Group {
+            if viewModel.isBannerClosed == false {
+                switch viewModel.noticeType {
+                case let .offer(inAppPurchaseOffer):
+                    if !isPremium {
+                        offerView(offer: inAppPurchaseOffer)
+                    }
+                case .rate:
                     rateNoticeView
-                }
-                if let offer {
-                    offerView(offer: offer)
+                case .firstDay:
+                    if !isPremium {
+                        firstDayOfferView
+                    }
+                case .none:
+                    EmptyView()
                 }
             }
-        case .initial, .loading, .error, .result, .empty:
-            EmptyView()
+        }
+        .sheet(item: $sheet) { sheet in
+            sheetView(sheet)
         }
     }
 
     @ViewBuilder
     private var rateNoticeView: some View {
-        if let reviewUrl = Info.url.appStoreReview {
-            NoticeView("How do you like the \(Info.app.name ?? "app"))?") {
+        if let reviewUrl = Info.App.appStoreReviewUrl {
+            NoticeView("How do you like the \(Info.App.name ?? "app"))?") {
                 Link(destination: reviewUrl) {
                     Text("Good")
                 }
@@ -48,7 +55,7 @@ public struct NoticeListView: View {
                     Task {
                         await viewModel.reviewService.estimate(goodRating: true)
                         withAnimation {
-                            isBannerClosed = true
+                            viewModel.isBannerClosed = true
                         }
                     }
                 })
@@ -57,7 +64,7 @@ public struct NoticeListView: View {
                     Task {
                         await viewModel.reviewService.estimate(goodRating: false)
                         withAnimation {
-                            isBannerClosed = true
+                            viewModel.isBannerClosed = true
                         }
                     }
                 }
@@ -67,38 +74,79 @@ public struct NoticeListView: View {
                 Task {
                     await viewModel.reviewService.reviewBannerClosed()
                     withAnimation {
-                        isBannerClosed = true
+                        viewModel.isBannerClosed = true
                     }
                 }
             }
-            .animation(.default, value: isBannerClosed)
+            .animation(.default, value: viewModel.isBannerClosed)
+        }
+    }
+
+    private var firstDayOfferView: some View {
+        NoticeView(
+            "Get \(viewModel.salePercent)% Off",
+            subtitle: "On your first year of \(viewModel.subscriptionName)"
+        ) {
+            Button {
+                sheet = .premiumInstructions(specialOfferMode: true)
+            } label: {
+                Text("Claim Offer")
+            }
+            .accent()
+        } closeAction: {
+            withAnimation {
+                viewModel.isBannerClosed = true
+            }
+        }
+    }
+
+    private func offerView(offer: Components.Schemas.InAppPurchaseOffer) -> some View {
+        NoticeView(
+            viewModel.textPrepere(offer.title),
+            subtitle: viewModel.textPrepere(offer.description ?? ""),
+            imageURL: offer.imageUrl?.url
+        ) {
+            Button {
+                sheet = .offer(offer)
+            } label: {
+                Text("Accept Offer")
+            }
+            .accent()
+
+        } closeAction: {
+            viewModel.lastClosedSpecialOffer = offer.id
+            withAnimation {
+                viewModel.isBannerClosed = true
+            }
         }
     }
 
     @ViewBuilder
-    private func offerView(offer: Components.Schemas.InAppPurchaseOffer) -> some View {
-        if let imageUrl = offer.imageURL, let url = URL(string: imageUrl) {
-            NoticeView(
-                viewModel.textPrepere(offer.title),
-                subtitle: viewModel.textPrepere(offer.description ?? ""),
-                imageURL: url
-            ) {
-                Button {
-                    isShowOfferSheet.toggle()
-                } label: {
-                    Text("Accept Offer")
-                }
-                .accent()
-
-            } closeAction: {
-                viewModel.lastClosedSpecialOffer = offer.id
-                withAnimation {
-                    isBannerClosed = true
-                }
-            }
-            .sheet(isPresented: $isShowOfferSheet) {
+    private func sheetView(_ sheet: Sheet) -> some View {
+        switch sheet {
+        case let .offer(offer):
+            NavigationStack {
                 StoreSpecialOfferView(event: offer)
-                    .systemServices()
+                    .coreServices()
+            }
+        case let .premiumInstructions(specialOfferMode):
+            NavigationStack {
+                StoreInstructionsView(specialOfferMode: specialOfferMode)
+                    .coreServices()
+            }
+        }
+    }
+}
+
+extension NoticeListView {
+    enum Sheet: Identifiable {
+        case offer(Components.Schemas.InAppPurchaseOffer)
+        case premiumInstructions(specialOfferMode: Bool)
+
+        var id: Int {
+            switch self {
+            case let .offer(offer): offer.id
+            case .premiumInstructions: -1
             }
         }
     }

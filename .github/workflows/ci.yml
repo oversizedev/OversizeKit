@@ -60,11 +60,11 @@ jobs:
       package: OversizeOnboardingKit
     secrets: inherit
     
-  build-photo-kit:
-    name: Build PhotoKit
+  build-media-kit:
+    name: Build MediaKit
     uses: oversizedev/GithubWorkflows/.github/workflows/build-swiftpm-all-platforms.yml@main
     with:
-      package: OversizePhotoKit
+      package: OversizeMediaKit
     secrets: inherit
     
   build-example:
@@ -77,12 +77,12 @@ jobs:
       - build-notice-kit
       - build-notification-kit
       - build-onboarding-kit
-      - build-photo-kit
+      - build-media-kit
     uses: oversizedev/GithubWorkflows/.github/workflows/build-app.yml@main
     with:
       path: AppExample/Example
       scheme: Example
-      destination: platform=iOS Simulator,name=iPhone 16,OS=18.1
+      destination: generic/platform=iOS Simulator
     secrets: inherit
 
 #  tests:

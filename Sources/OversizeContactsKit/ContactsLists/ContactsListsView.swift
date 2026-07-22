@@ -6,9 +6,7 @@
 #if canImport(Contacts)
 import Contacts
 #endif
-import OversizeComponents
 import OversizeCore
-import OversizeKit
 import OversizeLocalizable
 import OversizeUI
 import SwiftUI
@@ -25,7 +23,7 @@ public struct ContactsListsView: View {
     }
 
     public var body: some View {
-        PageView("") {
+        LayoutView("Contacts") {
             Group {
                 switch viewModel.state {
                 case .initial:
@@ -35,19 +33,30 @@ public struct ContactsListsView: View {
                 case let .result(data):
                     content(data: data)
                 case let .error(error):
-                    ErrorView(error)
+                    OversizeUI.ErrorView(error: error)
                 }
             }
+        } background: {
+            Color.backgroundSecondary
         }
-        .leadingBar {
-            BarButton(.close)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Close", systemImage: "xmark", role: .cancel) {
+                    dismiss()
+                }
+                .labelStyle(.toolbar)
+                .buttonStyle(.toolbarSecondary)
+                #if !os(tvOS) && !os(watchOS)
+                    .keyboardShortcut(.cancelAction)
+                #endif
+            }
         }
+        .toolbarTitleDisplayMode(.inline)
         .task {
             await viewModel.fetchData()
         }
     }
 
-    @ViewBuilder
     private func content(data: [CNContact]) -> some View {
         ForEach(emails, id: \.self) { email in
             if let contact = viewModel.getContactFromEmail(email: email, contacts: data) {
@@ -85,7 +94,6 @@ public struct ContactsListsView: View {
         #endif
     }
 
-    @ViewBuilder
     private func placeholder() -> some View {
         ForEach(emails, id: \.self) { email in
             Row(email) {

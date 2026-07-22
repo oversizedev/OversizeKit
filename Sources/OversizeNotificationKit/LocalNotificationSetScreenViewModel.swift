@@ -5,7 +5,6 @@
 
 import FactoryKit
 import OversizeCore
-import OversizeModels
 import OversizeNotificationService
 import SwiftUI
 
@@ -15,7 +14,7 @@ class LocalNotificationSetScreenViewModel: ObservableObject {
     @Injected(\.localNotificationService) var localNotificationService: LocalNotificationServiceProtocol
     @Published var state = State.initial
 
-    public let id: UUID
+    let id: UUID
     private let date: Date
     private let title: String
     private let body: String
@@ -70,7 +69,7 @@ class LocalNotificationSetScreenViewModel: ObservableObject {
         case .success:
             state = .result
         case let .failure(error):
-            state = .error(error)
+            state = .error(error as? NotificationError ?? .unknown(error))
         }
     }
 }
@@ -79,7 +78,7 @@ extension LocalNotificationSetScreenViewModel {
     enum State {
         case initial
         case result
-        case error(AppError)
+        case error(NotificationError)
     }
 }
 #endif

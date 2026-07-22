@@ -1,26 +1,24 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 6.1
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import Foundation
 import PackageDescription
 
 let commonDependencies: [PackageDescription.Package.Dependency] = [
-    .package(url: "https://github.com/lorenzofiamingo/swiftui-cached-async-image.git", .upToNextMajor(from: "2.1.1")),
-    .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "2.1.3")),
-    .package(url: "https://github.com/hmlongco/Navigator.git", .upToNextMajor(from: "1.0.0")),
+    .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "3.0.2")),
+    .package(url: "https://github.com/hmlongco/Navigator.git", .upToNextMajor(from: "2.0.2")),
 ]
 
 let remoteDependencies: [PackageDescription.Package.Dependency] = commonDependencies + [
     .package(url: "https://github.com/oversizedev/OversizeUI.git", .upToNextMajor(from: "3.0.2")),
     .package(url: "https://github.com/oversizedev/OversizeCore.git", .upToNextMajor(from: "1.3.0")),
     .package(url: "https://github.com/oversizedev/OversizeServices.git", .upToNextMajor(from: "1.4.0")),
-    .package(url: "https://github.com/oversizedev/OversizeLocalizable.git", .upToNextMajor(from: "1.4.0")),
+    .package(url: "https://github.com/oversizedev/OversizeLocalizable.git", .upToNextMajor(from: "1.5.0")),
     .package(url: "https://github.com/oversizedev/OversizeComponents.git", .upToNextMajor(from: "2.0.0")),
     .package(url: "https://github.com/oversizedev/OversizeResources.git", .upToNextMajor(from: "2.0.0")),
     .package(url: "https://github.com/oversizedev/OversizeNetwork.git", .upToNextMajor(from: "1.0.0")),
-    .package(url: "https://github.com/oversizedev/OversizeModels.git", .upToNextMajor(from: "0.1.0")),
-    .package(url: "https://github.com/oversizedev/OversizeRouter.git", .upToNextMajor(from: "0.1.0")),
-    .package(url: "https://github.com/oversizedev/OversizeNavigation.git", .upToNextMajor(from: "0.1.0")),
+    .package(url: "https://github.com/oversizedev/OversizeNavigation.git", .upToNextMajor(from: "0.7.0")),
+    .package(url: "https://github.com/oversizedev/OversizeArchitecture.git", .upToNextMajor(from: "0.2.0")),
 ]
 
 let localDependencies: [PackageDescription.Package.Dependency] = commonDependencies + [
@@ -31,12 +29,12 @@ let localDependencies: [PackageDescription.Package.Dependency] = commonDependenc
     .package(name: "OversizeComponents", path: "../OversizeComponents"),
     .package(name: "OversizeResources", path: "../OversizeResources"),
     .package(name: "OversizeNetwork", path: "../OversizeNetwork"),
-    .package(name: "OversizeModels", path: "../OversizeModels"),
-    .package(name: "OversizeRouter", path: "../OversizeRouter"),
     .package(name: "OversizeNavigation", path: "../OversizeNavigation"),
+    .package(name: "OversizeArchitecture", path: "../OversizeArchitecture"),
 ]
 
-let dependencies: [PackageDescription.Package.Dependency] = remoteDependencies
+let isLocalDev = FileManager.default.fileExists(atPath: "\(NSHomeDirectory())/Developer/Packages/OversizeCore")
+let dependencies: [PackageDescription.Package.Dependency] = isLocalDev ? localDependencies : remoteDependencies
 
 let package = Package(
     name: "OversizeKit",
@@ -48,13 +46,15 @@ let package = Package(
     ],
     products: [
         .library(name: "OversizeKit", targets: ["OversizeKit"]),
+        .library(name: "OversizeEditorKit", targets: ["OversizeEditorKit"]),
         .library(name: "OversizeOnboardingKit", targets: ["OversizeOnboardingKit"]),
         .library(name: "OversizeNoticeKit", targets: ["OversizeNoticeKit"]),
         .library(name: "OversizeCalendarKit", targets: ["OversizeCalendarKit"]),
         .library(name: "OversizeContactsKit", targets: ["OversizeContactsKit"]),
         .library(name: "OversizeLocationKit", targets: ["OversizeLocationKit"]),
         .library(name: "OversizeNotificationKit", targets: ["OversizeNotificationKit"]),
-        .library(name: "OversizePhotoKit", targets: ["OversizePhotoKit"]),
+        .library(name: "OversizeMediaKit", targets: ["OversizeMediaKit"]),
+        .library(name: "OversizeCloudKit", targets: ["OversizeCloudKit"]),
     ],
     dependencies: dependencies,
     targets: [
@@ -64,18 +64,17 @@ let package = Package(
                 .product(name: "OversizeUI", package: "OversizeUI"),
                 .product(name: "OversizeServices", package: "OversizeServices"),
                 .product(name: "OversizeStoreService", package: "OversizeServices"),
+                .product(name: "OversizeWebService", package: "OversizeServices"),
+                .product(name: "OversizeNotificationService", package: "OversizeServices"),
                 .product(name: "OversizeCore", package: "OversizeCore"),
                 .product(name: "OversizeComponents", package: "OversizeComponents"),
                 .product(name: "OversizeLocalizable", package: "OversizeLocalizable"),
                 .product(name: "OversizeResources", package: "OversizeResources"),
-                .product(name: "OversizeNotificationService", package: "OversizeServices"),
-                .product(name: "OversizeModels", package: "OversizeModels"),
                 .product(name: "OversizeNetwork", package: "OversizeNetwork"),
-                .product(name: "OversizeRouter", package: "OversizeRouter"),
                 .product(name: "FactoryKit", package: "Factory"),
-                .product(name: "CachedAsyncImage", package: "swiftui-cached-async-image"),
                 .product(name: "NavigatorUI", package: "Navigator"),
                 .product(name: "OversizeNavigation", package: "OversizeNavigation"),
+                .product(name: "OversizeArchitecture", package: "OversizeArchitecture"),
             ]
         ),
         .target(
@@ -84,23 +83,24 @@ let package = Package(
                 "OversizeContactsKit",
                 "OversizeLocationKit",
                 .product(name: "OversizeUI", package: "OversizeUI"),
+                .product(name: "OversizeResources", package: "OversizeResources"),
                 .product(name: "OversizeServices", package: "OversizeServices"),
                 .product(name: "OversizeCalendarService", package: "OversizeServices"),
                 .product(name: "OversizeLocationService", package: "OversizeServices"),
                 .product(name: "FactoryKit", package: "Factory"),
-                .product(name: "OversizeModels", package: "OversizeModels"),
+                .product(name: "OversizeCore", package: "OversizeCore"),
             ]
         ),
         .target(
             name: "OversizeContactsKit",
             dependencies: [
-                "OversizeKit",
+                // "OversizeKit",
                 .product(name: "OversizeUI", package: "OversizeUI"),
                 .product(name: "OversizeServices", package: "OversizeServices"),
                 .product(name: "OversizeContactsService", package: "OversizeServices"),
                 .product(name: "OversizeCalendarService", package: "OversizeServices"),
                 .product(name: "FactoryKit", package: "Factory"),
-                .product(name: "OversizeModels", package: "OversizeModels"),
+                .product(name: "OversizeCore", package: "OversizeCore"),
             ]
         ),
         .target(
@@ -109,7 +109,7 @@ let package = Package(
                 .product(name: "OversizeUI", package: "OversizeUI"),
                 .product(name: "OversizeLocationService", package: "OversizeServices"),
                 .product(name: "FactoryKit", package: "Factory"),
-                .product(name: "OversizeModels", package: "OversizeModels"),
+                .product(name: "OversizeCore", package: "OversizeCore"),
             ]
         ),
         .target(
@@ -121,6 +121,7 @@ let package = Package(
                 .product(name: "OversizeServices", package: "OversizeServices"),
                 .product(name: "OversizeStoreService", package: "OversizeServices"),
                 .product(name: "FactoryKit", package: "Factory"),
+                .product(name: "NavigatorUI", package: "Navigator"),
             ]
         ),
         .target(
@@ -134,17 +135,39 @@ let package = Package(
             dependencies: [
                 "OversizeKit",
                 .product(name: "OversizeUI", package: "OversizeUI"),
-                .product(name: "OversizeModels", package: "OversizeModels"),
+                .product(name: "OversizeCore", package: "OversizeCore"),
                 .product(name: "OversizeNotificationService", package: "OversizeServices"),
                 .product(name: "FactoryKit", package: "Factory"),
             ]
         ),
         .target(
-            name: "OversizePhotoKit",
+            name: "OversizeMediaKit",
             dependencies: [
                 "OversizeKit",
                 .product(name: "OversizeUI", package: "OversizeUI"),
-                .product(name: "OversizePhotoComponents", package: "OversizeComponents"),
+                .product(name: "OversizeResources", package: "OversizeResources"),
+            ]
+        ),
+        .target(
+            name: "OversizeEditorKit",
+            dependencies: [
+                "OversizeKit",
+                "OversizeMediaKit",
+                .product(name: "OversizeUI", package: "OversizeUI"),
+                .product(name: "OversizeCore", package: "OversizeCore"),
+                .product(name: "OversizeResources", package: "OversizeResources"),
+                .product(name: "OversizeIntelligenceService", package: "OversizeServices"),
+                .product(name: "FactoryKit", package: "Factory"),
+            ]
+        ),
+        .target(
+            name: "OversizeCloudKit",
+            dependencies: [
+                .product(name: "OversizeUI", package: "OversizeUI"),
+                .product(name: "OversizeCloudService", package: "OversizeServices"),
+                .product(name: "OversizeCore", package: "OversizeCore"),
+                .product(name: "OversizeResources", package: "OversizeResources"),
+                .product(name: "FactoryKit", package: "Factory"),
             ]
         ),
         .testTarget(

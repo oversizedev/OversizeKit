@@ -3,8 +3,10 @@
 // StoreInstructionsView.swift
 //
 
+import FactoryKit
 import OversizeComponents
 import OversizeLocalizable
+import OversizeNavigation
 import OversizeResources
 import OversizeServices
 import OversizeStoreService
@@ -14,19 +16,24 @@ import SwiftUI
 public struct StoreInstructionsView: View {
     @StateObject var viewModel: StoreViewModel
     @Environment(\.screenSize) var screenSize
+    @Environment(\.safeAreaInsets) var safeAreaInsets
     @Environment(\.isPremium) var isPremium
     @Environment(\.dismiss) var dismiss
+
     @State var isShowAllPlans = false
     @State var offset: CGFloat = 0
+    private var safeAreaHeight: CGFloat {
+        screenSize.height - safeAreaInsets.top - safeAreaInsets.bottom
+    }
 
-    public init() {
-        _viewModel = StateObject(wrappedValue: StoreViewModel())
+    public init(specialOfferMode: Bool = false) {
+        _viewModel = StateObject(wrappedValue: StoreViewModel(specialOfferMode: specialOfferMode))
     }
 
     public var body: some View {
         ScrollViewReader { value in
             #if os(iOS) || os(macOS)
-            PageView { offset = $0 } content: {
+            NavigationLayoutView(onScroll: handleOffset) {
                 Group {
                     switch viewModel.state {
                     case .idle, .loading:
@@ -34,33 +41,40 @@ public struct StoreInstructionsView: View {
                     case let .result(data):
                         content(data: data)
                     case let .error(error):
-                        ErrorView(error)
+                        OversizeUI.ErrorView(error: error)
                     }
                 }
                 .paddingContent(.horizontal)
+            } background: {
+                LinearGradient(
+                    colors: [
+                        .backgroundPrimary,
+                        .backgroundSecondary,
+                    ],
+                    startPoint: .top,
+                    endPoint: .center
+                )
             }
-            .backgroundLinerGradient(LinearGradient(colors: [.backgroundPrimary, .backgroundSecondary], startPoint: .top, endPoint: .center))
-//            .titleLabel {
-//                PremiumLabel(image: Resource.Store.zap, text: Info.store.subscriptionsName, size: .medium)
-//            }
-            .trailingBar {
-                BarButton(.close)
-            }
-            .bottomToolbar(style: .none) {
+            .toolbar { toolbarContent }
+            .safeAreaBarBottom {
                 VStack(spacing: .zero) {
-                    StorePaymentButtonBar(trialNotification: true) {
-                        isShowAllPlans = true
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                            withAnimation {
-                                value.scrollTo(10, anchor: .top)
+                    StorePaymentButtonBar(
+                        trialNotification: true,
+                        showDescription: true,
+                        action: viewModel.specialOfferMode ? nil : {
+                            isShowAllPlans = true
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                withAnimation {
+                                    value.scrollTo(10, anchor: .top)
+                                }
                             }
                         }
-                    }
+                    )
                     .environmentObject(viewModel)
                 }
             }
-            .onChange(of: isPremium) { _, status in
-                if status {
+            .onChange(of: isPremium) { _, isPremium in
+                if isPremium {
                     dismiss()
                 }
             }
@@ -73,76 +87,70 @@ public struct StoreInstructionsView: View {
         }
     }
 
-    @ViewBuilder
-    private func contentPlaceholder() -> some View {
-        VStack(spacing: .medium) {
-            VStack {
-                VStack(spacing: .xSmall) {
-                    Text("How your free trial works")
-                        .largeTitle()
-                        .foregroundColor(.onSurfacePrimary)
-
-                    if viewModel.isHaveSale {
-                        Group {
-                            Text("Begin your path towards feeling better with a ")
-                                .foregroundColor(.onSurfaceSecondary)
-
-                                + Text("--% discount")
-                                .foregroundColor(.accent)
-                        }
-                        .body(.semibold)
-                    }
-                }
-                .multilineTextAlignment(.center)
-                .padding(.top, .small)
-
-                Spacer()
-
-                stepsView
-                    .padding(.bottom, .medium)
-
-                Spacer()
+    @ToolbarContentBuilder
+    private var toolbarContent: some ToolbarContent {
+        #if os(macOS)
+        ToolbarItem(placement: .cancellationAction) {
+            Button("Close") {
+                dismiss()
             }
-            .frame(height: screenSize.safeAreaHeight - 265)
-            .overlay {
-                ScrollArrow(width: 30, offset: -5 + (offset * 0.05))
-                    .stroke(style: StrokeStyle(lineWidth: 5, lineCap: .round))
-                    .foregroundColor(.onSurfacePrimary.opacity(0.3))
-                    .frame(width: 30)
-                    .offset(y: screenSize.safeAreaHeight - 300)
-                // .opacity(1 - (offset * 0.01))
-            }
-
-            StoreFeaturesLargeView()
-                .paddingContent(.horizontal)
-                .environmentObject(viewModel)
-            // .opacity(0 + (offset * 0.01))
+            .keyboardShortcut(.cancelAction)
+            .controlSize(.large)
         }
-        .padding(.bottom, 220)
+        #elseif !os(watchOS)
+        if #available(iOS 26.0, *) {
+            ToolbarItem(placement: .principal) {
+                PremiumLabel(
+                    image: Resource.Store.zap,
+                    text: viewModel.productsState.result?.banner.badge ?? "Pro",
+                    size: .medium
+                )
+                .redacted(reason: viewModel.productsState.result?.banner.badge == nil ? .placeholder : .init())
+            }
+        }
+        #else
+        ToolbarItem(placement: .cancellationAction) {
+            Button("Close") { dismiss() }
+        }
+        #endif
     }
 
-    @ViewBuilder
+    func handleOffset(_ scrollOffset: CGPoint, visibleHeaderRatio _: CGFloat) {
+        offset = -scrollOffset.y
+    }
+
+    private func contentPlaceholder() -> some View {
+        StoreInstructionsPlaceholderView(offset: offset)
+    }
+
     private func content(data: StoreKitProducts) -> some View {
         VStack(spacing: .medium) {
             VStack {
-                VStack(spacing: .xSmall) {
-                    Text("How your free trial works")
+                VStack(spacing: .zero) {
+                    Text(viewModel.specialOfferMode ? "Limited Time" : "Free Trial")
+                        .textCase(.uppercase)
+                        .footnote(.bold)
+                        .onBackgroundSecondary()
+                        .padding(.bottom, .xxSmall)
+
+                    Text("How your free trial works")
                         .largeTitle()
                         .foregroundColor(.onSurfacePrimary)
+                        .padding(.bottom, .xSmall)
 
                     if viewModel.isHaveSale {
                         Group {
-                            Text("Begin your path towards feeling better with a ")
+                            Text("Save ")
                                 .foregroundColor(.onSurfaceSecondary)
-
-                                + Text("\(viewModel.salePercent)% discount")
+                                + Text("\(viewModel.salePercent)%")
                                 .foregroundColor(.accent)
+                                + Text(" on subscription")
+                                .foregroundColor(.onSurfaceSecondary)
                         }
                         .body(.semibold)
                     }
                 }
                 .multilineTextAlignment(.center)
-                .padding(.top, .small)
 
                 Spacer()
 
@@ -151,20 +159,20 @@ public struct StoreInstructionsView: View {
 
                 Spacer()
             }
-            .frame(height: screenSize.safeAreaHeight - 265)
+            .frame(height: safeAreaHeight - 230)
             .overlay {
                 ScrollArrow(width: 30, offset: -5 + (offset * 0.05))
                     .stroke(style: StrokeStyle(lineWidth: 5, lineCap: .round))
                     .foregroundColor(.onSurfacePrimary.opacity(0.3))
                     .frame(width: 30)
-                    .offset(y: screenSize.safeAreaHeight - 300)
-                // .opacity(1 - (offset * 0.01))
+                    .offset(y: safeAreaHeight - 300)
+                    .opacity(1 - (offset * 0.01))
             }
 
             StoreFeaturesLargeView()
                 .paddingContent(.horizontal)
                 .environmentObject(viewModel)
-            // .opacity(0 + (offset * 0.01))
+                .opacity(0 + (offset * 0.01))
 
             if isShowAllPlans {
                 productsLust(data: data)
@@ -176,7 +184,7 @@ public struct StoreInstructionsView: View {
                 products: data
             )
         }
-        .padding(.bottom, 220)
+        .padding(.bottom, .medium)
         .onAppear {
             Task {
                 await viewModel.updateSubscriptionStatus(products: data)
@@ -189,7 +197,6 @@ public struct StoreInstructionsView: View {
         }
     }
 
-    @ViewBuilder
     var stepsView: some View {
         VStack(alignment: .leading, spacing: .xxxSmall) {
             HStack(alignment: .top, spacing: .small) {
@@ -204,7 +211,8 @@ public struct StoreInstructionsView: View {
                                     colors: [Color(hex: "EAAB44"),
                                              Color(hex: "D24A44"),
                                              Color(hex: "9C5BA2"),
-                                             Color(hex: "4B5B94")]),
+                                             Color(hex: "4B5B94")]
+                                ),
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             ))
@@ -212,11 +220,12 @@ public struct StoreInstructionsView: View {
 
                 TextBox(
                     title: "Today: Get welcome offer",
-                    subtitle: "Unlock all access to functions",
+                    subtitle: "Unlock full access to all premium features",
                     spacing: .xxxSmall
                 )
                 .textBoxSize(.small)
                 .padding(.top, 6)
+                .fixedSize(horizontal: false, vertical: true)
             }
 
             HStack {
@@ -225,7 +234,8 @@ public struct StoreInstructionsView: View {
                         gradient: Gradient(
                             colors: [Color(hex: "EAAB44"),
                                      Color(hex: "D24A44"),
-                                     Color(hex: "9C5BA2")]),
+                                     Color(hex: "9C5BA2")]
+                        ),
                         startPoint: .topLeading,
                         endPoint: .trailing
                     ))
@@ -247,11 +257,12 @@ public struct StoreInstructionsView: View {
 
                 TextBox(
                     title: "Day 5",
-                    subtitle: "Get a reminder about when your trial",
+                    subtitle: "Reminder before your trial ends",
                     spacing: .xxxSmall
                 )
                 .textBoxSize(.small)
                 .padding(.top, 6)
+                .fixedSize(horizontal: false, vertical: true)
             }
 
             HStack {
@@ -275,20 +286,28 @@ public struct StoreInstructionsView: View {
 
                 TextBox(
                     title: "Day 7",
-                    subtitle: "Tou will be charged on this day, cancel anytime beforel",
+                    subtitle: "First payment. Cancel anytime in Settings",
                     spacing: .xxxSmall
                 )
                 .textBoxSize(.small)
                 .padding(.top, 6)
+                .fixedSize(horizontal: false, vertical: true)
             }
         }
         .frame(maxWidth: .infinity)
     }
 
-    @ViewBuilder
     func productsLust(data: StoreKitProducts) -> some View {
         VStack(spacing: .small) {
             ForEach(viewModel.availableSubscriptions) { product in
+                if viewModel.specialOfferMode, product.isOffer {
+                    StoreProductView(product: product, products: data, isSelected: .constant(false)) {
+                        Task {
+                            await viewModel.buy(product: product)
+                        }
+                    }
+                }
+
                 if !product.isOffer {
                     StoreProductView(product: product, products: data, isSelected: .constant(false)) {
                         Task {
@@ -297,6 +316,7 @@ public struct StoreInstructionsView: View {
                     }
                 }
             }
+
             ForEach(data.nonConsumable) { product in
                 StoreProductView(product: product, products: data, isSelected: .constant(false)) {
                     Task {

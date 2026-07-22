@@ -6,11 +6,11 @@
 #if canImport(MessageUI)
 import MessageUI
 #endif
+import NavigatorUI
 import OversizeComponents
 import OversizeLocalizable
 import OversizeNavigation
 import OversizeResources
-import OversizeRouter
 import OversizeServices
 import OversizeUI
 import SwiftUI
@@ -44,14 +44,14 @@ public struct SupportView: View {
             VStack(alignment: .leading) {
                 #if os(iOS)
                 if MFMailComposeViewController.canSendMail(),
-                   let mail = Info.links?.company.email,
-                   let appVersion = Info.app.version,
-                   let appName = Info.app.name,
-                   let device = Info.app.device,
-                   let appBuild = Info.app.build,
-                   let systemVersion = Info.app.system
+                   let mail = Info.Developer.email,
+                   let appVersion = Info.App.version,
+                   let appName = Info.App.name,
+                   let device = Info.App.device,
+                   let appBuild = Info.App.build,
+                   let systemVersion = Info.App.osVersion
                 {
-                    let contentPreText = "\n\n\n\n\n\n————————————————\nApp: \(appName) \(appVersion) (\(appBuild))\nDevice: \(device), \(systemVersion)\nLocale: \(Info.app.language ?? "Not init")"
+                    let contentPreText = "\n\n\n\n\n\n————————————————\nApp: \(appName) \(appVersion) (\(appBuild))\nDevice: \(device), \(systemVersion)\nLocale: \(Info.App.localeIdentifier ?? "Not init")"
                     let subject = "Support"
 
                     Row("Contact Us") {
@@ -68,7 +68,7 @@ public struct SupportView: View {
                     }
                 } else {
                     // Send author
-                    if let sendMailUrl = Info.url.developerSendMail {
+                    if let sendMailUrl = Info.Developer.emailUrl {
                         Link(destination: sendMailUrl) {
                             Row("Contact Us") {
                                 mailIcon.icon()
@@ -80,7 +80,7 @@ public struct SupportView: View {
                 #endif
 
                 // Telegramm chat
-                if let telegramChatUrl = Info.url.appTelegramChat, let id = Info.app.telegramChatID, !id.isEmpty {
+                if let telegramChatUrl = Info.App.telegramChatUrl, let id = Info.App.telegramChatId, !id.isEmpty {
                     Link(destination: telegramChatUrl) {
                         Row(L10n.Settings.telegramChat) {
                             chatIcon.icon()

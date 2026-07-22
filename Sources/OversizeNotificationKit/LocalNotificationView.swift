@@ -54,7 +54,7 @@ public struct LocalNotificationView: View {
                 }
         case let .error(error):
             PageView("Notification") {
-                ErrorView(error)
+                OversizeUI.ErrorView(error: error)
             }
             .leadingBar {
                 BarButton(.close)

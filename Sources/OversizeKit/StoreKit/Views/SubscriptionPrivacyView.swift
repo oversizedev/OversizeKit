@@ -42,7 +42,7 @@ struct SubscriptionPrivacyView: View {
 
                     Text("•")
 
-                    if let privacyUrl = Info.url.appPrivacyPolicyUrl {
+                    if let privacyUrl = Info.App.privacyPolicyUrl {
                         Button {
                             isShowPrivacy.toggle()
                         } label: {
@@ -67,7 +67,7 @@ struct SubscriptionPrivacyView: View {
 
                     Text("•")
 
-                    if let termsOfUde = Info.url.appTermsOfUseUrl {
+                    if let termsOfUde = Info.App.termsOfUseUrl {
                         Button {
                             isShowTerms.toggle()
                         } label: {

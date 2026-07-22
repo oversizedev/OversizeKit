@@ -7,10 +7,12 @@ import OversizeUI
 import SwiftUI
 
 public struct AttachmentView: View {
+    @Environment(\.dismiss) var dismiss
+
     public init() {}
 
     public var body: some View {
-        PageView("Attachment") {
+        LayoutView("Attachment") {
             SectionView {
                 VStack(spacing: .zero) {
                     Row("Add investment") {
@@ -25,16 +27,25 @@ public struct AttachmentView: View {
                 }
             }
             .surfaceContentRowMargins()
+        } background: {
+            Color.backgroundSecondary
         }
-        .backgroundSecondary()
-        .leadingBar {
-            BarButton(.close)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Close", systemImage: "xmark", role: .cancel) {
+                    dismiss()
+                }
+                .labelStyle(.toolbar)
+                .buttonStyle(.toolbarSecondary)
+                #if !os(tvOS) && !os(watchOS)
+                    .keyboardShortcut(.cancelAction)
+                #endif
+            }
         }
+        .toolbarTitleDisplayMode(.inline)
     }
 }
 
-struct AttachmentView_Previews: PreviewProvider {
-    static var previews: some View {
-        AttachmentView()
-    }
+#Preview {
+    AttachmentView()
 }

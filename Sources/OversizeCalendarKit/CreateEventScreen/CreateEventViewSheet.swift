@@ -6,7 +6,6 @@
 #if canImport(EventKit)
 import EventKit
 #endif
-import OversizeComponents
 import OversizeContactsKit
 import OversizeLocationKit
 import OversizeUI
@@ -75,6 +74,8 @@ public extension CreateEventView {
                         }
                     }
                     .presentationDetents([.height(500)])
+                    .presentationDragIndicator(.hidden)
+                    .scrollDisabled(true)
                 #else
                 EmptyView()
                 #endif
@@ -83,6 +84,8 @@ public extension CreateEventView {
                 DatePickerSheet(title: "Ends time", selection: $viewModel.dateEnd)
                     .datePickerMinimumDate(viewModel.dateStart.minute)
                     .presentationDetents([.height(500)])
+                    .presentationDragIndicator(.hidden)
+                    .scrollDisabled(true)
                 #else
                 EmptyView()
                 #endif
@@ -93,7 +96,7 @@ public extension CreateEventView {
                 CalendarPicker(selection: $viewModel.calendar, calendars: viewModel.calendars, sourses: viewModel.sourses)
                     .presentationDetents([.large])
             case .location:
-                #if !os(watchOS)
+                #if !os(watchOS) && !os(tvOS)
                 AddressPicker(address: $viewModel.locationName, location: $viewModel.location)
                     .interactiveDismissDisabled(true)
                     .presentationDetents([.large])
@@ -115,7 +118,6 @@ public extension CreateEventView {
                     .presentationDetents([.height(270)])
             }
         }
-        .systemServices()
     }
 }
 #endif

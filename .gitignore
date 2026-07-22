@@ -6,3 +6,7 @@ xcuserdata/
 /.swiftpm
 DerivedData/
 /AppExample/Example.xcodeproj/project.xcworkspace/xcuserdata/admin.xcuserdatad/UserInterfaceState.xcuserstate
+/AGENTS.md
+/CLAUDE.md
+/build
+/.claude

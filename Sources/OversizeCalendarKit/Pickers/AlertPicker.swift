@@ -22,7 +22,7 @@ public struct AlarmPicker: View {
     }
 
     public var body: some View {
-        PageView("Alarm") {
+        LayoutView("Alarm") {
             SectionView {
                 VStack(spacing: .zero) {
                     ForEach(CalendarAlertsTimes.allCases) { alert in
@@ -37,24 +37,34 @@ public struct AlarmPicker: View {
                 }
             }
             .surfaceContentRowMargins()
+        } background: {
+            Color.backgroundSecondary
         }
-        .backgroundSecondary()
-        .leadingBar {
-            BarButton(.close)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Close", systemImage: "xmark", role: .cancel) {
+                    dismiss()
+                }
+                .labelStyle(.toolbar)
+                .buttonStyle(.toolbarSecondary)
+                #if !os(tvOS) && !os(watchOS)
+                    .keyboardShortcut(.cancelAction)
+                #endif
+            }
+            ToolbarItem(placement: .primaryAction) {
+                Button("Done", systemImage: "checkmark") {
+                    selection = selectedAlerts
+                    dismiss()
+                }
+                .labelStyle(.toolbar)
+                .buttonStyle(.toolbarPrimary)
+                .disabled(selectedAlerts.isEmpty)
+                #if !os(tvOS) && !os(watchOS)
+                    .keyboardShortcut(.defaultAction)
+                #endif
+            }
         }
-        .trailingBar {
-            BarButton(.accent("Done", action: {
-                selection = selectedAlerts
-                dismiss()
-            }))
-            .disabled(selectedAlerts.isEmpty)
-        }
+        .toolbarTitleDisplayMode(.inline)
     }
 }
 #endif
-
-// struct AlertPicker_Previews: PreviewProvider {
-//    static var previews: some View {
-//        AlertPicker()
-//    }
-// }

@@ -1,0 +1,224 @@
+//
+// Copyright © 2024 Alexander Romanov
+// RichTextEditor.swift, created on 03.03.2024
+//
+
+import OversizeCore
+import OversizeResources
+import OversizeUI
+import SwiftUI
+
+public struct RichTextEditor: View {
+    @Binding private var text: AttributedString
+    private let title: String?
+
+    public init(_ title: String? = nil, text: Binding<AttributedString>) {
+        self.title = title
+        _text = text
+    }
+
+    public var body: some View {
+        if #available(iOS 26, macOS 26, tvOS 26, watchOS 26, visionOS 26, *) {
+            RichTextEditor26(title, text: $text)
+        } else {
+            RichTextEditorFallback(title, text: $text)
+        }
+    }
+}
+
+@available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
+struct RichTextEditor26: View {
+    @Environment(\.fontResolutionContext) var fontResolutionContext
+    @Environment(\.undoManager) private var undoManager
+    @Environment(\.dismiss) private var dismiss
+
+    @Namespace var unionNamespace
+    @FocusState var isFocus: Bool
+
+    @Binding var text: AttributedString
+    @State var viewModel: RichTextEditorViewModel
+
+    private let title: String?
+
+    init(_ title: String? = nil, text: Binding<AttributedString>) {
+        self.title = title
+        _text = text
+        _viewModel = State(wrappedValue: RichTextEditorViewModel(text.wrappedValue))
+    }
+
+    var body: some View {
+        TextEditor(text: $viewModel.text, selection: $viewModel.textSelection)
+            .focused($isFocus)
+            .findNavigator(isPresented: $viewModel.findNavigatorIsPresented)
+            .writingToolsBehavior(.complete)
+            .contentMargins(.horizontal, .regular, for: .scrollContent)
+            .textEditorStyle(.plain)
+            .toolbar {
+                if let title {
+                    ToolbarItem(placement: .principal) {
+                        Text(title)
+                            .font(.headline)
+                    }
+                }
+                ToolbarItem(placement: .primaryAction) {
+                    Toggle(isOn: $viewModel.findNavigatorIsPresented) {
+                        Label("Find and replace", systemImage: "magnifyingglass")
+                    }
+                }
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Close", systemImage: "xmark", role: .cancel) {
+                        dismiss()
+                    }
+                    .labelStyle(.toolbar)
+                    .buttonStyle(.toolbarSecondary)
+                    #if !os(tvOS) && !os(watchOS)
+                        .keyboardShortcut(.cancelAction)
+                    #endif
+                }
+            }
+            .toolbarTitleDisplayMode(.inline)
+            .scrollDismissesKeyboard(.interactively)
+            .safeAreaInset(edge: .bottom) {
+                RichTextBottomBar(
+                    hasSelection: viewModel.hasSelection,
+                    isFontStyleSelection: viewModel.isFontStyleSelection,
+                    isFocus: isFocus,
+                    canUndo: viewModel.canUndo,
+                    canRedo: viewModel.canRedo,
+                    isSelectionBold: viewModel.isSelectionBold,
+                    isEffectiveItalic: viewModel.isEffectiveItalic,
+                    isSelectionUnderlined: viewModel.isSelectionUnderlined,
+                    isSelectionStrikethrough: viewModel.isSelectionStrikethrough,
+                    isItalicSupported: viewModel.isItalicSupported,
+                    selectedTextStyleName: viewModel.selectedTextStyle.displayName,
+                    hasSelectionLink: viewModel.hasSelectionLink,
+                    selectionHighlightColor: viewModel.selectionHighlightColor,
+                    namespace: unionNamespace
+                ) { action in
+                    switch action {
+                    case .undo: viewModel.send(.undo)
+                    case .redo: viewModel.send(.redo)
+                    case .toggleBold: viewModel.send(.toggleBold)
+                    case .toggleItalic: viewModel.send(.toggleItalic)
+                    case .toggleUnderline: viewModel.send(.toggleUnderline)
+                    case .toggleStrikethrough: viewModel.send(.toggleStrikethrough)
+                    case let .applyHighlight(color): viewModel.send(.applyHighlight(color))
+                    case .removeHighlight: viewModel.send(.removeHighlight)
+                    case .openFontPicker: viewModel.present(.fontPicker)
+                    case .openTextStylePicker: viewModel.present(.textStylePicker)
+                    case .openLinkSheet: viewModel.send(.openLinkSheet)
+                    case .toggleFontStyleSelection: viewModel.send(.toggleFontStyleSelection)
+                    case .openAIWritingSheet: viewModel.send(.openAIWritingSheet)
+                    case .toggleFocus: isFocus.toggle()
+                    }
+                }
+            }
+            .onChange(of: viewModel.text) { old, new in handleViewModelTextChange(from: old, to: new) }
+            .onChange(of: text) { _, newText in viewModel.syncText(newText) }
+            .onChange(of: viewModel.textSelection) { _, new in viewModel.onTextSelectionChanged(new) }
+            .onChange(of: undoManager) { _, newValue in
+                viewModel.undoManager = newValue
+            }
+            .onChange(of: fontResolutionContext) { _, newValue in
+                viewModel.fontResolutionContext = newValue
+            }
+            .onAppear {
+                isFocus = true
+                viewModel.undoManager = undoManager
+                viewModel.fontResolutionContext = fontResolutionContext
+            }
+            .sheet(item: $viewModel.sheet) { resolveSheet(sheet: $0) }
+    }
+}
+
+// MARK: - Handlers
+
+@available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
+extension RichTextEditor26 {
+    func handleViewModelTextChange(from oldText: AttributedString, to newText: AttributedString) {
+        guard !viewModel.isApplyingOverrides else { return }
+        text = newText
+        viewModel.applyTypingChangesIfNeeded(from: oldText, to: newText)
+        text = viewModel.text
+    }
+}
+
+private struct RichTextEditorFallback: View {
+    @Environment(\.dismiss) private var dismiss
+    @Binding private var text: AttributedString
+    @FocusState private var isFocus: Bool
+    @State private var showFormattingAlert = false
+    private let title: String?
+
+    private var hasAttributes: Bool {
+        text != AttributedString(String(text.characters))
+    }
+
+    private var stringBinding: Binding<String> {
+        Binding<String>(
+            get: { String(text.characters) },
+            set: { text = AttributedString($0) }
+        )
+    }
+
+    init(_ title: String? = nil, text: Binding<AttributedString>) {
+        self.title = title
+        _text = text
+    }
+
+    var body: some View {
+        ScrollView {
+            TextEditor(text: stringBinding)
+                .focused($isFocus)
+                .textEditorStyle(.plain)
+                .padding(.horizontal)
+        }
+        .background(Color.backgroundPrimary)
+        .toolbar {
+            if let title {
+                ToolbarItem(placement: .principal) {
+                    Text(title).font(.headline)
+                }
+            }
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Close", systemImage: "xmark", role: .cancel) { dismiss() }
+                    .labelStyle(.toolbar)
+                    .buttonStyle(.toolbarSecondary)
+                #if !os(tvOS) && !os(watchOS)
+                    .keyboardShortcut(.cancelAction)
+                #endif
+            }
+        }
+        .toolbarTitleDisplayMode(.inline)
+        .scrollDismissesKeyboard(.interactively)
+        .onAppear {
+            if hasAttributes {
+                showFormattingAlert = true
+            } else {
+                isFocus = true
+            }
+        }
+        .animation(.default, value: isFocus)
+        .alert("Formatting Not Supported", isPresented: $showFormattingAlert) {
+            Button("Edit Anyway", role: .destructive) { isFocus = true }
+            Button("Close", role: .cancel) { dismiss() }
+        } message: {
+            Text("Rich text editing is not supported on this OS version. All formatting will be removed when you edit.")
+        }
+    }
+}
+
+@available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
+#Preview {
+    @Previewable @State var text: AttributedString = .init("Pack sunscreen, water, and snacks for the hike. Check weather forecast the day before departure.")
+    NavigationStack {
+        RichTextEditor("New Article", text: $text)
+    }
+}
+
+#Preview("Fallback") {
+    @Previewable @State var text: AttributedString = .init("Hello world")
+    NavigationStack {
+        RichTextEditor("New Article", text: $text)
+    }
+}

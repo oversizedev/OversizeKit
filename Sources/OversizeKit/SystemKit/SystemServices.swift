@@ -20,35 +20,41 @@ public struct SystemServicesModifier: ViewModifier {
 
     @State private var blurRadius: CGFloat = 0
     @State private var oppacity: CGFloat = 1
-    @State private var screnSize: ScreenSize = .init(width: 375, height: 667)
+    @State private var screenSize: ScreenSize = .init(width: 375, height: 667)
 
-    private enum FullScreenSheet: Identifiable, Equatable, Sendable {
+    private enum FullScreenSheet: Identifiable, Equatable {
         case onboarding
         case payWall
         case lockscreen
-        public var id: Int {
+        var id: Int {
             hashValue
         }
     }
 
-    public nonisolated init() {}
+    public init() {}
 
     public func body(content: Content) -> some View {
-        GeometryReader { geometry in
-            content
-                .blur(radius: blurRadius)
-                .preferredColorScheme(theme.appearance.colorScheme)
-                .premiumStatus(isPremium)
-                .theme(ThemeSettings())
-                .screenSize(screnSize)
-            #if os(iOS)
-                .tint(theme.accentColor)
-            #endif
-                .onAppear(perform: { onAppear(geometry: geometry) })
-                .onChange(of: scenePhase) { _, phase in
-                    onChangeScenePhase(phase)
+        content
+            .background {
+                GeometryReader { geometry in
+                    Color.clear
+                        .onAppear { screenSize = ScreenSize(geometry: geometry) }
+                        .onChange(of: geometry.size) { _, _ in
+                            screenSize = ScreenSize(geometry: geometry)
+                        }
                 }
-        }
+            }
+            .screenSize(screenSize)
+            .blur(radius: blurRadius)
+            .preferredColorScheme(theme.appearance.colorScheme)
+            .premiumStatus(isPremium)
+            .theme(ThemeSettings())
+        #if os(iOS)
+            .tint(theme.accentColor)
+        #endif
+            .onChange(of: scenePhase) { _, phase in
+                onChangeScenePhase(phase)
+            }
     }
 
     private func onChangeScenePhase(_ phase: ScenePhase) {
@@ -75,15 +81,15 @@ public struct SystemServicesModifier: ViewModifier {
             break
         }
     }
-
-    private func onAppear(geometry: GeometryProxy) {
-        let updatedScreenSize = ScreenSize(geometry: geometry)
-        screnSize = updatedScreenSize
-    }
 }
 
 public extension View {
-    nonisolated func systemServices() -> some View {
+    @available(*, deprecated, renamed: "coreServices", message: "Renamed")
+    func systemServices() -> some View {
+        modifier(SystemServicesModifier())
+    }
+
+    func coreServices() -> some View {
         modifier(SystemServicesModifier())
     }
 }

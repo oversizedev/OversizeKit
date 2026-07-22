@@ -22,6 +22,9 @@ public struct StoreView: View {
     @Environment(\.isPortrait) private var isPortrait
     private var isClosable = true
     @State var isShowFireworks = false
+    #if os(iOS)
+    @State var isPresentedManageSubscription = false
+    #endif
 
     public init() {
         _viewModel = StateObject(wrappedValue: StoreViewModel())
@@ -36,7 +39,7 @@ public struct StoreView: View {
                 case let .result(data):
                     content(data: data)
                 case let .error(error):
-                    ErrorView(error)
+                    ErrorView(error: error)
                 }
             }
             .paddingContent(.horizontal)
@@ -55,13 +58,13 @@ public struct StoreView: View {
             ToolbarItem(placement: .principal) {
                 PremiumLabel(
                     image: Resource.Store.zap,
-                    text: Info.store.subscriptionsName,
+                    text: viewModel.productsState.result?.banner.badge ?? "",
                     size: .medium
                 )
             }
         }
         .safeAreaInset(edge: .bottom) {
-            if !viewModel.isPremium {
+            if !viewModel.isPremium || isCancelledSubscription {
                 StorePaymentButtonBar()
                     .environmentObject(viewModel)
             }
@@ -74,10 +77,29 @@ public struct StoreView: View {
         .task {
             await viewModel.fetchData()
         }
+        #if os(iOS)
+        .manageSubscriptionsSheet(isPresented: $isPresentedManageSubscription)
+        .onChange(of: isPresentedManageSubscription) { _, isPresented in
+            if isPresented == false {
+                Task {
+                    await viewModel.fetchData()
+                }
+            }
+        }
+        #endif
+    }
+
+    var isCancelledSubscription: Bool {
+        guard let statusInfo = viewModel.status,
+              case let .verified(renewalInfo) = statusInfo.renewalInfo
+        else { return false }
+        return !renewalInfo.willAutoRenew && viewModel.isPremium
     }
 
     var titleText: String {
-        if viewModel.isPremium {
+        if isCancelledSubscription {
+            "Subscription Cancelling"
+        } else if viewModel.isPremium {
             "You are all set!"
         } else {
             "Upgrade to \(viewModel.productsState.result?.banner.badge ?? "")"
@@ -85,14 +107,15 @@ public struct StoreView: View {
     }
 
     var subtitleText: String {
-        if viewModel.isPremium {
+        if isCancelledSubscription {
+            "Your subscription \(viewModel.subscriptionStatusText.lowercased()). Resubscribe to keep your benefits."
+        } else if viewModel.isPremium {
             "Thank you for use to \(viewModel.productsState.result?.banner.badge ?? "").\nHere's what is now unlocked."
         } else {
             "Remove ads and unlock all features"
         }
     }
 
-    @ViewBuilder
     private func contentPlaceholder() -> some View {
         VStack(spacing: .medium) {
             VStack(spacing: .xxSmall) {
@@ -119,52 +142,66 @@ public struct StoreView: View {
         }
     }
 
-    @ViewBuilder
     private func content(data: StoreKitProducts) -> some View {
         LazyVStack(spacing: .medium) {
             titleView
 
-            #if DEBUG
-            if let currentSubscription = viewModel.currentSubscription {
-                LeadingVStack(spacing: .small) {
-                    Text("My Subscription")
-                        .headline()
-                        .onSurfacePrimaryForeground()
-
-                    StoreProductView(product: currentSubscription, products: data) {}
-
-                    if let status = viewModel.status {
-                        Text("Status: \(status.state.localizedDescription)")
-                            .caption()
-                            .onSurfacePrimaryForeground()
-                    }
-                }
-            } else {
-                Surface {
-                    Text("No subscription")
-                        .onSurfacePrimaryForeground()
-                        .body()
-                        .frame(
-                            maxWidth: .infinity,
-                            alignment: .center
-                        )
-                }
-            }
-            #endif
-
-            if !viewModel.isPremium {
+            if !viewModel.isPremium || isCancelledSubscription {
                 productsCollum(data: data)
             }
 
             StoreFeaturesView()
                 .environmentObject(viewModel)
 
+            #if os(iOS)
+            if viewModel.isPremium {
+                Surface {
+                    isPresentedManageSubscription = true
+
+                } label: {
+                    Text("Manage Subscription")
+                        .body(.semibold)
+                        .onSurfaceSecondary()
+                        .frame(maxWidth: .infinity, alignment: .center)
+                }
+                .surfaceBorderColor(Color.surfaceSecondary)
+                .surfaceBorderWidth(2)
+            }
+            #endif
+
             SubscriptionPrivacyView(
                 subscriptionsName: viewModel.productsState.result?.banner.badge ?? "",
                 products: data
             )
 
-            if !viewModel.isPremium {
+            #if DEBUG
+            if let currentSubscription = viewModel.currentSubscription {
+                LeadingVStack(spacing: .small) {
+                    Text("My Subscription")
+                        .headline()
+                        .onSurfacePrimary()
+
+                    StoreProductView(product: currentSubscription, products: data) {}
+
+                    if let status = viewModel.status {
+                        Text("Status: \(status.state.localizedDescription)")
+                            .caption()
+                            .onSurfacePrimary()
+                    }
+                }
+            } else {
+                Surface {
+                    Text("No subscription")
+                        .body(.semibold)
+                        .onSurfaceSecondary()
+                        .frame(maxWidth: .infinity, alignment: .center)
+                }
+                .surfaceBorderColor(Color.surfaceSecondary)
+                .surfaceBorderWidth(platform == .macOS ? 1 : 2)
+            }
+            #endif
+
+            if !viewModel.isPremium || isCancelledSubscription {
                 productsList(data: data)
             }
         }
@@ -203,7 +240,6 @@ public struct StoreView: View {
         .multilineTextAlignment(.center)
     }
 
-    @ViewBuilder
     private func productsCollum(data: StoreKitProducts) -> some View {
         HStack(spacing: .xSmall) {
             ForEach(viewModel.availableSubscriptions /* data.autoRenewable */ ) { product in
@@ -223,7 +259,6 @@ public struct StoreView: View {
         }
     }
 
-    @ViewBuilder
     private func productsList(data: StoreKitProducts) -> some View {
         VStack(spacing: .small) {
             ForEach(viewModel.availableSubscriptions /* data.autoRenewable */ ) { product in
@@ -262,9 +297,7 @@ public struct StoreView: View {
     }
 
     public func closable(_: Bool = true) -> StoreView {
-        let control = self
-        return control
+        self
     }
 }
 #endif
-    

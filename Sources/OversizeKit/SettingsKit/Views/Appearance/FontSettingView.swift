@@ -15,7 +15,6 @@ public struct FontSettingView: View {
     @Environment(\.theme) private var theme: ThemeSettings
 
     @State private var activeTab: FontSetting = .title
-    @State var offset = CGPoint(x: 0, y: 0)
 
     public init() {}
 
@@ -33,9 +32,7 @@ public struct FontSettingView: View {
         }
         .padding(.horizontal)
         .padding(.bottom)
-        .navigationBar("Fonts", style: .fixed($offset)) {
-            BarButton(.back)
-        } trailingBar: {} bottomBar: {}
+        .navigationTitle("Fonts")
     }
 
     @ViewBuilder
@@ -93,12 +90,12 @@ public struct FontSettingView: View {
     }
 
     private var otherSelector: some View {
-        VStack(alignment: .leading, spacing: Space.medium.rawValue) {
-            VStack(alignment: .leading, spacing: Space.small.rawValue) {
+        VStack(alignment: .leading, spacing: .medium) {
+            VStack(alignment: .leading, spacing: .small) {
                 Text("Button".uppercased())
                     .bold()
                     .caption()
-                    .onBackgroundSecondaryForeground()
+                    .onBackgroundSecondary()
                 SegmentedPickerSelector(FontDesignType.allCases, selection: theme.$fontButton) { fontStyle, _ in
                     VStack(alignment: .center, spacing: 8) {
                         Text("Aa")
@@ -113,11 +110,11 @@ public struct FontSettingView: View {
                 .segmentedControlStyle(.island(selected: .graySurface))
             }
 
-            VStack(alignment: .leading, spacing: Space.small.rawValue) {
+            VStack(alignment: .leading, spacing: .small) {
                 Text("Overline & caption".uppercased())
                     .bold()
                     .caption()
-                    .onBackgroundSecondaryForeground()
+                    .onBackgroundSecondary()
                 SegmentedPickerSelector(FontDesignType.allCases, selection: theme.$fontOverline) { fontStyle, _ in
                     VStack(alignment: .center, spacing: 8) {
                         Text("Aa")
@@ -138,41 +135,41 @@ public struct FontSettingView: View {
 // swiftlint:disable all
 extension FontSettingView {
     private var previewText: some View {
-        ScrollViewOffset(offset: $offset) {
+        ScrollView {
             HStack {
-                VStack(alignment: .leading, spacing: Space.medium.rawValue) {
-                    VStack(alignment: .leading, spacing: Space.xxSmall.rawValue) {
+                VStack(alignment: .leading, spacing: .medium) {
+                    VStack(alignment: .leading, spacing: .xxSmall) {
                         Text("Overline".uppercased())
                             .bold()
                             .caption()
-                            .onBackgroundSecondaryForeground()
+                            .onBackgroundSecondary()
 
                         Text("Large title")
                             .largeTitle()
-                            .onBackgroundPrimaryForeground()
+                            .onBackgroundPrimary()
 
                         Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")
                             .body()
-                            .onBackgroundSecondaryForeground()
+                            .onBackgroundSecondary()
                     }
 
-                    VStack(alignment: .leading, spacing: Space.xxSmall.rawValue) {
+                    VStack(alignment: .leading, spacing: .xxSmall) {
                         Text("Title")
                             .title3()
-                            .onBackgroundPrimaryForeground()
+                            .onBackgroundPrimary()
 
                         Text("Subtitle")
                             .headline()
-                            .onBackgroundPrimaryForeground()
+                            .onBackgroundPrimary()
 
                         Text("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.")
                             .bold()
                             .subheadline()
-                            .onBackgroundPrimaryForeground()
+                            .onBackgroundPrimary()
 
                         Text("Button")
                             .body()
-                            .onBackgroundPrimaryForeground()
+                            .onBackgroundPrimary()
                             .padding(.top, .xxxSmall)
                     }
                 }

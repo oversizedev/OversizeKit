@@ -4,7 +4,8 @@
 //
 
 import FactoryKit
-import OversizeModels
+import Foundation
+import OversizeCore
 import OversizeNetwork
 import OversizeServices
 import OversizeStoreService
@@ -13,25 +14,20 @@ import SwiftUI
 
 @MainActor
 public final class NoticeListViewModel: ObservableObject {
-    enum State {
-        case initial
-        case loading
-        case result(offer: Components.Schemas.InAppPurchaseOffer?, isShowRate: Bool)
-        case empty
-        case error(AppError)
-    }
-
     @Injected(\.appStoreReviewService) var reviewService
     @Injected(\.networkService) var networkService
     @Injected(\.storeKitService) var storeKitService: StoreKitService
+    @Injected(\.appStateService) var appStateService: AppStateService
 
     @AppStorage("AppState.LastClosedSpecialOfferBanner") var lastClosedSpecialOffer: Int = .init()
 
-    private let expectedFormat = Date.ISO8601FormatStyle()
+    @Published var noticeType: NoticeType?
+    @Published var isBannerClosed = false
 
-    @Published var state = State.initial
-    @Published public var trialDaysPeriodText: String = ""
-    @Published public var salePercent: Decimal = 0
+    public var trialDaysPeriodText: String = ""
+    public var subscriptionName: String = ""
+    public var salePercent: Decimal = 0
+    private var hasFirstDayOffer = false
 
     public init() {
         Task {
@@ -40,52 +36,42 @@ public final class NoticeListViewModel: ObservableObject {
     }
 
     public func fetchData() async {
-        state = .loading
         await fetchStoreKitProudcts()
         await fetchAndSetSpecialOffer()
     }
 
-    public func fetchStoreKitProudcts() async {
-        guard let appStoreID = Info.app.appStoreID else {
+    private func fetchStoreKitProudcts() async {
+        guard let appStoreID = Info.App.appStoreId else {
             return
         }
-        let productIds = await networkService.fetchAppStoreProductIds(appId: appStoreID).successResult ?? []
+        let inAppPurchases = await networkService.fetchInAppPurchases(appId: appStoreID)
 
-        let result = await storeKitService.requestProducts(productIds: productIds)
+        let result = await storeKitService.requestProducts(productIds: inAppPurchases.successResult?.productIds ?? [])
         switch result {
         case let .success(products):
             if let product = products.autoRenewable.first(where: { $0.isOffer }), let offer = product.subscription?.introductoryOffer {
                 trialDaysPeriodText = storeKitService.daysLabel(offer.period.value, unit: offer.period.unit)
                 salePercent = storeKitService.salePercent(product: product, products: products)
+                subscriptionName = inAppPurchases.successResult?.banner.badge ?? ""
+                hasFirstDayOffer = true
             }
         case .failure:
             break
         }
     }
 
-    public func fetchAndSetSpecialOffer() async {
+    private func fetchAndSetSpecialOffer() async {
         let result = await networkService.fetchSpecialOffers()
         switch result {
         case let .success(offers):
             let isShowReviewBanner = await reviewService.isShowReviewBanner
-            if let offer = offers.first(where: { checkDateInSelectedPeriod(startDate: $0.startDate, endDate: $0.endDate) }) {
-                if offer.id != lastClosedSpecialOffer {
-                    withAnimation {
-                        state = .result(
-                            offer: offer,
-                            isShowRate: isShowReviewBanner
-                        )
-                    }
-                } else if isShowReviewBanner {
-                    withAnimation {
-                        state = .result(
-                            offer: nil,
-                            isShowRate: isShowReviewBanner
-                        )
-                    }
-                } else {
-                    state = .empty
-                }
+            let isFirstDayAfterRun = Date().hours(from: appStateService.firstRunDate) < 24
+            if isFirstDayAfterRun, hasFirstDayOffer {
+                noticeType = .firstDay
+            } else if let offer = offers.first(where: { $0.id != lastClosedSpecialOffer && checkDateInSelectedPeriod(startDate: $0.startDate, endDate: $0.endDate) }) {
+                noticeType = .offer(offer)
+            } else if isShowReviewBanner {
+                noticeType = .rate
             }
         case .failure:
             break
@@ -104,6 +90,14 @@ public final class NoticeListViewModel: ObservableObject {
         text
             .replacingOccurrences(of: "<salePercent>", with: salePercent.toString)
             .replacingOccurrences(of: "<freeDays>", with: trialDaysPeriodText)
-        // .replacingOccurrences(of: "<subscriptionName>", with: Info.store.subscriptionsName)
+            .replacingOccurrences(of: "<subscriptionName>", with: subscriptionName)
+    }
+}
+
+extension NoticeListViewModel {
+    enum NoticeType {
+        case offer(Components.Schemas.InAppPurchaseOffer)
+        case rate
+        case firstDay
     }
 }

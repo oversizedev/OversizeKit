@@ -10,16 +10,16 @@ import FactoryKit
 import OversizeCalendarService
 import OversizeCore
 import OversizeLocationService
-import OversizeModels
 import SwiftUI
 
 #if !os(tvOS)
-public enum CreateEventType: Equatable, @unchecked Sendable {
-    case new(Date?, calendar: EKCalendar?)
+public enum CreateEventType: Equatable {
+    case new(title: String? = nil, date: Date? = nil, locationName: String? = nil, location: CLLocationCoordinate2D? = nil, calendar: EKCalendar? = nil)
     case update(EKEvent)
 }
 
-public class CreateEventViewModel: ObservableObject, @unchecked Sendable {
+@MainActor
+public class CreateEventViewModel: ObservableObject {
     @Injected(\.calendarService) private var calendarService: CalendarService
     @Injected(\.locationService) private var locationService: LocationServiceProtocol
 
@@ -57,11 +57,16 @@ public class CreateEventViewModel: ObservableObject, @unchecked Sendable {
 
     func setEvent(type: CreateEventType) {
         switch type {
-        case let .new(date, calendar):
+        case let .new(title, date, locationName, location, calendar):
+            if let title {
+                self.title = title
+            }
             if let date {
                 dateStart = date
                 dateEnd = date.halfHour
             }
+            self.locationName = locationName
+            self.location = location
             if let calendar {
                 self.calendar = calendar
             }
@@ -92,41 +97,48 @@ public class CreateEventViewModel: ObservableObject, @unchecked Sendable {
 
     func fetchData() async {
         state = .loading
-        async let calendarsResult = await calendarService.fetchCalendars()
-        switch await calendarsResult {
+        let calendarsResult = await calendarService.fetchCalendars()
+        switch calendarsResult {
         case let .success(data):
-            log("✅ EKCalendars fetched")
+            Log.debug("✅ EKCalendars fetched")
             calendars = data
         case let .failure(error):
-            log("❌ EKCalendars not fetched (\(error.title))")
-            state = .error(error)
+            Log.debug("❌ EKCalendars not fetched (\(error.localizedDescription))")
+            state = .error(error as? CalendarError ?? .unknown(error))
         }
-        async let soursesResult = await calendarService.fetchSourses()
-        switch await soursesResult {
+        let soursesResult = await calendarService.fetchSourses()
+        switch soursesResult {
         case let .success(data):
-            log("✅ EKSource fetched")
+            Log.debug("✅ EKSource fetched")
             sourses = data
         case let .failure(error):
-            log("❌ EKSource not fetched (\(error.title))")
-            state = .error(error)
+            Log.debug("❌ EKSource not fetched (\(error.localizedDescription))")
+            state = .error(error as? CalendarError ?? .unknown(error))
         }
-        if case let .new(_, calendar) = type, calendar == nil {
+        let needsDefaultCalendar: Bool = switch type {
+        case let .new(_, _, _, _, calendar): calendar == nil
+        case .update: false
+        }
+        if needsDefaultCalendar {
             let result = await calendarService.fetchDefaultCalendar()
             switch result {
             case let .success(calendar):
                 self.calendar = calendar
             case let .failure(error):
-                log("❌ Default calendar not fetched (\(error.title))")
+                Log.debug("❌ Default calendar not fetched (\(error.localizedDescription))")
             }
         }
     }
 
-    func save() async -> Result<Bool, AppError> {
-        var oldEvent: EKEvent?
+    func save() async -> Result<EKEvent, Error> {
+        nonisolated(unsafe) var oldEvent: EKEvent?
 
         if case let .update(event) = type {
             oldEvent = event
         }
+
+        nonisolated(unsafe) let currentCalendar = calendar
+        nonisolated(unsafe) let currentStructuredLocation = getEKStructuredLocation()
 
         let result = await calendarService.createEvent(
             event: oldEvent,
@@ -134,10 +146,10 @@ public class CreateEventViewModel: ObservableObject, @unchecked Sendable {
             notes: note,
             startDate: dateStart,
             endDate: dateEnd,
-            calendar: calendar,
+            calendar: currentCalendar,
             isAllDay: isAllDay,
             location: locationName,
-            structuredLocation: getEKStructuredLocation(),
+            structuredLocation: currentStructuredLocation,
             alarms: alarms,
             url: URL(string: url),
             memberEmails: members,
@@ -146,11 +158,11 @@ public class CreateEventViewModel: ObservableObject, @unchecked Sendable {
             span: span ?? .thisEvent
         )
         switch result {
-        case let .success(data):
-            log("✅ EKEvent saved")
-            return .success(data)
+        case let .success(event):
+            Log.debug("✅ EKEvent saved")
+            return .success(event)
         case let .failure(error):
-            log("❌ EKEvent not saved (\(error.title))")
+            Log.debug("❌ EKEvent not saved (\(error.localizedDescription))")
             return .failure(error)
         }
     }
@@ -172,7 +184,7 @@ public class CreateEventViewModel: ObservableObject, @unchecked Sendable {
         let currentPosition = try await locationService.currentLocation()
         guard let newLocation = currentPosition else { return }
         location = newLocation
-        log("📍 Location: \(newLocation.latitude), \(newLocation.longitude)")
+        Log.debug("📍 Location: \(newLocation.latitude), \(newLocation.longitude)")
         isFetchUpdatePositon = false
     }
 }
@@ -181,6 +193,6 @@ public enum CreateEventViewModelState {
     case initial
     case loading
     case result([EKEvent])
-    case error(AppError)
+    case error(CalendarError)
 }
 #endif

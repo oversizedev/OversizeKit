@@ -19,16 +19,16 @@ public struct SaveForView: View {
     }
 
     public var body: some View {
-        PageView("This is repeating event") {
+        LayoutView("This is repeating event") {
             SectionView {
                 VStack(spacing: .zero) {
                     Row("Save for this event only") {
                         span = .thisEvent
                         dismiss()
                     } leading: {
-                        Image.Date.calendar
+                        Image.Base.calendar
                             .renderingMode(.template)
-                            .foregroundColor(.onSurfacePrimary)
+                            .foregroundStyle(Color.onSurfacePrimary)
                     }
 
                     Row("Save for feature events") {
@@ -37,16 +37,27 @@ public struct SaveForView: View {
                     } leading: {
                         Image.Base.calendar
                             .renderingMode(.template)
-                            .foregroundColor(.onSurfacePrimary)
+                            .foregroundStyle(Color.onSurfacePrimary)
                     }
                 }
             }
             .surfaceContentRowMargins()
+        } background: {
+            Color.backgroundSecondary
         }
-        .backgroundSecondary()
-        .leadingBar {
-            BarButton(.close)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Close", systemImage: "xmark", role: .cancel) {
+                    dismiss()
+                }
+                .labelStyle(.toolbar)
+                .buttonStyle(.toolbarSecondary)
+                #if !os(tvOS) && !os(watchOS)
+                    .keyboardShortcut(.cancelAction)
+                #endif
+            }
         }
+        .toolbarTitleDisplayMode(.inline)
     }
 }
 #endif

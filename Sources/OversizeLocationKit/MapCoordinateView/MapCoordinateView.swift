@@ -9,133 +9,189 @@ import SwiftUI
 
 #if !os(watchOS)
 public struct MapCoordinateView: View {
-    @Environment(\.screenSize) var screenSize
     @Environment(\.openURL) var openURL
-    @StateObject var viewModel: MapCoordinateViewModel
+    @State var viewModel: MapCoordinateViewModel
+    @Namespace var unionNamespace
 
     public init(_ location: CLLocationCoordinate2D, annotation: String? = nil) {
-        _viewModel = StateObject(wrappedValue: MapCoordinateViewModel(location: location, annotation: annotation))
+        _viewModel = State(wrappedValue: MapCoordinateViewModel(location: location, annotation: annotation))
     }
 
     public var body: some View {
-        VStack(spacing: 0) {
-            if #available(iOS 16.0, *) {
-                mapView
-                    .ignoresSafeArea()
-                    .safeAreaInset(edge: .top) {
-                        ModalNavigationBar(title: viewModel.annotation ?? "", largeTitle: false, leadingBar: {
-                            BarButton(.back)
-                        }, trailingBar: {
-                            BarButton(.icon(.map, action: {
-                                viewModel.isShowRoutePickerSheet.toggle()
-                            }))
-                        })
-                        .background(.thickMaterial, ignoresSafeAreaEdges: .top)
-                    }
-                #if os(iOS)
-                    .toolbar(.hidden, for: .tabBar)
-                #endif
+        Map(position: $viewModel.cameraPosition) {
+            ForEach(viewModel.annotations) { point in
+                Marker(point.name, coordinate: point.coordinate)
+            }
+            UserAnnotation()
+        }
+        .ignoresSafeArea()
+        .safeAreaInset(edge: .trailing) {
+            if #available(iOS 26.0, macOS 26.0, tvOS 26.0, *) {
+                zoomButtonsGlass.padding(.small)
             } else {
-                mapView
-                    .safeAreaInset(edge: .top) {
-                        ModalNavigationBar(title: viewModel.annotation ?? "", largeTitle: false, leadingBar: {
-                            BarButton(.back)
-                        }, trailingBar: {
-                            BarButton(.icon(.map, action: {
-                                viewModel.isShowRoutePickerSheet.toggle()
-                            }))
-                        })
-                    }
+                zoomButtons.padding(.small)
             }
         }
+        .safeAreaInset(edge: .bottom) {
+            if #available(iOS 26.0, macOS 26.0, tvOS 26.0, *) {
+                EmptyView()
+            } else {
+                locationButton
+            }
+        }
+        .navigationTitle(viewModel.annotation ?? "")
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button("Route", systemImage: "arrow.trianglehead.turn.up.right.diamond") {
+                    viewModel.isShowRoutePickerSheet.toggle()
+                }
+                .labelStyle(.toolbar)
+                .tint(Color.onSurfacePrimary)
+            }
+
+            #if os(iOS)
+            if #available(iOS 26.0, *) {
+                ToolbarSpacer(.flexible, placement: .bottomBar)
+
+                ToolbarItem(placement: .bottomBar) {
+                    locationButtonGlass
+                }
+            }
+            #endif
+        }
+        #if os(iOS)
+        .toolbar(.hidden, for: .tabBar)
+        .navigationBarTitleDisplayMode(.inline)
+        #endif
         .sheet(isPresented: $viewModel.isShowRoutePickerSheet) {
-            routeSheetView
-                .presentationDetents([.height(260)])
-        }
-    }
-
-    var mapView: some View {
-        ZStack(alignment: .trailing) {
-            Map(coordinateRegion: region, showsUserLocation: true, userTrackingMode: $viewModel.userTrackingMode, annotationItems: viewModel.annotations) {
-                MapMarker(coordinate: $0.coordinate)
-            }
-            controlButtons
-        }
-    }
-
-    private var region: Binding<MKCoordinateRegion> {
-        Binding {
-            viewModel.region
-        } set: { region in
-            DispatchQueue.main.async {
-                viewModel.region = region
+            NavigationStack {
+                routeSheetView
+                    .presentationDetents([.height(240)])
             }
         }
     }
 
-    var controlButtons: some View {
-        VStack {
-            Spacer()
-            VStack(spacing: .zero) {
+    @available(iOS 26.0, macOS 26.0, tvOS 26.0, *)
+    var zoomButtonsGlass: some View {
+        GlassEffectContainer {
+            VStack {
                 Button {
                     viewModel.zoomIn()
                 } label: {
-                    IconDeprecated(.plus)
-                        .onSurfaceSecondaryForeground()
-                        .padding(.xxSmall)
+                    Label("Plus", systemImage: "plus")
+                        .font(.system(size: 20))
+                        .labelStyle(.iconOnly)
+                        .padding(.top, 8)
+                        .foregroundStyle(Color.onSurfacePrimary)
                 }
+                .buttonStyle(.glassProminent)
+                .glassEffectUnion(id: "mapOptions", namespace: unionNamespace)
 
                 Button {
                     viewModel.zoomOut()
                 } label: {
-                    IconDeprecated(.minus)
-                        .onSurfaceSecondaryForeground()
-                        .padding(.xxSmall)
+                    Label("Miuns", systemImage: "minus")
+                        .font(.system(size: 20))
+                        .labelStyle(.iconOnly)
+                        .padding(.bottom, 14)
+                        .foregroundStyle(Color.onSurfacePrimary)
                 }
+                .buttonStyle(.glassProminent)
+                .glassEffectUnion(id: "mapOptions", namespace: unionNamespace)
             }
-            .background {
-                Capsule()
-                    .fillSurfacePrimary()
-                    .shadowElevation(.z1)
-            }
-            Spacer()
+            .tint(Color.surfacePrimary.opacity(0.8))
         }
-        .overlay(alignment: .bottomTrailing, content: {
+    }
+
+    var zoomButtons: some View {
+        VStack(spacing: .zero) {
+            Button {
+                viewModel.zoomIn()
+            } label: {
+                Image(systemName: "plus")
+                    .onSurfaceSecondary()
+                    .padding(.xSmall)
+            }
+            .buttonStyle(.scale)
+
+            Button {
+                viewModel.zoomOut()
+            } label: {
+                Image(systemName: "minus")
+                    .onSurfaceSecondary()
+                    .padding(.xSmall)
+                    .padding(.bottom, 6)
+            }
+        }
+        .background {
+            Capsule()
+                .fillSurfacePrimary()
+                .shadowElevation(.z1)
+        }
+    }
+
+    #if os(iOS)
+    @available(iOS 26.0, *)
+    var locationButtonGlass: some View {
+        Button {
+            viewModel.positionInLocation()
+        } label: {
+            Label("Location", systemImage: "location.fill")
+                .labelStyle(.iconOnly)
+                .foregroundStyle(Color.onSurfacePrimary)
+        }
+        .buttonStyle(.glassProminent)
+    }
+    #endif
+
+    var locationButton: some View {
+        HStack {
+            Spacer()
+
             Button {
                 viewModel.positionInLocation()
-
             } label: {
-                IconDeprecated(.navigation)
-                    .onSurfaceSecondaryForeground()
+                Image(systemName: "location.fill")
+                    .onSurfaceSecondary()
                     .padding(.xxSmall)
+                    .background {
+                        Capsule()
+                            .fillSurfacePrimary()
+                            .shadowElevation(.z1)
+                    }
             }
-            .background {
-                Capsule()
-                    .fillSurfacePrimary()
-                    .shadowElevation(.z1)
-            }
-        })
-        .padding(.trailing, 16)
-        .padding(.bottom, screenSize.safeAreaBottom)
+        }
+        .padding(.horizontal, .small)
     }
 
     var routeSheetView: some View {
-        PageView("Route") {
-            SectionView {
-                Row("Apple Maps") {
-                    onTapAppleMaps()
+        ListLayoutView("Route") {
+            ListSection {
+                Button(action: onTapAppleMaps) {
+                    ListRow("Apple Maps")
                 }
-                Row("Google Maps") {
-                    onTapGoogleMaps()
+                Button(action: onTapGoogleMaps) {
+                    ListRow("Google Maps")
                 }
             }
+            #if !os(tvOS)
+            .listRowSeparator(.hidden)
+            #endif
         }
-        .leadingBar(leadingBar: {
-            BarButton(.close)
-        })
-        .backgroundSecondary()
-        .disableScrollShadow(true)
-        .surfaceContentRowMargins()
+        .listLayoutStyle(.insetGrouped)
+        .toolbarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Close", systemImage: "xmark", role: .cancel) {
+                    viewModel.isShowRoutePickerSheet = false
+                }
+                .labelStyle(.toolbar)
+                .buttonStyle(.toolbarSecondary)
+                #if !os(tvOS) && !os(watchOS)
+                    .keyboardShortcut(.cancelAction)
+                #endif
+            }
+        }
     }
 
     func onTapAppleMaps() {
@@ -149,14 +205,20 @@ public struct MapCoordinateView: View {
     }
 
     func onTapGoogleMaps() {
-        guard let url = URL(string: "comgooglemaps://?saddr=\(viewModel.location.latitude),\(viewModel.location.longitude)") else { return }
+        guard let url = URL(string: "comgooglemaps://?daddr=\(viewModel.location.latitude),\(viewModel.location.longitude)&directionsmode=driving") else { return }
         openURL(url)
     }
 }
 
-struct MapCoordinateView_Previews: PreviewProvider {
-    static var previews: some View {
-        MapCoordinateView(.init(latitude: 100, longitude: 100))
+#Preview {
+    NavigationStack {
+        MapCoordinateView(
+            .init(
+                latitude: 100,
+                longitude: 100
+            ),
+            annotation: "Point"
+        )
     }
 }
 #endif

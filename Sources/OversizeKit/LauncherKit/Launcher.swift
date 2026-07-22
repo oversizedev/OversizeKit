@@ -3,8 +3,10 @@
 // Launcher.swift
 //
 
+import NavigatorUI
 import OversizeCore
 import OversizeLocalizable
+import OversizeNavigation
 import OversizeServices
 import OversizeUI
 import SwiftUI
@@ -20,7 +22,7 @@ public struct Launcher<Content: View, Onboarding: View>: View {
     public init(
         @ViewBuilder content: () -> Content,
         firstRunAction: (() -> Void)? = nil,
-        appUpdateAction: (() -> Void)? = nil
+        appUpdateAction: ((String, String?) -> Void)? = nil
     ) {
         self.content = content()
         _viewModel = StateObject(wrappedValue: LauncherViewModel(
@@ -31,43 +33,61 @@ public struct Launcher<Content: View, Onboarding: View>: View {
 
     public var body: some View {
         contentView
-            .task(viewModel.onAppear)
             .appLaunchCover(item: $viewModel.activeFullScreenSheet) {
                 fullScreenCover(sheet: $0)
-                    .systemServices()
+                    .coreServices()
                 #if os(macOS)
-                    .frame(width: viewModel.activeFullScreenSheet == .onboarding ? 840 : 500, height: 672)
-                // .interactiveDismissDisabled(!viewModel.appStateService.isCompletedOnbarding)
+                    .frame(width: viewModel.contentType == .onboarding ? 840 : 500, height: 672)
                 #endif
             }
-            .onChange(of: viewModel.appStateService.isCompletedOnboarding) { _, isCompletedOnbarding in
-                viewModel.onCompeteOnboarding(isCompletedOnbarding)
+            .onChange(of: viewModel.appStateService.isCompletedOnboarding) { _, isCompletedOnboarding in
+                viewModel.onCompeteOnboarding(isCompletedOnboarding)
             }
             .onChange(of: scenePhase) { _, value in
                 viewModel.onScenePhaseChange(value)
             }
+            .presentationHUDRoot()
+            .coreServices()
+            .task(viewModel.onAppear)
     }
 
     @ViewBuilder
     var contentView: some View {
-        if viewModel.isShowLockscreen {
-            lockscreenView
-        } else {
-            content
-                .task {
-                    await viewModel.reviewService.launchEvent()
-                    await viewModel.launcherSheetsCheck()
-                }
+        switch viewModel.contentType {
+        case .content:
+            if viewModel.isShowLockscreen {
+                lockscreenView
+            } else {
+                content
+                    .task {
+                        await viewModel.reviewService.launchEvent()
+                        await viewModel.launcherSheetsCheck()
+                    }
+            }
+        case .onboarding:
+            onboarding
         }
     }
 
     @ViewBuilder
     private func fullScreenCover(sheet: LauncherViewModel.FullScreenSheet) -> some View {
         switch sheet {
-        case .onboarding: onboarding
-        case .payWall: StoreInstructionsView()
-        case .rate: RateAppScreen()
-        case let .specialOffer(event): StoreSpecialOfferView(event: event)
+        case .payWall:
+            ManagedNavigationStack {
+                StoreInstructionsView(specialOfferMode: true)
+            }
+        case .rate:
+            ManagedNavigationStack {
+                RateAppScreen()
+            }
+        case let .specialOffer(event):
+            ManagedNavigationStack {
+                StoreSpecialOfferView(event: event)
+            }
+        case let .whatsNew(version):
+            ManagedNavigationStack {
+                AppUpdate.build(input: .init(version: version))
+            }
         }
     }
 
@@ -83,11 +103,13 @@ public struct Launcher<Content: View, Onboarding: View>: View {
         ) {
             viewModel.checkPassword()
         } biometricAction: {
-            viewModel.appBiometricUnlock()
+            Task {
+                await viewModel.appBiometricUnlock()
+            }
         }
-        .onAppear {
+        .task {
             if viewModel.settingsService.biometricEnabled, scenePhase != .background {
-                viewModel.appBiometricUnlock()
+                await viewModel.appBiometricUnlock()
             }
         }
     }
@@ -103,7 +125,7 @@ public extension Launcher where Onboarding == EmptyView {
     init(
         @ViewBuilder content: () -> Content,
         firstRunAction: (() -> Void)? = nil,
-        appUpdateAction: (() -> Void)? = nil
+        appUpdateAction: ((String, String?) -> Void)? = nil
     ) {
         self.content = content()
         _viewModel = StateObject(wrappedValue: LauncherViewModel(
@@ -131,7 +153,7 @@ public extension View {
     func appLaunch(
         @ViewBuilder onboarding: @escaping () -> some View,
         firstRun: (() -> Void)? = nil,
-        appUpdate: (() -> Void)? = nil
+        appUpdate: ((String, String?) -> Void)? = nil
     ) -> some View {
         Launcher(
             content: { self },
@@ -143,9 +165,9 @@ public extension View {
 }
 
 private extension View {
-    func appLaunchCover<Item>(
+    func appLaunchCover<Item: Identifiable>(
         item: Binding<Item?>, onDismiss: (() -> Void)? = nil, @ViewBuilder content: @escaping (Item) -> some View
-    ) -> some View where Item: Identifiable {
+    ) -> some View {
         #if os(macOS)
         sheet(item: item, onDismiss: onDismiss, content: content)
         #else

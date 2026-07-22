@@ -3,10 +3,10 @@
 // SettingsView.swift
 //
 
+import NavigatorUI
 import OversizeLocalizable
 import OversizeNavigation
 import OversizeResources
-import OversizeRouter
 import OversizeServices
 import OversizeUI
 import SwiftUI
@@ -87,7 +87,7 @@ extension SettingsView {
                     } leading: {
                         appearanceSettingsIcon.icon()
                     }
-                    .rowArrow()
+                    .navigatable()
                 }
 
                 if FeatureFlags.app.сloudKit.valueOrFalse || FeatureFlags.app.healthKit.valueOrFalse {
@@ -96,24 +96,17 @@ extension SettingsView {
                     } leading: {
                         cloudKitIcon.icon()
                     }
-                    .rowArrow()
+                    .navigatable()
                 }
 
-                if FeatureFlags.secure.faceID.valueOrFalse
-                    || FeatureFlags.secure.lookscreen.valueOrFalse
-                    || FeatureFlags.secure.CVVCodes.valueOrFalse
-                    || FeatureFlags.secure.alertSecureCodes.valueOrFalse
-                    || FeatureFlags.secure.blurMinimize.valueOrFalse
-                    || FeatureFlags.secure.bruteForceSecure.valueOrFalse
-                    || FeatureFlags.secure.photoBreaker.valueOrFalse
-                {
+                if FeatureFlags.secure.faceID.valueOrFalse || FeatureFlags.secure.lookscreen.valueOrFalse || FeatureFlags.secure.blurMinimize.valueOrFalse {
                     Row(L10n.Security.title) {
                         navigator.navigate(to: SettingsDestinations.security)
 
                     } leading: {
                         securityIcon.icon()
                     }
-                    .rowArrow()
+                    .navigatable()
                 }
 
                 if FeatureFlags.app.sounds.valueOrFalse || FeatureFlags.app.vibration.valueOrFalse {
@@ -123,7 +116,7 @@ extension SettingsView {
                     } leading: {
                         FeatureFlags.app.sounds.valueOrFalse ? soundIcon.icon() : vibrationIcon.icon()
                     }
-                    .rowArrow()
+                    .navigatable()
                 }
 
                 if FeatureFlags.app.notifications.valueOrFalse {
@@ -133,7 +126,7 @@ extension SettingsView {
                     } leading: {
                         notificationsIcon.icon()
                     }
-                    .rowArrow()
+                    .navigatable()
                 }
 
                 appSection
@@ -212,7 +205,7 @@ extension SettingsView {
         }
     }
 
-    // App Store Review
+    /// App Store Review
     private var help: some View {
         SectionView(L10n.Settings.supportSection) {
             VStack(alignment: .leading) {
@@ -224,7 +217,7 @@ extension SettingsView {
                 } leading: {
                     helpIcon.icon()
                 }
-                .rowArrow()
+                .navigatable()
                 .buttonStyle(.row)
 
                 Row("Send feedback") {
@@ -235,9 +228,30 @@ extension SettingsView {
                 } leading: {
                     chatIcon.icon()
                 }
-                .rowArrow()
+                .navigatable()
                 .buttonStyle(.row)
+
+                if Info.App.version?.isFirstVersion == false {
+                    Row("What's New") {
+                        navigator.navigate(to: SettingsDestinations.appUpdates)
+                    } leading: {
+                        updatesIcon.icon()
+                    }
+                    .navigatable()
+                    .buttonStyle(.row)
+                }
             }
+        }
+    }
+
+    var updatesIcon: Image {
+        switch iconStyle {
+        case .line:
+            Image.Base.star
+        case .fill:
+            Image.Base.Star.fill
+        case .twoTone:
+            Image.Base.Star.TwoTone.fill
         }
     }
 
@@ -342,14 +356,14 @@ extension SettingsView {
                 } leading: {
                     debugIcon.icon()
                 }
-                .rowArrow()
+                .navigatable()
 
                 Row("Information") {
                     navigator.navigate(to: SettingsDestinations.debugInfo)
                 } leading: {
                     debugInfoIcon.icon()
                 }
-                .rowArrow()
+                .navigatable()
             }
             .buttonStyle(.row)
         }
@@ -364,7 +378,7 @@ extension SettingsView {
                 } leading: {
                     infoIcon.icon()
                 }
-                .rowArrow()
+                .navigatable()
             }
             .buttonStyle(.row)
         }

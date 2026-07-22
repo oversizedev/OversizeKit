@@ -3,15 +3,15 @@
 // Alerts.swift, created on 25.09.2023
 //
 
+import OversizeCore
 import OversizeLocalizable
-import OversizeModels
 import OversizeServices
 import SwiftUI
 
 enum RootAlert: Identifiable {
     case dismiss(_ action: () -> Void)
     case delete(_ action: () -> Void)
-    case appError(error: AppError)
+    case appError(error: Error)
 
     var id: String {
         switch self {
@@ -38,12 +38,30 @@ enum RootAlert: Identifiable {
                 primaryButton: .destructive(Text("\(L10n.Button.delete)"), action: action),
                 secondaryButton: .cancel()
             )
-        case let .appError(error: error):
+        case let .appError(error):
             Alert(
-                title: Text(error.title),
-                message: Text(error.subtitle.valueOrEmpty),
+                title: Text(errorTitle(error)),
+                message: errorSubtitle(error).map { Text($0) },
                 dismissButton: .cancel()
             )
         }
     }
+}
+
+private func errorTitle(_ error: Error) -> String {
+    if let localizedError = error as? LocalizedError {
+        return localizedError.errorDescription ?? "Error"
+    }
+    return error.localizedDescription
+}
+
+private func errorSubtitle(_ error: Error) -> String? {
+    if let localizedError = error as? LocalizedError {
+        let subtitle = [
+            localizedError.failureReason,
+            localizedError.recoverySuggestion,
+        ].compactMap { $0 }.joined(separator: "\n")
+        return subtitle.isEmpty ? nil : subtitle
+    }
+    return nil
 }

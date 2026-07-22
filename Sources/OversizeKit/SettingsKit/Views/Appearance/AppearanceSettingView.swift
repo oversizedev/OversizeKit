@@ -3,10 +3,10 @@
 // AppearanceSettingView.swift
 //
 
+import NavigatorUI
 import OversizeCore
 import OversizeLocalizable
 import OversizeNavigation
-import OversizeRouter
 import OversizeServices
 import OversizeUI
 import SwiftUI
@@ -17,9 +17,7 @@ public struct AppearanceSettingView: View {
     @Environment(\.iconStyle) var iconStyle: IconStyle
     @Environment(\.isPremium) var isPremium: Bool
 
-    #if os(iOS)
-    @StateObject var iconSettings = AppIconSettings()
-    #endif
+    @State var iconNameSelection = Info.App.alternateIconName ?? "AppIcon"
 
     private let columns = [
         GridItem(.adaptive(minimum: 78)),
@@ -48,7 +46,7 @@ public struct AppearanceSettingView: View {
             advanded
 
             #if os(iOS)
-            if iconSettings.iconNames.count > 1 {
+            if UIApplication.shared.supportsAlternateIcons, Info.App.alternateIconNames.isEmpty == false {
                 appIcon
             }
             #endif
@@ -65,7 +63,6 @@ public struct AppearanceSettingView: View {
             advanded
         }
         .frame(width: 400, height: 300)
-        // swiftlint:disable multiple_closures_with_trailing_closure superfluous_disable_command
         .navigationTitle("Appearance")
         .preferredColorScheme(theme.appearance.colorScheme)
     }
@@ -87,9 +84,9 @@ public struct AppearanceSettingView: View {
                                 .padding(.vertical, .medium)
 
                             if appearance == theme.appearance {
-                                IconDeprecated(.checkCircle, color: Color.accent)
+                                Icon(Image.Base.Check.circle).iconColor(Color.accent)
                             } else {
-                                IconDeprecated(.circle, color: .onSurfaceSecondary)
+                                Icon("circle").iconColor(.onSurfaceSecondary)
                             }
                         }
                         Spacer()
@@ -117,40 +114,42 @@ public struct AppearanceSettingView: View {
     private var appIcon: some View {
         SectionView("App icon") {
             LazyVGrid(columns: columns, spacing: 24) {
-                ForEach(0 ..< iconSettings.iconNames.count, id: \.self) { index in
+                ForEach(Info.App.alternateIconNames, id: \.self) { iconName in
                     HStack {
-                        Image(uiImage: UIImage(named: iconSettings.iconNames[index]
-                                ?? "AppIcon") ?? UIImage())
+                        Image(iconName)
                             .renderingMode(.original)
                             .resizable()
                             .scaledToFit()
                             .frame(width: 78, height: 78)
-                            .cornerRadius(18)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 20)
                                     .stroke(
-                                        index == iconSettings.currentIndex ? Color.accent : Color.border,
-                                        lineWidth: index == iconSettings.currentIndex ? 3 : 1
+                                        iconName == iconNameSelection ? Color.accent : Color.clear,
+                                        lineWidth: iconName == iconNameSelection ? 3 : 0
                                     )
                             )
+                            .overlay(alignment: .bottomTrailing) {
+                                if iconName == iconNameSelection {
+                                    Image.Base.check.icon(.white, size: .small)
+                                        .padding(4)
+                                        .background {
+                                            Circle().fillAccent()
+                                        }
+                                        .offset(x: 7, y: 7)
+                                }
+                            }
                             .onTapGesture {
-                                if index != 0, isPremium == false {
-                                    navigator.navigate(
-                                        to: SettingsDestinations.premium)
-
-                                } else {
-                                    let defaultIconIndex = iconSettings.iconNames
-                                        .firstIndex(of: UIApplication.shared.alternateIconName) ?? 0
-                                    if defaultIconIndex != index {
-                                        // swiftlint:disable line_length
-                                        UIApplication.shared.setAlternateIconName(iconSettings.iconNames[index]) { error in
-                                            if let error {
-                                                log(error.localizedDescription)
-                                            } else {
-                                                log("Success! You have changed the app icon.")
-                                            }
+                                if isPremium {
+                                    iconNameSelection = iconName
+                                    UIApplication.shared.setAlternateIconName(iconName) { error in
+                                        if let error {
+                                            Log.error("App icon change failed", error: error)
+                                        } else {
+                                            Log.info("App icon changed")
                                         }
                                     }
+                                } else {
+                                    navigator.navigate(to: SettingsDestinations.premium)
                                 }
                             }
                     }
@@ -170,8 +169,8 @@ public struct AppearanceSettingView: View {
                 } leading: {
                     textIcon.icon()
                 }
-                .rowArrow()
                 .premium()
+                .navigatable()
                 .onPremiumTap()
 
                 Switch(isOn: theme.$borderApp) {
@@ -197,8 +196,8 @@ public struct AppearanceSettingView: View {
                 } leading: {
                     radiusIcon.icon()
                 }
-                .rowArrow()
                 .premium()
+                .navigatable()
                 .onPremiumTap()
             }
         }
@@ -237,30 +236,6 @@ public struct AppearanceSettingView: View {
         }
     }
 }
-
-#if os(iOS)
-@MainActor
-public class AppIconSettings: ObservableObject {
-    public var iconNames: [String?] = [nil]
-    @Published public var currentIndex = 0
-
-    public init() {
-        getAlternateIconNames()
-
-        if let currentIcon = UIApplication.shared.alternateIconName {
-            currentIndex = iconNames.firstIndex(of: currentIcon) ?? 0
-        }
-    }
-
-    private func getAlternateIconNames() {
-        if let iconCount = FeatureFlags.app.alternateAppIcons, iconCount != 0 {
-            for index in 1 ... iconCount {
-                iconNames.append("AlternateAppIcon\(index)")
-            }
-        }
-    }
-}
-#endif
 
 struct SettingsThemeView_Previews: PreviewProvider {
     static var previews: some View {

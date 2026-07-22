@@ -3,19 +3,16 @@
 // AboutView.swift
 //
 
-import CachedAsyncImage
 import NavigatorUI
 import OversizeComponents
 import OversizeCore
 import OversizeLocalizable
 import OversizeNavigation
 import OversizeResources
-import OversizeRouter
 import OversizeServices
 import OversizeUI
 import SwiftUI
 
-// swiftlint:disable all
 #if canImport(MessageUI)
 import MessageUI
 #endif
@@ -86,11 +83,11 @@ public struct AboutView: View {
 
     private func appLinks() -> some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            HStack(alignment: .top, spacing: Space.small) {
+            HStack(alignment: .top, spacing: .small) {
                 switch viewModel.state {
                 case .initial, .loading:
                     ForEach(0 ... 6, id: \.self) { _ in
-                        RoundedRectangle(cornerRadius: .large, style: .continuous)
+                        RoundedRectangle(cornerRadius: 18, style: .continuous)
                             .fillSurfaceSecondary()
                             .frame(width: 74, height: 74)
                     }
@@ -100,28 +97,33 @@ public struct AboutView: View {
                             isPresentStoreProduct = true
                         } label: {
                             VStack(spacing: .xSmall) {
-                                CachedAsyncImage(url: URL(string: "https://cdn.oversize.design/assets/apps/" + app.address + "/icon.png"), urlCache: .imageCache, content: {
-                                    $0
-                                        .resizable()
-                                        .frame(width: 74, height: 74)
-                                        .mask(RoundedRectangle(
-                                            cornerRadius: .large,
-                                            style: .continuous
-                                        ))
-                                        .overlay(
-                                            RoundedRectangle(
-                                                cornerRadius: 16,
+                                CachedAsyncImage(
+                                    url: URL(string: app.iconUrl ?? ""),
+                                    urlCache: .imageCache,
+                                    content: { image in
+                                        image
+                                            .resizable()
+                                            .frame(width: 74, height: 74)
+                                            .mask(RoundedRectangle(
+                                                cornerRadius: 18,
                                                 style: .continuous
+                                            ))
+                                            .overlay(
+                                                RoundedRectangle(
+                                                    cornerRadius: 18,
+                                                    style: .continuous
+                                                )
+                                                .stroke(lineWidth: 1)
+                                                .opacity(0.15)
                                             )
-                                            .stroke(lineWidth: 1)
-                                            .opacity(0.15)
-                                        )
 
-                                }, placeholder: {
-                                    RoundedRectangle(cornerRadius: .large, style: .continuous)
-                                        .fillSurfaceSecondary()
-                                        .frame(width: 74, height: 74)
-                                })
+                                    },
+                                    placeholder: {
+                                        RoundedRectangle(cornerRadius: 18, style: .continuous)
+                                            .fillSurfaceSecondary()
+                                            .frame(width: 74, height: 74)
+                                    }
+                                )
 
                                 Text(app.name)
                                     .caption(.medium)
@@ -139,15 +141,15 @@ public struct AboutView: View {
                     EmptyView()
                 }
 
-                if let authorAllApps = Info.url.developerAllApps {
+                if let authorAllApps = Info.Developer.appsUrl {
                     VStack(spacing: .xSmall) {
                         Link(destination: authorAllApps) {
                             ZStack {
-                                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                                RoundedRectangle(cornerRadius: 18, style: .continuous)
                                     .foregroundColor(.surfaceSecondary)
                                     .frame(width: 74, height: 74)
 
-                                IconDeprecated(.externalLink)
+                                Icon(Image.Base.link)
                             }
                         }
 
@@ -212,7 +214,7 @@ public struct AboutView: View {
 
             SectionView {
                 VStack(spacing: .zero) {
-                    if let reviewUrl = Info.url.appStoreReview, let id = Info.app.appStoreID, !id.isEmpty, let appName = Info.app.name {
+                    if let reviewUrl = Info.App.appStoreReviewUrl, let id = Info.App.appStoreId, !id.isEmpty, let appName = Info.App.name {
                         Link(destination: reviewUrl) {
                             Row("Rate \(appName) on App Store") {
                                 rateSettingsIcon.icon()
@@ -223,14 +225,14 @@ public struct AboutView: View {
 
                     #if os(iOS)
                     if MFMailComposeViewController.canSendMail(),
-                       let mail = Info.links?.company.email,
-                       let appVersion = Info.app.version,
-                       let appName = Info.app.name,
-                       let device = Info.app.device,
-                       let appBuild = Info.app.build,
-                       let systemVersion = Info.app.system
+                       let mail = Info.Developer.email,
+                       let appVersion = Info.App.version,
+                       let appName = Info.App.name,
+                       let device = Info.App.device,
+                       let appBuild = Info.App.build,
+                       let systemVersion = Info.App.osVersion
                     {
-                        let contentPreText = "\n\n\n\n\n\n————————————————\nApp: \(appName) \(appVersion) (\(appBuild))\nDevice: \(device), \(systemVersion)\nLocale: \(Info.app.language ?? "Not init")"
+                        let contentPreText = "\n\n\n\n\n\n————————————————\nApp: \(appName) \(appVersion) (\(appBuild))\nDevice: \(device), \(systemVersion)\nLocale: \(Info.App.localeIdentifier ?? "Not init")"
                         let subject = "Feedback"
 
                         Row(L10n.About.suggestIdea) {
@@ -247,7 +249,7 @@ public struct AboutView: View {
                     #endif
 
                     #if os(iOS)
-                    if let shareUrl = Info.url.appInstallShare, let id = Info.app.appStoreID, !id.isEmpty {
+                    if let shareUrl = Info.App.appStoreUrl, let id = Info.App.appStoreId, !id.isEmpty {
                         Row(L10n.Settings.shareApplication) {
                             isSharePresented.toggle()
                         } leading: {
@@ -283,15 +285,15 @@ public struct AboutView: View {
                     Row("Our open resources") {
                         navigator.navigate(to: SettingsDestinations.ourResources)
                     }
-                    .rowArrow()
+                    .navigatable()
 
-                    if let privacyUrl = Info.url.appPrivacyPolicyUrl {
+                    if let privacyUrl = Info.App.privacyPolicyUrl {
                         Row(L10n.Store.privacyPolicy) {
                             navigator.navigate(to: SettingsDestinations.webView(url: privacyUrl))
                         }
                     }
 
-                    if let termsOfUde = Info.url.appTermsOfUseUrl {
+                    if let termsOfUde = Info.App.termsOfUseUrl {
                         Row(L10n.Store.termsOfUse) {
                             navigator.navigate(to: SettingsDestinations.webView(url: termsOfUde))
                         }
@@ -340,7 +342,7 @@ public struct AboutView: View {
 //                    EmptyView()
 //                }
 
-            if let facebook = Info.url.companyFacebook {
+            if let facebook = Info.Company.facebookUrl {
                 Link(destination: facebook) {
                     // Surface {
                     HStack {
@@ -354,7 +356,7 @@ public struct AboutView: View {
                 }
             }
 
-            if let instagram = Info.url.companyInstagram {
+            if let instagram = Info.Company.instagramUrl {
                 Link(destination: instagram) {
                     // Surface {
                     HStack {
@@ -368,7 +370,7 @@ public struct AboutView: View {
                 }
             }
 
-            if let twitter = Info.url.companyTwitter {
+            if let twitter = Info.Company.twitterUrl {
                 Link(destination: twitter) {
                     // Surface {
                     HStack {
@@ -382,7 +384,7 @@ public struct AboutView: View {
                 }
             }
 
-            if let telegramUrl = Info.url.companyTelegram {
+            if let telegramUrl = Info.Company.telegramUrl {
                 Link(destination: telegramUrl) {
                     // Surface {
                     HStack {
@@ -396,7 +398,7 @@ public struct AboutView: View {
                 }
             }
 
-            if let dribbble = Info.url.companyDribbble {
+            if let dribbble = Info.Company.dribbbleUrl {
                 Link(destination: dribbble) {
                     //  Surface {
                     HStack {
@@ -475,14 +477,14 @@ public struct AboutView: View {
             Spacer()
 
             VStack(alignment: .center) {
-                if let authorLink = Info.links?.company.url {
+                if let authorLink = Info.Company.websiteUrl {
                     Link(destination: authorLink) {
-                        if let developerName = Info.developer.name,
-                           let appVersion = Info.app.version,
-                           let appName = Info.app.name,
-                           let appBuild = Info.app.build
+                        if let developerName = Info.Developer.name,
+                           let appVersion = Info.App.version?.description,
+                           let appName = Info.App.name,
+                           let appBuild = Info.App.build
                         {
-                            Text("© 2024 \(developerName). \(appName) \(appVersion) (\(appBuild))")
+                            Text("© 2026 \(developerName). \(appName) \(appVersion) (\(appBuild))")
                                 .footnote()
                                 .foregroundColor(.onBackgroundTertiary)
                         } else {
@@ -496,7 +498,7 @@ public struct AboutView: View {
 
             Spacer()
         }
-        .padding(.top, Space.small)
+        .padding(.top, .small)
         .padding(.bottom, 40)
     }
 

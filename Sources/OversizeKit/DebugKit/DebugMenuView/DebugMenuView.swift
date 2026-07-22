@@ -6,6 +6,7 @@
 import OversizeCore
 import OversizeLocalizable
 import OversizeNavigation
+import OversizeNetwork
 import OversizeServices
 import OversizeUI
 import SwiftUI
@@ -26,6 +27,23 @@ public struct DebugMenuView: View {
 
     var contentView: some View {
         LeadingVStack {
+            SectionView("API Server") {
+                Picker("Server", selection: $viewModel.selectedServer) {
+                    ForEach(APIServer.allCases) { server in
+                        Text(server.title).tag(server)
+                    }
+                }
+                #if !os(watchOS)
+                .pickerStyle(.segmented)
+                #endif
+                .padding(.horizontal, .medium)
+                .padding(.vertical, .small)
+                .onChange(of: viewModel.selectedServer) { _, new in
+                    viewModel.onChangeAPIServer(new)
+                }
+            }
+            .sectionContentCompactRowMargins()
+
             SectionView {
                 Row(
                     "Rest onboarding",

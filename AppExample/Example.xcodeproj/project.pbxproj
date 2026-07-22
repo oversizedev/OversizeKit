@@ -28,7 +28,7 @@
 		84664C382BF9FD6400A24148 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84664C372BF9FD6400A24148 /* ContentView.swift */; };
 		84664C3A2BF9FD6500A24148 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84664C392BF9FD6500A24148 /* Assets.xcassets */; };
 		84664C3D2BF9FD6500A24148 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84664C3C2BF9FD6500A24148 /* Preview Assets.xcassets */; };
-		84664C472BF9FDC200A24148 /* Factory in Frameworks */ = {isa = PBXBuildFile; productRef = 84664C462BF9FDC200A24148 /* Factory */; };
+		84664C472BF9FDC200A24148 /* FactoryKit in Frameworks */ = {isa = PBXBuildFile; productRef = 84664C462BF9FDC200A24148 /* FactoryKit */; };
 		848479442BF9FF94003FC3FC /* OversizeCalendarKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479432BF9FF94003FC3FC /* OversizeCalendarKit */; };
 		848479462BF9FF94003FC3FC /* OversizeContactsKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479452BF9FF94003FC3FC /* OversizeContactsKit */; };
 		848479482BF9FF94003FC3FC /* OversizeKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479472BF9FF94003FC3FC /* OversizeKit */; };
@@ -36,7 +36,7 @@
 		8484794C2BF9FF94003FC3FC /* OversizeNoticeKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8484794B2BF9FF94003FC3FC /* OversizeNoticeKit */; };
 		8484794E2BF9FF94003FC3FC /* OversizeNotificationKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8484794D2BF9FF94003FC3FC /* OversizeNotificationKit */; };
 		848479502BF9FF94003FC3FC /* OversizeOnboardingKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8484794F2BF9FF94003FC3FC /* OversizeOnboardingKit */; };
-		848479522BF9FF94003FC3FC /* OversizePhotoKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479512BF9FF94003FC3FC /* OversizePhotoKit */; };
+		848479522BF9FF94003FC3FC /* OversizeMediaKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479512BF9FF94003FC3FC /* OversizeMediaKit */; };
 		848479542BF9FFA4003FC3FC /* OversizeCalendarKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479532BF9FFA4003FC3FC /* OversizeCalendarKit */; };
 		848479562BF9FFA4003FC3FC /* OversizeContactsKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479552BF9FFA4003FC3FC /* OversizeContactsKit */; };
 		848479582BF9FFA4003FC3FC /* OversizeKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479572BF9FFA4003FC3FC /* OversizeKit */; };
@@ -44,7 +44,7 @@
 		8484795C2BF9FFA4003FC3FC /* OversizeNoticeKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8484795B2BF9FFA4003FC3FC /* OversizeNoticeKit */; };
 		8484795E2BF9FFA4003FC3FC /* OversizeNotificationKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8484795D2BF9FFA4003FC3FC /* OversizeNotificationKit */; };
 		848479602BF9FFA4003FC3FC /* OversizeOnboardingKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8484795F2BF9FFA4003FC3FC /* OversizeOnboardingKit */; };
-		848479622BF9FFA4003FC3FC /* OversizePhotoKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479612BF9FFA4003FC3FC /* OversizePhotoKit */; };
+		848479622BF9FFA4003FC3FC /* OversizeMediaKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479612BF9FFA4003FC3FC /* OversizeMediaKit */; };
 		848479652BFA0E64003FC3FC /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848479642BFA0E64003FC3FC /* TestView.swift */; };
 		84A876512E129B0F00CC6DDA /* FactoryKit in Frameworks */ = {isa = PBXBuildFile; productRef = 84A876502E129B0F00CC6DDA /* FactoryKit */; };
 /* End PBXBuildFile section */
@@ -112,10 +112,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				848479622BF9FFA4003FC3FC /* OversizePhotoKit in Frameworks */,
+				848479622BF9FFA4003FC3FC /* OversizeMediaKit in Frameworks */,
 				848479542BF9FFA4003FC3FC /* OversizeCalendarKit in Frameworks */,
 				8484795E2BF9FFA4003FC3FC /* OversizeNotificationKit in Frameworks */,
-				84A876512E129B0F00CC6DDA /* FactoryKit in Frameworks */,
+				84A876512E129B0F00CC6DDA /* Factory in Frameworks */,
 				848479582BF9FFA4003FC3FC /* OversizeKit in Frameworks */,
 				8484795A2BF9FFA4003FC3FC /* OversizeLocationKit in Frameworks */,
 				8484795C2BF9FFA4003FC3FC /* OversizeNoticeKit in Frameworks */,
@@ -128,7 +128,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				848479522BF9FF94003FC3FC /* OversizePhotoKit in Frameworks */,
+				848479522BF9FF94003FC3FC /* OversizeMediaKit in Frameworks */,
 				848479442BF9FF94003FC3FC /* OversizeCalendarKit in Frameworks */,
 				8484794E2BF9FF94003FC3FC /* OversizeNotificationKit in Frameworks */,
 				84664C472BF9FDC200A24148 /* Factory in Frameworks */,
@@ -316,7 +316,7 @@
 				8484795B2BF9FFA4003FC3FC /* OversizeNoticeKit */,
 				8484795D2BF9FFA4003FC3FC /* OversizeNotificationKit */,
 				8484795F2BF9FFA4003FC3FC /* OversizeOnboardingKit */,
-				848479612BF9FFA4003FC3FC /* OversizePhotoKit */,
+				848479612BF9FFA4003FC3FC /* OversizeMediaKit */,
 				84A876502E129B0F00CC6DDA /* FactoryKit */,
 			);
 			productName = Example;
@@ -354,7 +354,7 @@
 			);
 			name = "Example (watchOS) Watch App";
 			packageProductDependencies = (
-				84664C462BF9FDC200A24148 /* Factory */,
+				84664C462BF9FDC200A24148 /* FactoryKit */,
 				848479432BF9FF94003FC3FC /* OversizeCalendarKit */,
 				848479452BF9FF94003FC3FC /* OversizeContactsKit */,
 				848479472BF9FF94003FC3FC /* OversizeKit */,
@@ -362,7 +362,7 @@
 				8484794B2BF9FF94003FC3FC /* OversizeNoticeKit */,
 				8484794D2BF9FF94003FC3FC /* OversizeNotificationKit */,
 				8484794F2BF9FF94003FC3FC /* OversizeOnboardingKit */,
-				848479512BF9FF94003FC3FC /* OversizePhotoKit */,
+				848479512BF9FF94003FC3FC /* OversizeMediaKit */,
 			);
 			productName = "Example (watchOS) Watch App";
 			productReference = 84664C302BF9FD6400A24148 /* Example (watchOS) Watch App.app */;
@@ -820,7 +820,7 @@
 			repositoryURL = "https://github.com/hmlongco/Factory";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 2.1.3;
+				minimumVersion = 3.0.2;
 			};
 		};
 		845A59312BA4FD2B00988D52 /* XCRemoteSwiftPackageReference "OversizeModels" */ = {
@@ -834,10 +834,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		84664C462BF9FDC200A24148 /* Factory */ = {
+		84664C462BF9FDC200A24148 /* FactoryKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 840CD6AD2AC0E44E00C6AAD0 /* XCRemoteSwiftPackageReference "Factory" */;
-			productName = Factory;
+			productName = FactoryKit;
 		};
 		848479432BF9FF94003FC3FC /* OversizeCalendarKit */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -867,9 +867,9 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = OversizeOnboardingKit;
 		};
-		848479512BF9FF94003FC3FC /* OversizePhotoKit */ = {
+		848479512BF9FF94003FC3FC /* OversizeMediaKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = OversizePhotoKit;
+			productName = OversizeMediaKit;
 		};
 		848479532BF9FFA4003FC3FC /* OversizeCalendarKit */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -899,9 +899,9 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = OversizeOnboardingKit;
 		};
-		848479612BF9FFA4003FC3FC /* OversizePhotoKit */ = {
+		848479612BF9FFA4003FC3FC /* OversizeMediaKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = OversizePhotoKit;
+			productName = OversizeMediaKit;
 		};
 		84A876502E129B0F00CC6DDA /* FactoryKit */ = {
 			isa = XCSwiftPackageProductDependency;

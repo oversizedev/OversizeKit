@@ -3,9 +3,7 @@
 // AdView.swift
 //
 
-import CachedAsyncImage
 import OversizeCore
-import OversizeModels
 import OversizeNetwork
 import OversizeServices
 import OversizeUI
@@ -14,56 +12,89 @@ import SwiftUI
 public struct AdView: View {
     @Environment(\.isPremium) var isPremium: Bool
 
-    @StateObject var viewModel: AdViewModel
+    @State var viewModel = AdViewModel()
 
     @State var isShowProduct = false
-    public init() {
-        _viewModel = StateObject(wrappedValue: AdViewModel())
-    }
+    public init() {}
 
     public var body: some View {
-        switch viewModel.state {
-        case .initial:
+        if isPremium {
             EmptyView()
-                .task {
-                    if !isPremium {
+        } else {
+            switch viewModel.state {
+            case .idle:
+                placeholder
+                    .task {
                         await viewModel.fetchAd()
                     }
+            case .loading:
+                placeholder
+            case let .result(appAd):
+                #if os(iOS)
+                Surface {
+                    isShowProduct.toggle()
+                } label: {
+                    premiumBanner(appAd: appAd)
                 }
-
-        case let .result(appAd):
-            #if os(iOS)
-            Surface {
-                isShowProduct.toggle()
-            } label: {
-                premiumBanner(appAd: appAd)
+                .surfaceContentMargins(.xSmall)
+                .appStoreOverlay(isPresent: $isShowProduct, appId: String(appAd.id))
+                #else
+                EmptyView()
+                #endif
+            case .error:
+                EmptyView()
             }
-            .surfaceContentMargins(.xSmall)
-            .appStoreOverlay(isPresent: $isShowProduct, appId: String(appAd.id))
-
-            #else
-            EmptyView()
-            #endif
-
-        case .loading, .error:
-            EmptyView()
         }
+    }
+
+    var placeholder: some View {
+        Surface {
+            HStack(spacing: .zero) {
+                RoundedRectangle(cornerRadius: .small, style: .continuous)
+                    .fillSurfaceSecondary()
+                    .frame(width: 64, height: 64)
+
+                VStack(alignment: .leading, spacing: .xxxSmall) {
+                    Text("App Title")
+                        .subheadline(.bold)
+                        .onSurfacePrimary()
+
+                    Text("App description text here")
+                        .subheadline()
+                        .onSurfaceSecondary()
+                }
+                .padding(.leading, .xSmall)
+
+                Spacer()
+
+                Button("Get") {}
+                    .buttonStyle(.tertiary)
+                    .controlBorderShape(.capsule)
+                    .padding(.trailing, .xxxSmall)
+                #if !os(tvOS)
+                    .controlSize(.small)
+                #endif
+            }
+        }
+        .surfaceContentMargins(.xSmall)
+        .redacted(reason: .placeholder)
+        .disabled(true)
     }
 
     func premiumBanner(appAd: Components.Schemas.Ad) -> some View {
         HStack(spacing: .zero) {
-            if let iconUrl = appAd.iconURL, let url = URL(string: iconUrl) {
+            if let iconUrl = appAd.iconUrl, let url = URL(string: iconUrl) {
                 CachedAsyncImage(url: url, urlCache: .imageCache, content: {
                     $0
                         .resizable()
                         .frame(width: 64, height: 64)
                         .mask(RoundedRectangle(
-                            cornerRadius: .large,
+                            cornerRadius: .small,
                             style: .continuous
                         ))
                         .overlay(
                             RoundedRectangle(
-                                cornerRadius: 16,
+                                cornerRadius: .small,
                                 style: .continuous
                             )
                             .stroke(lineWidth: 1)
@@ -74,7 +105,7 @@ public struct AdView: View {
                         }
 
                 }, placeholder: {
-                    RoundedRectangle(cornerRadius: .large, style: .continuous)
+                    RoundedRectangle(cornerRadius: .small, style: .continuous)
                         .fillSurfaceSecondary()
                         .frame(width: 64, height: 64)
                 })
@@ -84,7 +115,7 @@ public struct AdView: View {
                 HStack {
                     Text(appAd.title)
                         .subheadline(.bold)
-                        .onSurfacePrimaryForeground()
+                        .onSurfacePrimary()
 
                     Badge(color: .warning) {
                         Text("Our app")
@@ -94,11 +125,10 @@ public struct AdView: View {
 
                 Text(appAd.description)
                     .subheadline()
-                    .onSurfaceSecondaryForeground()
+                    .onSurfaceSecondary()
+                    .hLeading()
             }
             .padding(.leading, .xSmall)
-
-            Spacer()
 
             Button("Get") {
                 isShowProduct.toggle()
@@ -114,8 +144,6 @@ public struct AdView: View {
     }
 }
 
-struct AdView_Previews: PreviewProvider {
-    static var previews: some View {
-        AdView()
-    }
+#Preview {
+    AdView()
 }

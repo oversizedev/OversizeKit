@@ -9,7 +9,6 @@
 import FactoryKit
 import OversizeContactsService
 import OversizeCore
-import OversizeModels
 import SwiftUI
 
 #if !os(tvOS)
@@ -23,17 +22,17 @@ public class ContactsListsViewModel: ObservableObject {
 
     func fetchData() async {
         state = .loading
-        let _ = await contactsService.requestAccess()
+        _ = await contactsService.requestAccess()
 
         let keys = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactEmailAddressesKey, CNContactThumbnailImageDataKey]
         let result = await contactsService.fetchContacts(keysToFetch: keys as [CNKeyDescriptor])
         switch result {
         case let .success(data):
-            log("✅ CNContact fetched")
+            Log.debug("✅ CNContact fetched")
             state = .result(data)
         case let .failure(error):
-            log("❌ CNContact not fetched (\(error.title))")
-            state = .error(error)
+            Log.debug("❌ CNContact not fetched (\(error.localizedDescription))")
+            state = .error(error as? ContactsError ?? .unknown(error))
         }
     }
 
@@ -54,6 +53,6 @@ enum ContactsListsViewModelState {
     case initial
     case loading
     case result([CNContact])
-    case error(AppError)
+    case error(ContactsError)
 }
 #endif

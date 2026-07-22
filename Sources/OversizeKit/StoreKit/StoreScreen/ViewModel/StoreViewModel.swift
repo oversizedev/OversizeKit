@@ -6,7 +6,6 @@
 import FactoryKit
 import OversizeCore
 import OversizeLocalizable
-import OversizeModels
 import OversizeNetwork
 import OversizeNotificationService
 import OversizeServices
@@ -22,9 +21,9 @@ public class StoreViewModel: ObservableObject {
     @Injected(\.localNotificationService) var localNotificationService: LocalNotificationServiceProtocol
     #endif
 
-    @Published var state: LoadingViewState<StoreKitProducts> = .idle
-    @Published var featuresState: LoadingViewState<[Components.Schemas.Feature]> = .idle
-    @Published var productsState: LoadingViewState<InAppPurchaseResponse> = .idle
+    @Published public var state: LoadingState<StoreKitProducts> = .idle
+    @Published public var featuresState: LoadingState<[Components.Schemas.Feature]> = .idle
+    @Published public var productsState: LoadingState<InAppPurchaseResponse> = .idle
 
     @Published var currentSubscription: Product?
     @Published var status: Product.SubscriptionInfo.Status?
@@ -38,11 +37,15 @@ public class StoreViewModel: ObservableObject {
     @AppStorage("AppState.PremiumRenewalState") var currentSubscriptionStatus: RenewalState = .revoked
 
     var availableSubscriptions: [Product] {
-        if case let .result(products) = state {
-            products.autoRenewable.filter { $0.id != currentSubscription?.id }
+        guard case let .result(products) = state else { return [] }
+        let isCancelled: Bool = if let statusInfo = status,
+                                   case let .verified(renewalInfo) = statusInfo.renewalInfo
+        {
+            !renewalInfo.willAutoRenew
         } else {
-            []
+            false
         }
+        return isCancelled ? products.autoRenewable : products.autoRenewable.filter { $0.id != currentSubscription?.id }
     }
 
     public var updateListenerTask: Task<Void, Error>?
@@ -69,6 +72,17 @@ extension StoreViewModel {
         guard let subscriptionStatus = products.subscriptionGroupStatus else { return "" }
         switch subscriptionStatus {
         case .subscribed:
+            if let statusInfo = status,
+               case let .verified(renewalInfo) = statusInfo.renewalInfo,
+               !renewalInfo.willAutoRenew
+            {
+                if let transaction = try? statusInfo.transaction.payloadValue,
+                   let expirationDate = transaction.expirationDate
+                {
+                    return "Cancels \(expirationDate.formattedDate())"
+                }
+                return "Cancelling"
+            }
             return L10n.Store.active
         case .revoked:
             if #available(iOS 15.4, macOS 12.3, *) {
@@ -105,10 +119,19 @@ extension StoreViewModel {
 
     var subscriptionStatusColor: Color {
         guard case let .result(products) = state else { return .gray }
-        if !products.purchasedNonConsumable.isEmpty { return .green }
+        if !products.purchasedNonConsumable.isEmpty {
+            return .green
+        }
         guard let subscriptionStatus = products.subscriptionGroupStatus else { return .red }
         switch subscriptionStatus {
-        case .subscribed: return .green
+        case .subscribed:
+            if let statusInfo = status,
+               case let .verified(renewalInfo) = statusInfo.renewalInfo,
+               !renewalInfo.willAutoRenew
+            {
+                return .orange
+            }
+            return .green
         case .revoked: return .red
         case .expired: return .red
         case .inBillingRetryPeriod: return .yellow
@@ -184,18 +207,10 @@ extension StoreViewModel {
 
 extension StoreViewModel {
     public func fetchFeatures() async {
-        guard let appStoreID = Info.app.appStoreID else {
-            featuresState = .error(.network(type: .unknown))
+        guard let appStoreID = Info.App.appStoreId else {
+            featuresState = .error(NetworkError.unknown(nil))
             return
         }
-//        async let resultFeatures = networkService.fetchPremiumFeatures(appId: appStoreID)
-//        async let resultProducts = networkService.fetchInAppPurchases(appId: appStoreID)
-//        if let features = await resultFeatures.successResult, let products = await resultProducts.successResult {
-//            featuresState = .result(features)
-//            productsState = .result(products)
-//        } else {
-//            featuresState = .error(.network(type: .unknown))
-//        }
 
         let resultFeatures = await networkService.fetchPremiumFeatures(appId: appStoreID)
         let resultProducts = await networkService.fetchInAppPurchases(appId: appStoreID)
@@ -203,28 +218,14 @@ extension StoreViewModel {
         case let .success(features):
             featuresState = .result(features)
         case let .failure(error):
-            logError("Error fetching features", error: error)
+            Log.error("Error fetching features", error: error)
         }
         switch resultProducts {
         case let .success(products):
             productsState = .result(products)
         case let .failure(error):
-            logError("Error fetching resultProducts", error: error)
+            Log.error("Error fetching resultProducts", error: error)
         }
-
-//        if let features = await resultFeatures.successResult, let products = await resultProducts.successResult {
-//
-//            productsState = .result(products)
-//        } else {
-//            featuresState = .error(.network(type: .unknown))
-//        }
-
-//        switch result {
-//        case let .success(features):
-//            featuresState = .result(features)
-//        case let .failure(error):
-//            featuresState = .error(error)
-//        }
     }
 
     public func listenForTransactions() -> Task<Void, Error> {
@@ -249,7 +250,7 @@ extension StoreViewModel {
                     await transaction.finish()
                 } catch {
                     // StoreKit has a transaction that fails verification. Don't deliver content to the user.
-                    logError("Transaction failed verification", error: error)
+                    Log.error("Transaction failed verification", error: error)
                 }
             }
         }
@@ -308,8 +309,12 @@ extension StoreViewModel {
 
             status = highestStatus
             currentSubscription = highestProduct
+
+            if highestProduct == nil, products.purchasedNonConsumable.isEmpty {
+                isPremium = false
+            }
         } catch {
-            logError("Could not update subscription status", error: error)
+            Log.error("Could not update subscription status", error: error)
         }
     }
 
@@ -329,11 +334,11 @@ extension StoreViewModel {
             }
         } catch StoreError.failedVerification {
             isBuyLoading = false
-            state = .error(.custom(title: "Your purchase could not be verified by the App Store."))
+            state = .error(CustomError(title: "Your purchase could not be verified by the App Store."))
             return false
         } catch {
             isBuyLoading = false
-            log("Failed purchase for \(product.id): \(error)")
+            Log.debug("Failed purchase for \(product.id): \(error)")
             return false
         }
     }
@@ -369,8 +374,8 @@ extension StoreViewModel {
 
         state = .loading
 
-        guard let appStoreID = Info.app.appStoreID else {
-            state = .error(.network(type: .unknown))
+        guard let appStoreID = Info.App.appStoreId else {
+            state = .error(NetworkError.unknown(nil))
             return
         }
 
@@ -393,15 +398,22 @@ extension StoreViewModel {
                     currentSubscriptionStatus = status
                 }
                 state = .result(finalProducts)
-                logSuccess("StoreKit products fetched")
+                if finalProducts.purchasedAutoRenewable.isEmpty, finalProducts.purchasedNonConsumable.isEmpty,
+                   !finalProducts.autoRenewable.isEmpty
+                {
+                    isPremiumActivated = false
+                    isPremium = false
+                }
+                await updateSubscriptionStatus(products: finalProducts)
+                Log.info("StoreKit products fetched")
                 if finalProducts.autoRenewable.isEmpty {
-                    logError("No autoRenewable products")
+                    Log.error("No autoRenewable products")
                 } else {
-                    logInfo("\(finalProducts.autoRenewable.count) autoRenewable products")
+                    Log.info("\(finalProducts.autoRenewable.count) autoRenewable products")
                 }
             case let .failure(error):
                 state = .error(error)
-                logError("StoreKit Products not fetched", error: error)
+                Log.error("StoreKit Products not fetched", error: error)
             }
 
         case let .failure(error):
@@ -464,7 +476,7 @@ extension StoreViewModel {
         "You are currently subscribed to \(product.displayName)."
     }
 
-    // Build a string description of the `expirationReason` to display to the user.
+    /// Build a string description of the `expirationReason` to display to the user.
     private func expirationDescription(_ expirationReason: RenewalInfo.ExpirationReason, expirationDate: Date, product: Product) -> String {
         var description = ""
 

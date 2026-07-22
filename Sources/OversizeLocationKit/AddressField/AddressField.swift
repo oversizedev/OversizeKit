@@ -70,7 +70,7 @@ public struct AddressField: View {
                             Text(title)
                                 .font(!isSlectedAddress ? .headline : .subheadline)
                                 .fontWeight(!isSlectedAddress ? .medium : .semibold)
-                                .onSurfaceTertiaryForeground()
+                                .onSurfaceTertiary()
                                 .offset(y: !isSlectedAddress ? 0 : -13)
                                 .opacity(!isSlectedAddress ? 0 : 1)
                         }
@@ -81,16 +81,19 @@ public struct AddressField: View {
                             .lineLimit(1)
                     }
                     Spacer()
-                    IconDeprecated(.chevronDown, color: .onSurfacePrimary)
+                    Image(systemName: "chevron.down")
+                        .foregroundStyle(Color.onSurfacePrimary)
                 }
             }
             .contentShape(Rectangle())
         }
         .foregroundColor(.onSurfacePrimary)
         .buttonStyle(.field)
-        #if !os(watchOS)
+        #if !os(watchOS) && !os(tvOS)
             .sheet(isPresented: $isShowPicker) {
-                AddressPicker(address: $seletedAddress, location: $seletedLocation, place: $seletedPlace)
+                NavigationStack {
+                    AddressPicker(address: $seletedAddress, location: $seletedLocation, place: $seletedPlace)
+                }
             }
         #endif
     }

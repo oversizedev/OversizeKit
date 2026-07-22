@@ -25,9 +25,9 @@ public struct RadiusSettingView: View {
         VStack(alignment: .center, spacing: 0) {
             SectionView {
                 VStack(spacing: .zero) {
-                    VStack(spacing: Space.small.rawValue) {
+                    VStack(spacing: .small) {
                         #if os(iOS) || os(macOS)
-                        VStack(spacing: Space.xxSmall.rawValue) {
+                        VStack(spacing: .xxSmall) {
                             HStack {
                                 Text("Size")
                                     .subheadline()
@@ -43,7 +43,7 @@ public struct RadiusSettingView: View {
                             Slider(value: theme.$radius, in: 0 ... 12, step: 4)
                         }
                         .padding(.horizontal, Space.medium)
-                        .padding(.bottom, Space.xxSmall)
+                        .padding(.bottom, .xxSmall)
 
                         #endif
                     }
