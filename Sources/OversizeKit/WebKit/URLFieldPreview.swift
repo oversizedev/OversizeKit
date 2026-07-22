@@ -118,7 +118,9 @@ public struct URLFieldPreview: View {
 }
 
 #Preview {
-    URLFieldPreview(url: URL(string: "https://apple.com")!)
-        .padding()
+    if #available(iOS 16.0, macOS 13.0, tvOS 18.0, *) {
+        URLFieldPreview(url: URL(string: "https://apple.com")!)
+            .padding()
+    }
 }
 #endif
