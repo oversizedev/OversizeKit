@@ -64,10 +64,12 @@ public struct URLEditor<Action: View>: View {
 
             #if canImport(LinkPresentation)
             if let resolvedURL = previewURL {
-                URLFieldPreview(url: resolvedURL)
-                    .animation(.default, value: linkSize.height)
-                    .id(resolvedURL)
-                    .fieldPosition(.bottom)
+                if #available(iOS 16.0, macOS 13.0, tvOS 18.0, *) {
+                    URLFieldPreview(url: resolvedURL)
+                        .animation(.default, value: linkSize.height)
+                        .id(resolvedURL)
+                        .fieldPosition(.bottom)
+                }
             }
             #endif
 

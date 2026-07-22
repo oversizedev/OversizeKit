@@ -8,7 +8,7 @@ import OversizeUI
 import OversizeWebService
 import SwiftUI
 
-@available(macOS 13.0, iOS 16.0, tvOS 16.0, *)
+@available(macOS 13.0, iOS 16.0, tvOS 18.0, *)
 public struct URLFieldPreview: View {
     @Environment(\.fieldPosition) private var fieldPosition: VerticalAlignment?
 
