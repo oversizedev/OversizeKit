@@ -8,7 +8,7 @@
 import SwiftUI
 import UIKit
 
-@available(iOS 16.0, tvOS 16.0, *)
+@available(iOS 16.0, tvOS 18.0, *)
 public struct URLPreview: UIViewRepresentable {
     private let url: URL
     @Binding private var size: CGSize
@@ -36,9 +36,19 @@ public struct URLPreview: UIViewRepresentable {
 }
 
 #Preview {
-    @Previewable @State var size: CGSize = .zero
-    let url = URL(string: "https://apple.com")!
-    URLPreview(url: url, size: $size)
-        .frame(width: size.width, height: size.height)
+    if #available(iOS 16.0, tvOS 18.0, *) {
+        PreviewURLPreview()
+    }
+}
+
+@available(iOS 16.0, tvOS 18.0, *)
+private struct PreviewURLPreview: View {
+    @State private var size: CGSize = .zero
+
+    var body: some View {
+        let url = URL(string: "https://apple.com")!
+        URLPreview(url: url, size: $size)
+            .frame(width: size.width, height: size.height)
+    }
 }
 #endif
