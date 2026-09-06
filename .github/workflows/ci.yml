@@ -67,11 +67,22 @@ jobs:
       package: OversizeMediaKit
     secrets: inherit
     
-  build-editor-kit:
-    name: Build EditorKit
-    uses: oversizedev/GithubWorkflows/.github/workflows/build-swiftpm-all-platforms.yml@main
+  # OversizeEditorKit is iOS/macOS only: it builds on TextEditor and Menu,
+  # which are unavailable on tvOS and watchOS.
+  build-editor-kit-ios:
+    name: Build EditorKit (iOS)
+    uses: oversizedev/GithubWorkflows/.github/workflows/build-swiftpm.yml@main
     with:
       package: OversizeEditorKit
+      destination: generic/platform=iOS Simulator
+    secrets: inherit
+
+  build-editor-kit-macos:
+    name: Build EditorKit (macOS)
+    uses: oversizedev/GithubWorkflows/.github/workflows/build-swiftpm.yml@main
+    with:
+      package: OversizeEditorKit
+      destination: platform=macOS
     secrets: inherit
 
   build-example:
@@ -85,7 +96,8 @@ jobs:
       - build-notification-kit
       - build-onboarding-kit
       - build-media-kit
-      - build-editor-kit
+      - build-editor-kit-ios
+      - build-editor-kit-macos
     uses: oversizedev/GithubWorkflows/.github/workflows/build-app.yml@main
     with:
       path: AppExample/Example
