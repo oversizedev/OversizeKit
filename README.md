@@ -158,12 +158,16 @@ struct AppSettingsNavigationStack: View {
                 .rowArrow()
                 .buttonStyle(.row)
             }
+            .navigationDestination(AppSettingsDestinations.self)
             .navigationAutoReceive(AppSettingsDestinations.self)
+            .navigationDestination(SettingsDestinations.self)
+            .navigationAutoReceive(SettingsDestinations.self)
         }
-        .coreServices()
     }
 }
 ```
+
+Registering `SettingsDestinations` is what lets the kit's own screens — appearance, security, about, premium — open from the rows `SettingsView` renders. Registering your own destination type does the same for your section.
 
 The closure you pass to `SettingsView` becomes your app's own section; everything else — appearance, security, notifications, sync, about, feedback, support, premium — comes from the kit and routes through `SettingsDestinations`.
 

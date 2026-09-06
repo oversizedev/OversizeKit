@@ -34,10 +34,10 @@ struct AppSettingsNavigationStack: View {
             .navigationDestination(SettingsDestinations.self)
             .navigationAutoReceive(SettingsDestinations.self)
         }
-        .coreServices()
     }
 }
 
 #Preview {
     AppSettingsNavigationStack()
+        .coreServices()
 }

@@ -30,10 +30,10 @@ struct DemoNavigationStack: View {
                 .navigationDestination(DemoDestinations.self)
                 .navigationAutoReceive(DemoDestinations.self)
         }
-        .coreServices()
     }
 }
 
 #Preview {
     DemoNavigationStack()
+        .coreServices()
 }

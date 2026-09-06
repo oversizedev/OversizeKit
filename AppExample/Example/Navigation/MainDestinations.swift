@@ -12,10 +12,10 @@ struct MainNavigationStack: View {
         ManagedNavigationStack(scene: RootTab.main.id) {
             MainView()
         }
-        .coreServices()
     }
 }
 
 #Preview {
     MainNavigationStack()
+        .coreServices()
 }

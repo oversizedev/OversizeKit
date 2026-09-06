@@ -6,7 +6,11 @@
 import SwiftUI
 
 struct RootTabView: View {
-    @State private var selection: RootTab = .main
+    @Binding private var selection: RootTab
+
+    init(selection: Binding<RootTab>) {
+        _selection = selection
+    }
 
     var body: some View {
         TabView(selection: $selection) {
@@ -34,5 +38,6 @@ struct RootTabView: View {
 }
 
 #Preview {
-    RootTabView()
+    RootTabView(selection: .constant(.main))
+        .coreServices()
 }
