@@ -44,7 +44,7 @@ public struct CreateEventView: View {
                 .labelStyle(.toolbar)
                 .buttonStyle(.toolbarSecondary)
                 #if !os(tvOS) && !os(watchOS)
-                    .keyboardShortcut(.cancelAction)
+                .keyboardShortcut(.cancelAction)
                 #endif
             }
             #if !os(watchOS)
@@ -106,7 +106,7 @@ public struct CreateEventView: View {
                 .buttonStyle(.toolbarPrimary)
                 .disabled(viewModel.title.isEmpty)
                 #if !os(tvOS) && !os(watchOS)
-                    .keyboardShortcut(.defaultAction)
+                .keyboardShortcut(.defaultAction)
                 #endif
             }
         }

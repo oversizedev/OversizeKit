@@ -51,7 +51,7 @@ public struct EmailPickerView: View {
                 .labelStyle(.toolbar)
                 .buttonStyle(.toolbarSecondary)
                 #if !os(tvOS) && !os(watchOS)
-                    .keyboardShortcut(.cancelAction)
+                .keyboardShortcut(.cancelAction)
                 #endif
             }
             ToolbarItem(placement: .primaryAction) {
@@ -62,7 +62,7 @@ public struct EmailPickerView: View {
                 .buttonStyle(.toolbarPrimary)
                 .disabled(selectedEmails.isEmpty && !viewModel.searchText.isEmail)
                 #if !os(tvOS) && !os(watchOS)
-                    .keyboardShortcut(.defaultAction)
+                .keyboardShortcut(.defaultAction)
                 #endif
             }
         }

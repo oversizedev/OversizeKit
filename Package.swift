@@ -7,6 +7,7 @@ import PackageDescription
 let commonDependencies: [PackageDescription.Package.Dependency] = [
     .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "3.0.2")),
     .package(url: "https://github.com/hmlongco/Navigator.git", .upToNextMajor(from: "2.0.2")),
+    .package(name: "OversizeIntelligenceService", path: "../OversizeIntelligenceService"),
 ]
 
 let remoteDependencies: [PackageDescription.Package.Dependency] = commonDependencies + [
@@ -156,7 +157,7 @@ let package = Package(
                 .product(name: "OversizeUI", package: "OversizeUI"),
                 .product(name: "OversizeCore", package: "OversizeCore"),
                 .product(name: "OversizeResources", package: "OversizeResources"),
-                .product(name: "OversizeIntelligenceService", package: "OversizeServices"),
+                .product(name: "OversizeIntelligenceService", package: "OversizeIntelligenceService"),
                 .product(name: "FactoryKit", package: "Factory"),
             ]
         ),

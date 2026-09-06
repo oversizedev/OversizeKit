@@ -36,9 +36,9 @@ public struct OnboardView<C: View, A: View>: View {
             )
             .safeAreaBarTop(content: topButtons)
             .safeAreaBarBottom(content: bottomButtons)
-        #if os(iOS)
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
-        #endif
+            #endif
     }
 
     private func topButtons() -> some View {
@@ -71,7 +71,7 @@ public struct OnboardView<C: View, A: View>: View {
                 .controlBorderShape(.capsule)
                 .accent()
                 #if !os(tvOS)
-                    .controlSize(.mini)
+                .controlSize(.mini)
                 #endif
             }
         }
@@ -101,10 +101,10 @@ public struct OnboardView<C: View, A: View>: View {
             if let helpAction {
                 Button("Help", action: helpAction)
                     .help("Help")
-                #if !os(tvOS)
+                    #if !os(tvOS)
                     .controlSize(.extraLarge)
                     .buttonStyle(.bordered)
-                #endif
+                    #endif
             }
 
             Spacer()
@@ -121,10 +121,10 @@ public struct OnboardView<C: View, A: View>: View {
             }
 
             actions
-            #if !os(tvOS)
-            .controlSize(.extraLarge)
-            #endif
-            .buttonStyle(.borderedProminent)
+                #if !os(tvOS)
+                .controlSize(.extraLarge)
+                #endif
+                .buttonStyle(.borderedProminent)
         }
         .padding(.small)
         .background(Color.surfacePrimary)

@@ -72,7 +72,7 @@ struct RichTextEditor26: View {
                     .labelStyle(.toolbar)
                     .buttonStyle(.toolbarSecondary)
                     #if !os(tvOS) && !os(watchOS)
-                        .keyboardShortcut(.cancelAction)
+                    .keyboardShortcut(.cancelAction)
                     #endif
                 }
             }
@@ -184,9 +184,9 @@ private struct RichTextEditorFallback: View {
                 Button("Close", systemImage: "xmark", role: .cancel) { dismiss() }
                     .labelStyle(.toolbar)
                     .buttonStyle(.toolbarSecondary)
-                #if !os(tvOS) && !os(watchOS)
+                    #if !os(tvOS) && !os(watchOS)
                     .keyboardShortcut(.cancelAction)
-                #endif
+                    #endif
             }
         }
         .toolbarTitleDisplayMode(.inline)

@@ -71,9 +71,9 @@ public struct AdView: View {
                     .buttonStyle(.tertiary)
                     .controlBorderShape(.capsule)
                     .padding(.trailing, .xxxSmall)
-                #if !os(tvOS)
+                    #if !os(tvOS)
                     .controlSize(.small)
-                #endif
+                    #endif
             }
         }
         .surfaceContentMargins(.xSmall)
@@ -138,7 +138,7 @@ public struct AdView: View {
             .padding(.trailing, .xxxSmall)
             .loading(isShowProduct)
             #if !os(tvOS)
-                .controlSize(.small)
+            .controlSize(.small)
             #endif
         }
     }

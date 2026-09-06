@@ -6,12 +6,14 @@ import Observation
 import OversizeCore
 import OversizeIntelligenceService
 
-@available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
+@available(iOS 26.0, macOS 26.0, visionOS 26.0, *)
+@available(tvOS, unavailable)
+@available(watchOS, unavailable)
 @MainActor
 @Observable
 final class AIWritingViewModel {
     @ObservationIgnored
-    @Injected(\.intelligenceService) private var service: IntelligenceService
+    @Injected(\.intelligenceService) private var service: IntelligenceServiceProtocol
 
     var prompt: String = ""
     var state: LoadingState<String> = .idle
@@ -24,7 +26,7 @@ final class AIWritingViewModel {
         guard canGenerate else { return }
         state = .loading
         do {
-            let result = try await service.generate(prompt)
+            let result = try await service.respond(to: prompt)
             state = .result(result)
         } catch {
             state = .error(error)

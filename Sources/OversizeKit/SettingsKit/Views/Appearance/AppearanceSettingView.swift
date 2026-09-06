@@ -53,7 +53,7 @@ public struct AppearanceSettingView: View {
         }
         .preferredColorScheme(theme.appearance.colorScheme)
         #if os(iOS)
-            .accentColor(theme.accentColor)
+        .accentColor(theme.accentColor)
         #elseif os(macOS)
         #endif
     }

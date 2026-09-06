@@ -48,7 +48,7 @@ public struct AlarmPicker: View {
                 .labelStyle(.toolbar)
                 .buttonStyle(.toolbarSecondary)
                 #if !os(tvOS) && !os(watchOS)
-                    .keyboardShortcut(.cancelAction)
+                .keyboardShortcut(.cancelAction)
                 #endif
             }
             ToolbarItem(placement: .primaryAction) {
@@ -60,7 +60,7 @@ public struct AlarmPicker: View {
                 .buttonStyle(.toolbarPrimary)
                 .disabled(selectedAlerts.isEmpty)
                 #if !os(tvOS) && !os(watchOS)
-                    .keyboardShortcut(.defaultAction)
+                .keyboardShortcut(.defaultAction)
                 #endif
             }
         }

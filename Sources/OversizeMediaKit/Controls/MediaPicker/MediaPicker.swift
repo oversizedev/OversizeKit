@@ -9,6 +9,7 @@ import SwiftUI
 
 #if os(iOS)
 import Photos
+
 public struct MediaPicker<CustomSection: View>: View {
     @Environment(\.dismiss) private var dismiss
 

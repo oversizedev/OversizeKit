@@ -39,6 +39,7 @@ public struct SettingsView<AppSection: View, HeadSection: View>: View {
         } background: {
             Color.backgroundSecondary
         }
+        .backButtonHidden()
         .toolbarTitleDisplayMode(.inline)
     }
 }

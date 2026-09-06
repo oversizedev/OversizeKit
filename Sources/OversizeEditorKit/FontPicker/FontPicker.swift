@@ -90,33 +90,33 @@ public struct FontPicker: View {
         }
         .listLayoutStyle(.insetGrouped)
         #if os(iOS)
-            .listSectionIndexVisibility(.visible)
-            .searchable(text: $viewModel.searchQuery, placement: .navigationBarDrawer(displayMode: .always))
+        .listSectionIndexVisibility(.visible)
+        .searchable(text: $viewModel.searchQuery, placement: .navigationBarDrawer(displayMode: .always))
         #else
-            .searchable(text: $viewModel.searchQuery)
+        .searchable(text: $viewModel.searchQuery)
         #endif
-            .toolbarTitleDisplayMode(.inline)
-            .toolbar {
-                #if os(iOS)
-                if #available(iOS 26.0, *) {
-                    DefaultToolbarItem(kind: .search, placement: .bottomBar)
+        .toolbarTitleDisplayMode(.inline)
+        .toolbar {
+            #if os(iOS)
+            if #available(iOS 26.0, *) {
+                DefaultToolbarItem(kind: .search, placement: .bottomBar)
+            }
+            #endif
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Close", systemImage: "xmark", role: .cancel) {
+                    dismiss()
                 }
+                .labelStyle(.toolbar)
+                .buttonStyle(.toolbarSecondary)
+                #if !os(tvOS) && !os(watchOS)
+                .keyboardShortcut(.cancelAction)
                 #endif
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Close", systemImage: "xmark", role: .cancel) {
-                        dismiss()
-                    }
-                    .labelStyle(.toolbar)
-                    .buttonStyle(.toolbarSecondary)
-                    #if !os(tvOS) && !os(watchOS)
-                        .keyboardShortcut(.cancelAction)
-                    #endif
-                }
             }
-            .onChange(of: selectedFontName) { _, name in
-                guard let name else { return }
-                viewModel.recordSelection(name)
-            }
+        }
+        .onChange(of: selectedFontName) { _, name in
+            guard let name else { return }
+            viewModel.recordSelection(name)
+        }
     }
 }
 

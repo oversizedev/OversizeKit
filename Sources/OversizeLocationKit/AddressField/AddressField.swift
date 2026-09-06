@@ -90,11 +90,11 @@ public struct AddressField: View {
         .foregroundColor(.onSurfacePrimary)
         .buttonStyle(.field)
         #if !os(watchOS) && !os(tvOS)
-            .sheet(isPresented: $isShowPicker) {
-                NavigationStack {
-                    AddressPicker(address: $seletedAddress, location: $seletedLocation, place: $seletedPlace)
-                }
+        .sheet(isPresented: $isShowPicker) {
+            NavigationStack {
+                AddressPicker(address: $seletedAddress, location: $seletedLocation, place: $seletedPlace)
             }
+        }
         #endif
     }
 

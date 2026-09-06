@@ -49,9 +49,9 @@ public struct SystemServicesModifier: ViewModifier {
             .preferredColorScheme(theme.appearance.colorScheme)
             .premiumStatus(isPremium)
             .theme(ThemeSettings())
-        #if os(iOS)
+            #if os(iOS)
             .tint(theme.accentColor)
-        #endif
+            #endif
             .onChange(of: scenePhase) { _, phase in
                 onChangeScenePhase(phase)
             }
