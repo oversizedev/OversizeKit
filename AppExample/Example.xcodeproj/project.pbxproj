@@ -153,13 +153,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		AC0000000000000000000004 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -412,8 +405,6 @@
 			buildConfigurationList = AC0000000000000000000006 /* Build configuration list for PBXNativeTarget "ExampleUITests" */;
 			buildPhases = (
 				AC0000000000000000000003 /* Sources */,
-				AC0000000000000000000004 /* Frameworks */,
-				AC0000000000000000000005 /* Resources */,
 			);
 			buildRules = (
 			);
@@ -500,13 +491,6 @@
 			files = (
 				84664C3D2BF9FD6500A24148 /* Preview Assets.xcassets in Resources */,
 				84664C3A2BF9FD6500A24148 /* Assets.xcassets in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		AC0000000000000000000005 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -857,10 +841,7 @@
 		AC0000000000000000000007 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = ER582ZK85C;
-				ENABLE_TESTING_SEARCH_PATHS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -868,11 +849,9 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = app.oversize.ExampleUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = Example;
@@ -882,10 +861,7 @@
 		AC0000000000000000000008 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = ER582ZK85C;
-				ENABLE_TESTING_SEARCH_PATHS = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -893,11 +869,9 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = app.oversize.ExampleUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
-				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = Example;
