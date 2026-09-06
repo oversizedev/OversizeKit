@@ -444,6 +444,10 @@
 					84664C2F2BF9FD6400A24148 = {
 						CreatedOnToolsVersion = 15.4;
 					};
+					AC0000000000000000000001 = {
+						CreatedOnToolsVersion = 26.0;
+						TestTargetID = 840CD6622AC0E39D00C6AAD0;
+					};
 				};
 			};
 			buildConfigurationList = 840CD65C2AC0E39D00C6AAD0 /* Build configuration list for PBXProject "Example" */;
