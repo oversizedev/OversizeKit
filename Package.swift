@@ -7,7 +7,6 @@ import PackageDescription
 let commonDependencies: [PackageDescription.Package.Dependency] = [
     .package(url: "https://github.com/hmlongco/Factory.git", .upToNextMajor(from: "3.0.2")),
     .package(url: "https://github.com/hmlongco/Navigator.git", .upToNextMajor(from: "2.0.2")),
-    .package(name: "OversizeIntelligenceService", path: "../OversizeIntelligenceService"),
 ]
 
 let remoteDependencies: [PackageDescription.Package.Dependency] = commonDependencies + [
@@ -20,6 +19,7 @@ let remoteDependencies: [PackageDescription.Package.Dependency] = commonDependen
     .package(url: "https://github.com/oversizedev/OversizeNetwork.git", .upToNextMajor(from: "1.0.0")),
     .package(url: "https://github.com/oversizedev/OversizeNavigation.git", .upToNextMajor(from: "0.7.0")),
     .package(url: "https://github.com/oversizedev/OversizeArchitecture.git", .upToNextMajor(from: "0.2.0")),
+    .package(url: "https://github.com/oversizedev/OversizeIntelligenceService.git", .upToNextMajor(from: "0.1.0")),
 ]
 
 let localDependencies: [PackageDescription.Package.Dependency] = commonDependencies + [
@@ -32,6 +32,7 @@ let localDependencies: [PackageDescription.Package.Dependency] = commonDependenc
     .package(name: "OversizeNetwork", path: "../OversizeNetwork"),
     .package(name: "OversizeNavigation", path: "../OversizeNavigation"),
     .package(name: "OversizeArchitecture", path: "../OversizeArchitecture"),
+    .package(name: "OversizeIntelligenceService", path: "../OversizeIntelligenceService"),
 ]
 
 let isLocalDev = FileManager.default.fileExists(atPath: "\(NSHomeDirectory())/Developer/Packages/OversizeCore")
@@ -173,7 +174,14 @@ let package = Package(
         ),
         .testTarget(
             name: "OversizeKitTests",
-            dependencies: ["OversizeKit"]
+            dependencies: [
+                "OversizeKit",
+                .product(name: "NavigatorUI", package: "Navigator"),
+            ]
+        ),
+        .testTarget(
+            name: "OversizeNotificationKitTests",
+            dependencies: ["OversizeNotificationKit"]
         ),
     ]
 )

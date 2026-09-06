@@ -283,10 +283,8 @@ public struct StoreView: View {
     }
 }
 
-struct StoreView_Previews: PreviewProvider {
-    static var previews: some View {
-        StoreView()
-    }
+#Preview {
+    StoreView()
 }
 #else
 public struct StoreView: View {

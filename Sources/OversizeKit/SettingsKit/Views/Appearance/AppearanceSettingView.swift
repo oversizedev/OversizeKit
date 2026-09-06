@@ -237,9 +237,7 @@ public struct AppearanceSettingView: View {
     }
 }
 
-struct SettingsThemeView_Previews: PreviewProvider {
-    static var previews: some View {
-        AppearanceSettingView()
-            .previewPhones()
-    }
+#Preview {
+    AppearanceSettingView()
+        .previewPhones()
 }

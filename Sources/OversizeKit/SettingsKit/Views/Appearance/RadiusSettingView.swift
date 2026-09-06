@@ -55,8 +55,6 @@ public struct RadiusSettingView: View {
     }
 }
 
-struct RadiusSettingView_Previews: PreviewProvider {
-    static var previews: some View {
-        RadiusSettingView()
-    }
+#Preview {
+    RadiusSettingView()
 }

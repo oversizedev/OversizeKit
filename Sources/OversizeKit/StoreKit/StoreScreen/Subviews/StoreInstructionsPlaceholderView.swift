@@ -73,8 +73,6 @@ struct StoreInstructionsPlaceholderView: View {
     }
 }
 
-struct StoreInstructionsPlaceholderView_Previews: PreviewProvider {
-    static var previews: some View {
-        StoreInstructionsPlaceholderView(offset: .zero)
-    }
+#Preview {
+    StoreInstructionsPlaceholderView(offset: .zero)
 }

@@ -113,4 +113,14 @@ public struct LocalNotificationView: View {
         }
     }
 }
+
+#Preview {
+    LocalNotificationView(
+        .constant(.tenMinutesBefore),
+        id: UUID(),
+        title: "Reminder",
+        body: "Time to review your notes",
+        date: .now.addingTimeInterval(60 * 60)
+    )
+}
 #endif

@@ -3,31 +3,46 @@
 // MainView.swift, created on 25.09.2023
 //
 
-import FactoryKit
 import OversizeKit
-import OversizeLocalizable
-import OversizeServices
+import OversizeNoticeKit
 import OversizeUI
 import SwiftUI
 
 struct MainView: View {
-    @Injected(\.appStateService) var appStateService: AppStateService
-    @Environment(\.screenSize) var screenSize
-    @EnvironmentObject var router: Router
-    @EnvironmentObject var appSettins: AppSettingsViewModel
-    @StateObject var viewModel: MainViewModel
-
-    init() {
-        _viewModel = StateObject(wrappedValue: MainViewModel())
-    }
-
     var body: some View {
-        Text("Hello, Oversize Kit!")
+        ScrollView {
+            VStack(spacing: .small) {
+                NoticeListView()
+
+                AdView()
+
+                SectionView("Launcher") {
+                    VStack(spacing: .zero) {
+                        Row("Onboarding, lockscreen, paywall and rate prompts are presented by Launcher before this screen becomes reachable")
+                            .multilineTextAlignment(.leading)
+                    }
+                }
+                .sectionContentCompactRowMargins()
+            }
+            .paddingContent(.horizontal)
+        }
+        .background {
+            Color.backgroundSecondary.ignoresSafeArea()
+        }
+        .navigationTitle(RootTab.main.title)
+        .accessibilityIdentifier(AccessibilityIdentifier.screen)
     }
 }
 
-struct MainView_Previews: PreviewProvider {
-    static var previews: some View {
+extension MainView {
+    enum AccessibilityIdentifier {
+        static let screen = "main.screen"
+    }
+}
+
+#Preview {
+    NavigationStack {
         MainView()
     }
+    .coreServices()
 }

@@ -176,10 +176,8 @@ private extension View {
     }
 }
 
-struct LockscreenView_Previews: PreviewProvider {
-    static var previews: some View {
-        Launcher {
-            Text("Succes")
-        }
+#Preview {
+    Launcher {
+        Text("Success")
     }
 }

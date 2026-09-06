@@ -407,8 +407,16 @@ public struct StoreSpecialOfferView: View {
     }
 }
 
-// struct StoreSpecialOfferView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        StoreSpecialOfferView()
-//    }
-// }
+#Preview {
+    StoreSpecialOfferView(
+        event: .init(
+            id: 1,
+            badge: "Limited",
+            title: "Special offer",
+            headline: "Get all features",
+            description: "Unlock every feature at a reduced price",
+            startDate: .now,
+            endDate: .now.addingTimeInterval(7 * 24 * 60 * 60)
+        )
+    )
+}

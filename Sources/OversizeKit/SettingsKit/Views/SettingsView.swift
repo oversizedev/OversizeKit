@@ -430,3 +430,17 @@ public extension SettingsView where HeadSection == EmptyView {
         self.init(appSection: appSection, headSection: { EmptyView() })
     }
 }
+
+#Preview {
+    ManagedNavigationStack {
+        SettingsView {
+            Row("App settings") {} leading: {
+                Image(systemName: "gearshape")
+            }
+            .rowArrow()
+            .buttonStyle(.row)
+        }
+        .navigationDestinationAutoReceive(SettingsDestinations.self)
+    }
+    .coreServices()
+}

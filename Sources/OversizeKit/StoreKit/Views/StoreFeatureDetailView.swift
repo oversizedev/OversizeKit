@@ -183,3 +183,17 @@ public struct StoreFeatureDetailView: View {
         }
     }
 }
+
+#Preview {
+    StoreFeatureDetailView(
+        selection: .init(
+            id: "sync",
+            title: "Sync across devices",
+            subtitle: "Everywhere you work",
+            description: "Your data stays up to date on every device signed in to your account",
+            textSize: .medium,
+            textAlignment: .center,
+            screenshots: []
+        )
+    )
+}

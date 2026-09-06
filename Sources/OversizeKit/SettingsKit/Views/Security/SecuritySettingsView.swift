@@ -186,3 +186,8 @@ extension SecuritySettingsView {
         }
     }
 }
+
+#Preview {
+    SecuritySettingsView()
+        .coreServices()
+}

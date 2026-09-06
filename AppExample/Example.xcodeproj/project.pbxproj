@@ -8,17 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		840CD6692AC0E39D00C6AAD0 /* AppSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840CD6682AC0E39D00C6AAD0 /* AppSettingsView.swift */; };
-		840CD66B2AC0E39D00C6AAD0 /* AppSettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840CD66A2AC0E39D00C6AAD0 /* AppSettingsViewModel.swift */; };
 		840CD66D2AC0E39D00C6AAD0 /* AppSettingsPageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840CD66C2AC0E39D00C6AAD0 /* AppSettingsPageView.swift */; };
-		840CD66F2AC0E39D00C6AAD0 /* AppSettingsPageViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840CD66E2AC0E39D00C6AAD0 /* AppSettingsPageViewModel.swift */; };
 		840CD6722AC0E39D00C6AAD0 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840CD6712AC0E39D00C6AAD0 /* OnboardingView.swift */; };
 		840CD6752AC0E39D00C6AAD0 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840CD6742AC0E39D00C6AAD0 /* MainView.swift */; };
-		840CD6772AC0E39D00C6AAD0 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840CD6762AC0E39D00C6AAD0 /* MainViewModel.swift */; };
-		840CD67A2AC0E39D00C6AAD0 /* Alerts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840CD6792AC0E39D00C6AAD0 /* Alerts.swift */; };
-		840CD67C2AC0E39D00C6AAD0 /* Screens.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840CD67B2AC0E39D00C6AAD0 /* Screens.swift */; };
 		840CD67F2AC0E39D00C6AAD0 /* AppConfig.plist in Resources */ = {isa = PBXBuildFile; fileRef = 840CD67E2AC0E39D00C6AAD0 /* AppConfig.plist */; };
-		840CD6812AC0E39D00C6AAD0 /* Router.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840CD6802AC0E39D00C6AAD0 /* Router.swift */; };
-		840CD6832AC0E39D00C6AAD0 /* Tabs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840CD6822AC0E39D00C6AAD0 /* Tabs.swift */; };
 		840CD68E2AC0E39D00C6AAD0 /* ExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 840CD68D2AC0E39D00C6AAD0 /* ExampleApp.swift */; };
 		840CD6902AC0E3A600C6AAD0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 840CD68F2AC0E3A600C6AAD0 /* Assets.xcassets */; };
 		840CD6932AC0E3A600C6AAD0 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 840CD6922AC0E3A600C6AAD0 /* Preview Assets.xcassets */; };
@@ -29,14 +22,8 @@
 		84664C3A2BF9FD6500A24148 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84664C392BF9FD6500A24148 /* Assets.xcassets */; };
 		84664C3D2BF9FD6500A24148 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84664C3C2BF9FD6500A24148 /* Preview Assets.xcassets */; };
 		84664C472BF9FDC200A24148 /* FactoryKit in Frameworks */ = {isa = PBXBuildFile; productRef = 84664C462BF9FDC200A24148 /* FactoryKit */; };
-		848479442BF9FF94003FC3FC /* OversizeCalendarKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479432BF9FF94003FC3FC /* OversizeCalendarKit */; };
-		848479462BF9FF94003FC3FC /* OversizeContactsKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479452BF9FF94003FC3FC /* OversizeContactsKit */; };
 		848479482BF9FF94003FC3FC /* OversizeKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479472BF9FF94003FC3FC /* OversizeKit */; };
-		8484794A2BF9FF94003FC3FC /* OversizeLocationKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479492BF9FF94003FC3FC /* OversizeLocationKit */; };
-		8484794C2BF9FF94003FC3FC /* OversizeNoticeKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8484794B2BF9FF94003FC3FC /* OversizeNoticeKit */; };
-		8484794E2BF9FF94003FC3FC /* OversizeNotificationKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8484794D2BF9FF94003FC3FC /* OversizeNotificationKit */; };
 		848479502BF9FF94003FC3FC /* OversizeOnboardingKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8484794F2BF9FF94003FC3FC /* OversizeOnboardingKit */; };
-		848479522BF9FF94003FC3FC /* OversizeMediaKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479512BF9FF94003FC3FC /* OversizeMediaKit */; };
 		848479542BF9FFA4003FC3FC /* OversizeCalendarKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479532BF9FFA4003FC3FC /* OversizeCalendarKit */; };
 		848479562BF9FFA4003FC3FC /* OversizeContactsKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479552BF9FFA4003FC3FC /* OversizeContactsKit */; };
 		848479582BF9FFA4003FC3FC /* OversizeKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479572BF9FFA4003FC3FC /* OversizeKit */; };
@@ -45,8 +32,24 @@
 		8484795E2BF9FFA4003FC3FC /* OversizeNotificationKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8484795D2BF9FFA4003FC3FC /* OversizeNotificationKit */; };
 		848479602BF9FFA4003FC3FC /* OversizeOnboardingKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8484795F2BF9FFA4003FC3FC /* OversizeOnboardingKit */; };
 		848479622BF9FFA4003FC3FC /* OversizeMediaKit in Frameworks */ = {isa = PBXBuildFile; productRef = 848479612BF9FFA4003FC3FC /* OversizeMediaKit */; };
-		848479652BFA0E64003FC3FC /* TestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 848479642BFA0E64003FC3FC /* TestView.swift */; };
 		84A876512E129B0F00CC6DDA /* FactoryKit in Frameworks */ = {isa = PBXBuildFile; productRef = 84A876502E129B0F00CC6DDA /* FactoryKit */; };
+		AA0000000000000000000003 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000002 /* RootView.swift */; };
+		AA0000000000000000000005 /* RootTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000004 /* RootTabView.swift */; };
+		AA0000000000000000000007 /* UITestLaunchArguments.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000006 /* UITestLaunchArguments.swift */; };
+		AA0000000000000000000009 /* UITestingSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000008 /* UITestingSupport.swift */; };
+		AA000000000000000000000B /* RootTabs.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000000A /* RootTabs.swift */; };
+		AA000000000000000000000D /* AppSettingsDestinations.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000000C /* AppSettingsDestinations.swift */; };
+		AA000000000000000000000F /* DemoDestinations.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000000E /* DemoDestinations.swift */; };
+		AA0000000000000000000011 /* MainDestinations.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000010 /* MainDestinations.swift */; };
+		AA0000000000000000000013 /* DemoListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000012 /* DemoListView.swift */; };
+		AA0000000000000000000015 /* MediaKitDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000014 /* MediaKitDemoView.swift */; };
+		AA0000000000000000000017 /* EditorKitDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000016 /* EditorKitDemoView.swift */; };
+		AB0000000000000000000001 /* OversizeEditorKit in Frameworks */ = {isa = PBXBuildFile; productRef = AB0000000000000000000002 /* OversizeEditorKit */; };
+		AC0000000000000000000012 /* ExampleLaunchUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000011 /* ExampleLaunchUITests.swift */; };
+		AC0000000000000000000014 /* ExampleOnboardingUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000013 /* ExampleOnboardingUITests.swift */; };
+		AC0000000000000000000016 /* ExampleSettingsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000015 /* ExampleSettingsUITests.swift */; };
+		AC0000000000000000000018 /* UITestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000017 /* UITestSupport.swift */; };
+		AC0000000000000000000019 /* UITestLaunchArguments.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000006 /* UITestLaunchArguments.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +59,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 84664C2F2BF9FD6400A24148;
 			remoteInfo = "Example (watchOS) Watch App";
+		};
+		AC000000000000000000000A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 840CD6592AC0E39D00C6AAD0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 840CD6622AC0E39D00C6AAD0;
+			remoteInfo = Example;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -76,17 +86,10 @@
 /* Begin PBXFileReference section */
 		840CD6632AC0E39D00C6AAD0 /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		840CD6682AC0E39D00C6AAD0 /* AppSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsView.swift; sourceTree = "<group>"; };
-		840CD66A2AC0E39D00C6AAD0 /* AppSettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsViewModel.swift; sourceTree = "<group>"; };
 		840CD66C2AC0E39D00C6AAD0 /* AppSettingsPageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsPageView.swift; sourceTree = "<group>"; };
-		840CD66E2AC0E39D00C6AAD0 /* AppSettingsPageViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsPageViewModel.swift; sourceTree = "<group>"; };
 		840CD6712AC0E39D00C6AAD0 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		840CD6742AC0E39D00C6AAD0 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
-		840CD6762AC0E39D00C6AAD0 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
-		840CD6792AC0E39D00C6AAD0 /* Alerts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Alerts.swift; sourceTree = "<group>"; };
-		840CD67B2AC0E39D00C6AAD0 /* Screens.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Screens.swift; sourceTree = "<group>"; };
 		840CD67E2AC0E39D00C6AAD0 /* AppConfig.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = AppConfig.plist; sourceTree = "<group>"; };
-		840CD6802AC0E39D00C6AAD0 /* Router.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Router.swift; sourceTree = "<group>"; };
-		840CD6822AC0E39D00C6AAD0 /* Tabs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tabs.swift; sourceTree = "<group>"; };
 		840CD6852AC0E39D00C6AAD0 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; name = .gitignore; path = ../../../.gitignore; sourceTree = "<group>"; };
 		840CD6872AC0E39D00C6AAD0 /* .swiftformat */ = {isa = PBXFileReference; lastKnownFileType = text; name = .swiftformat; path = ../../../.swiftformat; sourceTree = "<group>"; };
 		840CD6892AC0E39D00C6AAD0 /* .swiftlint.yml */ = {isa = PBXFileReference; lastKnownFileType = text.yaml; name = .swiftlint.yml; path = ../../../.swiftlint.yml; sourceTree = "<group>"; };
@@ -102,9 +105,24 @@
 		84664C372BF9FD6400A24148 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		84664C392BF9FD6500A24148 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		84664C3C2BF9FD6500A24148 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		848479642BFA0E64003FC3FC /* TestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestView.swift; sourceTree = "<group>"; };
 		84DE88812BF9FEED00CCF37A /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Package.swift; path = ../Package.swift; sourceTree = "<group>"; };
 		84DE88822BF9FF5100CCF37A /* OversizeKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = OversizeKit; path = ..; sourceTree = "<group>"; };
+		AA0000000000000000000002 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		AA0000000000000000000004 /* RootTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabView.swift; sourceTree = "<group>"; };
+		AA0000000000000000000006 /* UITestLaunchArguments.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestLaunchArguments.swift; sourceTree = "<group>"; };
+		AA0000000000000000000008 /* UITestingSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestingSupport.swift; sourceTree = "<group>"; };
+		AA000000000000000000000A /* RootTabs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootTabs.swift; sourceTree = "<group>"; };
+		AA000000000000000000000C /* AppSettingsDestinations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppSettingsDestinations.swift; sourceTree = "<group>"; };
+		AA000000000000000000000E /* DemoDestinations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoDestinations.swift; sourceTree = "<group>"; };
+		AA0000000000000000000010 /* MainDestinations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainDestinations.swift; sourceTree = "<group>"; };
+		AA0000000000000000000012 /* DemoListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoListView.swift; sourceTree = "<group>"; };
+		AA0000000000000000000014 /* MediaKitDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaKitDemoView.swift; sourceTree = "<group>"; };
+		AA0000000000000000000016 /* EditorKitDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorKitDemoView.swift; sourceTree = "<group>"; };
+		AC0000000000000000000011 /* ExampleLaunchUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleLaunchUITests.swift; sourceTree = "<group>"; };
+		AC0000000000000000000013 /* ExampleOnboardingUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleOnboardingUITests.swift; sourceTree = "<group>"; };
+		AC0000000000000000000015 /* ExampleSettingsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleSettingsUITests.swift; sourceTree = "<group>"; };
+		AC0000000000000000000017 /* UITestSupport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITestSupport.swift; sourceTree = "<group>"; };
+		AC0000000000000000000002 /* ExampleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ExampleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +131,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				848479622BF9FFA4003FC3FC /* OversizeMediaKit in Frameworks */,
+				AB0000000000000000000001 /* OversizeEditorKit in Frameworks */,
 				848479542BF9FFA4003FC3FC /* OversizeCalendarKit in Frameworks */,
 				8484795E2BF9FFA4003FC3FC /* OversizeNotificationKit in Frameworks */,
 				84A876512E129B0F00CC6DDA /* Factory in Frameworks */,
@@ -128,15 +147,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				848479522BF9FF94003FC3FC /* OversizeMediaKit in Frameworks */,
-				848479442BF9FF94003FC3FC /* OversizeCalendarKit in Frameworks */,
-				8484794E2BF9FF94003FC3FC /* OversizeNotificationKit in Frameworks */,
 				84664C472BF9FDC200A24148 /* Factory in Frameworks */,
 				848479482BF9FF94003FC3FC /* OversizeKit in Frameworks */,
-				8484794A2BF9FF94003FC3FC /* OversizeLocationKit in Frameworks */,
-				8484794C2BF9FF94003FC3FC /* OversizeNoticeKit in Frameworks */,
-				848479462BF9FF94003FC3FC /* OversizeContactsKit in Frameworks */,
 				848479502BF9FF94003FC3FC /* OversizeOnboardingKit in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AC0000000000000000000004 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,6 +169,7 @@
 				84DE88822BF9FF5100CCF37A /* OversizeKit */,
 				840CD6652AC0E39D00C6AAD0 /* Example */,
 				84664C342BF9FD6400A24148 /* Example (watchOS) Watch App */,
+				AC000000000000000000000B /* ExampleUITests */,
 				840CD6642AC0E39D00C6AAD0 /* Products */,
 				84664C452BF9FDC200A24148 /* Frameworks */,
 			);
@@ -160,6 +181,7 @@
 				840CD6632AC0E39D00C6AAD0 /* Example.app */,
 				84664C2B2BF9FD6400A24148 /* Example (watchOS).app */,
 				84664C302BF9FD6400A24148 /* Example (watchOS) Watch App.app */,
+				AC0000000000000000000002 /* ExampleUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -168,9 +190,9 @@
 			isa = PBXGroup;
 			children = (
 				840CD68D2AC0E39D00C6AAD0 /* ExampleApp.swift */,
-				848479632BFA0E55003FC3FC /* Test */,
+				AA0000000000000000000018 /* App */,
+				AA0000000000000000000019 /* Navigation */,
 				840CD6662AC0E39D00C6AAD0 /* Screens */,
-				840CD6782AC0E39D00C6AAD0 /* Router */,
 				840CD67D2AC0E39D00C6AAD0 /* Resources */,
 				840CD6912AC0E3A600C6AAD0 /* Preview Content */,
 			);
@@ -183,6 +205,7 @@
 				840CD6672AC0E39D00C6AAD0 /* AppSettings */,
 				840CD6702AC0E39D00C6AAD0 /* Onboarding */,
 				840CD6732AC0E39D00C6AAD0 /* Main */,
+				AA000000000000000000001A /* Demo */,
 			);
 			path = Screens;
 			sourceTree = "<group>";
@@ -191,9 +214,7 @@
 			isa = PBXGroup;
 			children = (
 				840CD6682AC0E39D00C6AAD0 /* AppSettingsView.swift */,
-				840CD66A2AC0E39D00C6AAD0 /* AppSettingsViewModel.swift */,
 				840CD66C2AC0E39D00C6AAD0 /* AppSettingsPageView.swift */,
-				840CD66E2AC0E39D00C6AAD0 /* AppSettingsPageViewModel.swift */,
 			);
 			path = AppSettings;
 			sourceTree = "<group>";
@@ -210,20 +231,8 @@
 			isa = PBXGroup;
 			children = (
 				840CD6742AC0E39D00C6AAD0 /* MainView.swift */,
-				840CD6762AC0E39D00C6AAD0 /* MainViewModel.swift */,
 			);
 			path = Main;
-			sourceTree = "<group>";
-		};
-		840CD6782AC0E39D00C6AAD0 /* Router */ = {
-			isa = PBXGroup;
-			children = (
-				840CD6792AC0E39D00C6AAD0 /* Alerts.swift */,
-				840CD67B2AC0E39D00C6AAD0 /* Screens.swift */,
-				840CD6802AC0E39D00C6AAD0 /* Router.swift */,
-				840CD6822AC0E39D00C6AAD0 /* Tabs.swift */,
-			);
-			path = Router;
 			sourceTree = "<group>";
 		};
 		840CD67D2AC0E39D00C6AAD0 /* Resources */ = {
@@ -284,12 +293,47 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		848479632BFA0E55003FC3FC /* Test */ = {
+		AA0000000000000000000018 /* App */ = {
 			isa = PBXGroup;
 			children = (
-				848479642BFA0E64003FC3FC /* TestView.swift */,
+				AA0000000000000000000002 /* RootView.swift */,
+				AA0000000000000000000004 /* RootTabView.swift */,
+				AA0000000000000000000006 /* UITestLaunchArguments.swift */,
+				AA0000000000000000000008 /* UITestingSupport.swift */,
 			);
-			path = Test;
+			path = App;
+			sourceTree = "<group>";
+		};
+		AA0000000000000000000019 /* Navigation */ = {
+			isa = PBXGroup;
+			children = (
+				AA000000000000000000000A /* RootTabs.swift */,
+				AA000000000000000000000C /* AppSettingsDestinations.swift */,
+				AA000000000000000000000E /* DemoDestinations.swift */,
+				AA0000000000000000000010 /* MainDestinations.swift */,
+			);
+			path = Navigation;
+			sourceTree = "<group>";
+		};
+		AA000000000000000000001A /* Demo */ = {
+			isa = PBXGroup;
+			children = (
+				AA0000000000000000000012 /* DemoListView.swift */,
+				AA0000000000000000000014 /* MediaKitDemoView.swift */,
+				AA0000000000000000000016 /* EditorKitDemoView.swift */,
+			);
+			path = Demo;
+			sourceTree = "<group>";
+		};
+		AC000000000000000000000B /* ExampleUITests */ = {
+			isa = PBXGroup;
+			children = (
+				AC0000000000000000000011 /* ExampleLaunchUITests.swift */,
+				AC0000000000000000000013 /* ExampleOnboardingUITests.swift */,
+				AC0000000000000000000015 /* ExampleSettingsUITests.swift */,
+				AC0000000000000000000017 /* UITestSupport.swift */,
+			);
+			path = ExampleUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -317,6 +361,7 @@
 				8484795D2BF9FFA4003FC3FC /* OversizeNotificationKit */,
 				8484795F2BF9FFA4003FC3FC /* OversizeOnboardingKit */,
 				848479612BF9FFA4003FC3FC /* OversizeMediaKit */,
+				AB0000000000000000000002 /* OversizeEditorKit */,
 				84A876502E129B0F00CC6DDA /* FactoryKit */,
 			);
 			productName = Example;
@@ -355,18 +400,30 @@
 			name = "Example (watchOS) Watch App";
 			packageProductDependencies = (
 				84664C462BF9FDC200A24148 /* FactoryKit */,
-				848479432BF9FF94003FC3FC /* OversizeCalendarKit */,
-				848479452BF9FF94003FC3FC /* OversizeContactsKit */,
 				848479472BF9FF94003FC3FC /* OversizeKit */,
-				848479492BF9FF94003FC3FC /* OversizeLocationKit */,
-				8484794B2BF9FF94003FC3FC /* OversizeNoticeKit */,
-				8484794D2BF9FF94003FC3FC /* OversizeNotificationKit */,
 				8484794F2BF9FF94003FC3FC /* OversizeOnboardingKit */,
-				848479512BF9FF94003FC3FC /* OversizeMediaKit */,
 			);
 			productName = "Example (watchOS) Watch App";
 			productReference = 84664C302BF9FD6400A24148 /* Example (watchOS) Watch App.app */;
 			productType = "com.apple.product-type.application";
+		};
+		AC0000000000000000000001 /* ExampleUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AC0000000000000000000006 /* Build configuration list for PBXNativeTarget "ExampleUITests" */;
+			buildPhases = (
+				AC0000000000000000000003 /* Sources */,
+				AC0000000000000000000004 /* Frameworks */,
+				AC0000000000000000000005 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AC0000000000000000000009 /* PBXTargetDependency */,
+			);
+			name = ExampleUITests;
+			productName = ExampleUITests;
+			productReference = AC0000000000000000000002 /* ExampleUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -401,7 +458,6 @@
 			packageReferences = (
 				840CD69A2AC0E43000C6AAD0 /* XCLocalSwiftPackageReference ".." */,
 				840CD6AD2AC0E44E00C6AAD0 /* XCRemoteSwiftPackageReference "Factory" */,
-				845A59312BA4FD2B00988D52 /* XCRemoteSwiftPackageReference "OversizeModels" */,
 			);
 			productRefGroup = 840CD6642AC0E39D00C6AAD0 /* Products */;
 			projectDirPath = "";
@@ -410,6 +466,7 @@
 				840CD6622AC0E39D00C6AAD0 /* Example */,
 				84664C2A2BF9FD6400A24148 /* Example (watchOS) */,
 				84664C2F2BF9FD6400A24148 /* Example (watchOS) Watch App */,
+				AC0000000000000000000001 /* ExampleUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -442,6 +499,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AC0000000000000000000005 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -450,18 +514,21 @@
 			buildActionMask = 2147483647;
 			files = (
 				840CD68E2AC0E39D00C6AAD0 /* ExampleApp.swift in Sources */,
-				840CD6772AC0E39D00C6AAD0 /* MainViewModel.swift in Sources */,
-				840CD66F2AC0E39D00C6AAD0 /* AppSettingsPageViewModel.swift in Sources */,
-				840CD6812AC0E39D00C6AAD0 /* Router.swift in Sources */,
-				840CD67A2AC0E39D00C6AAD0 /* Alerts.swift in Sources */,
-				840CD6832AC0E39D00C6AAD0 /* Tabs.swift in Sources */,
+				AA0000000000000000000003 /* RootView.swift in Sources */,
+				AA0000000000000000000005 /* RootTabView.swift in Sources */,
+				AA0000000000000000000007 /* UITestLaunchArguments.swift in Sources */,
+				AA0000000000000000000009 /* UITestingSupport.swift in Sources */,
+				AA000000000000000000000B /* RootTabs.swift in Sources */,
+				AA000000000000000000000D /* AppSettingsDestinations.swift in Sources */,
+				AA000000000000000000000F /* DemoDestinations.swift in Sources */,
+				AA0000000000000000000011 /* MainDestinations.swift in Sources */,
+				AA0000000000000000000013 /* DemoListView.swift in Sources */,
+				AA0000000000000000000015 /* MediaKitDemoView.swift in Sources */,
+				AA0000000000000000000017 /* EditorKitDemoView.swift in Sources */,
 				840CD6752AC0E39D00C6AAD0 /* MainView.swift in Sources */,
 				840CD6692AC0E39D00C6AAD0 /* AppSettingsView.swift in Sources */,
 				840CD66D2AC0E39D00C6AAD0 /* AppSettingsPageView.swift in Sources */,
-				840CD67C2AC0E39D00C6AAD0 /* Screens.swift in Sources */,
 				840CD6722AC0E39D00C6AAD0 /* OnboardingView.swift in Sources */,
-				848479652BFA0E64003FC3FC /* TestView.swift in Sources */,
-				840CD66B2AC0E39D00C6AAD0 /* AppSettingsViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -474,6 +541,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AC0000000000000000000003 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AC0000000000000000000012 /* ExampleLaunchUITests.swift in Sources */,
+				AC0000000000000000000014 /* ExampleOnboardingUITests.swift in Sources */,
+				AC0000000000000000000016 /* ExampleSettingsUITests.swift in Sources */,
+				AC0000000000000000000018 /* UITestSupport.swift in Sources */,
+				AC0000000000000000000019 /* UITestLaunchArguments.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -481,6 +560,11 @@
 			isa = PBXTargetDependency;
 			target = 84664C2F2BF9FD6400A24148 /* Example (watchOS) Watch App */;
 			targetProxy = 84664C322BF9FD6400A24148 /* PBXContainerItemProxy */;
+		};
+		AC0000000000000000000009 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 840CD6622AC0E39D00C6AAD0 /* Example */;
+			targetProxy = AC000000000000000000000A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -621,12 +705,12 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = app.oversize.Example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -634,7 +718,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2,3";
 				TVOS_DEPLOYMENT_TARGET = 18.0;
 			};
@@ -657,12 +741,12 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 15.0;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = app.oversize.Example;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -670,7 +754,7 @@
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2,3";
 				TVOS_DEPLOYMENT_TARGET = 18.0;
 			};
@@ -700,7 +784,7 @@
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 10.0;
 			};
@@ -730,7 +814,7 @@
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 10.0;
 			};
@@ -747,7 +831,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "app.oversize.Example--watchOS-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 			};
 			name = Debug;
 		};
@@ -762,7 +846,55 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "app.oversize.Example--watchOS-";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		AC0000000000000000000007 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ER582ZK85C;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = app.oversize.ExampleUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Example;
+			};
+			name = Debug;
+		};
+		AC0000000000000000000008 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = ER582ZK85C;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = app.oversize.ExampleUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Example;
 			};
 			name = Release;
 		};
@@ -805,6 +937,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		AC0000000000000000000006 /* Build configuration list for PBXNativeTarget "ExampleUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AC0000000000000000000007 /* Debug */,
+				AC0000000000000000000008 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
@@ -823,14 +964,6 @@
 				minimumVersion = 3.0.2;
 			};
 		};
-		845A59312BA4FD2B00988D52 /* XCRemoteSwiftPackageReference "OversizeModels" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/oversizedev/OversizeModels.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.1.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -839,37 +972,13 @@
 			package = 840CD6AD2AC0E44E00C6AAD0 /* XCRemoteSwiftPackageReference "Factory" */;
 			productName = FactoryKit;
 		};
-		848479432BF9FF94003FC3FC /* OversizeCalendarKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = OversizeCalendarKit;
-		};
-		848479452BF9FF94003FC3FC /* OversizeContactsKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = OversizeContactsKit;
-		};
 		848479472BF9FF94003FC3FC /* OversizeKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = OversizeKit;
 		};
-		848479492BF9FF94003FC3FC /* OversizeLocationKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = OversizeLocationKit;
-		};
-		8484794B2BF9FF94003FC3FC /* OversizeNoticeKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = OversizeNoticeKit;
-		};
-		8484794D2BF9FF94003FC3FC /* OversizeNotificationKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = OversizeNotificationKit;
-		};
 		8484794F2BF9FF94003FC3FC /* OversizeOnboardingKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = OversizeOnboardingKit;
-		};
-		848479512BF9FF94003FC3FC /* OversizeMediaKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = OversizeMediaKit;
 		};
 		848479532BF9FFA4003FC3FC /* OversizeCalendarKit */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -907,6 +1016,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 840CD6AD2AC0E44E00C6AAD0 /* XCRemoteSwiftPackageReference "Factory" */;
 			productName = FactoryKit;
+		};
+		AB0000000000000000000002 /* OversizeEditorKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OversizeEditorKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

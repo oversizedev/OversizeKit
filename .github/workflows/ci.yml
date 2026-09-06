@@ -67,6 +67,13 @@ jobs:
       package: OversizeMediaKit
     secrets: inherit
     
+  build-editor-kit:
+    name: Build EditorKit
+    uses: oversizedev/GithubWorkflows/.github/workflows/build-swiftpm-all-platforms.yml@main
+    with:
+      package: OversizeEditorKit
+    secrets: inherit
+
   build-example:
     name: Build Example
     needs:
@@ -78,6 +85,7 @@ jobs:
       - build-notification-kit
       - build-onboarding-kit
       - build-media-kit
+      - build-editor-kit
     uses: oversizedev/GithubWorkflows/.github/workflows/build-app.yml@main
     with:
       path: AppExample/Example
@@ -85,16 +93,62 @@ jobs:
       destination: generic/platform=iOS Simulator
     secrets: inherit
 
-#  tests:
-#    name: Test
-#    needs: build-swiftpm
-#    uses: oversizedev/GithubWorkflows/.github/workflows/test.yml@main
-#    secrets: inherit
+  tests:
+    name: Package tests
+    needs:
+      - build-oversize-kit
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup SwiftPM Config
+        run: |
+          echo "machine github.com login oversizedev password ${{ secrets.ACTIONS_TOKEN }}" > ~/.netrc
+          chmod 600 ~/.netrc
+          set -euo pipefail
+          defaults write com.apple.dt.Xcode IDESkipPackagePluginFingerprintValidation -bool YES
+          defaults write com.apple.dt.Xcode IDESkipMacroFingerprintValidation -bool YES
+
+      - name: Run tests
+        run: |
+          xcodebuild test \
+            -skipPackagePluginValidation \
+            -scheme OversizeKit-Package \
+            -destination "platform=iOS Simulator,name=iPhone 17 Pro" | xcpretty && exit ${PIPESTATUS[0]}
+
+  ui-tests:
+    name: Example UI tests
+    needs:
+      - build-example
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup SwiftPM Config
+        run: |
+          echo "machine github.com login oversizedev password ${{ secrets.ACTIONS_TOKEN }}" > ~/.netrc
+          chmod 600 ~/.netrc
+          set -euo pipefail
+          defaults write com.apple.dt.Xcode IDESkipPackagePluginFingerprintValidation -bool YES
+          defaults write com.apple.dt.Xcode IDESkipMacroFingerprintValidation -bool YES
+
+      - name: Run UI tests
+        run: |
+          xcodebuild test \
+            -skipPackagePluginValidation \
+            -project AppExample/Example.xcodeproj \
+            -scheme Example \
+            -destination "platform=iOS Simulator,name=iPhone 17 Pro" \
+            -only-testing:ExampleUITests | xcpretty && exit ${PIPESTATUS[0]}
 
   bump:
     name: Bump version
     needs:
       - build-example
+      - tests
+      - ui-tests
     if: github.ref == 'refs/heads/main'
     uses: oversizedev/GithubWorkflows/.github/workflows/bump.yml@main
     secrets: inherit

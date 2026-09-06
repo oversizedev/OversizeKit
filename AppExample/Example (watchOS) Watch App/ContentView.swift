@@ -3,25 +3,28 @@
 // ContentView.swift, created on 19.05.2024
 //
 
-import OversizeCalendarKit
-import OversizeContactsKit
 import OversizeKit
-import OversizeLocationKit
-import OversizeMediaKit
-import OversizeNoticeKit
-import OversizeNotificationKit
 import OversizeOnboardingKit
+import OversizeUI
 import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        OnboardView {
+            VStack(spacing: .xxSmall) {
+                Text("Example")
+                    .headline(.bold)
+
+                Text("OversizeKit on watchOS")
+                    .caption()
+                    .foregroundStyle(.secondary)
+            }
+            .multilineTextAlignment(.center)
+        } actions: {
+            Button("Continue") {}
+                .buttonStyle(.primary)
+                .accent()
         }
-        .padding()
     }
 }
 

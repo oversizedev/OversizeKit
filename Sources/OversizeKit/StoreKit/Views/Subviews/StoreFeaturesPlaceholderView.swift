@@ -23,8 +23,6 @@ struct StoreFeaturesPlaceholderView: View {
     }
 }
 
-struct StoreFeaturesPlaceholderView_Previews: PreviewProvider {
-    static var previews: some View {
-        StoreFeaturesPlaceholderView()
-    }
+#Preview {
+    StoreFeaturesPlaceholderView()
 }

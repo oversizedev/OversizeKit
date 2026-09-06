@@ -87,8 +87,6 @@ struct RateAppScreen: View {
     }
 }
 
-struct RateAppScreen_Previews: PreviewProvider {
-    static var previews: some View {
-        RateAppScreen()
-    }
+#Preview {
+    RateAppScreen()
 }
