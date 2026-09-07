@@ -80,7 +80,6 @@ struct RootView: View {
 
     var body: some View {
         RootTabView()
-            .coreServices()
             .navigationRoot(navigator)
     }
 }
@@ -134,7 +133,9 @@ Most behaviour is driven by `Info.plist`, not by code. Add `Developer`, `Company
 
 These are read back through `Info.App.*` and `FeatureFlags.app.*` / `FeatureFlags.secure.*` from `OversizeServices`.
 
-**The paywall is enabled by configuration, not code.** With `StoreKit` set to `true`, `SettingsView` renders the premium banner and `Launcher` is allowed to present the store screens. Link `StoreKit.framework` in the target as well.
+**The premium banner in settings is enabled by configuration, not code**: with `StoreKit` set to `true`, `SettingsView` renders `PremiumBannerRow`. Link `StoreKit.framework` in the target as well.
+
+Note that `Launcher`'s own paywall, special-offer and rate covers are gated on the persisted premium state, not on this flag — clearing `StoreKit` hides the settings banner but does not stop those screens.
 
 ## Settings
 
@@ -148,7 +149,7 @@ import SwiftUI
 
 struct AppSettingsNavigationStack: View {
     var body: some View {
-        ManagedNavigationStack(scene: RootTabs.settings.id) { navigator in
+        ManagedNavigationStack(scene: RootTab.settings.id) { navigator in
             SettingsView {
                 Row("App settings") {
                     navigator.navigate(to: AppSettingsDestinations.appSettings)
@@ -239,6 +240,7 @@ PhotoLibraryPicker(selection: $selectedImage)
 
 ```swift
 import OversizeEditorKit
+import OversizeKit // URLEditor lives here
 
 NoteEditor("Note", text: $text)
 
@@ -255,11 +257,14 @@ The package uses [Factory](https://github.com/hmlongco/Factory) — import it as
 
 ```swift
 import FactoryKit
+import OversizeServices
 
 @Injected(\.appStateService) private var appStateService: AppStateService
 ```
 
-You do not need to register anything. Default implementations come from `OversizeServices`, and `Launcher` registers the network service itself. Override a keypath only for tests or a custom implementation.
+You do not need to register anything: default implementations come from `OversizeServices`. Override a keypath only for tests or a custom implementation.
+
+One exception: `LauncherViewModel.init` always re-registers `\.networkService` with its own `NetworkService`, so a custom registration made before `Launcher` is built will be replaced.
 
 | Keypath | Used for |
 |---|---|
@@ -327,6 +332,8 @@ app.launchArguments += [
 ]
 app.launch()
 ```
+
+Seeding the premium flag is enough only while `Info.App.appStoreId` is absent. Once your app provides an App Store ID, `LauncherViewModel.onAppear()` runs `checkPremium()` and writes the fetched status back over the same key, so a paywall or rate cover can still appear mid-test.
 
 ## Requirements
 

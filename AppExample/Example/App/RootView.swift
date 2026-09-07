@@ -8,18 +8,24 @@ import OversizeKit
 import SwiftUI
 
 struct RootView: View {
+    @Binding private var deeplink: URL?
     @State private var navigator: Navigator = .init(configuration: .init())
     @State private var selectedTab: RootTab = .main
+
+    init(deeplink: Binding<URL?>) {
+        _deeplink = deeplink
+    }
 
     var body: some View {
         RootTabView(selection: $selectedTab)
             .navigationRoot(navigator)
-            .onOpenURL { handle($0) }
-            .onDeeplink { handle($0) }
+            .task(id: deeplink) { handlePendingDeeplink() }
     }
 
-    private func handle(_ url: URL) {
-        guard let host = URLComponents(url: url, resolvingAgainstBaseURL: true)?.host else { return }
+    private func handlePendingDeeplink() {
+        guard let url = deeplink,
+              let host = URLComponents(url: url, resolvingAgainstBaseURL: true)?.host
+        else { return }
 
         switch host {
         case "settings":
@@ -30,10 +36,12 @@ struct RootView: View {
         default:
             break
         }
+
+        deeplink = nil
     }
 }
 
 #Preview {
-    RootView()
+    RootView(deeplink: .constant(nil))
         .coreServices()
 }
