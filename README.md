@@ -365,6 +365,6 @@ OversizeKit is released under the **MIT License**. See [LICENSE](LICENSE) for de
 
 <div align="center">
 
-**Made with ❤️ by the Oversize**
+**Made by Oversize**
 
 </div>
