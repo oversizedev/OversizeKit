@@ -46,8 +46,8 @@ public struct Launcher<Content: View, Onboarding: View>: View {
             .onChange(of: scenePhase) { _, value in
                 viewModel.onScenePhaseChange(value)
             }
-            .coreServices()
             .presentationHUDRoot()
+            .coreServices()
             .task(viewModel.onAppear)
     }
 
