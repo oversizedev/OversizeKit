@@ -21,6 +21,7 @@ public struct SystemServicesModifier: ViewModifier {
     @State private var blurRadius: CGFloat = 0
     @State private var oppacity: CGFloat = 1
     @State private var screenSize: ScreenSize = .init(width: 375, height: 667)
+    @State private var safeAreaInsets: SwiftUI.EdgeInsets = .init()
 
     private enum FullScreenSheet: Identifiable, Equatable {
         case onboarding
@@ -38,13 +39,17 @@ public struct SystemServicesModifier: ViewModifier {
             .background {
                 GeometryReader { geometry in
                     Color.clear
-                        .onAppear { screenSize = ScreenSize(geometry: geometry) }
+                        .onAppear { updateScreenGeometry(geometry) }
                         .onChange(of: geometry.size) { _, _ in
-                            screenSize = ScreenSize(geometry: geometry)
+                            updateScreenGeometry(geometry)
+                        }
+                        .onChange(of: geometry.safeAreaInsets) { _, _ in
+                            updateScreenGeometry(geometry)
                         }
                 }
             }
             .screenSize(screenSize)
+            .environment(\.safeAreaInsets, safeAreaInsets)
             .blur(radius: blurRadius)
             .preferredColorScheme(theme.appearance.colorScheme)
             .premiumStatus(isPremium)
@@ -55,6 +60,11 @@ public struct SystemServicesModifier: ViewModifier {
             .onChange(of: scenePhase) { _, phase in
                 onChangeScenePhase(phase)
             }
+    }
+
+    private func updateScreenGeometry(_ geometry: GeometryProxy) {
+        screenSize = ScreenSize(geometry: geometry)
+        safeAreaInsets = geometry.safeAreaInsets
     }
 
     private func onChangeScenePhase(_ phase: ScenePhase) {
