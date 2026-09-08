@@ -30,6 +30,7 @@ struct RootView: View {
         switch host {
         case "settings":
             selectedTab = .settings
+            navigator.named(RootTab.settings.id)?.popAll()
         case "premium":
             selectedTab = .settings
             navigator.navigate(to: SettingsDestinations.premium)

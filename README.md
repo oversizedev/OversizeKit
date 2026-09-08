@@ -212,7 +212,7 @@ struct OnboardingView: View {
 
 ## Notices and ads
 
-Both are zero-configuration and hide themselves for premium users:
+Both are zero-configuration. `AdView` and the offer and first-day notices hide themselves for premium users; the rate notice can still be shown to premium users:
 
 ```swift
 import OversizeKit
@@ -303,9 +303,13 @@ enum UITestLaunchArguments {
             }
 
             // Launcher presents the paywall and the rate prompt over the content
-            // for non-premium users, which would cover the screen under test.
+            // for non-premium users, and AppStoreReviewService requests the system
+            // review alert on specific launch counts; both would cover the screen
+            // under test.
             if arguments.contains(UITestLaunchArguments.suppressInterstitials) {
                 UserDefaults.standard.set(true, forKey: "AppState.PremiumState")
+                UserDefaults.standard.set(true, forKey: "AppState.isAppReviewd")
+                UserDefaults.standard.set(1000, forKey: "AppState.appRunCount")
             }
         }
     }
@@ -333,13 +337,13 @@ app.launchArguments += [
 app.launch()
 ```
 
-Seeding the premium flag is enough only while `Info.App.appStoreId` is absent. Once your app provides an App Store ID, `LauncherViewModel.onAppear()` runs `checkPremium()` and writes the fetched status back over the same key, so a paywall or rate cover can still appear mid-test.
+Seeding the premium flag is enough only while `Info.App.appStoreId` is absent. Once your app provides an App Store ID, `LauncherViewModel.onAppear()` runs `checkPremium()` and writes the fetched status back over the same key, so a paywall can still appear mid-test. The `AppState.isAppReviewd` and `AppState.appRunCount` seeds keep the rate covers and the system review alert suppressed regardless of premium status.
 
 ## Requirements
 
 - **iOS** 17.0+, **macOS** 14.0+, **tvOS** 17.0+, **watchOS** 10.0+
 - **Swift** 6.1+ (`swift-tools-version: 6.1`)
-- `OversizeEditorKit`'s `RichTextEditor` additionally requires the 26.0 SDKs
+- `OversizeEditorKit` builds for iOS and macOS only; its `RichTextEditor` additionally requires the 26.0 SDKs
 
 ## Dependencies
 
