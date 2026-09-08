@@ -26,7 +26,7 @@ final class ExampleSettingsUITests: XCTestCase {
         appSettingsRow.tap()
 
         XCTAssertTrue(
-            app.otherElements[UITestIdentifier.appSettingsPage].waitForExistence(timeout: UITestTimeout.screen),
+            app.descendants(matching: .any)[UITestIdentifier.appSettingsPage].waitForExistence(timeout: UITestTimeout.screen),
             "Tapping the app section row did not push its destination"
         )
     }

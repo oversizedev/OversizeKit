@@ -31,7 +31,7 @@ final class ExampleOnboardingUITests: XCTestCase {
         app.completeOnboarding()
 
         XCTAssertTrue(
-            app.otherElements[UITestIdentifier.mainScreen].waitForExistence(timeout: UITestTimeout.screen),
+            app.descendants(matching: .any)[UITestIdentifier.mainScreen].waitForExistence(timeout: UITestTimeout.screen),
             "Main screen did not render after onboarding completed"
         )
     }
