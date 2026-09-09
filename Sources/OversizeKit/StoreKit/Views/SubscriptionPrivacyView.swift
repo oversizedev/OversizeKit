@@ -101,9 +101,3 @@ struct SubscriptionPrivacyView: View {
         .surfaceBorderWidth(platform == .macOS ? 1 : 2)
     }
 }
-
-// struct SubscriptionPrivacyView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        SubscriptionPrivacyView()
-//    }
-// }

@@ -39,6 +39,7 @@ public struct SettingsView<AppSection: View, HeadSection: View>: View {
         } background: {
             Color.backgroundSecondary
         }
+        .backButtonHidden()
         .toolbarTitleDisplayMode(.inline)
     }
 }
@@ -428,4 +429,18 @@ public extension SettingsView where HeadSection == EmptyView {
     init(@ViewBuilder appSection: () -> AppSection) {
         self.init(appSection: appSection, headSection: { EmptyView() })
     }
+}
+
+#Preview {
+    ManagedNavigationStack {
+        SettingsView {
+            Row("App settings") {} leading: {
+                Image(systemName: "gearshape")
+            }
+            .rowArrow()
+            .buttonStyle(.row)
+        }
+        .navigationDestinationAutoReceive(SettingsDestinations.self)
+    }
+    .coreServices()
 }

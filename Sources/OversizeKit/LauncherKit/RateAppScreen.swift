@@ -48,7 +48,7 @@ struct RateAppScreen: View {
                 .labelStyle(.toolbar)
                 .buttonStyle(.toolbarSecondary)
                 #if !os(tvOS) && !os(watchOS)
-                    .keyboardShortcut(.cancelAction)
+                .keyboardShortcut(.cancelAction)
                 #endif
             }
         }
@@ -79,16 +79,14 @@ struct RateAppScreen: View {
                 }
                 .elevation(.z3)
                 #if !os(tvOS)
-                    .controlSize(.large)
+                .controlSize(.large)
                 #endif
-                    .padding(.bottom, .medium)
+                .padding(.bottom, .medium)
             }
         }
     }
 }
 
-struct RateAppScreen_Previews: PreviewProvider {
-    static var previews: some View {
-        RateAppScreen()
-    }
+#Preview {
+    RateAppScreen()
 }

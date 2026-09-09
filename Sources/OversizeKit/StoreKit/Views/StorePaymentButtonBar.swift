@@ -76,8 +76,6 @@ struct StorePaymentButtonBar: View {
     }
 }
 
-struct StorePaymentButtonBar_Previews: PreviewProvider {
-    static var previews: some View {
-        StorePaymentButtonBar()
-    }
+#Preview {
+    StorePaymentButtonBar()
 }

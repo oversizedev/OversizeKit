@@ -43,10 +43,10 @@ public struct URLEditor<Action: View>: View {
                 commitURL()
             }, onCommit: commitURL)
                 .focused($isFocused)
-            #if os(iOS)
+                #if os(iOS)
                 .keyboardType(.URL)
                 .textInputAutocapitalization(.never)
-            #endif
+                #endif
                 .textContentType(.URL)
                 .autocorrectionDisabled()
                 .textFieldStyle(.placeholder(placeholder, text: $urlString))
@@ -85,23 +85,23 @@ public struct URLEditor<Action: View>: View {
         }
         .navigationTitle(label)
         #if os(iOS)
-            .navigationBarTitleDisplayMode(.inline)
+        .navigationBarTitleDisplayMode(.inline)
         #endif
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Close", systemImage: "xmark", role: .cancel) {
-                        dismiss()
-                    }
-                    .labelStyle(.toolbar)
-                    .buttonStyle(.toolbarSecondary)
-                    .keyboardShortcut(.cancelAction)
+        .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Close", systemImage: "xmark", role: .cancel) {
+                    dismiss()
                 }
+                .labelStyle(.toolbar)
+                .buttonStyle(.toolbarSecondary)
+                .keyboardShortcut(.cancelAction)
             }
-            .onAppear {
-                isFocused = true
-                urlString = url?.absoluteString ?? ""
-                previewURL = url
-            }
+        }
+        .onAppear {
+            isFocused = true
+            urlString = url?.absoluteString ?? ""
+            previewURL = url
+        }
     }
 
     // MARK: - Private

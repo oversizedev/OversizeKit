@@ -36,9 +36,9 @@ public struct Launcher<Content: View, Onboarding: View>: View {
             .appLaunchCover(item: $viewModel.activeFullScreenSheet) {
                 fullScreenCover(sheet: $0)
                     .coreServices()
-                #if os(macOS)
+                    #if os(macOS)
                     .frame(width: viewModel.contentType == .onboarding ? 840 : 500, height: 672)
-                #endif
+                    #endif
             }
             .onChange(of: viewModel.appStateService.isCompletedOnboarding) { _, isCompletedOnboarding in
                 viewModel.onCompeteOnboarding(isCompletedOnboarding)
@@ -176,10 +176,8 @@ private extension View {
     }
 }
 
-struct LockscreenView_Previews: PreviewProvider {
-    static var previews: some View {
-        Launcher {
-            Text("Succes")
-        }
+#Preview {
+    Launcher {
+        Text("Success")
     }
 }

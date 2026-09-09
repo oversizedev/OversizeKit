@@ -180,8 +180,6 @@ extension FontSettingView {
     }
 }
 
-struct FontSettingView_Previews: PreviewProvider {
-    static var previews: some View {
-        FontSettingView()
-    }
+#Preview {
+    FontSettingView()
 }

@@ -94,9 +94,7 @@ public struct BorderSettingView: View {
     }
 }
 
-struct BorderSettongView_Previews: PreviewProvider {
-    static var previews: some View {
-        BorderSettingView()
-            .previewPhones()
-    }
+#Preview {
+    BorderSettingView()
+        .previewPhones()
 }

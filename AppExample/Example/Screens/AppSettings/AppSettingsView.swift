@@ -7,22 +7,30 @@ import OversizeUI
 import SwiftUI
 
 struct AppSettingsView: View {
-    @EnvironmentObject var viewModel: AppSettingsViewModel
+    private let openAppSettings: () -> Void
+
+    init(openAppSettings: @escaping () -> Void) {
+        self.openAppSettings = openAppSettings
+    }
 
     var body: some View {
-        NavigationLink(destination: AppSettingsPageView()) {
-            Row("Option") {
-                Image(systemName: "")
-            }
-            .rowArrow()
-            .multilineTextAlignment(.leading)
+        Row("App settings") {
+            openAppSettings()
+        } leading: {
+            Image(systemName: "slider.horizontal.3")
         }
+        .rowArrow()
         .buttonStyle(.row)
+        .accessibilityIdentifier(AccessibilityIdentifier.appSettingsRow)
     }
 }
 
-struct AppSettings_ViewPreviews: PreviewProvider {
-    static var previews: some View {
-        AppSettingsView()
+extension AppSettingsView {
+    enum AccessibilityIdentifier {
+        static let appSettingsRow = "settings.appSection.row"
     }
+}
+
+#Preview {
+    AppSettingsView {}
 }

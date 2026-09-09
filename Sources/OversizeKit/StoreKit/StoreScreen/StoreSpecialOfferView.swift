@@ -58,9 +58,9 @@ public struct StoreSpecialOfferView: View {
             VStack(spacing: .small) {
                 productsLust
                     .padding(.horizontal, .medium)
-                #if os(macOS)
+                    #if os(macOS)
                     .padding(.bottom, .medium)
-                #endif
+                    #endif
 
                 #if os(iOS)
                 StorePaymentButtonBar(showDescription: false)
@@ -199,11 +199,11 @@ public struct StoreSpecialOfferView: View {
             VStack(spacing: .medium) {
                 VStack(spacing: .zero) {
                     Text("")
-                    #if os(macOS)
+                        #if os(macOS)
                         .padding(.vertical, .medium)
-                    #else
+                        #else
                         .offset(y: -32)
-                    #endif
+                        #endif
 
                     if platform == .macOS || screenSize.height > 850 {
                         Spacer()
@@ -407,8 +407,16 @@ public struct StoreSpecialOfferView: View {
     }
 }
 
-// struct StoreSpecialOfferView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        StoreSpecialOfferView()
-//    }
-// }
+#Preview {
+    StoreSpecialOfferView(
+        event: .init(
+            id: 1,
+            badge: "Limited",
+            title: "Special offer",
+            headline: "Get all features",
+            description: "Unlock every feature at a reduced price",
+            startDate: .now,
+            endDate: .now.addingTimeInterval(7 * 24 * 60 * 60)
+        )
+    )
+}

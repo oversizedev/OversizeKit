@@ -4,169 +4,62 @@
 //
 
 import FactoryKit
+import OversizeOnboardingKit
 import OversizeServices
 import OversizeUI
 import SwiftUI
 
 struct OnboardingView: View {
-    @Injected(\.appStateService) var appStateService: AppStateService
-    @Environment(\.screenSize) var screenSize: ScreenSize
-    @Environment(\.verticalSizeClass) var verticalSizeClass: UserInterfaceSizeClass?
-    @Environment(\.horizontalSizeClass) var horizontalSizeClass: UserInterfaceSizeClass?
+    @Injected(\.appStateService) private var appStateService: AppStateService
 
     var body: some View {
-        if horizontalSizeClass == .compact, verticalSizeClass == .regular {
-            phoneRegular
-        } else if horizontalSizeClass == .regular, verticalSizeClass == .compact {
-            phoneCompact
-        } else {
-            ipad
-        }
-    }
-
-    var phoneRegular: some View {
-        ZStack {
-            VStack {
-                Spacer()
-                Image("OnbardingBackground", bundle: .main)
-
-                Spacer()
-
-                VStack(spacing: .medium) {
-                    Text("Welcome to\nExample")
-                        .largeTitle()
-                        .onBackgroundPrimaryForeground()
-
-                    Text("Welcome text")
-                        .title2(.semibold)
-                        .onBackgroundSecondaryForeground()
-                }
-                .paddingContent(.horizontal)
-                .multilineTextAlignment(.center)
-
-                Spacer()
-
-                Button("Contine") {
-                    appStateService.completedOnbarding()
-                }
-                .buttonStyle(.primary)
-                .accent()
-                .paddingContent(.bottom)
-                .paddingContent(.horizontal)
-                .elevation(.z2)
+        OnboardView {
+            content
+        } actions: {
+            Button("Continue") {
+                appStateService.completedOnboarding()
             }
-
-            // VStack {
-            //
-            //     Spacer()
-            //     Image("OnbardingBackground", bundle: .main)
-            //     Spacer()
-            // }
-        }
-        .ignoresSafeArea(edges: .top)
-        .background {
-            Color.backgroundSecondary.ignoresSafeArea()
+            .buttonStyle(.primary)
+            .accent()
+            .accessibilityIdentifier(AccessibilityIdentifier.continueButton)
         }
     }
 
-    var phoneCompact: some View {
-        HStack(spacing: .zero) {
+    private var content: some View {
+        VStack(spacing: .large) {
+            Spacer()
+
             Image("OnbardingBackground", bundle: .main)
+                .resizable()
+                .scaledToFit()
+                .frame(maxHeight: 320)
+                .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
 
-            Divider()
+            VStack(spacing: .small) {
+                Text("Welcome to\nExample")
+                    .largeTitle()
+                    .accessibilityIdentifier(AccessibilityIdentifier.title)
 
-            VStack {
-                Spacer()
-
-                VStack(spacing: .medium) {
-                    Text("Welcome to\nExample")
-                        .largeTitle()
-                        .onBackgroundPrimaryForeground()
-
-                    Text("Welcome text")
-                        .title2(.semibold)
-                        .onBackgroundSecondaryForeground()
-                }
-                .paddingContent(.horizontal)
-                .multilineTextAlignment(.center)
-
-                Spacer()
-
-                HStack {
-                    Spacer()
-                    Button("Contine") {
-                        appStateService.completedOnbarding()
-                    }
-                    .buttonStyle(.primary)
-                    .accent()
-                    .elevation(.z2)
-                    .frame(maxWidth: 300)
-                    .paddingContent(.horizontal)
-                    .paddingContent(.bottom)
-                    Spacer()
-                }
+                Text("A working integration of OversizeKit")
+                    .title2(.semibold)
+                    .foregroundStyle(.secondary)
             }
+            .multilineTextAlignment(.center)
+
+            Spacer()
         }
-        .background {
-            Color.backgroundSecondary.ignoresSafeArea()
-        }
-    }
-
-    var ipad: some View {
-        ZStack {
-            VStack {
-                VStack {}
-                    .frame(maxHeight: screenSize.height < 1000 ? 320 : 490)
-
-                Spacer()
-
-                VStack(spacing: .medium) {
-                    Text("Example")
-                        .largeTitle()
-                        .onBackgroundPrimaryForeground()
-
-                    Text("Welcome text")
-                        .title2(.semibold)
-                        .onBackgroundSecondaryForeground()
-                }
-                .paddingContent(.horizontal)
-                .multilineTextAlignment(.center)
-
-                Spacer()
-
-                Button("Contine") {
-                    appStateService.completedOnbarding()
-                }
-                .buttonStyle(.primary)
-                .accent()
-                .paddingContent(.bottom)
-                .paddingContent(.horizontal)
-                .elevation(.z2)
-            }
-
-            VStack {
-                Surface {
-                    Image("OnbardingBackground", bundle: .main)
-                        .offset(y: -44)
-                        .frame(width: screenSize.height < 1000 ? 320 : 490, height: screenSize.height < 1000 ? 320 : 490)
-                        .cornerRadius(.xLarge)
-                        .clipped()
-                }
-                .elevation(.z2)
-                .surfaceContentMargins(.zero)
-                .controlRadius(.xLarge)
-                .padding(.top, .large)
-                Spacer()
-            }
-        }
-        .background {
-            Color.backgroundSecondary.ignoresSafeArea()
-        }
+        .paddingContent(.horizontal)
     }
 }
 
-struct OnboardingView_Previews: PreviewProvider {
-    static var previews: some View {
-        OnboardingView()
+extension OnboardingView {
+    enum AccessibilityIdentifier {
+        static let title = "onboarding.title"
+        static let continueButton = "onboarding.continue"
     }
+}
+
+#Preview {
+    OnboardingView()
+        .coreServices()
 }

@@ -7,31 +7,36 @@ import OversizeUI
 import SwiftUI
 
 struct AppSettingsPageView: View {
-    @StateObject var viewModel: AppSettingsPageViewModel
-
-    init() {
-        _viewModel = StateObject(wrappedValue: AppSettingsPageViewModel())
-    }
+    @AppStorage("AppState.Option") private var option: String = "Default option"
 
     var body: some View {
-        PageView("Option") {
+        ScrollView {
             SectionView {
                 VStack(spacing: .zero) {
-                    Row("Default option") {
-                        Image(systemName: "")
+                    Row(option) {
+                        Image(systemName: "checkmark.circle")
                     }
                 }
             }
             .sectionContentCompactRowMargins()
+            .paddingContent(.horizontal)
         }
-        .leadingBar {
-            BarButton(.back)
+        .background {
+            Color.backgroundSecondary.ignoresSafeArea()
         }
+        .navigationTitle("Option")
+        .accessibilityIdentifier(AccessibilityIdentifier.screen)
     }
 }
 
-struct AppSettingsPageView_ViewPreviews: PreviewProvider {
-    static var previews: some View {
+extension AppSettingsPageView {
+    enum AccessibilityIdentifier {
+        static let screen = "settings.appSettingsPage.screen"
+    }
+}
+
+#Preview {
+    NavigationStack {
         AppSettingsPageView()
     }
 }

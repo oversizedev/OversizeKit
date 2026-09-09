@@ -121,8 +121,6 @@ struct StoreFeaturesView: View {
     }
 }
 
-struct StoreFeaturesView_Previews: PreviewProvider {
-    static var previews: some View {
-        StoreFeaturesView()
-    }
+#Preview {
+    StoreFeaturesView()
 }

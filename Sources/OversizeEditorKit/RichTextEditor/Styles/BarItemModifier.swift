@@ -30,9 +30,9 @@ struct BarItemScrollHapticModifier: ViewModifier {
 public extension View {
     func barItem(namespace: Namespace.ID) -> some View {
         glassEffectUnion(id: "bar", namespace: namespace)
-        #if os(iOS)
+            #if os(iOS)
             .glassEffectTransition(.identity)
-        #endif
+            #endif
             .scrollTransition(.interactive) { content, phase in
                 let t = max(0, phase.value)
                 return content

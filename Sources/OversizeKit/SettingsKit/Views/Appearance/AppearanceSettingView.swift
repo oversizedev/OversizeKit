@@ -53,7 +53,7 @@ public struct AppearanceSettingView: View {
         }
         .preferredColorScheme(theme.appearance.colorScheme)
         #if os(iOS)
-            .accentColor(theme.accentColor)
+        .accentColor(theme.accentColor)
         #elseif os(macOS)
         #endif
     }
@@ -237,9 +237,7 @@ public struct AppearanceSettingView: View {
     }
 }
 
-struct SettingsThemeView_Previews: PreviewProvider {
-    static var previews: some View {
-        AppearanceSettingView()
-            .previewPhones()
-    }
+#Preview {
+    AppearanceSettingView()
+        .previewPhones()
 }

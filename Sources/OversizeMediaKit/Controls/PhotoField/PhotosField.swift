@@ -109,10 +109,8 @@ public struct PhotosField: View {
 }
 
 @available(iOS 17.0, *)
-struct PhotosFieldView_Previews: PreviewProvider {
-    static var previews: some View {
-        PhotosField(.constant([]), selectionDate: .constant([]))
-            .previewComponent()
-    }
+#Preview {
+    PhotosField(.constant([]), selectionDate: .constant([]))
+        .previewComponent()
 }
 #endif

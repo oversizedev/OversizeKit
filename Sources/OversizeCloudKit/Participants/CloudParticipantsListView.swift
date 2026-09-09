@@ -74,7 +74,7 @@ public struct CloudParticipantsListView: View {
                 .labelStyle(.toolbar)
                 .buttonStyle(.toolbarPrimary)
                 #if !os(tvOS) && !os(watchOS)
-                    .keyboardShortcut(.defaultAction)
+                .keyboardShortcut(.defaultAction)
                 #endif
             }
         }

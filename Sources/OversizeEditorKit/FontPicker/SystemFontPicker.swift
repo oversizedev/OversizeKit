@@ -96,27 +96,27 @@ public struct SystemFontPicker: View {
                 .labelStyle(.toolbar)
                 .buttonStyle(.toolbarSecondary)
                 #if !os(tvOS) && !os(watchOS)
-                    .keyboardShortcut(.cancelAction)
+                .keyboardShortcut(.cancelAction)
                 #endif
             }
         }
         .scrollIndicators(.hidden)
         #if os(iOS) || os(macOS)
-            .sheet(isPresented: $isFontPickerPresented) {
-                NavigationStack {
-                    FontPicker(
-                        selectedFontName: $selectedFontName,
-                        onApply: { name in
-                            onApply?(name)
-                            dismiss()
-                        }
-                    )
-                }
-                #if os(iOS)
-                .presentationDetents([.large])
-                .navigationTransitionZoom(sourceID: "allFonts", in: namespace)
-                #endif
+        .sheet(isPresented: $isFontPickerPresented) {
+            NavigationStack {
+                FontPicker(
+                    selectedFontName: $selectedFontName,
+                    onApply: { name in
+                        onApply?(name)
+                        dismiss()
+                    }
+                )
             }
+            #if os(iOS)
+            .presentationDetents([.large])
+            .navigationTransitionZoom(sourceID: "allFonts", in: namespace)
+            #endif
+        }
         #endif
     }
 }

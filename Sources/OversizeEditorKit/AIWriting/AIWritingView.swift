@@ -4,7 +4,9 @@
 import OversizeUI
 import SwiftUI
 
-@available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
+@available(iOS 26.0, macOS 26.0, visionOS 26.0, *)
+@available(tvOS, unavailable)
+@available(watchOS, unavailable)
 struct AIWritingView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var viewModel = AIWritingViewModel()
@@ -101,7 +103,9 @@ struct AIWritingView: View {
 
 // MARK: - Preview
 
-@available(iOS 26.0, macOS 26.0, tvOS 26.0, watchOS 26.0, visionOS 26.0, *)
+@available(iOS 26.0, macOS 26.0, visionOS 26.0, *)
+@available(tvOS, unavailable)
+@available(watchOS, unavailable)
 #Preview {
     AIWritingView { _ in }
 }

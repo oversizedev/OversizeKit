@@ -4,6 +4,7 @@
 //
 
 import NavigatorUI
+import OversizeUI
 import SwiftUI
 
 public struct SettingsNavigationStack<AppSection: View, HeadSection: View>: View {
@@ -35,5 +36,15 @@ public extension SettingsNavigationStack where HeadSection == EmptyView {
             appSection: appSection,
             headSection: { EmptyView() }
         )
+    }
+}
+
+#Preview {
+    SettingsNavigationStack {
+        Row("App settings") {} leading: {
+            Image(systemName: "gearshape")
+        }
+        .rowArrow()
+        .buttonStyle(.row)
     }
 }

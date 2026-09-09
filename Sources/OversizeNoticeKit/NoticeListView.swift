@@ -152,8 +152,6 @@ extension NoticeListView {
     }
 }
 
-// struct NoticeListView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        NoticeListView()
-//    }
-// }
+#Preview {
+    NoticeListView()
+}

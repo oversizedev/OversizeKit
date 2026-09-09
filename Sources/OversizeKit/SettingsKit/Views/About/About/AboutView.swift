@@ -134,7 +134,7 @@ public struct AboutView: View {
                         }
                         .buttonStyle(.scale)
                         #if os(iOS)
-                            .appStoreOverlay(isPresent: $isPresentStoreProduct, appId: app.id)
+                        .appStoreOverlay(isPresent: $isPresentStoreProduct, appId: app.id)
                         #endif
                     }
                 case .error:
@@ -536,8 +536,6 @@ public struct AboutView: View {
     }
 }
 
-struct AboutView_Previews: PreviewProvider {
-    static var previews: some View {
-        AboutView()
-    }
+#Preview {
+    AboutView()
 }

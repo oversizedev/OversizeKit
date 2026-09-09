@@ -3,25 +3,50 @@
 // ContentView.swift, created on 19.05.2024
 //
 
-import OversizeCalendarKit
-import OversizeContactsKit
+import FactoryKit
 import OversizeKit
-import OversizeLocationKit
-import OversizeMediaKit
-import OversizeNoticeKit
-import OversizeNotificationKit
 import OversizeOnboardingKit
+import OversizeServices
+import OversizeUI
 import SwiftUI
 
 struct ContentView: View {
+    @Injected(\.appStateService) private var appStateService: AppStateService
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        if appStateService.isCompletedOnboarding {
+            VStack(spacing: .xxSmall) {
+                Text("Example")
+                    .headline(.bold)
+
+                Text("OversizeKit on watchOS")
+                    .caption()
+                    .foregroundStyle(.secondary)
+            }
+            .multilineTextAlignment(.center)
+        } else {
+            onboarding
         }
-        .padding()
+    }
+
+    private var onboarding: some View {
+        OnboardView {
+            VStack(spacing: .xxSmall) {
+                Text("Welcome")
+                    .headline(.bold)
+
+                Text("A working integration of OversizeKit")
+                    .caption()
+                    .foregroundStyle(.secondary)
+            }
+            .multilineTextAlignment(.center)
+        } actions: {
+            Button("Continue") {
+                appStateService.completedOnboarding()
+            }
+            .buttonStyle(.primary)
+            .accent()
+        }
     }
 }
 

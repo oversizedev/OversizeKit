@@ -12,13 +12,14 @@ let commonDependencies: [PackageDescription.Package.Dependency] = [
 let remoteDependencies: [PackageDescription.Package.Dependency] = commonDependencies + [
     .package(url: "https://github.com/oversizedev/OversizeUI.git", .upToNextMajor(from: "3.0.2")),
     .package(url: "https://github.com/oversizedev/OversizeCore.git", .upToNextMajor(from: "1.3.0")),
-    .package(url: "https://github.com/oversizedev/OversizeServices.git", .upToNextMajor(from: "1.4.0")),
+    .package(url: "https://github.com/oversizedev/OversizeServices.git", .upToNextMajor(from: "1.25.0")),
     .package(url: "https://github.com/oversizedev/OversizeLocalizable.git", .upToNextMajor(from: "1.5.0")),
     .package(url: "https://github.com/oversizedev/OversizeComponents.git", .upToNextMajor(from: "2.0.0")),
     .package(url: "https://github.com/oversizedev/OversizeResources.git", .upToNextMajor(from: "2.0.0")),
     .package(url: "https://github.com/oversizedev/OversizeNetwork.git", .upToNextMajor(from: "1.0.0")),
     .package(url: "https://github.com/oversizedev/OversizeNavigation.git", .upToNextMajor(from: "0.7.0")),
     .package(url: "https://github.com/oversizedev/OversizeArchitecture.git", .upToNextMajor(from: "0.2.0")),
+    .package(url: "https://github.com/oversizedev/OversizeIntelligenceService.git", .upToNextMajor(from: "1.0.0")),
 ]
 
 let localDependencies: [PackageDescription.Package.Dependency] = commonDependencies + [
@@ -31,6 +32,7 @@ let localDependencies: [PackageDescription.Package.Dependency] = commonDependenc
     .package(name: "OversizeNetwork", path: "../OversizeNetwork"),
     .package(name: "OversizeNavigation", path: "../OversizeNavigation"),
     .package(name: "OversizeArchitecture", path: "../OversizeArchitecture"),
+    .package(name: "OversizeIntelligenceService", path: "../OversizeIntelligenceService"),
 ]
 
 let isLocalDev = FileManager.default.fileExists(atPath: "\(NSHomeDirectory())/Developer/Packages/OversizeCore")
@@ -156,7 +158,7 @@ let package = Package(
                 .product(name: "OversizeUI", package: "OversizeUI"),
                 .product(name: "OversizeCore", package: "OversizeCore"),
                 .product(name: "OversizeResources", package: "OversizeResources"),
-                .product(name: "OversizeIntelligenceService", package: "OversizeServices"),
+                .product(name: "OversizeIntelligenceService", package: "OversizeIntelligenceService"),
                 .product(name: "FactoryKit", package: "Factory"),
             ]
         ),
@@ -172,7 +174,14 @@ let package = Package(
         ),
         .testTarget(
             name: "OversizeKitTests",
-            dependencies: ["OversizeKit"]
+            dependencies: [
+                "OversizeKit",
+                .product(name: "NavigatorUI", package: "Navigator"),
+            ]
+        ),
+        .testTarget(
+            name: "OversizeNotificationKitTests",
+            dependencies: ["OversizeNotificationKit"]
         ),
     ]
 )

@@ -157,8 +157,6 @@ public extension PremiumBannerRow {
     }
 }
 
-struct PremiumBannerRow_Previews: PreviewProvider {
-    static var previews: some View {
-        PremiumBannerRow()
-    }
+#Preview {
+    PremiumBannerRow()
 }

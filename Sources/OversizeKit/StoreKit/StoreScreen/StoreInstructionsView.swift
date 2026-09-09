@@ -328,8 +328,6 @@ public struct StoreInstructionsView: View {
     }
 }
 
-struct StoreViewInstructions_Previews: PreviewProvider {
-    static var previews: some View {
-        StoreInstructionsView()
-    }
+#Preview {
+    StoreInstructionsView()
 }
