@@ -65,7 +65,7 @@ public struct StoreInstructionsView: View {
             }
             .toolbar { toolbarContent }
             .safeAreaBarBottom {
-                if case .result = viewModel.state {
+                if case .result = viewModel.state, viewModel.selectedProduct != nil {
                     VStack(spacing: .zero) {
                         StorePaymentButtonBar(
                             trialNotification: true,
@@ -101,7 +101,7 @@ public struct StoreInstructionsView: View {
     private var toolbarContent: some ToolbarContent {
         #if os(macOS)
         ToolbarItem(placement: .cancellationAction) {
-            Button("Maybe Later") {
+            Button("Close") {
                 dismiss()
             }
             .keyboardShortcut(.cancelAction)
@@ -117,17 +117,10 @@ public struct StoreInstructionsView: View {
                 )
                 .redacted(reason: viewModel.productsState.result?.banner.badge == nil ? .placeholder : .init())
             }
-            ToolbarItem(placement: .cancellationAction) {
-                Button("Maybe Later") { dismiss() }
-            }
-        } else {
-            ToolbarItem(placement: .cancellationAction) {
-                Button("Maybe Later") { dismiss() }
-            }
         }
         #else
         ToolbarItem(placement: .cancellationAction) {
-            Button("Maybe Later") { dismiss() }
+            Button("Close") { dismiss() }
         }
         #endif
     }

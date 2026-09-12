@@ -1,8 +1,9 @@
 //
-// Copyright © 2023 Alexander Romanov
+// Copyright © 2026 Alexander Romanov
 // StoreInstructionsErrorView.swift
 //
 
+import OversizeLocalizable
 import OversizeUI
 import SwiftUI
 
@@ -11,23 +12,30 @@ struct StoreInstructionsErrorView: View {
     let retryAction: () async -> Void
     let continueAction: () -> Void
 
+    @State private var isRetrying = false
+
     var body: some View {
         VStack(spacing: .medium) {
             OversizeUI.ErrorView(error: error)
 
-            Button("Try Again") {
+            Button(L10n.Button.tryAgain) {
+                isRetrying = true
                 Task {
                     await retryAction()
+                    isRetrying = false
                 }
             }
             .buttonStyle(.primary)
+            .loading(isRetrying)
+            .disabled(isRetrying)
+            .accessibilityIdentifier("store.error.tryAgain")
 
-            Button("Maybe Later") {
+            Button(L10n.Button.later) {
                 continueAction()
             }
             .buttonStyle(.quaternary)
+            .accessibilityIdentifier("store.error.continueFree")
         }
-        .paddingContent(.horizontal)
     }
 }
 
