@@ -41,7 +41,15 @@ public struct StoreInstructionsView: View {
                     case let .result(data):
                         content(data: data)
                     case let .error(error):
-                        OversizeUI.ErrorView(error: error)
+                        StoreInstructionsErrorView(
+                            error: error,
+                            retryAction: {
+                                await viewModel.fetchData()
+                            },
+                            continueAction: {
+                                dismiss()
+                            }
+                        )
                     }
                 }
                 .paddingContent(.horizontal)
@@ -57,20 +65,22 @@ public struct StoreInstructionsView: View {
             }
             .toolbar { toolbarContent }
             .safeAreaBarBottom {
-                VStack(spacing: .zero) {
-                    StorePaymentButtonBar(
-                        trialNotification: true,
-                        showDescription: true,
-                        action: viewModel.specialOfferMode ? nil : {
-                            isShowAllPlans = true
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                withAnimation {
-                                    value.scrollTo(10, anchor: .top)
+                if case .result = viewModel.state {
+                    VStack(spacing: .zero) {
+                        StorePaymentButtonBar(
+                            trialNotification: true,
+                            showDescription: true,
+                            action: viewModel.specialOfferMode ? nil : {
+                                isShowAllPlans = true
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                    withAnimation {
+                                        value.scrollTo(10, anchor: .top)
+                                    }
                                 }
                             }
-                        }
-                    )
-                    .environmentObject(viewModel)
+                        )
+                        .environmentObject(viewModel)
+                    }
                 }
             }
             .onChange(of: isPremium) { _, isPremium in
@@ -91,7 +101,7 @@ public struct StoreInstructionsView: View {
     private var toolbarContent: some ToolbarContent {
         #if os(macOS)
         ToolbarItem(placement: .cancellationAction) {
-            Button("Close") {
+            Button("Maybe Later") {
                 dismiss()
             }
             .keyboardShortcut(.cancelAction)
@@ -107,10 +117,17 @@ public struct StoreInstructionsView: View {
                 )
                 .redacted(reason: viewModel.productsState.result?.banner.badge == nil ? .placeholder : .init())
             }
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Maybe Later") { dismiss() }
+            }
+        } else {
+            ToolbarItem(placement: .cancellationAction) {
+                Button("Maybe Later") { dismiss() }
+            }
         }
         #else
         ToolbarItem(placement: .cancellationAction) {
-            Button("Close") { dismiss() }
+            Button("Maybe Later") { dismiss() }
         }
         #endif
     }
