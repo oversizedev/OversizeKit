@@ -9,6 +9,7 @@ import SwiftUI
 
 struct StoreInstructionsErrorView: View {
     let error: Error
+    let isRetrying: Bool
     let retryAction: () async -> Void
     let continueAction: () -> Void
 
@@ -22,9 +23,11 @@ struct StoreInstructionsErrorView: View {
                 }
             }
             .buttonStyle(.primary)
+            .loading(isRetrying)
+            .disabled(isRetrying)
             .accessibilityIdentifier("store.error.tryAgain")
 
-            Button("Continue without Pro") {
+            Button(L10n.Button.later) {
                 continueAction()
             }
             .buttonStyle(.quaternary)
@@ -40,6 +43,7 @@ struct StoreInstructionsErrorView: View {
             code: -1,
             userInfo: [NSLocalizedDescriptionKey: "Unknown network error"]
         ),
+        isRetrying: false,
         retryAction: {},
         continueAction: {}
     )

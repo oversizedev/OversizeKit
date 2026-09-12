@@ -43,6 +43,7 @@ public struct StoreInstructionsView: View {
                     case let .error(error):
                         StoreInstructionsErrorView(
                             error: error,
+                            isRetrying: viewModel.isRefetching,
                             retryAction: {
                                 await viewModel.fetchData()
                             },
