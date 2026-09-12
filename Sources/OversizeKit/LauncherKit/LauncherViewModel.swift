@@ -137,6 +137,7 @@ public extension LauncherViewModel {
         activeFullScreenSheet = nil
         delay(time: 0.2) {
             Task { @MainActor in
+                guard self.activeFullScreenSheet == nil else { return }
                 self.activeFullScreenSheet = .payWall
                 Log.notice("Paywall shown")
             }
@@ -256,7 +257,7 @@ public extension LauncherViewModel {
         case let .success(offers):
             Log.info("Offers loaded")
             if let offer = offers.first(where: { checkDateInSelectedPeriod(startDate: $0.startDate, endDate: $0.endDate) }) {
-                if offer.id != lastClosedSpecialOffer {
+                if offer.id != lastClosedSpecialOffer, activeFullScreenSheet == nil {
                     activeFullScreenSheet = .specialOffer(event: offer)
                     Log.notice("Offer shown")
                 }
