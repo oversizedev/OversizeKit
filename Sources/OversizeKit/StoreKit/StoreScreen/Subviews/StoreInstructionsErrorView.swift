@@ -12,29 +12,23 @@ struct StoreInstructionsErrorView: View {
     let retryAction: () async -> Void
     let continueAction: () -> Void
 
-    @State private var isRetrying = false
-
     var body: some View {
         VStack(spacing: .medium) {
             OversizeUI.ErrorView(error: error)
 
             Button(L10n.Button.tryAgain) {
-                isRetrying = true
                 Task {
                     await retryAction()
-                    isRetrying = false
                 }
             }
             .buttonStyle(.primary)
-            .loading(isRetrying)
-            .disabled(isRetrying)
             .accessibilityIdentifier("store.error.tryAgain")
 
-            Button(L10n.Button.later) {
+            Button("Continue without Pro") {
                 continueAction()
             }
             .buttonStyle(.quaternary)
-            .accessibilityIdentifier("store.error.continueFree")
+            .accessibilityIdentifier("store.error.continueWithoutPro")
         }
     }
 }
