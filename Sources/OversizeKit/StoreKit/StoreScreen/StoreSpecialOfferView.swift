@@ -70,6 +70,7 @@ public struct StoreSpecialOfferView: View {
                 #endif
             }
         }
+        .scrollEdgeEffectStyle(.soft)
         .toolbar(content: { toolbarContent })
         .onChange(of: isPremium) { _, status in
             if status {
