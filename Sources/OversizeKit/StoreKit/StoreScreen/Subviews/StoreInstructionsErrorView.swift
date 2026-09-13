@@ -1,0 +1,50 @@
+//
+// Copyright © 2026 Alexander Romanov
+// StoreInstructionsErrorView.swift
+//
+
+import OversizeLocalizable
+import OversizeUI
+import SwiftUI
+
+struct StoreInstructionsErrorView: View {
+    let error: Error
+    let isRetrying: Bool
+    let retryAction: () async -> Void
+    let continueAction: () -> Void
+
+    var body: some View {
+        VStack(spacing: .medium) {
+            OversizeUI.ErrorView(error: error)
+
+            Button(L10n.Button.tryAgain) {
+                Task {
+                    await retryAction()
+                }
+            }
+            .buttonStyle(.primary)
+            .loading(isRetrying)
+            .disabled(isRetrying)
+            .accessibilityIdentifier("store.error.tryAgain")
+
+            Button(L10n.Button.later) {
+                continueAction()
+            }
+            .buttonStyle(.quaternary)
+            .accessibilityIdentifier("store.error.continueWithoutPro")
+        }
+    }
+}
+
+#Preview {
+    StoreInstructionsErrorView(
+        error: NSError(
+            domain: "OversizeKit",
+            code: -1,
+            userInfo: [NSLocalizedDescriptionKey: "Unknown network error"]
+        ),
+        isRetrying: false,
+        retryAction: {},
+        continueAction: {}
+    )
+}

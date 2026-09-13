@@ -41,7 +41,16 @@ public struct StoreInstructionsView: View {
                     case let .result(data):
                         content(data: data)
                     case let .error(error):
-                        OversizeUI.ErrorView(error: error)
+                        StoreInstructionsErrorView(
+                            error: error,
+                            isRetrying: viewModel.isRefetching,
+                            retryAction: {
+                                await viewModel.fetchData()
+                            },
+                            continueAction: {
+                                dismiss()
+                            }
+                        )
                     }
                 }
                 .paddingContent(.horizontal)
@@ -57,20 +66,22 @@ public struct StoreInstructionsView: View {
             }
             .toolbar { toolbarContent }
             .safeAreaBarBottom {
-                VStack(spacing: .zero) {
-                    StorePaymentButtonBar(
-                        trialNotification: true,
-                        showDescription: true,
-                        action: viewModel.specialOfferMode ? nil : {
-                            isShowAllPlans = true
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                withAnimation {
-                                    value.scrollTo(10, anchor: .top)
+                if case .result = viewModel.state, viewModel.selectedProduct != nil {
+                    VStack(spacing: .zero) {
+                        StorePaymentButtonBar(
+                            trialNotification: true,
+                            showDescription: true,
+                            action: viewModel.specialOfferMode ? nil : {
+                                isShowAllPlans = true
+                                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                    withAnimation {
+                                        value.scrollTo(10, anchor: .top)
+                                    }
                                 }
                             }
-                        }
-                    )
-                    .environmentObject(viewModel)
+                        )
+                        .environmentObject(viewModel)
+                    }
                 }
             }
             .onChange(of: isPremium) { _, isPremium in

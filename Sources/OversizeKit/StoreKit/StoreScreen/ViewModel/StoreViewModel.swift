@@ -30,6 +30,7 @@ public class StoreViewModel: ObservableObject {
     @Published var isBuyLoading: Bool = false
 
     @Published var selectedProduct: Product?
+    @Published private(set) var isRefetching: Bool = false
     let specialOfferMode: Bool
 
     @AppStorage("AppState.PremiumState") var isPremium: Bool = false
@@ -368,6 +369,10 @@ extension StoreViewModel {
 
 extension StoreViewModel {
     func fetchData() async {
+        guard !isRefetching else { return }
+        isRefetching = true
+        defer { isRefetching = false }
+
         Task {
             await fetchFeatures()
         }
