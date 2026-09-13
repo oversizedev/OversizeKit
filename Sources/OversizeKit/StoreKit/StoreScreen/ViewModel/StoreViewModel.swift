@@ -30,6 +30,7 @@ public class StoreViewModel: ObservableObject {
     @Published var isBuyLoading: Bool = false
 
     @Published var selectedProduct: Product?
+    @Published private(set) var isRefetching: Bool = false
     let specialOfferMode: Bool
 
     @AppStorage("AppState.PremiumState") var isPremium: Bool = false
@@ -368,6 +369,10 @@ extension StoreViewModel {
 
 extension StoreViewModel {
     func fetchData() async {
+        guard !isRefetching else { return }
+        isRefetching = true
+        defer { isRefetching = false }
+
         Task {
             await fetchFeatures()
         }
@@ -388,10 +393,22 @@ extension StoreViewModel {
             let result = await storeKitService.updateCustomerProductStatus(products: preProducts)
             switch result {
             case let .success(finalProducts):
+                if finalProducts.autoRenewable.isEmpty, finalProducts.nonConsumable.isEmpty {
+                    state = .error(CustomError(title: "No products available"))
+                    Log.error("StoreKit returned an empty product catalog")
+                    return
+                }
+
                 if let yarlyProduct = finalProducts.autoRenewable.first(where: { $0.subscription?.subscriptionPeriod.unit == .year && $0.isOffer == specialOfferMode }) {
                     selectedProduct = yarlyProduct
                 } else {
                     selectedProduct = finalProducts.autoRenewable.first(where: { $0.subscription?.subscriptionPeriod.unit == .year }) ?? finalProducts.autoRenewable.first
+                }
+
+                if selectedProduct == nil {
+                    let purchasedIds = Set(finalProducts.purchasedNonConsumable.map(\.id))
+                    selectedProduct = finalProducts.nonConsumable.first(where: { !purchasedIds.contains($0.id) })
+                        ?? finalProducts.nonConsumable.first
                 }
 
                 if let status = finalProducts.subscriptionGroupStatus {

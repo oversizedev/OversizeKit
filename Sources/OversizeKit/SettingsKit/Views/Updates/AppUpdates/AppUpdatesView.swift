@@ -15,11 +15,12 @@ public struct AppUpdatesView: ViewProtocol {
     @Environment(\.navigator) var navigator
 
     public var body: some View {
-        NavigationLayoutView("What's New") {
+        NavigationListLayoutView("What's New") {
             content
         } background: {
             Color.backgroundSecondary
         }
+        .listLayoutStyle(.insetGrouped)
         .toolbarTitleDisplayMode(.inline)
         .task { reducer(.onFetch) }
         .navigationBack($viewState.isNavigationBack)
@@ -38,7 +39,7 @@ public struct AppUpdatesView: ViewProtocol {
     }
 
     private var placeholder: some View {
-        SectionView {
+        ListSection {
             VStack(spacing: .zero) {
                 ForEach(0 ..< 3, id: \.self) { _ in
                     AppUpdatesPlaceholderRow()
@@ -47,32 +48,27 @@ public struct AppUpdatesView: ViewProtocol {
                 }
             }
         }
-        .surfaceContentRowMargins()
     }
 
+    @ViewBuilder
     private func versionsList(_ stateModel: AppUpdatesViewState.StateModel) -> some View {
-        VStack(spacing: .medium) {
-            if let lastVersion = stateModel.lastVersion {
-                SectionView {
-                    AppUpdatesLatestVersionCard(version: lastVersion)
-                }
-            }
-
-            SectionView {
-                VStack(spacing: .small) {
-                    ForEach(stateModel.versions) { version in
-                        AppUpdatesVersionRow(version: version)
-                    }
-
-                    AppUpdatesVersionRow(
-                        version: stateModel.firstVersion,
-                        showsConnector: false
-                    )
-                }
-                .padding(.vertical, .xSmall)
-            }
+        if let lastVersion = stateModel.lastVersion {
+            AppUpdatesLatestVersionCard(version: lastVersion)
         }
-        .surfaceContentRowMargins()
+
+        ListSection {
+            ForEach(stateModel.versions) { version in
+                AppUpdatesVersionRow(version: version)
+            }
+
+            AppUpdatesVersionRow(
+                version: stateModel.firstVersion,
+                showsConnector: false
+            )
+        }
+        #if !os(watchOS) && !os(tvOS)
+        .listRowSeparator(.hidden)
+        #endif
     }
 }
 

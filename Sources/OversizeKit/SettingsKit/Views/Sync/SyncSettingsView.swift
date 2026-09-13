@@ -37,17 +37,6 @@ public struct SyncSettingsView: View {
                         Text("Changes will take effect after restarting the app")
                     }
                 }
-
-                ListSection {
-                    Toggle(isOn: $settingsService.cloudKitCVVEnabled) {
-                        ListRow(
-                            "CVV iCloud sync",
-                            leading: {
-                                Icon("creditcard").iconOnSurface()
-                            }
-                        )
-                    }
-                }
             }
 
             if FeatureFlags.app.healthKit.valueOrFalse {
@@ -95,22 +84,17 @@ public struct SyncSettingsView: View {
     private var icon: some View {
         switch syncMonitor.status {
         case .idle:
-            Icon("icloud")
-                .font(.system(size: 16, weight: .semibold))
+            Icon(Image.Weather.cloud2)
+                .iconColor(Color.onSurfaceTertiary)
         case .syncing:
-            if #available(iOS 18.0, macOS 15.0, tvOS 18.0, watchOS 11.0, visionOS 2.0, *) {
-                Icon("arrow.triangle.2.circlepath")
-                    .symbolEffect(.rotate)
-            } else {
-                Icon("arrow.triangle.2.circlepath")
-                    .font(.system(size: 16, weight: .semibold))
-            }
+            Icon(Image.Arrow.update)
+                .iconColor(Color.onSurfacePrimary)
         case .success:
-            Icon("checkmark.icloud.fill")
-                .font(.system(size: 16, weight: .semibold))
+            Icon(Image.Weather.cloud2)
+                .iconColor(Color.onSurfacePrimary)
         case .failed:
-            Icon("exclamationmark.icloud.fill")
-                .font(.system(size: 16, weight: .semibold))
+            Icon(Image.Base.Exclamationmark.triangle)
+                .iconColor(Color.warning)
         }
     }
 }
