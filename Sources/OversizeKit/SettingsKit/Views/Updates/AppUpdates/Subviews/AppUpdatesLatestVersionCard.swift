@@ -6,7 +6,7 @@ struct AppUpdatesLatestVersionCard: View {
     let version: Components.Schemas.Version
 
     var body: some View {
-        Surface {
+        ListSection {
             HStack(alignment: .top, spacing: .medium) {
                 ZStack {
                     Circle()
@@ -37,11 +37,7 @@ struct AppUpdatesLatestVersionCard: View {
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
-            .padding(.medium)
         }
-        .surfaceRadius(.medium)
-        .surfaceContentMargins(.zero)
-        .elevation(.z1)
     }
 }
 
