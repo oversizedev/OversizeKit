@@ -66,7 +66,9 @@ public struct AppUpdatesView: ViewProtocol {
                 showsConnector: false
             )
         }
+        #if !os(watchOS)
         .listRowSeparator(.hidden)
+        #endif
     }
 }
 
