@@ -61,5 +61,5 @@ extension OnboardingView {
 
 #Preview {
     OnboardingView()
-        .coreServices()
+        .appEnvironment()
 }

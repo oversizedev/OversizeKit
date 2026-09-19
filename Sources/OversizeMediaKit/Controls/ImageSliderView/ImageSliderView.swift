@@ -9,8 +9,9 @@ import SwiftUI
 
 #if os(iOS)
 public struct ImageSlider: View {
-    @Environment(\.screenSize) private var screenSize
     @Environment(\.theme) private var theme
+
+    @State private var screenSize: CGSize = .zero
 
     @State private var currentScale: CGFloat = 1.0
     @State private var previousScale: CGFloat = 1.0
@@ -50,6 +51,7 @@ public struct ImageSlider: View {
         .tabViewStyle(.page(indexDisplayMode: .never))
         .indexViewStyle(.page(backgroundDisplayMode: .never))
         .ignoresSafeArea(.all)
+        .readSize { screenSize = $0 }
         // .toolbar(.hidden, for: .navigationBar)
         .background(.black.opacity(backgroundOpacity))
         .opacity(isShowPhotoDetail ? 1 : 0)

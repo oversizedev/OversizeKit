@@ -127,12 +127,12 @@ public struct NoticeListView: View {
         case let .offer(offer):
             NavigationStack {
                 StoreSpecialOfferView(event: offer)
-                    .coreServices()
+                    .appEnvironment()
             }
         case let .premiumInstructions(specialOfferMode):
             NavigationStack {
                 StoreInstructionsView(specialOfferMode: specialOfferMode)
-                    .coreServices()
+                    .appEnvironment()
             }
         }
     }

@@ -19,7 +19,6 @@ import MessageUI
 
 public struct AboutView: View {
     @Environment(\.navigator) var navigator
-    @Environment(\.screenSize) var screenSize
     @Environment(\.iconStyle) var iconStyle: IconStyle
 
     @StateObject var viewModel: AboutViewModel
@@ -29,6 +28,7 @@ public struct AboutView: View {
     }
 
     @State var offset: CGFloat = 0
+    @State private var screenWidth: CGFloat = 0
 
     @State var isSharePresented = false
     @State private var isShowMail = false
@@ -36,7 +36,7 @@ public struct AboutView: View {
     @State private var isPresentStoreProduct: Bool = false
 
     var isLargeScreen: Bool {
-        screenSize.width < 500 ? false : true
+        screenWidth >= 500
     }
 
     var oppacity: CGFloat {
@@ -74,10 +74,12 @@ public struct AboutView: View {
         } background: {
             Color.backgroundSecondary
         }
+        .readSize { screenWidth = $0.width }
 
         #else
         list
             .navigationTitle(L10n.Settings.about)
+            .readSize { screenWidth = $0.width }
         #endif
     }
 
@@ -432,7 +434,7 @@ public struct AboutView: View {
                             .fillSurfaceTertiary()
                             .rotationEffect(.degrees(45))
                             .opacity(0)
-                            .frame(height: screenSize.width / 1.16)
+                            .frame(height: screenWidth / 1.16)
                     }
                     .offset(y: -offset * 0.1)
 
@@ -446,7 +448,7 @@ public struct AboutView: View {
                             .fillSurfaceTertiary()
                             .rotationEffect(.degrees(45))
                             .padding(200)
-                            .frame(height: screenSize.width / 1.16)
+                            .frame(height: screenWidth / 1.16)
                             .overlay {
                                 ProgressView()
                             }
@@ -462,12 +464,12 @@ public struct AboutView: View {
                             .fillSurfaceTertiary()
                             .rotationEffect(.degrees(45))
                             .opacity(0)
-                            .frame(height: screenSize.width / 1.16)
+                            .frame(height: screenWidth / 1.16)
                     }
                     .offset(y: -(offset * -0.04))
                 }
-                .scaleEffect(screenSize.width < 500 ? 1.4 : 0.9)
-                .opacity(screenSize.width < 500 ? oppacity : 1)
+                .scaleEffect(isLargeScreen ? 0.9 : 1.4)
+                .opacity(isLargeScreen ? 1 : oppacity)
             }
         }
     }

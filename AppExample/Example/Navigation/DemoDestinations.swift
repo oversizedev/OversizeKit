@@ -35,5 +35,5 @@ struct DemoNavigationStack: View {
 
 #Preview {
     DemoNavigationStack()
-        .coreServices()
+        .appEnvironment()
 }

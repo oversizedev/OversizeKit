@@ -442,5 +442,5 @@ public extension SettingsView where HeadSection == EmptyView {
         }
         .navigationDestinationAutoReceive(SettingsDestinations.self)
     }
-    .coreServices()
+    .appEnvironment()
 }

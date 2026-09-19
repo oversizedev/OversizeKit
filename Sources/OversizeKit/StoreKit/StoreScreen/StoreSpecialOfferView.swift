@@ -15,8 +15,6 @@ import OversizeUI
 import SwiftUI
 
 public struct StoreSpecialOfferView: View {
-    @Environment(\.screenSize) private var screenSize
-    @Environment(\.safeAreaInsets) private var safeAreaInsets
     @Environment(\.navigator) private var navigator: Navigator
     @Environment(\.dismiss) private var dismiss
     @Environment(\.platform) private var platform
@@ -30,9 +28,7 @@ public struct StoreSpecialOfferView: View {
 
     @State var trialDaysPeriodText: String = ""
     @State var salePercent: Decimal = 0
-    private var safeAreaHeight: CGFloat {
-        screenSize.height - safeAreaInsets.top - safeAreaInsets.bottom
-    }
+    @State private var safeAreaHeight: CGFloat = 0
 
     public init(event: Components.Schemas.InAppPurchaseOffer) {
         self.event = event
@@ -54,6 +50,7 @@ public struct StoreSpecialOfferView: View {
             )
         }
         .toolbarTitleDisplayMode(.inline)
+        .readSafeContentSize { safeAreaHeight = $0.height }
         .safeAreaBarBottom {
             VStack(spacing: .small) {
                 productsLust
@@ -185,9 +182,9 @@ public struct StoreSpecialOfferView: View {
         #if os(macOS)
         return 160
         #else
-        if screenSize.height > 830 {
+        if safeAreaHeight > 730 {
             200
-        } else if screenSize.height > 700 {
+        } else if safeAreaHeight > 600 {
             160
         } else {
             64
@@ -206,7 +203,7 @@ public struct StoreSpecialOfferView: View {
                         .offset(y: -32)
                         #endif
 
-                    if platform == .macOS || screenSize.height > 850 {
+                    if platform == .macOS || safeAreaHeight > 750 {
                         Spacer()
                     }
 
@@ -236,7 +233,7 @@ public struct StoreSpecialOfferView: View {
                     }
                     .buttonStyle(.quaternary)
                     .accent(true)
-                    .padding(.bottom, screenSize.height > 810 ? .small : .zero)
+                    .padding(.bottom, safeAreaHeight > 710 ? .small : .zero)
 
                     Spacer()
                 }

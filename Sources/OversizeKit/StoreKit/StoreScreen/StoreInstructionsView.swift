@@ -15,16 +15,12 @@ import SwiftUI
 
 public struct StoreInstructionsView: View {
     @StateObject var viewModel: StoreViewModel
-    @Environment(\.screenSize) var screenSize
-    @Environment(\.safeAreaInsets) var safeAreaInsets
     @Environment(\.isPremium) var isPremium
     @Environment(\.dismiss) var dismiss
 
     @State var isShowAllPlans = false
     @State var offset: CGFloat = 0
-    private var safeAreaHeight: CGFloat {
-        screenSize.height - safeAreaInsets.top - safeAreaInsets.bottom
-    }
+    @State private var safeAreaHeight: CGFloat = 0
 
     public init(specialOfferMode: Bool = false) {
         _viewModel = StateObject(wrappedValue: StoreViewModel(specialOfferMode: specialOfferMode))
@@ -65,6 +61,8 @@ public struct StoreInstructionsView: View {
                 )
             }
             .toolbar { toolbarContent }
+            .scrollEdgeEffectStyle(.soft)
+            .readSafeContentSize { safeAreaHeight = $0.height }
             .safeAreaBarBottom {
                 if case .result = viewModel.state, viewModel.selectedProduct != nil {
                     VStack(spacing: .zero) {
@@ -131,7 +129,7 @@ public struct StoreInstructionsView: View {
     }
 
     private func contentPlaceholder() -> some View {
-        StoreInstructionsPlaceholderView(offset: offset)
+        StoreInstructionsPlaceholderView(offset: offset, safeAreaHeight: safeAreaHeight)
     }
 
     private func content(data: StoreKitProducts) -> some View {

@@ -1,6 +1,6 @@
 //
 // Copyright © 2023 Alexander Romanov
-// SystemServices.swift
+// AppEnvironment.swift
 //
 
 import FactoryKit
@@ -9,7 +9,7 @@ import OversizeStoreService
 import OversizeUI
 import SwiftUI
 
-public struct SystemServicesModifier: ViewModifier {
+public struct AppEnvironmentModifier: ViewModifier {
     @Injected(\.appStateService) private var appState: AppStateService
     @Injected(\.settingsService) private var settingsService: SettingsServiceProtocol
     @Injected(\.appStoreReviewService) private var appStoreReviewService: AppStoreReviewService
@@ -19,7 +19,6 @@ public struct SystemServicesModifier: ViewModifier {
     @AppStorage("AppState.PremiumState") private var isPremium: Bool = false
 
     @State private var blurRadius: CGFloat = 0
-    @State private var oppacity: CGFloat = 1
     @State private var screenSize: ScreenSize = .init(width: 375, height: 667)
     @State private var safeAreaInsets: SwiftUI.EdgeInsets = .init()
 
@@ -94,12 +93,17 @@ public struct SystemServicesModifier: ViewModifier {
 }
 
 public extension View {
-    @available(*, deprecated, renamed: "coreServices", message: "Renamed")
-    func systemServices() -> some View {
-        modifier(SystemServicesModifier())
+    func appEnvironment() -> some View {
+        modifier(AppEnvironmentModifier())
     }
 
+    @available(*, deprecated, renamed: "appEnvironment", message: "Renamed")
     func coreServices() -> some View {
-        modifier(SystemServicesModifier())
+        modifier(AppEnvironmentModifier())
+    }
+
+    @available(*, deprecated, renamed: "appEnvironment", message: "Renamed")
+    func systemServices() -> some View {
+        modifier(AppEnvironmentModifier())
     }
 }

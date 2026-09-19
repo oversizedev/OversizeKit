@@ -44,5 +44,5 @@ struct RootView: View {
 
 #Preview {
     RootView(deeplink: .constant(nil))
-        .coreServices()
+        .appEnvironment()
 }

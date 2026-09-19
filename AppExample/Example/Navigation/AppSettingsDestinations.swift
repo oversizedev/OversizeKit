@@ -39,5 +39,5 @@ struct AppSettingsNavigationStack: View {
 
 #Preview {
     AppSettingsNavigationStack()
-        .coreServices()
+        .appEnvironment()
 }

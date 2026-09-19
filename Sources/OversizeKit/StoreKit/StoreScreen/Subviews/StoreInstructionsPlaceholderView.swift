@@ -4,13 +4,7 @@ import SwiftUI
 
 struct StoreInstructionsPlaceholderView: View {
     let offset: CGFloat
-
-    @Environment(\.screenSize) private var screenSize
-    @Environment(\.safeAreaInsets) private var safeAreaInsets
-
-    private var safeAreaHeight: CGFloat {
-        screenSize.height - safeAreaInsets.top - safeAreaInsets.bottom
-    }
+    let safeAreaHeight: CGFloat
 
     var body: some View {
         VStack(spacing: .medium) {
@@ -74,5 +68,5 @@ struct StoreInstructionsPlaceholderView: View {
 }
 
 #Preview {
-    StoreInstructionsPlaceholderView(offset: .zero)
+    StoreInstructionsPlaceholderView(offset: .zero, safeAreaHeight: 760)
 }
