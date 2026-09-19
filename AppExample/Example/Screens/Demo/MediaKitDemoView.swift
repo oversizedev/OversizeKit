@@ -11,13 +11,13 @@ struct MediaKitDemoView: View {
     @State private var emoji: String = "🚀"
     @State private var isShowEmojiPicker = false
     @State private var isShowGallery = false
+
+    #if os(iOS)
     @State private var isShowSlider = false
     @State private var isShowPhotoOverlay = false
     @State private var sliderSelection: Int = 0
     @State private var overlaySelection: Int = 0
     @State private var gridColumnCount: Int = 3
-
-    #if os(iOS)
     @State private var photo: UIImage?
     @State private var photos: [UIImage] = []
     @State private var photosDates: [Date] = []
@@ -52,6 +52,7 @@ struct MediaKitDemoView: View {
 
                 screens
 
+                #if os(iOS)
                 SectionView("Grid") {
                     ImageGridView(demoImages, columnCount: $gridColumnCount, itemOverlay: { _, _ in
                         EmptyView()
@@ -60,6 +61,7 @@ struct MediaKitDemoView: View {
                         isShowPhotoOverlay = true
                     })
                 }
+                #endif
             }
             .paddingContent(.horizontal)
         }
@@ -67,7 +69,6 @@ struct MediaKitDemoView: View {
             Color.backgroundSecondary.ignoresSafeArea()
         }
         .navigationTitle("Media")
-        .photoOverlay(isPresent: $isShowPhotoOverlay, selection: $overlaySelection, photos: demoImages)
         .sheet(isPresented: $isShowEmojiPicker) {
             NavigationStack {
                 EmojiPicker("Emoji", emojis: emojis, selection: $emoji)
@@ -79,6 +80,7 @@ struct MediaKitDemoView: View {
             }
         }
         #if os(iOS)
+        .photoOverlay(isPresent: $isShowPhotoOverlay, selection: $overlaySelection, photos: demoImages)
         .fullScreenCover(isPresented: $isShowSlider) {
             ImageSlider(selection: $sliderSelection, photos: demoImages) {
                 isShowSlider = false

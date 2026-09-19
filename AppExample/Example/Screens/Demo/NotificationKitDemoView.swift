@@ -11,9 +11,8 @@ struct NotificationKitDemoView: View {
     @State private var time: LocalNotificationTime = .oneHourBefore
     @State private var isShowNotification = false
     @State private var scheduledID: UUID?
-
-    private let notificationID = UUID()
-    private let date = Date().addingTimeInterval(86400)
+    @State private var notificationID = UUID()
+    @State private var date = Date().addingTimeInterval(86400)
 
     var body: some View {
         ScrollView {

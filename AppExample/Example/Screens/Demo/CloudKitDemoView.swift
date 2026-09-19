@@ -59,7 +59,7 @@ struct CloudKitDemoView: View {
 
     private func updatePermission(_ permission: ShareParticipant.Permission, for participant: ShareParticipant) {
         guard let index = participants.firstIndex(where: { $0.id == participant.id }) else { return }
-        participants[index] = ShareParticipant(
+        let updated = ShareParticipant(
             id: participant.id,
             firstName: participant.firstName,
             lastName: participant.lastName,
@@ -68,6 +68,8 @@ struct CloudKitDemoView: View {
             permission: permission,
             isOwner: participant.isOwner
         )
+        participants[index] = updated
+        selectedParticipant = updated
     }
 }
 
