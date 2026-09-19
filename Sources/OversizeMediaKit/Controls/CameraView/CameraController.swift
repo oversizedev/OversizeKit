@@ -73,6 +73,10 @@ class CameraController: NSObject {
         layer.frame = view.bounds
         previewLayer = layer
     }
+
+    func updatePreviewFrame(_ frame: CGRect) {
+        previewLayer?.frame = frame
+    }
 }
 
 enum CameraControllerError: Swift.Error {

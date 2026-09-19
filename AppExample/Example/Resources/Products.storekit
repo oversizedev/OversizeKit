@@ -1,177 +1,167 @@
 {
-  "identifier" : "D65ED633",
-  "nonRenewingSubscriptions" : [
-
-  ],
-  "products" : [
+  "identifier": "D65ED633",
+  "nonRenewingSubscriptions": [],
+  "products": [
     {
-      "displayPrice" : "19.99",
-      "familyShareable" : false,
-      "internalID" : "A413F754",
-      "localizations" : [
+      "displayPrice": "19.99",
+      "familyShareable": false,
+      "internalID": "A413F754",
+      "localizations": [
         {
-          "description" : "",
-          "displayName" : "",
-          "locale" : "en_US"
+          "description": "One-time purchase, lifetime access",
+          "displayName": "Forever",
+          "locale": "en_US"
         }
       ],
-      "productID" : "app.oversize.Example.forever",
-      "referenceName" : "Forever",
-      "type" : "NonConsumable"
+      "productID": "app.oversize.Example.forever",
+      "referenceName": "Forever",
+      "type": "NonConsumable"
     }
   ],
-  "settings" : {
-    "_failTransactionsEnabled" : false,
-    "_locale" : "en_US",
-    "_storefront" : "USA",
-    "_storeKitErrors" : [
+  "settings": {
+    "_failTransactionsEnabled": false,
+    "_locale": "en_US",
+    "_storefront": "USA",
+    "_storeKitErrors": [
       {
-        "current" : null,
-        "enabled" : false,
-        "name" : "Load Products"
+        "current": null,
+        "enabled": false,
+        "name": "Load Products"
       },
       {
-        "current" : null,
-        "enabled" : false,
-        "name" : "Purchase"
+        "current": null,
+        "enabled": false,
+        "name": "Purchase"
       },
       {
-        "current" : null,
-        "enabled" : false,
-        "name" : "Verification"
+        "current": null,
+        "enabled": false,
+        "name": "Verification"
       },
       {
-        "current" : null,
-        "enabled" : false,
-        "name" : "App Store Sync"
+        "current": null,
+        "enabled": false,
+        "name": "App Store Sync"
       },
       {
-        "current" : null,
-        "enabled" : false,
-        "name" : "Subscription Status"
+        "current": null,
+        "enabled": false,
+        "name": "Subscription Status"
       },
       {
-        "current" : null,
-        "enabled" : false,
-        "name" : "App Transaction"
+        "current": null,
+        "enabled": false,
+        "name": "App Transaction"
       },
       {
-        "current" : null,
-        "enabled" : false,
-        "name" : "Manage Subscriptions Sheet"
+        "current": null,
+        "enabled": false,
+        "name": "Manage Subscriptions Sheet"
       },
       {
-        "current" : null,
-        "enabled" : false,
-        "name" : "Refund Request Sheet"
+        "current": null,
+        "enabled": false,
+        "name": "Refund Request Sheet"
       },
       {
-        "current" : null,
-        "enabled" : false,
-        "name" : "Offer Code Redeem Sheet"
+        "current": null,
+        "enabled": false,
+        "name": "Offer Code Redeem Sheet"
       }
     ]
   },
-  "subscriptionGroups" : [
+  "subscriptionGroups": [
     {
-      "id" : "A866A70B",
-      "localizations" : [
-
+      "id": "A866A70B",
+      "localizations": [
+        {
+          "description": "No limits, no ads, iCloud sync and app design settings",
+          "displayName": "Pro",
+          "locale": "en_US"
+        }
       ],
-      "name" : "Pro",
-      "subscriptions" : [
+      "name": "Pro",
+      "subscriptions": [
         {
-          "adHocOffers" : [
-
-          ],
-          "codeOffers" : [
-
-          ],
-          "displayPrice" : "9.99",
-          "familyShareable" : false,
-          "groupNumber" : 1,
-          "internalID" : "917AE642",
-          "introductoryOffer" : {
-            "internalID" : "09E486B7",
-            "paymentMode" : "free",
-            "subscriptionPeriod" : "P1W"
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "9.99",
+          "familyShareable": false,
+          "groupNumber": 1,
+          "internalID": "917AE642",
+          "introductoryOffer": {
+            "internalID": "09E486B7",
+            "paymentMode": "free",
+            "subscriptionPeriod": "P1W"
           },
-          "localizations" : [
+          "localizations": [
             {
-              "description" : "",
-              "displayName" : "",
-              "locale" : "en_US"
+              "description": "Billed once a year",
+              "displayName": "Yearly",
+              "locale": "en_US"
             }
           ],
-          "productID" : "app.oversize.Example.yearly",
-          "recurringSubscriptionPeriod" : "P1Y",
-          "referenceName" : "Yearly",
-          "subscriptionGroupID" : "A866A70B",
-          "type" : "RecurringSubscription"
+          "productID": "app.oversize.Example.yearly",
+          "recurringSubscriptionPeriod": "P1Y",
+          "referenceName": "Yearly",
+          "subscriptionGroupID": "A866A70B",
+          "type": "RecurringSubscription"
         },
         {
-          "adHocOffers" : [
-
-          ],
-          "codeOffers" : [
-
-          ],
-          "displayPrice" : "0.99",
-          "familyShareable" : false,
-          "groupNumber" : 1,
-          "internalID" : "DCD986A0",
-          "introductoryOffer" : {
-            "internalID" : "AD2453D4",
-            "paymentMode" : "free",
-            "subscriptionPeriod" : "P3D"
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "0.99",
+          "familyShareable": false,
+          "groupNumber": 1,
+          "internalID": "DCD986A0",
+          "introductoryOffer": {
+            "internalID": "AD2453D4",
+            "paymentMode": "free",
+            "subscriptionPeriod": "P3D"
           },
-          "localizations" : [
+          "localizations": [
             {
-              "description" : "",
-              "displayName" : "",
-              "locale" : "en_US"
+              "description": "Billed every month",
+              "displayName": "Monthly",
+              "locale": "en_US"
             }
           ],
-          "productID" : "app.oversize.Example.monthly",
-          "recurringSubscriptionPeriod" : "P1M",
-          "referenceName" : "Monthly",
-          "subscriptionGroupID" : "A866A70B",
-          "type" : "RecurringSubscription"
+          "productID": "app.oversize.Example.monthly",
+          "recurringSubscriptionPeriod": "P1M",
+          "referenceName": "Monthly",
+          "subscriptionGroupID": "A866A70B",
+          "type": "RecurringSubscription"
         },
         {
-          "adHocOffers" : [
-
-          ],
-          "codeOffers" : [
-
-          ],
-          "displayPrice" : "3.99",
-          "familyShareable" : false,
-          "groupNumber" : 1,
-          "internalID" : "DA6156FB",
-          "introductoryOffer" : {
-            "internalID" : "ED52E0DA",
-            "paymentMode" : "free",
-            "subscriptionPeriod" : "P1W"
+          "adHocOffers": [],
+          "codeOffers": [],
+          "displayPrice": "3.99",
+          "familyShareable": false,
+          "groupNumber": 1,
+          "internalID": "DA6156FB",
+          "introductoryOffer": {
+            "internalID": "ED52E0DA",
+            "paymentMode": "free",
+            "subscriptionPeriod": "P1W"
           },
-          "localizations" : [
+          "localizations": [
             {
-              "description" : "",
-              "displayName" : "",
-              "locale" : "en_US"
+              "description": "Limited time price, billed once a year",
+              "displayName": "Yearly Offer",
+              "locale": "en_US"
             }
           ],
-          "productID" : "app.oversize.Example.offerYearly",
-          "recurringSubscriptionPeriod" : "P1Y",
-          "referenceName" : "Yearly Offer",
-          "subscriptionGroupID" : "A866A70B",
-          "type" : "RecurringSubscription"
+          "productID": "app.oversize.Example.offerYearly",
+          "recurringSubscriptionPeriod": "P1Y",
+          "referenceName": "Yearly Offer",
+          "subscriptionGroupID": "A866A70B",
+          "type": "RecurringSubscription"
         }
       ]
     }
   ],
-  "version" : {
-    "major" : 3,
-    "minor" : 0
+  "version": {
+    "major": 3,
+    "minor": 0
   }
 }

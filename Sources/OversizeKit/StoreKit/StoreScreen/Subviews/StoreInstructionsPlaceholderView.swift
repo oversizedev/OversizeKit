@@ -4,7 +4,11 @@ import SwiftUI
 
 struct StoreInstructionsPlaceholderView: View {
     let offset: CGFloat
-    let safeAreaHeight: CGFloat
+    let contentHeight: CGFloat
+
+    private var heroHeight: CGFloat? {
+        contentHeight > 0 ? contentHeight : nil
+    }
 
     var body: some View {
         VStack(spacing: .medium) {
@@ -34,13 +38,13 @@ struct StoreInstructionsPlaceholderView: View {
 
                 Spacer()
             }
-            .frame(height: safeAreaHeight - 230)
-            .overlay {
+            .frame(height: heroHeight)
+            .overlay(alignment: .bottom) {
                 ScrollArrow(width: 30, offset: -5 + (offset * 0.05))
                     .stroke(style: StrokeStyle(lineWidth: 5, lineCap: .round))
                     .foregroundColor(.onSurfacePrimary.opacity(0.3))
-                    .frame(width: 30)
-                    .offset(y: safeAreaHeight - 300)
+                    .frame(width: 30, height: 30)
+                    .padding(.bottom, .small)
                     .opacity(1 - (offset * 0.01))
             }
 
@@ -68,5 +72,5 @@ struct StoreInstructionsPlaceholderView: View {
 }
 
 #Preview {
-    StoreInstructionsPlaceholderView(offset: .zero, safeAreaHeight: 760)
+    StoreInstructionsPlaceholderView(offset: .zero, contentHeight: 546)
 }

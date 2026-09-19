@@ -43,8 +43,18 @@
 		AA0000000000000000000011 /* MainDestinations.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000010 /* MainDestinations.swift */; };
 		AA0000000000000000000013 /* DemoListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000012 /* DemoListView.swift */; };
 		AA0000000000000000000015 /* MediaKitDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000014 /* MediaKitDemoView.swift */; };
+		AA0000000000000000000021 /* CalendarKitDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000020 /* CalendarKitDemoView.swift */; };
+		AA0000000000000000000023 /* ContactsKitDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000022 /* ContactsKitDemoView.swift */; };
+		AA0000000000000000000025 /* LocationKitDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000024 /* LocationKitDemoView.swift */; };
+		AA0000000000000000000027 /* NotificationKitDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000026 /* NotificationKitDemoView.swift */; };
+		AA0000000000000000000029 /* CloudKitDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000028 /* CloudKitDemoView.swift */; };
+		AA000000000000000000002B /* StoreKitDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000002A /* StoreKitDemoView.swift */; };
+		AA000000000000000000002D /* LockscreenDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000002C /* LockscreenDemoView.swift */; };
+		AA000000000000000000002F /* DebugKitDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000000000000000000002E /* DebugKitDemoView.swift */; };
+		AA0000000000000000000031 /* WebKitDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000030 /* WebKitDemoView.swift */; };
 		AA0000000000000000000017 /* EditorKitDemoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0000000000000000000016 /* EditorKitDemoView.swift */; };
 		AB0000000000000000000001 /* OversizeEditorKit in Frameworks */ = {isa = PBXBuildFile; productRef = AB0000000000000000000002 /* OversizeEditorKit */; };
+		AA0000000000000000000041 /* OversizeCloudKit in Frameworks */ = {isa = PBXBuildFile; productRef = AA0000000000000000000040 /* OversizeCloudKit */; };
 		AC0000000000000000000012 /* ExampleLaunchUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000011 /* ExampleLaunchUITests.swift */; };
 		AC0000000000000000000014 /* ExampleOnboardingUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000013 /* ExampleOnboardingUITests.swift */; };
 		AC0000000000000000000016 /* ExampleSettingsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC0000000000000000000015 /* ExampleSettingsUITests.swift */; };
@@ -117,6 +127,15 @@
 		AA0000000000000000000010 /* MainDestinations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainDestinations.swift; sourceTree = "<group>"; };
 		AA0000000000000000000012 /* DemoListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoListView.swift; sourceTree = "<group>"; };
 		AA0000000000000000000014 /* MediaKitDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaKitDemoView.swift; sourceTree = "<group>"; };
+		AA0000000000000000000020 /* CalendarKitDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalendarKitDemoView.swift; sourceTree = "<group>"; };
+		AA0000000000000000000022 /* ContactsKitDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsKitDemoView.swift; sourceTree = "<group>"; };
+		AA0000000000000000000024 /* LocationKitDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationKitDemoView.swift; sourceTree = "<group>"; };
+		AA0000000000000000000026 /* NotificationKitDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationKitDemoView.swift; sourceTree = "<group>"; };
+		AA0000000000000000000028 /* CloudKitDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitDemoView.swift; sourceTree = "<group>"; };
+		AA000000000000000000002A /* StoreKitDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StoreKitDemoView.swift; sourceTree = "<group>"; };
+		AA000000000000000000002C /* LockscreenDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LockscreenDemoView.swift; sourceTree = "<group>"; };
+		AA000000000000000000002E /* DebugKitDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugKitDemoView.swift; sourceTree = "<group>"; };
+		AA0000000000000000000030 /* WebKitDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebKitDemoView.swift; sourceTree = "<group>"; };
 		AA0000000000000000000016 /* EditorKitDemoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorKitDemoView.swift; sourceTree = "<group>"; };
 		AC0000000000000000000011 /* ExampleLaunchUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleLaunchUITests.swift; sourceTree = "<group>"; };
 		AC0000000000000000000013 /* ExampleOnboardingUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleOnboardingUITests.swift; sourceTree = "<group>"; };
@@ -132,6 +151,7 @@
 			files = (
 				848479622BF9FFA4003FC3FC /* OversizeMediaKit in Frameworks */,
 				AB0000000000000000000001 /* OversizeEditorKit in Frameworks */,
+				AA0000000000000000000041 /* OversizeCloudKit in Frameworks */,
 				848479542BF9FFA4003FC3FC /* OversizeCalendarKit in Frameworks */,
 				8484795E2BF9FFA4003FC3FC /* OversizeNotificationKit in Frameworks */,
 				84A876512E129B0F00CC6DDA /* Factory in Frameworks */,
@@ -314,6 +334,15 @@
 				AA0000000000000000000012 /* DemoListView.swift */,
 				AA0000000000000000000014 /* MediaKitDemoView.swift */,
 				AA0000000000000000000016 /* EditorKitDemoView.swift */,
+				AA0000000000000000000020 /* CalendarKitDemoView.swift */,
+				AA0000000000000000000022 /* ContactsKitDemoView.swift */,
+				AA0000000000000000000024 /* LocationKitDemoView.swift */,
+				AA0000000000000000000026 /* NotificationKitDemoView.swift */,
+				AA0000000000000000000028 /* CloudKitDemoView.swift */,
+				AA000000000000000000002A /* StoreKitDemoView.swift */,
+				AA000000000000000000002C /* LockscreenDemoView.swift */,
+				AA000000000000000000002E /* DebugKitDemoView.swift */,
+				AA0000000000000000000030 /* WebKitDemoView.swift */,
 			);
 			path = Demo;
 			sourceTree = "<group>";
@@ -355,6 +384,7 @@
 				8484795F2BF9FFA4003FC3FC /* OversizeOnboardingKit */,
 				848479612BF9FFA4003FC3FC /* OversizeMediaKit */,
 				AB0000000000000000000002 /* OversizeEditorKit */,
+				AA0000000000000000000040 /* OversizeCloudKit */,
 				84A876502E129B0F00CC6DDA /* FactoryKit */,
 			);
 			productName = Example;
@@ -512,6 +542,15 @@
 				AA0000000000000000000011 /* MainDestinations.swift in Sources */,
 				AA0000000000000000000013 /* DemoListView.swift in Sources */,
 				AA0000000000000000000015 /* MediaKitDemoView.swift in Sources */,
+				AA0000000000000000000021 /* CalendarKitDemoView.swift in Sources */,
+				AA0000000000000000000023 /* ContactsKitDemoView.swift in Sources */,
+				AA0000000000000000000025 /* LocationKitDemoView.swift in Sources */,
+				AA0000000000000000000027 /* NotificationKitDemoView.swift in Sources */,
+				AA0000000000000000000029 /* CloudKitDemoView.swift in Sources */,
+				AA000000000000000000002B /* StoreKitDemoView.swift in Sources */,
+				AA000000000000000000002D /* LockscreenDemoView.swift in Sources */,
+				AA000000000000000000002F /* DebugKitDemoView.swift in Sources */,
+				AA0000000000000000000031 /* WebKitDemoView.swift in Sources */,
 				AA0000000000000000000017 /* EditorKitDemoView.swift in Sources */,
 				840CD6752AC0E39D00C6AAD0 /* MainView.swift in Sources */,
 				840CD6692AC0E39D00C6AAD0 /* AppSettingsView.swift in Sources */,
@@ -963,6 +1002,10 @@
 		848479532BF9FFA4003FC3FC /* OversizeCalendarKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = OversizeCalendarKit;
+		};
+		AA0000000000000000000040 /* OversizeCloudKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = OversizeCloudKit;
 		};
 		848479552BF9FFA4003FC3FC /* OversizeContactsKit */ = {
 			isa = XCSwiftPackageProductDependency;

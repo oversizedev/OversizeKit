@@ -17,9 +17,7 @@ import SwiftUI
 public struct StoreView: View {
     @StateObject private var viewModel: StoreViewModel
     @Environment(\.presentationMode) private var presentationMode
-    @Environment(\.verticalSizeClass) private var verticalSizeClass
     @Environment(\.platform) private var platform
-    @Environment(\.isPortrait) private var isPortrait
     private var isClosable = true
     @State var isShowFireworks = false
     #if os(iOS)

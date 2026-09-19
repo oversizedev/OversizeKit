@@ -19,36 +19,11 @@ public struct AppEnvironmentModifier: ViewModifier {
     @AppStorage("AppState.PremiumState") private var isPremium: Bool = false
 
     @State private var blurRadius: CGFloat = 0
-    @State private var screenSize: ScreenSize = .init(width: 375, height: 667)
-    @State private var safeAreaInsets: SwiftUI.EdgeInsets = .init()
-
-    private enum FullScreenSheet: Identifiable, Equatable {
-        case onboarding
-        case payWall
-        case lockscreen
-        var id: Int {
-            hashValue
-        }
-    }
 
     public init() {}
 
     public func body(content: Content) -> some View {
         content
-            .background {
-                GeometryReader { geometry in
-                    Color.clear
-                        .onAppear { updateScreenGeometry(geometry) }
-                        .onChange(of: geometry.size) { _, _ in
-                            updateScreenGeometry(geometry)
-                        }
-                        .onChange(of: geometry.safeAreaInsets) { _, _ in
-                            updateScreenGeometry(geometry)
-                        }
-                }
-            }
-            .screenSize(screenSize)
-            .environment(\.safeAreaInsets, safeAreaInsets)
             .blur(radius: blurRadius)
             .preferredColorScheme(theme.appearance.colorScheme)
             .premiumStatus(isPremium)
@@ -59,11 +34,6 @@ public struct AppEnvironmentModifier: ViewModifier {
             .onChange(of: scenePhase) { _, phase in
                 onChangeScenePhase(phase)
             }
-    }
-
-    private func updateScreenGeometry(_ geometry: GeometryProxy) {
-        screenSize = ScreenSize(geometry: geometry)
-        safeAreaInsets = geometry.safeAreaInsets
     }
 
     private func onChangeScenePhase(_ phase: ScenePhase) {
@@ -92,18 +62,54 @@ public struct AppEnvironmentModifier: ViewModifier {
     }
 }
 
+// MARK: - Legacy
+
+@available(*, deprecated, message: "Do not inject screen geometry into the environment: read container sizes with readSize or readSafeContentSize")
+struct LegacyScreenGeometryModifier: ViewModifier {
+    @Environment(\.screenSize) private var resolvedScreenSize: ScreenSize
+    @Environment(\.safeAreaInsets) private var resolvedSafeAreaInsets: SwiftUI.EdgeInsets
+
+    @State private var measuredScreenSize: ScreenSize?
+    @State private var measuredSafeAreaInsets: SwiftUI.EdgeInsets?
+
+    func body(content: Content) -> some View {
+        content
+            .background {
+                GeometryReader { geometry in
+                    Color.clear
+                        .onAppear { updateScreenGeometry(geometry) }
+                        .onChange(of: geometry.size) { _, _ in
+                            updateScreenGeometry(geometry)
+                        }
+                        .onChange(of: geometry.safeAreaInsets) { _, _ in
+                            updateScreenGeometry(geometry)
+                        }
+                }
+            }
+            .screenSize(measuredScreenSize ?? resolvedScreenSize)
+            .environment(\.safeAreaInsets, measuredSafeAreaInsets ?? resolvedSafeAreaInsets)
+    }
+
+    private func updateScreenGeometry(_ geometry: GeometryProxy) {
+        measuredScreenSize = ScreenSize(geometry: geometry)
+        measuredSafeAreaInsets = geometry.safeAreaInsets
+    }
+}
+
 public extension View {
     func appEnvironment() -> some View {
         modifier(AppEnvironmentModifier())
     }
 
-    @available(*, deprecated, renamed: "appEnvironment", message: "Renamed")
+    @available(*, deprecated, renamed: "appEnvironment", message: "Renamed. Unlike coreServices, appEnvironment does not inject screen size and safe area insets into the environment: read container sizes with readSize or readSafeContentSize")
     func coreServices() -> some View {
         modifier(AppEnvironmentModifier())
+            .modifier(LegacyScreenGeometryModifier())
     }
 
-    @available(*, deprecated, renamed: "appEnvironment", message: "Renamed")
+    @available(*, deprecated, renamed: "appEnvironment", message: "Renamed. Unlike systemServices, appEnvironment does not inject screen size and safe area insets into the environment: read container sizes with readSize or readSafeContentSize")
     func systemServices() -> some View {
         modifier(AppEnvironmentModifier())
+            .modifier(LegacyScreenGeometryModifier())
     }
 }

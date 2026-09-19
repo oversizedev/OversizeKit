@@ -3,6 +3,7 @@
 // AppSettingsPageView.swift, created on 25.09.2023
 //
 
+import OversizeKit
 import OversizeUI
 import SwiftUI
 
@@ -39,4 +40,5 @@ extension AppSettingsPageView {
     NavigationStack {
         AppSettingsPageView()
     }
+    .appEnvironment()
 }

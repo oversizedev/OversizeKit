@@ -12,34 +12,52 @@ struct DemoListView: View {
 
     var body: some View {
         ScrollView {
-            SectionView("Kits") {
-                VStack(spacing: .zero) {
-                    Row("Media") {
-                        navigator.navigate(to: DemoDestinations.media)
-                    } leading: {
-                        Image(systemName: "photo")
+            VStack(spacing: .small) {
+                SectionView("Kits") {
+                    VStack(spacing: .zero) {
+                        row("Media", image: "photo", destination: .media, identifier: AccessibilityIdentifier.mediaRow)
+                        row("Editor", image: "text.cursor", destination: .editor, identifier: AccessibilityIdentifier.editorRow)
+                        row("Calendar", image: "calendar", destination: .calendar)
+                        row("Contacts", image: "person.crop.circle", destination: .contacts)
+                        row("Location", image: "mappin.and.ellipse", destination: .location)
+                        row("Notification", image: "bell.badge", destination: .notification)
+                        row("Cloud", image: "icloud", destination: .cloud)
                     }
-                    .rowArrow()
-                    .buttonStyle(.row)
-                    .accessibilityIdentifier(AccessibilityIdentifier.mediaRow)
-
-                    Row("Editor") {
-                        navigator.navigate(to: DemoDestinations.editor)
-                    } leading: {
-                        Image(systemName: "text.cursor")
-                    }
-                    .rowArrow()
-                    .buttonStyle(.row)
-                    .accessibilityIdentifier(AccessibilityIdentifier.editorRow)
                 }
+                .sectionContentCompactRowMargins()
+
+                SectionView("OversizeKit") {
+                    VStack(spacing: .zero) {
+                        row("Store", image: "creditcard", destination: .store)
+                        row("Lockscreen", image: "lock", destination: .lockscreen)
+                        row("Web", image: "link", destination: .web)
+                        row("Debug", image: "ladybug", destination: .debug)
+                    }
+                }
+                .sectionContentCompactRowMargins()
             }
-            .sectionContentCompactRowMargins()
             .paddingContent(.horizontal)
         }
         .background {
             Color.backgroundSecondary.ignoresSafeArea()
         }
         .navigationTitle(RootTab.demo.title)
+    }
+
+    private func row(
+        _ title: String,
+        image: String,
+        destination: DemoDestinations,
+        identifier: String? = nil
+    ) -> some View {
+        Row(title) {
+            navigator.navigate(to: destination)
+        } leading: {
+            Image(systemName: image)
+        }
+        .navigatable()
+        .buttonStyle(.row)
+        .accessibilityIdentifier(identifier ?? title)
     }
 }
 
@@ -54,4 +72,5 @@ extension DemoListView {
     NavigationStack {
         DemoListView()
     }
+    .appEnvironment()
 }

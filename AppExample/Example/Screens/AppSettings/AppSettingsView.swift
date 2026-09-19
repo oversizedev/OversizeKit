@@ -3,6 +3,7 @@
 // AppSettingsView.swift, created on 25.09.2023
 //
 
+import OversizeKit
 import OversizeUI
 import SwiftUI
 
@@ -33,4 +34,5 @@ extension AppSettingsView {
 
 #Preview {
     AppSettingsView {}
+        .appEnvironment()
 }

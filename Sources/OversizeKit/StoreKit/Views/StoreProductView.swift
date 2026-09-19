@@ -41,21 +41,16 @@ public struct StoreProductView: View {
     }
 
     var isHaveSale: Bool {
-        if monthSubscriptionProduct != nil, product.subscription?.subscriptionPeriod.unit == .year {
-            true
-        } else {
-            false
-        }
+        product.subscription?.subscriptionPeriod.unit == .year && !salePercent.isEmpty
     }
 
     var salePercent: String {
-        if let monthSubscriptionProduct {
-            let yearPriceMonthly = monthSubscriptionProduct.price * 12
-            let percent = (yearPriceMonthly - product.price) / yearPriceMonthly
-            return (percent * 100).rounded(0).toString
-        } else {
-            return ""
-        }
+        guard let monthSubscriptionProduct else { return "" }
+        let yearPriceMonthly = monthSubscriptionProduct.price * 12
+        guard yearPriceMonthly > 0 else { return "" }
+        let percent = (yearPriceMonthly - product.price) / yearPriceMonthly
+        guard percent > 0 else { return "" }
+        return (percent * 100).rounded(0).toString
     }
 
     public init(product: Product, products: StoreKitProducts, isSelected: Binding<Bool> = .constant(false), action: @escaping () -> Void) {

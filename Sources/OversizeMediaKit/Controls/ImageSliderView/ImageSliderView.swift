@@ -155,7 +155,7 @@ public struct ImageSlider: View {
                 previousOffset.height = value.translation.height
 
                 let newOffsetWidth = currentOffset.width + deltaX / currentScale
-                if newOffsetWidth <= screenSize.width - 150.0, newOffsetWidth > -150.0, currentScale > 1 {
+                if screenSize.width > 0, newOffsetWidth <= screenSize.width - 150.0, newOffsetWidth > -150.0, currentScale > 1 {
                     currentOffset.width = currentOffset.width + deltaX / currentScale
                 }
 
@@ -163,9 +163,7 @@ public struct ImageSlider: View {
             }
             .onEnded { _ in
                 previousOffset = CGSize.zero
-                if currentOffset.height > screenSize.height / 5 ||
-                    currentOffset.height < -(screenSize.height / 5)
-                {
+                if screenSize.height > 0, abs(currentOffset.height) > screenSize.height / 5 {
                     hide()
                 } else {
                     if currentScale < 1.2 {

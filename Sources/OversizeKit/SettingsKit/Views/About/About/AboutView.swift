@@ -29,6 +29,7 @@ public struct AboutView: View {
 
     @State var offset: CGFloat = 0
     @State private var screenWidth: CGFloat = 0
+    @Environment(\.displayScale) private var scale
 
     @State var isSharePresented = false
     @State private var isShowMail = false
@@ -37,6 +38,10 @@ public struct AboutView: View {
 
     var isLargeScreen: Bool {
         screenWidth >= 500
+    }
+
+    private var imagePlaceholderHeight: CGFloat? {
+        screenWidth > 0 ? screenWidth / 1.16 : nil
     }
 
     var oppacity: CGFloat {
@@ -57,11 +62,6 @@ public struct AboutView: View {
         }
     }
 
-    #if os(iOS)
-    let scale = UIScreen.main.scale
-    #else
-    let scale: CGFloat = 2
-    #endif
 
     public var body: some View {
         #if os(iOS)
@@ -434,7 +434,7 @@ public struct AboutView: View {
                             .fillSurfaceTertiary()
                             .rotationEffect(.degrees(45))
                             .opacity(0)
-                            .frame(height: screenWidth / 1.16)
+                            .frame(height: imagePlaceholderHeight)
                     }
                     .offset(y: -offset * 0.1)
 
@@ -448,7 +448,7 @@ public struct AboutView: View {
                             .fillSurfaceTertiary()
                             .rotationEffect(.degrees(45))
                             .padding(200)
-                            .frame(height: screenWidth / 1.16)
+                            .frame(height: imagePlaceholderHeight)
                             .overlay {
                                 ProgressView()
                             }
@@ -464,7 +464,7 @@ public struct AboutView: View {
                             .fillSurfaceTertiary()
                             .rotationEffect(.degrees(45))
                             .opacity(0)
-                            .frame(height: screenWidth / 1.16)
+                            .frame(height: imagePlaceholderHeight)
                     }
                     .offset(y: -(offset * -0.04))
                 }
