@@ -152,22 +152,16 @@ extension StoreViewModel {
     }
 
     var isHaveSale: Bool {
-        if monthSubscriptionProduct != nil, yearSubscriptionProduct != nil {
-            true
-        } else {
-            false
-        }
+        !salePercent.isEmpty
     }
 
     var salePercent: String {
-        guard let yearSubscriptionProduct else { return "" }
-        if let monthSubscriptionProduct {
-            let yearPriceMonthly = monthSubscriptionProduct.price * 12
-            let percent = (yearPriceMonthly - yearSubscriptionProduct.price) / yearPriceMonthly
-            return (percent * 100).rounded(0).toString
-        } else {
-            return ""
-        }
+        guard let yearSubscriptionProduct, let monthSubscriptionProduct else { return "" }
+        let yearPriceMonthly = monthSubscriptionProduct.price * 12
+        guard yearPriceMonthly > 0 else { return "" }
+        let percent = (yearPriceMonthly - yearSubscriptionProduct.price) / yearPriceMonthly
+        guard percent > 0 else { return "" }
+        return (percent * 100).rounded(0).toString
     }
 
     var selectedProductButtonDescription: String {
@@ -379,12 +373,20 @@ extension StoreViewModel {
 
         state = .loading
 
-        guard let appStoreID = Info.App.appStoreId else {
-            state = .error(NetworkError.unknown(nil))
-            return
+        var productIds: [String] = []
+        if let appStoreID = Info.App.appStoreId {
+            productIds = await networkService.fetchAppStoreProductIds(appId: appStoreID).successResult ?? []
         }
 
-        let productIds = await networkService.fetchAppStoreProductIds(appId: appStoreID).successResult ?? []
+        if productIds.isEmpty {
+            productIds = StoreConfiguration.productIdentifiers
+        }
+
+        guard !productIds.isEmpty else {
+            state = .error(NetworkError.unknown(nil))
+            Log.error("No product identifiers from the network and no ProductIdentifiers in AppConfig.plist")
+            return
+        }
 
         let products = await storeKitService.requestProducts(productIds: productIds)
 

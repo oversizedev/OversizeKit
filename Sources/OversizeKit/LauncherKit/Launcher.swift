@@ -35,7 +35,7 @@ public struct Launcher<Content: View, Onboarding: View>: View {
         contentView
             .appLaunchCover(item: $viewModel.activeFullScreenSheet) {
                 fullScreenCover(sheet: $0)
-                    .coreServices()
+                    .appEnvironment()
                     #if os(macOS)
                     .frame(width: viewModel.contentType == .onboarding ? 840 : 500, height: 672)
                     #endif
@@ -47,7 +47,7 @@ public struct Launcher<Content: View, Onboarding: View>: View {
                 viewModel.onScenePhaseChange(value)
             }
             .presentationHUDRoot()
-            .coreServices()
+            .appEnvironment()
             .task(viewModel.onAppear)
     }
 

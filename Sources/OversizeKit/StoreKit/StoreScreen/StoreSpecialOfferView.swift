@@ -15,8 +15,6 @@ import OversizeUI
 import SwiftUI
 
 public struct StoreSpecialOfferView: View {
-    @Environment(\.screenSize) private var screenSize
-    @Environment(\.safeAreaInsets) private var safeAreaInsets
     @Environment(\.navigator) private var navigator: Navigator
     @Environment(\.dismiss) private var dismiss
     @Environment(\.platform) private var platform
@@ -30,8 +28,10 @@ public struct StoreSpecialOfferView: View {
 
     @State var trialDaysPeriodText: String = ""
     @State var salePercent: Decimal = 0
-    private var safeAreaHeight: CGFloat {
-        screenSize.height - safeAreaInsets.top - safeAreaInsets.bottom
+    @State private var contentHeight: CGFloat = 0
+
+    private var heroHeight: CGFloat? {
+        contentHeight > 0 ? contentHeight : nil
     }
 
     public init(event: Components.Schemas.InAppPurchaseOffer) {
@@ -54,6 +54,7 @@ public struct StoreSpecialOfferView: View {
             )
         }
         .toolbarTitleDisplayMode(.inline)
+        .readSize { contentHeight = $0.height }
         .safeAreaBarBottom {
             VStack(spacing: .small) {
                 productsLust
@@ -185,9 +186,9 @@ public struct StoreSpecialOfferView: View {
         #if os(macOS)
         return 160
         #else
-        if screenSize.height > 830 {
+        if contentHeight > 340 {
             200
-        } else if screenSize.height > 700 {
+        } else if contentHeight > 260 {
             160
         } else {
             64
@@ -206,7 +207,7 @@ public struct StoreSpecialOfferView: View {
                         .offset(y: -32)
                         #endif
 
-                    if platform == .macOS || screenSize.height > 850 {
+                    if platform == .macOS || contentHeight > 400 {
                         Spacer()
                     }
 
@@ -236,20 +237,19 @@ public struct StoreSpecialOfferView: View {
                     }
                     .buttonStyle(.quaternary)
                     .accent(true)
-                    .padding(.bottom, screenSize.height > 810 ? .small : .zero)
+                    .padding(.bottom, contentHeight > 300 ? .small : .zero)
 
                     Spacer()
                 }
                 #if os(iOS)
-                .frame(height: safeAreaHeight - 235)
+                .frame(height: heroHeight)
                 #endif
-                .overlay {
+                .overlay(alignment: .bottom) {
                     ScrollArrow(width: 30, offset: -5 + (offset * 0.05))
                         .stroke(style: StrokeStyle(lineWidth: 5, lineCap: .round))
                         .foregroundColor(.onSurfacePrimary.opacity(0.3))
-                        .frame(width: 30)
-                        .offset(y: safeAreaHeight - (platform == .macOS ? 200 : 280))
-                    // .opacity(1 - (offset * 0.01))
+                        .frame(width: 30, height: 30)
+                        .padding(.bottom, .small)
                 }
 
                 VStack(spacing: .zero) {

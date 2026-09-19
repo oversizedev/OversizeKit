@@ -39,5 +39,5 @@ struct RootTabView: View {
 
 #Preview {
     RootTabView(selection: .constant(.main))
-        .coreServices()
+        .appEnvironment()
 }

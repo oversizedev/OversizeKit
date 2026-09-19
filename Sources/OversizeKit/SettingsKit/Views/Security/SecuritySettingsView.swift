@@ -189,5 +189,5 @@ extension SecuritySettingsView {
 
 #Preview {
     SecuritySettingsView()
-        .coreServices()
+        .appEnvironment()
 }

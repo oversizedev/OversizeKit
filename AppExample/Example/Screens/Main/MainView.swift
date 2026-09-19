@@ -44,5 +44,5 @@ extension MainView {
     NavigationStack {
         MainView()
     }
-    .coreServices()
+    .appEnvironment()
 }

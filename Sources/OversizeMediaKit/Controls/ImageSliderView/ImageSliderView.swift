@@ -9,8 +9,9 @@ import SwiftUI
 
 #if os(iOS)
 public struct ImageSlider: View {
-    @Environment(\.screenSize) private var screenSize
     @Environment(\.theme) private var theme
+
+    @State private var screenSize: CGSize = .zero
 
     @State private var currentScale: CGFloat = 1.0
     @State private var previousScale: CGFloat = 1.0
@@ -50,6 +51,7 @@ public struct ImageSlider: View {
         .tabViewStyle(.page(indexDisplayMode: .never))
         .indexViewStyle(.page(backgroundDisplayMode: .never))
         .ignoresSafeArea(.all)
+        .readSize { screenSize = $0 }
         // .toolbar(.hidden, for: .navigationBar)
         .background(.black.opacity(backgroundOpacity))
         .opacity(isShowPhotoDetail ? 1 : 0)
@@ -153,7 +155,7 @@ public struct ImageSlider: View {
                 previousOffset.height = value.translation.height
 
                 let newOffsetWidth = currentOffset.width + deltaX / currentScale
-                if newOffsetWidth <= screenSize.width - 150.0, newOffsetWidth > -150.0, currentScale > 1 {
+                if screenSize.width > 0, newOffsetWidth <= screenSize.width - 150.0, newOffsetWidth > -150.0, currentScale > 1 {
                     currentOffset.width = currentOffset.width + deltaX / currentScale
                 }
 
@@ -161,9 +163,7 @@ public struct ImageSlider: View {
             }
             .onEnded { _ in
                 previousOffset = CGSize.zero
-                if currentOffset.height > screenSize.height / 5 ||
-                    currentOffset.height < -(screenSize.height / 5)
-                {
+                if screenSize.height > 0, abs(currentOffset.height) > screenSize.height / 5 {
                     hide()
                 } else {
                     if currentScale < 1.2 {

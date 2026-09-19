@@ -15,15 +15,15 @@ import SwiftUI
 
 public struct StoreInstructionsView: View {
     @StateObject var viewModel: StoreViewModel
-    @Environment(\.screenSize) var screenSize
-    @Environment(\.safeAreaInsets) var safeAreaInsets
     @Environment(\.isPremium) var isPremium
     @Environment(\.dismiss) var dismiss
 
     @State var isShowAllPlans = false
     @State var offset: CGFloat = 0
-    private var safeAreaHeight: CGFloat {
-        screenSize.height - safeAreaInsets.top - safeAreaInsets.bottom
+    @State private var contentHeight: CGFloat = 0
+
+    private var heroHeight: CGFloat? {
+        contentHeight > 0 ? contentHeight : nil
     }
 
     public init(specialOfferMode: Bool = false) {
@@ -65,6 +65,8 @@ public struct StoreInstructionsView: View {
                 )
             }
             .toolbar { toolbarContent }
+            .scrollEdgeEffectStyle(.soft)
+            .readSize { contentHeight = $0.height }
             .safeAreaBarBottom {
                 if case .result = viewModel.state, viewModel.selectedProduct != nil {
                     VStack(spacing: .zero) {
@@ -131,7 +133,7 @@ public struct StoreInstructionsView: View {
     }
 
     private func contentPlaceholder() -> some View {
-        StoreInstructionsPlaceholderView(offset: offset)
+        StoreInstructionsPlaceholderView(offset: offset, contentHeight: contentHeight)
     }
 
     private func content(data: StoreKitProducts) -> some View {
@@ -170,13 +172,13 @@ public struct StoreInstructionsView: View {
 
                 Spacer()
             }
-            .frame(height: safeAreaHeight - 230)
-            .overlay {
+            .frame(height: heroHeight)
+            .overlay(alignment: .bottom) {
                 ScrollArrow(width: 30, offset: -5 + (offset * 0.05))
                     .stroke(style: StrokeStyle(lineWidth: 5, lineCap: .round))
                     .foregroundColor(.onSurfacePrimary.opacity(0.3))
-                    .frame(width: 30)
-                    .offset(y: safeAreaHeight - 300)
+                    .frame(width: 30, height: 30)
+                    .padding(.bottom, .xSmall)
                     .opacity(1 - (offset * 0.01))
             }
 

@@ -6,5 +6,26 @@
 	<false/>
 	<key>NSFaceIDUsageDescription</key>
 	<string>$(PRODUCT_NAME) Authentication with TouchId or FaceID</string>
+	<key>NSCalendarsFullAccessUsageDescription</key>
+	<string>$(PRODUCT_NAME) shows the OversizeCalendarKit event screens with your calendars</string>
+	<key>NSContactsUsageDescription</key>
+	<string>$(PRODUCT_NAME) shows the OversizeContactsKit screens with your contacts</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>$(PRODUCT_NAME) shows the OversizeLocationKit address picker near your location</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>$(PRODUCT_NAME) shows the OversizeMediaKit pickers with your photos</string>
+	<key>NSCameraUsageDescription</key>
+	<string>$(PRODUCT_NAME) shows the OversizeMediaKit camera preview</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>example</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

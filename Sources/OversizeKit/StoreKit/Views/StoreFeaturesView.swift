@@ -81,7 +81,7 @@ struct StoreFeaturesView: View {
             VStack {
                 StoreFeatureDetailView(selection: feature)
                     .environmentObject(viewModel)
-                    .coreServices()
+                    .appEnvironment()
                     .frame(width: 440, height: 500)
             }
             .frame(width: 440, height: 500, alignment: .center)
@@ -91,7 +91,7 @@ struct StoreFeaturesView: View {
                     .environmentObject(viewModel)
                     .presentationDetents([.medium, .large])
                     .presentationContentInteraction(.scrolls)
-                    .coreServices()
+                    .appEnvironment()
             }
             #endif
         }

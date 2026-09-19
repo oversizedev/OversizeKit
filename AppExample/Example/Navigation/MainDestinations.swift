@@ -17,5 +17,5 @@ struct MainNavigationStack: View {
 
 #Preview {
     MainNavigationStack()
-        .coreServices()
+        .appEnvironment()
 }

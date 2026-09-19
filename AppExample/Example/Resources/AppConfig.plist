@@ -59,21 +59,21 @@
 		<key>StoreKit</key>
 		<true/>
 		<key>CloudKit</key>
-		<false/>
+		<true/>
 		<key>HealthKit</key>
 		<false/>
 		<key>FaceID</key>
-		<false/>
+		<true/>
 		<key>FaceIDSecureCodes</key>
 		<false/>
 		<key>Notifications</key>
-		<false/>
+		<true/>
 		<key>Lockscreen</key>
-		<false/>
+		<true/>
 		<key>Vibration</key>
-		<false/>
+		<true/>
 		<key>Sounds</key>
-		<false/>
+		<true/>
 		<key>Spotlight</key>
 		<false/>
 		<key>BlurMinimize</key>

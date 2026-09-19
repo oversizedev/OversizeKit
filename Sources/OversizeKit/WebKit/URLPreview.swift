@@ -18,21 +18,50 @@ public struct URLPreview: UIViewRepresentable {
         _size = size
     }
 
-    public func makeUIView(context _: Context) -> LPLinkView {
+    public func makeCoordinator() -> Coordinator {
+        Coordinator()
+    }
+
+    public func makeUIView(context: Context) -> LPLinkView {
         let view = LPLinkView(url: url)
-        let provider = LPMetadataProvider()
-        Task { @MainActor in
-            let metadata = try? await provider.startFetchingMetadata(for: url)
-            if let metadata {
-                view.metadata = metadata
-                view.sizeToFit()
-                size = view.frame.size
-            }
-        }
+        fetchMetadata(into: view, coordinator: context.coordinator)
         return view
     }
 
-    public func updateUIView(_: LPLinkView, context _: Context) {}
+    public func updateUIView(_ view: LPLinkView, context: Context) {
+        guard context.coordinator.url != url else { return }
+        let placeholder = LPLinkMetadata()
+        placeholder.originalURL = url
+        view.metadata = placeholder
+        fetchMetadata(into: view, coordinator: context.coordinator)
+    }
+
+    @MainActor
+    private func fetchMetadata(into view: LPLinkView, coordinator: Coordinator) {
+        coordinator.provider?.cancel()
+        coordinator.url = url
+        let provider = LPMetadataProvider()
+        coordinator.provider = provider
+        let requestedURL = url
+        Task { @MainActor in
+            let metadata = try? await provider.startFetchingMetadata(for: requestedURL)
+            guard coordinator.url == requestedURL else { return }
+            coordinator.provider = nil
+            if let metadata {
+                view.metadata = metadata
+            }
+            view.sizeToFit()
+            size = view.frame.size
+        }
+    }
+
+    @MainActor
+    public final class Coordinator {
+        var url: URL?
+        var provider: LPMetadataProvider?
+
+        public init() {}
+    }
 }
 
 #Preview {

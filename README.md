@@ -54,7 +54,7 @@ Then pick the products your target needs:
 
 ## Quick start
 
-`Launcher` is the entry point. Wrap your root view in it and it takes over everything that happens before your content is reachable: onboarding, lockscreen (PIN + biometrics), paywall, rate prompt and what's-new screens. It applies `.coreServices()` internally, so you don't repeat it there.
+`Launcher` is the entry point. Wrap your root view in it and it takes over everything that happens before your content is reachable: onboarding, lockscreen (PIN + biometrics), paywall, rate prompt and what's-new screens. It applies `.appEnvironment()` internally, so you don't repeat it there.
 
 ```swift
 import NavigatorUI
@@ -94,7 +94,7 @@ ContentView()
     }
 ```
 
-`coreServices()` injects screen size, theme, appearance, accent tint and premium status into the environment. The older `systemServices()` spelling is deprecated.
+`appEnvironment()` injects theme, appearance, accent tint and premium status into the environment. It does not inject screen size or safe area insets — read container sizes with `readSize` and `readSafeContentSize` from OversizeUI. The older `coreServices()` and `systemServices()` spellings are deprecated and keep injecting `\.screenSize` and `\.safeAreaInsets` for compatibility.
 
 ## Configuration
 

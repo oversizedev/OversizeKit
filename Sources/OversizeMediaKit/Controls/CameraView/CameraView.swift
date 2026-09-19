@@ -14,7 +14,9 @@ final class CameraView: UIViewController {
     var previewView: UIView!
 
     override func viewDidLoad() {
-        previewView = UIView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: UIScreen.main.bounds.size.height))
+        super.viewDidLoad()
+        previewView = UIView(frame: view.bounds)
+        previewView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         previewView.contentMode = UIView.ContentMode.scaleAspectFit
         view.addSubview(previewView)
 
@@ -25,6 +27,11 @@ final class CameraView: UIViewController {
 
             try? self.cameraController.displayPreview(on: self.previewView)
         }
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        cameraController.updatePreviewFrame(previewView.bounds)
     }
 }
 
