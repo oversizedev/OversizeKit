@@ -96,6 +96,17 @@ struct LegacyScreenGeometryModifier: ViewModifier {
     }
 }
 
+@available(*, deprecated, renamed: "AppEnvironmentModifier", message: "Renamed. Unlike AppEnvironmentModifier, this modifier still injects screen size and safe area insets: read container sizes with readSize or readSafeContentSize")
+public struct SystemServicesModifier: ViewModifier {
+    public init() {}
+
+    public func body(content: Content) -> some View {
+        content
+            .modifier(AppEnvironmentModifier())
+            .modifier(LegacyScreenGeometryModifier())
+    }
+}
+
 public extension View {
     func appEnvironment() -> some View {
         modifier(AppEnvironmentModifier())

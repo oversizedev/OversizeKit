@@ -94,7 +94,7 @@ ContentView()
     }
 ```
 
-`appEnvironment()` injects screen size, safe area, theme, appearance, accent tint and premium status into the environment. The older `coreServices()` and `systemServices()` spellings are deprecated.
+`appEnvironment()` injects theme, appearance, accent tint and premium status into the environment. It does not inject screen size or safe area insets — read container sizes with `readSize` and `readSafeContentSize` from OversizeUI. The older `coreServices()` and `systemServices()` spellings are deprecated and keep injecting `\.screenSize` and `\.safeAreaInsets` for compatibility.
 
 ## Configuration
 
