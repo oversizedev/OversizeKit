@@ -62,7 +62,6 @@ public struct AboutView: View {
         }
     }
 
-
     public var body: some View {
         #if os(iOS)
         NavigationLayoutView(L10n.Settings.about) {

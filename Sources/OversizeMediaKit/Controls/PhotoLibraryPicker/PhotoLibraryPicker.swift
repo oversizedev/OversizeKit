@@ -3,7 +3,6 @@
 // PhotoLibraryPicker.swift
 //
 
-import OversizeComponents
 import OversizeLocalizable
 import OversizeUI
 import SwiftUI

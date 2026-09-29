@@ -94,7 +94,7 @@ struct CalendarKitDemoView: View {
     }
 
     private func loadCalendars() async {
-        guard (try? await eventStore.requestFullAccessToEvents()) == true else { return }
+        guard await (try? eventStore.requestFullAccessToEvents()) == true else { return }
         calendars = eventStore.calendars(for: .event)
         sources = eventStore.sources
     }

@@ -154,7 +154,6 @@ let package = Package(
             name: "OversizeEditorKit",
             dependencies: [
                 "OversizeKit",
-                "OversizeMediaKit",
                 .product(name: "OversizeUI", package: "OversizeUI"),
                 .product(name: "OversizeCore", package: "OversizeCore"),
                 .product(name: "OversizeResources", package: "OversizeResources"),
