@@ -3,7 +3,6 @@
 // MediaPicker.swift
 //
 
-import OversizeComponents
 import OversizeUI
 import SwiftUI
 
