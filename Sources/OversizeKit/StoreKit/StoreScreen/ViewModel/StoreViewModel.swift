@@ -373,13 +373,10 @@ extension StoreViewModel {
 
         state = .loading
 
-        var productIds: [String] = []
-        if let appStoreID = Info.App.appStoreId {
-            productIds = await networkService.fetchAppStoreProductIds(appId: appStoreID).successResult ?? []
-        }
+        var productIds = StoreConfiguration.productIdentifiers
 
-        if productIds.isEmpty {
-            productIds = StoreConfiguration.productIdentifiers
+        if productIds.isEmpty, let appStoreID = Info.App.appStoreId {
+            productIds = await networkService.fetchAppStoreProductIds(appId: appStoreID).successResult ?? []
         }
 
         guard !productIds.isEmpty else {
