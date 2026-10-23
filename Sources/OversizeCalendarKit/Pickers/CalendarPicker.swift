@@ -53,24 +53,6 @@ public struct CalendarPicker: View {
                     .keyboardShortcut(.cancelAction)
                     #endif
                 }
-            } else {
-                #if os(iOS)
-                ToolbarItem(placement: .navigationBarLeading) {
-                    Button("Back", systemImage: "chevron.left") {
-                        dismiss()
-                    }
-                    .labelStyle(.toolbar)
-                    .buttonStyle(.toolbarSecondary)
-                }
-                #else
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Back", systemImage: "chevron.left") {
-                        dismiss()
-                    }
-                    .labelStyle(.toolbar)
-                    .buttonStyle(.toolbarSecondary)
-                }
-                #endif
             }
         }
         .toolbarTitleDisplayMode(.inline)
