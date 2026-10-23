@@ -49,7 +49,7 @@ public struct CreateEventView: View {
             }
             #if !os(watchOS)
             ToolbarItem(placement: .principal) {
-                if #available(iOS 26, *) {
+                if #available(iOS 26, macOS 26, *) {
                     Button { viewModel.present(.calendar) } label: {
                         HStack(spacing: .xxxSmall) {
                             Circle()
