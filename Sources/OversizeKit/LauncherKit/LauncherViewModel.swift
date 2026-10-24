@@ -215,8 +215,12 @@ public extension LauncherViewModel {
     }
 
     func onCompeteOnboarding(_ isCompletedOnboarding: Bool) {
+        guard isCompletedOnboarding else {
+            contentType = .onboarding
+            return
+        }
         contentType = .content
-        if isCompletedOnboarding, !isPremium {
+        if !isPremium {
             setPayWall()
         }
     }

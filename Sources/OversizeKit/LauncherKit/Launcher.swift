@@ -33,12 +33,14 @@ public struct Launcher<Content: View, Onboarding: View>: View {
 
     public var body: some View {
         contentView
-            .appLaunchCover(item: $viewModel.activeFullScreenSheet) {
-                fullScreenCover(sheet: $0)
-                    .appEnvironment()
-                    #if os(macOS)
-                    .frame(width: viewModel.contentType == .onboarding ? 840 : 500, height: 672)
-                    #endif
+            .appLaunchCover(item: $viewModel.activeFullScreenSheet) { sheet in
+                ManagedPresentationView {
+                    fullScreenCover(sheet: sheet)
+                        .appEnvironment()
+                        #if os(macOS)
+                        .frame(width: viewModel.contentType == .onboarding ? 840 : 500, height: 672)
+                        #endif
+                }
             }
             .onChange(of: viewModel.appStateService.isCompletedOnboarding) { _, isCompletedOnboarding in
                 viewModel.onCompeteOnboarding(isCompletedOnboarding)

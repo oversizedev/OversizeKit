@@ -69,6 +69,7 @@ public struct BackgroundPicker: View {
         .safeAreaBarTop {
             tabBar
         }
+        .scrollEdgeEffectStyle(.soft)
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
                 Button("Close", systemImage: "xmark", role: .cancel) {
